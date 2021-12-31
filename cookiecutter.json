@@ -1,4 +1,11 @@
 {
+  "group": "com.example",
+  "artifact": "demo",
+  "javaVersion": ["8", "11", "17"],
+  "bootVersion": ["2.6.2", "2.5.8"],
+  "package_path": "{{ cookiecutter.group|replace('.', '/') }}/{{ cookiecutter.artifact.replace('-', '') }}",
+  "app_name": "{{ cookiecutter.artifact|title|replace('-', '')|replace('_', '')|replace(' ', '') }}",
+
   "author_name": "Xiang Zheng",
   "email": "zxyful@gmail.com",
   "project_name": "Awesome Project",
