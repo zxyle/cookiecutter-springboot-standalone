@@ -147,7 +147,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-{% elif cookiecutter.open_source_license == 'java' %}
+{% elif cookiecutter.language == 'java' %}
 ### Java ###
 # Compiled class file
 *.class
@@ -170,7 +170,35 @@ cython_debug/
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-{% elif cookiecutter.open_source_license == 'javascript' %}
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+{% elif cookiecutter.language == 'javascript' %}
 # dependencies
 **/node_modules
 # roadhog-api-doc ignore
@@ -208,7 +236,7 @@ screenshot
 
 build
 
-{% elif cookiecutter.open_source_license == 'go' %}
+{% elif cookiecutter.language == 'go' %}
 
 ### Go ###
 # Binaries for programs and plugins

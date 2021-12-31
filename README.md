@@ -1,9 +1,10 @@
-# cookiecutter-template
+# cookiecutter-springboot
 
 ## Usage
 ```bash
-cookiecutter cookiecutter-template
+$ pip install -U cookiecutter
+$ cookiecutter https://github.com/zxyle/cookiecutter-springboot.git 
 ```
 
 ## License
-MIT
+MIT License
