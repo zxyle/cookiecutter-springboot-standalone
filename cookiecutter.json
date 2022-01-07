@@ -5,25 +5,21 @@
   "bootVersion": ["2.6.2", "2.5.8"],
   "package_path": "{{ cookiecutter.group|replace('.', '/') }}/{{ cookiecutter.artifact.replace('-', '') }}",
   "app_name": "{{ cookiecutter.artifact|title|replace('-', '')|replace('_', '')|replace(' ', '') }}",
+  "basePackage": "{{ cookiecutter.group }}.{{ cookiecutter.artifact.replace('-', '') }}",
 
   "author_name": "Xiang Zheng",
   "email": "zxyful@gmail.com",
-  "project_name": "Awesome Project",
-  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
   "project_short_description": "An awesome project.",
   "version": "1.0.0",
   "open_source_license": [
+    "Not open source",
     "MIT license",
     "BSD license",
     "ISC license",
     "Apache Software License 2.0",
-    "GNU General Public License v3",
-    "Not open source"
+    "GNU General Public License v3"
   ],
-  "language": [
-    "python",
-    "java",
-    "javascript",
-    "go"
+  "_copy_without_render": [
+    "docs/"
   ]
 }

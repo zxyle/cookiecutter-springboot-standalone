@@ -1,0 +1,17 @@
+[Unit]
+Description={{ cookiecutter.artifact }} server
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+Type=forking
+User=root
+EnvironmentFile=/root/package/{{ cookiecutter.artifact }}/config/{{ cookiecutter.artifact }}.env
+WorkingDirectory=/root/package/{{ cookiecutter.artifact }}
+
+ExecStartPre=/bin/sh -c 'if [ ! -d ${LOG_PATH} ]; then mkdir ${LOG_PATH}; fi'
+ExecStart=/bin/sh -c '${JAVA_HOME}/java ${JVM_OPTIONS} -jar -Dloader.path=${APP_HOME}/lib ${APP_HOME}/${JAR_NAME} > /dev/null  2>&1 &'
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
+
+[Install]
+WantedBy=multi-user.target
