@@ -2,7 +2,7 @@
 
 ## Usage
 ```bash
-$ pip install -U cookiecutter
+$ pip3 install -U cookiecutter
 $ cookiecutter https://github.com/zxyle/cookiecutter-springboot.git 
 ```
 
