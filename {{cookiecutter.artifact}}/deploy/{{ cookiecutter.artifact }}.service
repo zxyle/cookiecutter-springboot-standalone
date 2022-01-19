@@ -5,8 +5,8 @@ After=network.target remote-fs.target nss-lookup.target
 [Service]
 Type=forking
 User=root
-EnvironmentFile=/root/package/{{ cookiecutter.artifact }}/config/{{ cookiecutter.artifact }}.env
-WorkingDirectory=/root/package/{{ cookiecutter.artifact }}
+EnvironmentFile=/opt/webapps/{{ cookiecutter.artifact }}/config/{{ cookiecutter.artifact }}.env
+WorkingDirectory=/opt/webapps/{{ cookiecutter.artifact }}
 
 ExecStartPre=/bin/sh -c 'if [ ! -d ${LOG_PATH} ]; then mkdir ${LOG_PATH}; fi'
 ExecStart=/bin/sh -c '${JAVA_HOME}/java ${JVM_OPTIONS} -jar -Dloader.path=${APP_HOME}/lib ${APP_HOME}/${JAR_NAME} > /dev/null  2>&1 &'
