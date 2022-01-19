@@ -1,0 +1,23 @@
+plugins {
+  id 'org.springframework.boot' version '{{ cookiecutter.bootVersion }}'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'java'
+}
+
+group = '{{ cookiecutter.group }}'
+version = '{{ cookiecutter.version }}'
+sourceCompatibility = '{{ cookiecutter.javaVersion }}'
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+  useJUnitPlatform()
+}
