@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# 部署服务器
+# 部署服务器（需要配置免密登陆）
 server=root@127.0.0.1
 # 部署目录
 dir=/opt/webapps/{{ cookiecutter.artifact }}/

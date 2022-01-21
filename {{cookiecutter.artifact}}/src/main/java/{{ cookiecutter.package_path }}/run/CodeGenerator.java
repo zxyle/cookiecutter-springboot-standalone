@@ -56,9 +56,9 @@ public class CodeGenerator {
         // gc.setAuthor(AUTHOR);
         gc.setOpen(false);    // 是否打开输出目录
         // gc.setSwagger2(false); // 实体属性 Swagger2 注解
-        // gc.setEnableCache(true);     // 是否开启mybatis二级缓存
+        gc.setEnableCache(false);     // 是否开启mybatis二级缓存
         // gc.setBaseColumnList(true);  // 设置mybatis baseColumn
-        // gc.setBaseResultMap(true);   // 设置mybatis resultMap// gc.setEnableCache(true);     // 是否开启mybatis二级缓存
+        // gc.setBaseResultMap(true);   // 设置mybatis resultMap
         // gc.setBaseColumnList(true);  // 设置mybatis baseColumn
         // gc.setBaseResultMap(true);   // 设置mybatis resultMap
         mpg.setGlobalConfig(gc);
