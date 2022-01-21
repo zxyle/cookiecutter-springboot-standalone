@@ -34,4 +34,6 @@ jobs:
         cookiecutter --no-input .
         ls -lh
     - name: Build with Maven
-      run: mvn clean package -Dmaven.test.skip=true --file demo/pom.xml
+      run: |
+        mvn clean package -Dmaven.test.skip=true --file demo/pom.xml
+        mvn -Dfile.encoding=UTF-8 smart-doc:html --file demo/pom.xml
