@@ -19,7 +19,7 @@ public class UserController1 {
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController1(UserService userService) {
         this.userService = userService;
     }
 
