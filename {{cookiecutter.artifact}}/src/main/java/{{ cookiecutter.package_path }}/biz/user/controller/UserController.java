@@ -1,7 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.user.controller;
 
-import io.micrometer.core.instrument.Timer;
 import org.springframework.web.bind.annotation.*;
+import {{ cookiecutter.basePackage }}.biz.user.request.LoginRequest;
 
 import java.util.Date;
 
@@ -21,7 +21,7 @@ public class UserController {
      * @apiNote 通过用户名和密码进行用户登录
      */
     @PostMapping("/login")
-    public ApiResponse<LoginResponse> login(@RequestBody User user) {
+    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
         LoginResponse data = new LoginResponse();
         data.setAge(50);
         data.setBirthday(new Date());
