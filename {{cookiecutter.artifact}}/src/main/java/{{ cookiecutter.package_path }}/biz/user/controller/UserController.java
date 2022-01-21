@@ -2,6 +2,8 @@ package {{ cookiecutter.basePackage }}.biz.user.controller;
 
 import org.springframework.web.bind.annotation.*;
 import {{ cookiecutter.basePackage }}.biz.user.request.LoginRequest;
+import {{ cookiecutter.basePackage }}.biz.user.response.LoginResponse;
+import {{ cookiecutter.basePackage }}.base.response.ApiResponse;
 
 import java.util.Date;
 
