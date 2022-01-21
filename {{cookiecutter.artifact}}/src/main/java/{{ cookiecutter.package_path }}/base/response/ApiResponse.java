@@ -1,17 +1,43 @@
 package {{ cookiecutter.basePackage }}.base.response;
 
 
-public class ApiResponse {
+public class ApiResponse<T> {
 
+    /**
+     * 状态码
+     */
     private String code;
 
+    /**
+     * 消息
+     */
     private String message;
 
+    /**
+     * 是否成功
+     */
     private boolean success;
 
     private Object data;
 
     public ApiResponse() {
+    }
+
+    public ApiResponse(T data) {
+        setData(data);
+    }
+
+    public ApiResponse<T> ok() {
+        return ok(null);
+    }
+
+    public ApiResponse<T> ok(T data) {
+        ApiResponse<T> response = new ApiResponse<>();
+        response.setMessage("成功");
+        response.setCode("0");
+        response.setSuccess(true);
+        response.setData(data);
+        return response;
     }
 
     public ApiResponse(String code, String message, boolean success, Object data) {

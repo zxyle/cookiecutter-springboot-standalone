@@ -32,5 +32,6 @@ jobs:
     - name: Test with cookiecutter
       run: |
         cookiecutter --no-input .
+        ls -lh
     - name: Build with Maven
       run: mvn clean package -Dmaven.test.skip=true --file demo/pom.xml
