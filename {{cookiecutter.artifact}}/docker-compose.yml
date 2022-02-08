@@ -11,7 +11,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: {{ random_ascii_string(16) }}
       # create a database
-      MYSQL_DATABASE: {{ cookiecutter.artifact }}
+      MYSQL_DATABASE: app
       # create a user
       MYSQL_USER: {{ cookiecutter.artifact }}
       MYSQL_PASSWORD: {{ random_ascii_string(16) }}

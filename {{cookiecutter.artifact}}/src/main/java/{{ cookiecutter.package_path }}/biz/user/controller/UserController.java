@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * 用户接口
  *
- * @author {{ cookiecutter.author_name }} on 2022/01/21.
+ * @author {{ cookiecutter.author_name }} on {% now 'local', '%Y/%m/%d' %}.
  */
 @RestController
 @RequestMapping("/user")
