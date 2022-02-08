@@ -9,3 +9,5 @@ jmap -histo:live ${pid} > histo.snap
 jmap -heap ${pid} > heap.snap
 jmap -dump:live,format=b,file=dump.snap ${pid}
 jstack ${pid}> jstack.snap
+
+# 第三步: 如何使用

@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS {{ cookiecutter.artifact }} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE {{ cookiecutter.artifact }};
+CREATE DATABASE IF NOT EXISTS app CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE app;
 DROP TABLE IF EXISTS `template`;
 CREATE TABLE IF NOT EXISTS `template`
 (

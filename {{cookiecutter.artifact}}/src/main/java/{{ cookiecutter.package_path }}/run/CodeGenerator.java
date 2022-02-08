@@ -25,7 +25,7 @@ import java.util.Scanner;
  */
 public class CodeGenerator {
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/{{ cookiecutter.artifact }}?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=GMT%2B8";
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/app?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=GMT%2B8";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "123456";
     private static final String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
