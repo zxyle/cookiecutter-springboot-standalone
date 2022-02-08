@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.base.request;
+package {{ cookiecutter.basePackage }}.common.request;
 
 public class OpenApiRequest extends BaseRequest {
 

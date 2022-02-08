@@ -1,7 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.sample.controller;
 
-import {{ cookiecutter.basePackage }}.base.request.PageRequest;
-import {{ cookiecutter.basePackage }}.base.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.request.PageRequest;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.biz.sample.entity.User;
 import {{ cookiecutter.basePackage }}.biz.sample.service.UserService;
 import {{ cookiecutter.basePackage }}.common.utils.PageRequestUtils;
