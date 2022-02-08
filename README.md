@@ -1,9 +1,11 @@
-# cookiecutter-springboot
+# cookiecutter-springboot-standalone
+
+## Intro
 
 ## Usage
 ```bash
 $ pip3 install -U cookiecutter
-$ cookiecutter https://github.com/zxyle/cookiecutter-springboot.git 
+$ cookiecutter https://gitee.com/zxyle/cookiecutter-springboot-standalone.git 
 ```
 
 ## License
