@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.base.request;
+package {{ cookiecutter.basePackage }}.common.request;
 
 public class QueryRequest<T> extends PageRequest {
     private T query;

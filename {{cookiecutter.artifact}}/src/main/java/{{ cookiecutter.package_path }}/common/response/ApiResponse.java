@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.base.response;
+package {{ cookiecutter.basePackage }}.common.response;
 
 
 public class ApiResponse<T> {

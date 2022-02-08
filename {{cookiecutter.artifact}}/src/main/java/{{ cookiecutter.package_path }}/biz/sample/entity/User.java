@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.sample.entity;
 
-import {{ cookiecutter.basePackage }}.base.model.BaseEntity;
+import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import {{ cookiecutter.basePackage }}.common.enums.SexEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

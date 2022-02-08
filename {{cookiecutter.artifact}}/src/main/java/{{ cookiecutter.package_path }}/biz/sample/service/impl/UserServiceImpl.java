@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.sample.service.impl;
 
-import {{ cookiecutter.basePackage }}.base.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.biz.sample.entity.User;
 import {{ cookiecutter.basePackage }}.biz.sample.mapper.UserMapper;
 import {{ cookiecutter.basePackage }}.biz.sample.service.UserService;

@@ -1,7 +1,7 @@
 package {{ cookiecutter.basePackage }}.common.exception;
 
 
-import {{ cookiecutter.basePackage }}.base.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.constant.Constant;
 import org.slf4j.Logger;
 

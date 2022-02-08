@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.sys.entity;
 
-import {{ cookiecutter.basePackage }}.base.model.BaseEntity;
+import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

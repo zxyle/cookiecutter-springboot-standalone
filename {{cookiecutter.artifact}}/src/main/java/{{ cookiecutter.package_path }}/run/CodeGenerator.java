@@ -150,7 +150,7 @@ public class CodeGenerator {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setSuperEntityClass("{{ cookiecutter.basePackage }}.base.model.BaseEntity");
+        strategy.setSuperEntityClass("{{ cookiecutter.basePackage }}.common.entity.BaseEntity");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         // 公共父类
