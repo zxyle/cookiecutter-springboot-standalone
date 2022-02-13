@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.config.interceptor;
 
-import {{ cookiecutter.basePackage }}.common.utils.JwtUtils;
+import {{ cookiecutter.basePackage }}.common.util.JwtUtil;
 import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
@@ -24,7 +24,7 @@ public class JWTInterceptor implements HandlerInterceptor {
 
         Map<String, Object> map = new HashMap<>();
         try {
-            JwtUtils.verify(token);
+            JwtUtil.verify(token);
             map.put("status", true);
             map.put("msg", "请求成功");
             return true;

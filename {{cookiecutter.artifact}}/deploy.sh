@@ -10,7 +10,7 @@ function package() {
 }
 
 function restart() {
-    ssh $server "systemctl restart {{ cookiecutter.artifact }}/"
+    ssh $server "systemctl restart {{ cookiecutter.artifact }}"
 }
 
 function publish() {

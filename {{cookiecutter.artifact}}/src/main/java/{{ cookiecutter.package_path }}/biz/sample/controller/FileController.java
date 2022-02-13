@@ -16,9 +16,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * 文件传输示例
+ */
 @RestController
 public class FileController {
 
+    /**
+     * 文件下载
+     *
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public ResponseEntity<Object> downloadFile() throws IOException {
         String filename = "D:\\apache-tomcat-8.5.59.zip";

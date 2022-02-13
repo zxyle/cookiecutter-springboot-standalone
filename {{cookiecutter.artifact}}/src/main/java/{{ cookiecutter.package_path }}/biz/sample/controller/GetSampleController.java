@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-// 处理get请求
-
+/**
+ * Get请求示例
+ */
 @Controller
 public class GetSampleController {
     // RequestMapping方式的GET请求

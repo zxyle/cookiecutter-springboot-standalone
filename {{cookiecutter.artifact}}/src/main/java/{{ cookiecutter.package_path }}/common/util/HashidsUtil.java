@@ -1,11 +1,11 @@
-package {{ cookiecutter.basePackage }}.common.utils;
+package {{ cookiecutter.basePackage }}.common.util;
 
 import org.hashids.Hashids;
 
 /**
  * 用于对数据表主键进行混淆
  */
-public class HashidsUtils {
+public class HashidsUtil {
 
     public static final String salt = "{{ random_ascii_string(16) }}";
 

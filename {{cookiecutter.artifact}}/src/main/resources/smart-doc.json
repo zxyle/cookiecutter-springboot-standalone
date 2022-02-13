@@ -1,3 +1,7 @@
 {
-   "outPath": "src/main/resources/static/doc"
+   "outPath": "src/main/resources/static/doc",
+   "openUrl": "http://docServer:7700/api",
+   "replace": true,
+   "appToken": "",
+   "allInOne": true
 }

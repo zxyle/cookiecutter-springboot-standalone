@@ -1,28 +1,29 @@
 package {{ cookiecutter.basePackage }}.config;
 
+import cn.hutool.core.util.StrUtil;
+import {{ cookiecutter.basePackage }}.common.constant.ProjectConstant;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Slf4j
 @Component
 public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
+
+    public static final String CREATE_FIELD = StrUtil.toCamelCase(ProjectConstant.CREATE_FIELD);
+    public static final String UPDATE_FIELD = StrUtil.toCamelCase(ProjectConstant.UPDATE_FIELD);
 
     // mybatis plus 插入时填充策略
     @Override
     public void insertFill(MetaObject metaObject) {
-        log.info("start insert fill");
-        this.setFieldValByName("createTime", LocalDateTime.now(), metaObject);
-        this.setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
+        this.setFieldValByName(CREATE_FIELD, LocalDateTime.now(), metaObject);
+        this.setFieldValByName(UPDATE_FIELD, LocalDateTime.now(), metaObject);
     }
 
     // mybatis plus 更新时填充策略
     @Override
     public void updateFill(MetaObject metaObject) {
-        log.info("start update fill");
-        this.setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
+        this.setFieldValByName(UPDATE_FIELD, LocalDateTime.now(), metaObject);
     }
 }

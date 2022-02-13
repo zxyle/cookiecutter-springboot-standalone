@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.config;
+package {{ cookiecutter.basePackage }}.config.cache;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.CacheManager;

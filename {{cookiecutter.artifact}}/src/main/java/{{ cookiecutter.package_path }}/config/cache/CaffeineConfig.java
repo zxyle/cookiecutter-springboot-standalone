@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.config;
+package {{ cookiecutter.basePackage }}.config.cache;
 
 import {{ cookiecutter.basePackage }}.biz.sys.entity.TDict;
 import com.github.benmanes.caffeine.cache.Cache;

@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.common.entity;
 
-import {{ cookiecutter.basePackage }}.common.utils.HashidsCombinedSerializer;
+import {{ cookiecutter.basePackage }}.common.util.HashidsCombinedSerializer;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

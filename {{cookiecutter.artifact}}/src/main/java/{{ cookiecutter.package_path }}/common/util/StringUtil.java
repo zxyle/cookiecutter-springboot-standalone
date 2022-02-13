@@ -1,5 +1,4 @@
-package {{ cookiecutter.basePackage }}.common.utils;
-
+package {{ cookiecutter.basePackage }}.common.util;
 
 import cn.hutool.core.util.StrUtil;
 

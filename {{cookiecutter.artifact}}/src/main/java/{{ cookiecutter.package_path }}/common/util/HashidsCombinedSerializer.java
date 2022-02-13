@@ -1,5 +1,4 @@
-package {{ cookiecutter.basePackage }}.common.utils;
-
+package {{ cookiecutter.basePackage }}.common.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -20,7 +19,7 @@ public class HashidsCombinedSerializer {
     public static class Serialize extends JsonSerializer<Long> {
         @Override
         public void serialize(Long ids, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-            String hash = HashidsUtils.encode(ids);
+            String hash = HashidsUtil.encode(ids);
             jsonGenerator.writeString(hash);
         }
     }
@@ -29,7 +28,7 @@ public class HashidsCombinedSerializer {
         @Override
         public Long deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
             String hash = jsonParser.getValueAsString();
-            return HashidsUtils.decode(hash);
+            return HashidsUtil.decode(hash);
         }
     }
 }

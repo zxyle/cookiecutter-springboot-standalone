@@ -20,8 +20,16 @@ public class MybatisPlusConfig {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());       // 乐观锁插件
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());            // 防止全表更新与删除
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL)); // 分页插件
+        interceptor.addInnerInterceptor(pageInterceptor());
         return interceptor;
+    }
+
+    // 分页插件
+    public PaginationInnerInterceptor pageInterceptor() {
+        PaginationInnerInterceptor pageInterceptor = new PaginationInnerInterceptor();
+        pageInterceptor.setMaxLimit(500L);// 单页分页条数限制500
+        pageInterceptor.setDbType(DbType.MYSQL);
+        return pageInterceptor;
     }
 
 }

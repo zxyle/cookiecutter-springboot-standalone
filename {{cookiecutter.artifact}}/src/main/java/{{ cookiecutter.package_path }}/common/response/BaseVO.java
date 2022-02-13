@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.common.entity;
+package {{ cookiecutter.basePackage }}.common.response;
 
 import lombok.Data;
 
