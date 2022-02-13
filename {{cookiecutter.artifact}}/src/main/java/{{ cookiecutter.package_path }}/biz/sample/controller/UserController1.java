@@ -1,10 +1,10 @@
 package {{ cookiecutter.basePackage }}.biz.sample.controller;
 
-import {{ cookiecutter.basePackage }}.common.request.PageRequest;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.biz.sample.entity.User;
 import {{ cookiecutter.basePackage }}.biz.sample.service.UserService;
-import {{ cookiecutter.basePackage }}.common.utils.PageRequestUtils;
+import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +24,9 @@ public class UserController1 {
     }
 
     @PostMapping("/list")
-    public ResponseEntity<Object> list(@RequestBody PageRequest request) {
-        Integer pageNum = PageRequestUtils.checkPageNum(request.getPageNum());
-        Integer pageSize = PageRequestUtils.checkPageSize(request.getPageSize());
+    public ResponseEntity<Object> list(@RequestBody PaginationRequest request) {
+        Integer pageNum = PageRequestUtil.checkPageNum(request.getPageNum());
+        Integer pageSize = PageRequestUtil.checkPageSize(request.getPageSize());
 
         ApiResponse response = userService.list(pageNum, pageSize);
         return ResponseEntity.ok(response);

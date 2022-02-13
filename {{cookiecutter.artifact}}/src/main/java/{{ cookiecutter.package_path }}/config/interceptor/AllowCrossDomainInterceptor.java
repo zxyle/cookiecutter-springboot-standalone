@@ -1,7 +1,7 @@
 package {{ cookiecutter.basePackage }}.config.interceptor;
 
 import {{ cookiecutter.basePackage }}.common.constant.ProjectConstant;
-import {{ cookiecutter.basePackage }}.common.utils.StringUtil;
+import {{ cookiecutter.basePackage }}.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;

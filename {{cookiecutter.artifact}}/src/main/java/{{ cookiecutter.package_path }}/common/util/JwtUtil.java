@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage}}.common.utils;
+package {{ cookiecutter.basePackage}}.common.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JwtUtils {
+public class JwtUtil {
 
     // 密钥
     private static final String SECRET_KEY = "{{ random_ascii_string(32) }}";
@@ -58,6 +58,5 @@ public class JwtUtils {
         HashMap<String, String> map = new HashMap<>();
         verify(getToken(map));
     }
-
 
 }

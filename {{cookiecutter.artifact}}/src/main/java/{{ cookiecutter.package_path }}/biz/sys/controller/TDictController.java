@@ -17,7 +17,7 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
- * 字典数据表 前端控制器
+ * 字典数据
  */
 @RestController
 @RequestMapping("/dict")
@@ -33,17 +33,23 @@ public class TDictController {
         this.dictListCache = dictListCache;
     }
 
+    /**
+     * 字典分页
+     * @param request
+     * @return
+     */
     @GetMapping("/pages")
     public ResponseEntity<Object> list(DictRequest request) {
-
         IPage<TDict> dictIPage = dictService.getPageList(request);
-
         return ResponseEntity.ok(dictIPage);
     }
 
+    /**
+     * 字典列表
+     * @return
+     */
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
-
         List<TDict> dictList = dictListCache.getIfPresent("dictList");
         if (null != dictList) {
             return ResponseEntity.ok(dictList);
@@ -59,12 +65,16 @@ public class TDictController {
         return ResponseEntity.ok(dictList);
     }
 
+    /**
+     * 获取单个字典键值
+     * @param dictType
+     * @return
+     */
     @GetMapping("/get/{dict_type}")
     public ResponseEntity<Object> getListByType(@NotEmpty @PathVariable("dict_type") String dictType) {
         QueryWrapper<TDict> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("dict_type", dictType);
         queryWrapper.orderByAsc("dict_sort");
-
         List<TDict> dictList = dictService.list(queryWrapper);
         return ResponseEntity.ok(dictList);
     }

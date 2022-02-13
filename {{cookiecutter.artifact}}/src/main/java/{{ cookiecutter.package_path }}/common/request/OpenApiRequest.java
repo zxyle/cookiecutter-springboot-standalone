@@ -2,10 +2,28 @@ package {{ cookiecutter.basePackage }}.common.request;
 
 public class OpenApiRequest extends BaseRequest {
 
+    /**
+     * 应用的唯一标识
+     */
     private String appId;
+
+    /**
+     * 公钥（相当于账号）
+     */
     private String appKey;
+
+    /**
+     * 私钥（相当于密码）
+     */
     private String appSecret;
 
+    /**
+     * 访问键
+     */
     private String accessKey;
+
+    /**
+     * 访问密钥
+     */
     private String secretKey;
 }

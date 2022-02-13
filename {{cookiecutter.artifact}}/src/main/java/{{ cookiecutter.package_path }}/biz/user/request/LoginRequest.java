@@ -1,9 +1,14 @@
 package {{ cookiecutter.basePackage }}.biz.user.request;
 
+import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 
-public class LoginRequest {
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class LoginRequest extends BaseRequest {
 
     /**
      * 用户名
@@ -21,20 +26,4 @@ public class LoginRequest {
      * @since v1.0
      */
     private String password;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

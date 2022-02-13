@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-// 处理post请求
-
+/**
+ * Post请求示例
+ */
 @Controller
 public class PostSampleController {
     // 访问http://127.0.0.1:8090/post1

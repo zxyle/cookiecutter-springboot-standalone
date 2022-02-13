@@ -1,9 +1,12 @@
 package {{ cookiecutter.basePackage }}.biz.sys.request;
 
-import {{ cookiecutter.basePackage }}.common.request.PageRequest;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 
-public class DictRequest extends PageRequest {
+public class DictRequest extends PaginationRequest {
 
+    /**
+     * 字典ID
+     */
     private String id;
 
     public String getId() {

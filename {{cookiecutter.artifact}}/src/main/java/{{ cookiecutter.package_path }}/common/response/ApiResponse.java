@@ -1,6 +1,8 @@
 package {{ cookiecutter.basePackage }}.common.response;
 
+import lombok.ToString;
 
+@ToString
 public class ApiResponse<T> {
 
     /**
@@ -25,6 +27,9 @@ public class ApiResponse<T> {
 
     public ApiResponse(T data) {
         setData(data);
+        setMessage("成功");
+        setCode("0");
+        setSuccess(true);
     }
 
     public ApiResponse<T> ok() {
@@ -32,12 +37,11 @@ public class ApiResponse<T> {
     }
 
     public ApiResponse<T> ok(T data) {
-        ApiResponse<T> response = new ApiResponse<>();
-        response.setMessage("成功");
-        response.setCode("0");
-        response.setSuccess(true);
-        response.setData(data);
-        return response;
+        setMessage("成功");
+        setCode("0");
+        setSuccess(true);
+        setData(data);
+        return this;
     }
 
     public ApiResponse(String code, String message, boolean success, Object data) {

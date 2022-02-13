@@ -3,17 +3,19 @@ package {{ cookiecutter.basePackage }}.common.request;
 public class BaseRequest {
 
     /**
-     * timestamp
+     * 请求时间毫秒戳
+     *
+     * @mock 1644541518652
      */
     private String ts;
 
     /**
-     * signature
+     * 请求体签名
      */
     private String sign;
 
     /**
-     * Number used once
+     * 随机数
      */
     private String nonce;
 

@@ -1,0 +1,83 @@
+package {{ cookiecutter.basePackage }}.common.util;
+
+import {{ cookiecutter.basePackage }}.common.constant.PageConsts;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}
+.common.response.PageVO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+/**
+ * 检查分页参数工具类
+ */
+public class PageRequestUtil {
+
+    /**
+     * 检查Mybatis Plus分页
+     *
+     * @param request 分页对象
+     * @param <T>     类型
+     * @return Page
+     */
+    public static <T> IPage<T> checkForMp(PaginationRequest request) {
+        // 优先使用current
+        Integer current = request.getCurrent() == null ? request.getPageNum() : request.getCurrent();
+        Integer pageNum = PageRequestUtil.checkPageNum(current);
+        Integer pageSize = PageRequestUtil.checkPageSize(request.getPageSize());
+        return new Page<>(pageNum, pageSize);
+    }
+
+    /**
+     * 从Mybatis Plus 分页对象封装标准响应对象
+     *
+     * @param p   分页对象
+     * @param <T> 类型
+     * @return 标准响应对象
+     */
+    public static <T> ApiResponse<PageVO<T>> extractFromMp(IPage<T> p) {
+        PageVO<T> vo = new PageVO<>(p.getRecords(), p.getTotal());
+        return new ApiResponse<>(vo);
+    }
+
+    /**
+     * 检查页码大小
+     *
+     * @param pageNum 输入页码
+     * @return 有效页码大小
+     */
+    public static Integer checkPageNum(Integer pageNum) {
+        return valid(pageNum) ? PageConsts.DEFAULT_CURRENT : pageNum;
+    }
+
+    /**
+     * 检查分页大小
+     *
+     * @param pageSize 输入分页大小
+     * @return 有效分页大小
+     */
+    public static Integer checkPageSize(Integer pageSize) {
+        return checkPageSize(pageSize, PageConsts.DEFAULT_PAGE_SIZE);
+    }
+
+    /**
+     * 检查分页大小
+     *
+     * @param pageSize    输入分页大小
+     * @param maxPageSize 自定义最大分页大小
+     * @return 有效分页大小
+     */
+    public static Integer checkPageSize(Integer pageSize, Integer maxPageSize) {
+        return (valid(pageSize) || pageSize >= maxPageSize) ? maxPageSize : pageSize;
+    }
+
+    /**
+     * Integer取值范围检查
+     *
+     * @param param 参数
+     * @return 是否不在取值范围
+     */
+    private static boolean valid(Integer param) {
+        return param == null || param <= 0 || param >= Integer.MAX_VALUE;
+    }
+}

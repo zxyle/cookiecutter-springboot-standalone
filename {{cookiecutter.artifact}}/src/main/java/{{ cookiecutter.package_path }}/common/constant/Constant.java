@@ -2,11 +2,6 @@ package {{ cookiecutter.basePackage }}.common.constant;
 
 public class Constant {
 
-    public static final class Page {
-        public static final int DEFAULT_CURRENT = 1;
-        public static final int DEFAULT_PAGE_SIZE = 10;
-    }
-
     public static class Response {
         public static final String SUCCESS_CODE = "0";
         public static final String ERROR_CODE = "999";
@@ -14,19 +9,6 @@ public class Constant {
         public static final String ERROR_MESSAGE = "失败";
         public static final String ERROR_EXCEPTION = "服务异常";
         public static final String FORBIDDEN_MESSAGE = "权限不足";
-    }
-
-    public static class DateFormat {
-        public static final String YYYYMMDD = "yyyyMMdd";
-        public static final String YYYY_MM_DD = "yyyy-MM-dd";
-
-        public static final String YYMMDD = "yyMMdd";
-        public static final String YY_MM_DD = "yy-MM-dd";
-
-        public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
-        public static final String YYYY_MM_DD_T_HH_MM_SS_ZZ = "yyyy-MM-dd'T'HH:mm:ssZZ";
-
-        public static final String HH_MM_SS = "HH:mm:ss";
     }
 
     public static final class Jwt {

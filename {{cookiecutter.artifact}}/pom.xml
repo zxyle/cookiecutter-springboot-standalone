@@ -156,6 +156,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
+			<!-- smart-doc接口文档工具 -->
             <plugin>
                 <groupId>com.github.shalousun</groupId>
                 <artifactId>smart-doc-maven-plugin</artifactId>
@@ -182,7 +183,7 @@
                 <executions>
                     <execution>
                         <!--如果不需要在执行编译时启动smart-doc，则将phase注释掉-->
-                        <phase>compile</phase>
+                        <!--<phase>compile</phase>-->
                         <goals>
                             <!--smart-doc提供了html、openapi、markdown等goal，可按需配置-->
                             <goal>html</goal>
