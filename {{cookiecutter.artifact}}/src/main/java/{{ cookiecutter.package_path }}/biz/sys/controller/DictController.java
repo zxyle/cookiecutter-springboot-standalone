@@ -1,8 +1,8 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
-import {{ cookiecutter.basePackage }}.biz.sys.entity.TDict;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
 import {{ cookiecutter.basePackage }}.biz.sys.request.DictRequest;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ITDictService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -21,14 +21,14 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/dict")
-public class TDictController {
+public class DictController {
 
-    private final ITDictService dictService;
+    private final IDictService dictService;
 
-    Cache<String, List<TDict>> dictListCache;
+    Cache<String, List<Dict>> dictListCache;
 
     @Autowired
-    public TDictController(ITDictService dictService, Cache<String, List<TDict>> dictListCache) {
+    public DictController(IDictService dictService, Cache<String, List<Dict>> dictListCache) {
         this.dictService = dictService;
         this.dictListCache = dictListCache;
     }
@@ -40,7 +40,7 @@ public class TDictController {
      */
     @GetMapping("/pages")
     public ResponseEntity<Object> list(DictRequest request) {
-        IPage<TDict> dictIPage = dictService.getPageList(request);
+        IPage<Dict> dictIPage = dictService.getPageList(request);
         return ResponseEntity.ok(dictIPage);
     }
 
@@ -50,12 +50,12 @@ public class TDictController {
      */
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
-        List<TDict> dictList = dictListCache.getIfPresent("dictList");
+        List<Dict> dictList = dictListCache.getIfPresent("dictList");
         if (null != dictList) {
             return ResponseEntity.ok(dictList);
         }
 
-        QueryWrapper<TDict> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("id");
         queryWrapper.orderByAsc("dict_sort");
 
@@ -72,10 +72,10 @@ public class TDictController {
      */
     @GetMapping("/get/{dict_type}")
     public ResponseEntity<Object> getListByType(@NotEmpty @PathVariable("dict_type") String dictType) {
-        QueryWrapper<TDict> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("dict_type", dictType);
         queryWrapper.orderByAsc("dict_sort");
-        List<TDict> dictList = dictService.list(queryWrapper);
+        List<Dict> dictList = dictService.list(queryWrapper);
         return ResponseEntity.ok(dictList);
     }
 

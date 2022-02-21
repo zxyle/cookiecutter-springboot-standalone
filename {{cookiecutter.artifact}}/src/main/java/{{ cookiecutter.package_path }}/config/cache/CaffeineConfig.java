@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.config.cache;
 
-import {{ cookiecutter.basePackage }}.biz.sys.entity.TDict;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.context.annotation.Bean;
@@ -44,7 +44,7 @@ public class CaffeineConfig {
      * @return
      */
     @Bean
-    public Cache<String, List<TDict>> dictListCache() {
+    public Cache<String, List<Dict>> dictListCache() {
         return Caffeine.newBuilder()
                 // 设置最后一次写入或访问后经过固定时间过期
                 .expireAfterWrite(DEFAULT_TTL, TimeUnit.DAYS)

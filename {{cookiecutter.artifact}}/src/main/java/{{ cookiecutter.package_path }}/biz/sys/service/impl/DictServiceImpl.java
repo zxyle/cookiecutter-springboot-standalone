@@ -1,9 +1,9 @@
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
-import {{ cookiecutter.basePackage }}.biz.sys.entity.TDict;
-import {{ cookiecutter.basePackage }}.biz.sys.mapper.TDictMapper;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
+import {{ cookiecutter.basePackage }}.biz.sys.mapper.DictMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.request.DictRequest;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ITDictService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import {{ cookiecutter.basePackage }}.common.util.StringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
  * 字典数据表 服务实现类
  */
 @Service
-public class TDictServiceImpl extends ServiceImpl<TDictMapper, TDict> implements ITDictService {
+public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements IDictService {
 
     @Override
-    public IPage<TDict> getPageList(DictRequest request) {
+    public IPage<Dict> getPageList(DictRequest request) {
         Integer pageNum = PageRequestUtil.checkPageNum(request.getPageNum());
         Integer pageSize = PageRequestUtil.checkPageSize(request.getPageSize());
-        Page<TDict> page = new Page<>(pageNum, pageSize);
-        QueryWrapper<TDict> queryWrapper = new QueryWrapper<>();
+        Page<Dict> page = new Page<>(pageNum, pageSize);
+        QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
         if (StringUtil.isNotEmpty(request.getId())) {
             queryWrapper.eq("id", request.getId());
         }

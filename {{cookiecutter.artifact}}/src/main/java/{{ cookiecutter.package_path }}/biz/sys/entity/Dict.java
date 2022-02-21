@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TDict extends BaseEntity {
+public class Dict extends BaseEntity {
 
     private static final long serialVersionUID = -3437186795615187912L;
 
