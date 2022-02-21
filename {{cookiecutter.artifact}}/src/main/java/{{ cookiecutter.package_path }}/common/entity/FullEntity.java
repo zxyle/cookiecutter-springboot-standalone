@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 public class FullEntity implements Serializable {
 
     /**
-     * primary key
+     * 主键
      */
     @TableId(value = "id", type = IdType.AUTO)
     @JsonSerialize(using = HashidsCombinedSerializer.Serialize.class)
@@ -33,13 +33,13 @@ public class FullEntity implements Serializable {
     private Long id;
 
     /**
-     * create time of the row
+     * 数据行创建时间
      */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
-     * last update time of the row
+     * 数据行最后更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
@@ -51,7 +51,7 @@ public class FullEntity implements Serializable {
     private Integer version;
 
     /**
-     * soft delete tag (0-normal 1-deleted)
+     * 逻辑删除 (0-正常 1-已删除)
      */
     @TableLogic
     private Integer deleted;
