@@ -20,9 +20,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
 
     @Override
     public IPage<Dict> getPageList(DictRequest request) {
-        Integer pageNum = PageRequestUtil.checkPageNum(request.getPageNum());
-        Integer pageSize = PageRequestUtil.checkPageSize(request.getPageSize());
-        Page<Dict> page = new Page<>(pageNum, pageSize);
+        IPage<Dict> page = PageRequestUtil.checkForMp(request);
         QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
         if (StringUtil.isNotEmpty(request.getId())) {
             queryWrapper.eq("id", request.getId());
