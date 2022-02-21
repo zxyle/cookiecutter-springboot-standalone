@@ -5,6 +5,8 @@ import lombok.ToString;
 @ToString
 public class ApiResponse<T> {
 
+    public static final String SUCCESS = "成功";
+
     /**
      * 状态码
      */
@@ -27,7 +29,7 @@ public class ApiResponse<T> {
 
     public ApiResponse(T data) {
         setData(data);
-        setMessage("成功");
+        setMessage(SUCCESS);
         setCode("0");
         setSuccess(true);
     }
@@ -37,7 +39,7 @@ public class ApiResponse<T> {
     }
 
     public ApiResponse<T> ok(T data) {
-        setMessage("成功");
+        setMessage(SUCCESS);
         setCode("0");
         setSuccess(true);
         setData(data);
