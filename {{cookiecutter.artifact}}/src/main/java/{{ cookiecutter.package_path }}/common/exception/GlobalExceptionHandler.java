@@ -26,9 +26,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {Exception.class, NullPointerException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<ApiResponse> exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        logger.error(request.getServletPath(), response.getStatus(), e.getMessage());
-        // int status = response.getStatus();
-        ApiResponse apiResponse = new ApiResponse(Constant.Response.ERROR_CODE, Constant.Response.ERROR_EXCEPTION, false);
+        logger.error("接口报错 路径:【{}】, 状态码:【{}】, 错误原因:【{}】.", request.getServletPath(), response.getStatus(), e.getMessage());
+        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, Constant.Response.ERROR_EXCEPTION, false);
         return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
