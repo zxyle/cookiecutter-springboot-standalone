@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `template`
 (
     `id`          int unsigned     NOT NULL AUTO_INCREMENT COMMENT '主键id',
     `create_time` datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `update_time` datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `version`     int unsigned     NOT NULL DEFAULT 1 COMMENT '乐观锁版本号',
     `deleted`     tinyint unsigned not null default 0 COMMENT '逻辑删除1-删除 0-未删除',
     PRIMARY KEY (`id`)
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `user`
 (
     `id`          BIGINT(20)       NOT NULL AUTO_INCREMENT COMMENT '主键id',
     `create_time` datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time` datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `update_time` datetime         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `version`     int unsigned     NOT NULL DEFAULT 1 COMMENT '乐观锁版本号',
     `deleted`     tinyint unsigned NOT NULL DEFAULT 0 COMMENT '逻辑删除1-删除 0-未删除',
     `username`    VARCHAR(30)      NULL     DEFAULT NULL COMMENT '姓名',
