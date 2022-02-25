@@ -8,21 +8,22 @@ import javax.validation.constraints.NotNull;
 public class PaginationRequest extends BaseRequest {
 
     /**
-     * 当前页面的编号
+     * 当前分页的编号
      *
      * @mock 1
      */
     private Integer pageNum;
 
     /**
-     * 当前页面的编号(兼容pageNum)
+     * 当前分页的编号(兼容pageNum)
      *
      * @mock 1
      */
     private Integer current;
 
     /**
-     * 页面大小
+     * 分页大小
+     *
      * @mock 10
      */
     @NotNull
