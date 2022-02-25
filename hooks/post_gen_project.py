@@ -24,11 +24,14 @@ def remove_build_tool(tool: str):
 
 
 def git_init():
-    cmd1 = 'git config --local user.name "{{ cookiecutter.author_name }}"'
-    cmd2 = 'git config --local user.email "{{ cookiecutter.email }}"'
+    cmds = [
+        'git config --local user.name "{{ cookiecutter.author_name }}"',
+        'git config --local user.email "{{ cookiecutter.email }}"',
+        'git checkout -b dev/{{ cookiecutter.version }}'
+    ]
     try:
-        os.system(cmd1)
-        os.system(cmd2)
+        for cmd in cmds:
+            os.system(cmd)
     except:
         pass
 
