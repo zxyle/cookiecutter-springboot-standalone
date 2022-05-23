@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 钉钉告警发送
- * <a href="https://open.dingtalk.com/document/robots/custom-robot-access">...</a>
+ * <a href="https://open.dingtalk.com/document/robots/custom-robot-access">接口文档</a>
  */
 @Service
 public class DingTalkAlarmServiceImpl implements MonitoringAlarmService {
