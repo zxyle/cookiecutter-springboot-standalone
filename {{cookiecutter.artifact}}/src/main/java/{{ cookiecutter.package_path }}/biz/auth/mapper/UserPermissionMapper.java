@@ -1,0 +1,27 @@
+package {{ cookiecutter.basePackage }}.biz.auth.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.UserPermission;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * 用户-权限关联 Mapper 接口
+ */
+@Repository
+public interface UserPermissionMapper extends BaseMapper<UserPermission> {
+
+    List<UserPermission> selectAll();
+
+    // 截断表
+    void truncate();
+
+    /**
+     * 查询用户直接拥有的权限代码列表
+     *
+     * @param userId 用户ID
+     */
+    List<String> selectPermissionNameByUid(long userId);
+
+}

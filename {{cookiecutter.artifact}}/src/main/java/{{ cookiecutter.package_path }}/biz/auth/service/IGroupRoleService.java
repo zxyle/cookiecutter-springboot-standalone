@@ -1,0 +1,61 @@
+package {{ cookiecutter.basePackage }}.biz.auth.service;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
+
+import java.util.List;
+
+/**
+ * 组角色关联 服务类
+ */
+public interface IGroupRoleService extends IService<GroupRole> {
+
+    /**
+     * 查询用户组角色
+     *
+     * @param groupId 用户组ID
+     */
+    List<Long> selectRoleByGroup(Long groupId);
+
+    /**
+     * 删除映射关系
+     *
+     * @param groupId 用户组ID
+     * @param roleId  角色ID
+     */
+    boolean deleteRelation(Long groupId, Long roleId);
+
+    /**
+     * 查询映射关系
+     *
+     * @param groupId 用户组ID
+     * @param roleId  角色ID
+     */
+    List<GroupRole> queryRelation(Long groupId, Long roleId);
+
+    /**
+     * 统计映射关系
+     *
+     * @param groupId 用户组ID
+     * @param roleId  角色ID
+     */
+    Integer countRelation(Long groupId, Long roleId);
+
+    /**
+     * 创建映射关系
+     *
+     * @param groupId 用户组ID
+     * @param roleId  角色ID
+     */
+    boolean createRelation(Long groupId, Long roleId);
+
+    /**
+     * 分页查询映射关系
+     *
+     * @param groupId 用户组ID
+     * @param roleId  角色ID
+     */
+    IPage<GroupRole> pageRelation(Long groupId, Long roleId, IPage<GroupRole> page);
+
+}

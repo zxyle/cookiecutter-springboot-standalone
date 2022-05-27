@@ -1,0 +1,20 @@
+package {{ cookiecutter.basePackage }}.biz.sys.mapper;
+
+import {{ cookiecutter.basePackage }}.biz.sys.entity.FriendlyUrl;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * 友链 Mapper 接口
+ */
+@Repository
+public interface FriendlyUrlMapper extends BaseMapper<FriendlyUrl> {
+
+    List<FriendlyUrl> selectAll();
+
+    // 截断表
+    void truncate();
+
+}

@@ -1,0 +1,57 @@
+package {{ cookiecutter.basePackage }}.biz.auth.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
+import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
+
+import java.util.List;
+
+/**
+ * 用户组 服务类
+ */
+public interface IGroupService extends IService<Group> {
+
+    /**
+     * 创建用户组
+     *
+     * @param subGroups 子用户组ID
+     * @param group     用户组对象
+     */
+    Group create(List<String> subGroups, Group group);
+
+    /**
+     * 判断用户组是否存在
+     *
+     * @param name     用户组名称
+     * @param parentId 上级用户组ID
+     * @return 是否存在
+     */
+    boolean exist(String name, Long parentId);
+
+    /**
+     * 获取该用户组下 子用户组数量
+     *
+     * @param parentId 上级用户组ID
+     * @return 数量
+     */
+    Integer count(Long parentId);
+
+
+    /**
+     * 获取该用户组下所有子用户组ID（包括自身）
+     */
+    List<String> getSubGroups(Long rootGroupId);
+
+    /**
+     * 获取该用户组下所有子用户组树
+     */
+    AntdTree2 getSubGroupTree(Long rootGroupId);
+
+    /**
+     * 删除用户组
+     *
+     * @param groupId 用户组ID
+     */
+    boolean delete(Long groupId);
+
+}

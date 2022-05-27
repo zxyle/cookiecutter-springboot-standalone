@@ -1,0 +1,75 @@
+package {{ cookiecutter.basePackage }}.biz.sys.controller;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.Info;
+import {{ cookiecutter.basePackage }}.biz.sys.service.IInfoService;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 参数管理
+ */
+@RestController
+@RequestMapping("/sys")
+@CacheConfig(cacheNames = "infoCache")
+public class InfoController {
+
+    IInfoService thisService;
+
+    public InfoController(IInfoService thisService) {
+        this.thisService = thisService;
+    }
+
+    /**
+     * 获取参数列表
+     */
+    @Cacheable
+    @GetMapping("/infos")
+    public ApiResponse<Map<String, String>> list() {
+        QueryWrapper<Info> wrapper = new QueryWrapper<>();
+        wrapper.select("param_key", "param_value");
+        List<Info> params = thisService.list(wrapper);
+        Map<String, String> map = new HashMap<>();
+        params.forEach((e) -> map.put(e.getParamKey(), e.getParamValue()));
+        return new ApiResponse<>(map);
+    }
+
+    /**
+     * 新增资源
+     */
+    @PostMapping("/infos")
+    public ApiResponse<Info> add(@Valid @RequestBody Info entity) {
+        boolean success = thisService.save(entity);
+        if (success) {
+            return new ApiResponse<>(entity);
+        }
+        return new ApiResponse<>();
+    }
+
+    /**
+     * 按ID更新资源
+     */
+    @PutMapping("/infos/{id}")
+    public ApiResponse<Object> update(@Valid @RequestBody Info entity) {
+        thisService.updateById(entity);
+        return new ApiResponse<>("更新成功");
+    }
+
+
+    /**
+     * 按ID删除资源
+     */
+    @DeleteMapping("/infos/{id}")
+    public ApiResponse<Object> delete(@PathVariable Long id) {
+        thisService.removeById(id);
+        return new ApiResponse<>("删除成功");
+    }
+
+}

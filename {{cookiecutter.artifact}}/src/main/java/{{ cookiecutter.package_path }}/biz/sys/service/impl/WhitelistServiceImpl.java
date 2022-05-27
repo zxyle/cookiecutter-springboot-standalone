@@ -1,0 +1,35 @@
+package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
+import {{ cookiecutter.basePackage }}.biz.sys.mapper.WhitelistMapper;
+import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+/**
+ * IP黑名单 服务实现类
+ */
+@Service
+public class WhitelistServiceImpl extends ServiceImpl<WhitelistMapper, Whitelist> implements IWhitelistService {
+
+    /**
+     * 按ID查询
+     */
+    @Cacheable(cacheNames = "WhitelistCache", key = "#id")
+    @Override
+    public Whitelist queryById(Long id) {
+        return getById(id);
+    }
+
+    /**
+     * 分页查询
+     */
+    @Cacheable(cacheNames = "WhitelistCache", key = "#p.getCurrent()+#p.getSize()")
+    @Override
+    public IPage<Whitelist> pageQuery(IPage<Whitelist> p) {
+        return page(p);
+    }
+
+}
