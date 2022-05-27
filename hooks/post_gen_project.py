@@ -25,6 +25,7 @@ def remove_build_tool(tool: str):
 
 def git_init():
     cmds = [
+        'git init --initial-branch=master',
         'git config --local user.name "{{ cookiecutter.author_name }}"',
         'git config --local user.email "{{ cookiecutter.email }}"',
         'git checkout -b dev/{{ cookiecutter.version }}'
