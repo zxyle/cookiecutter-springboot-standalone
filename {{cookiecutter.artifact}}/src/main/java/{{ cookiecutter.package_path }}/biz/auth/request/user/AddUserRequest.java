@@ -1,0 +1,45 @@
+package {{ cookiecutter.basePackage }}.biz.auth.request.user;
+
+import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
+
+@Data
+public class AddUserRequest {
+    /**
+     * 登录用户名
+     */
+    @NotBlank
+    private String loginName;
+
+    /**
+     * 真实姓名
+     */
+    @NotBlank
+    private String realName;
+
+    /**
+     * 手机号码
+     */
+    private String mobile;
+
+    /**
+     * 邮箱地址
+     */
+    private String email;
+
+    /**
+     * 固定电话
+     */
+    private String telephone;
+
+    /**
+     * 用户组ID
+     */
+    private Long groupId;
+
+    /**
+     * 用户密码, 不填则使用默认密码
+     */
+    private String pwd;
+}

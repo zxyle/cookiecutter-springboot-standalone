@@ -27,6 +27,20 @@ public class ApiResponse<T> {
     public ApiResponse() {
     }
 
+    public ApiResponse(String message) {
+        setData(null);
+        setMessage(message);
+        setCode("0");
+        setSuccess(true);
+    }
+
+    public ApiResponse(String message, boolean success) {
+        setData(null);
+        setMessage(message);
+        setCode("0");
+        setSuccess(success);
+    }
+
     public ApiResponse(T data) {
         setData(data);
         setMessage(SUCCESS);
@@ -91,4 +105,3 @@ public class ApiResponse<T> {
         this.data = data;
     }
 }
-

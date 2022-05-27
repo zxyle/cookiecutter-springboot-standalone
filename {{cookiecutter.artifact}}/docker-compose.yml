@@ -21,3 +21,13 @@ services:
     command: --appendonly yes
     ports:
       - "6379:6379"
+
+  nginx:
+    image: nginx:1.21.6
+    depends_on:
+      - mysql
+      - redis
+      - app
+
+  app:
+    image: openjdk:{{ cookiecutter.javaVersion }}

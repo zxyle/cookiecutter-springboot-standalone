@@ -1,0 +1,32 @@
+package {{ cookiecutter.basePackage }}.biz.auth.response;
+
+import lombok.Data;
+
+@Data
+public class UserVO {
+
+    /**
+     * 登录用户名
+     */
+    private String loginName;
+
+    /**
+     * 真实姓名
+     */
+    private String realName;
+
+    /**
+     * 手机号码
+     */
+    private String mobile;
+
+    /**
+     * 邮箱地址
+     */
+    private String email;
+
+    /**
+     * 固定电话
+     */
+    private String telephone;
+}

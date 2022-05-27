@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.mapper.GroupPermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="{{ cookiecutter.basePackage }}.biz.auth.entity.GroupPermission">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="group_id" property="groupId" />
+        <result column="permission_id" property="permissionId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        create_time,
+        update_time,
+        group_id, permission_id
+    </sql>
+
+
+    <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.GroupPermission">
+        SELECT *
+        FROM auth_group_permission
+    </select>
+
+    <select id="getPermissionNameByGid" resultType="java.lang.String">
+        SELECT b.`code`
+        FROM auth_group_permission a
+                 LEFT JOIN auth_permission b
+                           ON a.permission_id = b.id
+        WHERE a.group_id = #{gid};
+    </select>
+
+    <update id="truncate">
+        TRUNCATE TABLE auth_group_permission
+    </update>
+
+</mapper>

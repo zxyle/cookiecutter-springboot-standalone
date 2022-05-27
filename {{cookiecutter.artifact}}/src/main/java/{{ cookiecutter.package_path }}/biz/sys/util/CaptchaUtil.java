@@ -1,0 +1,25 @@
+package {{ cookiecutter.basePackage }}.biz.sys.util;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class CaptchaUtil {
+
+    /**
+     * 随机生成数字验证码
+     *
+     * @param len 长度
+     */
+    public static String randCode(int len) {
+        String[] beforeShuffle = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
+        List<String> list = Arrays.asList(beforeShuffle);
+        Collections.shuffle(list);
+        StringBuilder sb = new StringBuilder();
+        for (String s : list) {
+            sb.append(s);
+        }
+        String afterShuffle = sb.toString();
+        return afterShuffle.substring(0, len);
+    }
+}

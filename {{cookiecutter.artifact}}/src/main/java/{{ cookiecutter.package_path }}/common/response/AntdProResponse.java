@@ -1,0 +1,33 @@
+package {{ cookiecutter.basePackage }}.common.response;
+
+import lombok.Data;
+
+// https://pro.ant.design/zh-CN/docs/request#参考后端接口规范建议
+@Data
+public class AntdProResponse {
+    private boolean success;
+
+    private Object data;
+
+    private String errorCode;
+
+    private String errorMessage;
+
+    private Integer showType;
+
+    private String traceId;
+
+    private String host;
+
+    private String status;
+
+    private String msg;
+    private String currentAuthority;
+    private String type;
+
+    /**
+     * 登录用户名
+     */
+    private String name;
+
+}

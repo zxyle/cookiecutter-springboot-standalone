@@ -1,0 +1,93 @@
+package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
+import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserRoleMapper;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 用户和角色关联表 服务实现类
+ */
+@Service
+public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> implements IUserRoleService {
+
+    /**
+     * 删除映射关系
+     *
+     * @param userId 用户ID
+     * @param roleId 角色ID
+     */
+    @Override
+    public boolean deleteRelation(Long userId, Long roleId) {
+        return remove(buildWrapper(userId, roleId));
+    }
+
+    /**
+     * 查询映射关系
+     *
+     * @param userId 用户ID
+     * @param roleId 角色ID
+     */
+    @Override
+    public List<UserRole> queryRelation(Long userId, Long roleId) {
+        QueryWrapper<UserRole> wrapper = buildWrapper(userId, roleId);
+        wrapper.select("user_id, role_id");
+        return list(wrapper);
+    }
+
+    /**
+     * 统计映射关系
+     *
+     * @param userId 用户ID
+     * @param roleId 角色ID
+     */
+    @Override
+    public Integer countRelation(Long userId, Long roleId) {
+        return count(buildWrapper(userId, roleId));
+    }
+
+    /**
+     * 创建映射关系
+     *
+     * @param userId 用户ID
+     * @param roleId 角色ID
+     */
+    @Override
+    public boolean createRelation(Long userId, Long roleId) {
+        UserRole entity = new UserRole();
+        entity.setUserId(userId);
+        entity.setRoleId(roleId);
+        try {
+            save(entity);
+        } catch (DuplicateKeyException ignored) {
+        }
+        return true;
+    }
+
+    /**
+     * 分页查询映射关系
+     *
+     * @param userId 用户ID
+     * @param roleId 角色ID
+     */
+    @Override
+    public IPage<UserRole> pageRelation(Long userId, Long roleId, IPage<UserRole> iPage) {
+        QueryWrapper<UserRole> wrapper = buildWrapper(userId, roleId);
+        wrapper.select("user_id, role_d");
+        return page(iPage, wrapper);
+    }
+
+    // 构建wrapper
+    public QueryWrapper<UserRole> buildWrapper(Long userId, Long roleId) {
+        QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
+        wrapper.eq(userId != 0L, "user_id", userId);
+        wrapper.eq(roleId != 0L, "role_id", roleId);
+        return wrapper;
+    }
+}

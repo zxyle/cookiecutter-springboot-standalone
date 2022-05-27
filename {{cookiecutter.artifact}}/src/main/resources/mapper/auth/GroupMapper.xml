@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.mapper.GroupMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="{{ cookiecutter.basePackage }}.biz.auth.entity.Group">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="name" property="name" />
+        <result column="parent_id" property="parentId" />
+        <result column="sort_no" property="sortNo" />
+        <result column="description" property="description" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        create_time, update_time, name, parent_id, sort_no, description
+    </sql>
+
+
+    <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Group">
+        SELECT * FROM auth_group
+    </select>
+
+    <update id="truncate">
+        TRUNCATE TABLE auth_group
+    </update>
+
+</mapper>

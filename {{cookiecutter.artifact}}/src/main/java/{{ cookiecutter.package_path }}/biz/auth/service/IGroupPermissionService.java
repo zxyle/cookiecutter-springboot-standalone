@@ -1,0 +1,61 @@
+package {{ cookiecutter.basePackage }}.biz.auth.service;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupPermission;
+
+import java.util.List;
+
+/**
+ * 用户组权限 服务类
+ */
+public interface IGroupPermissionService extends IService<GroupPermission> {
+
+    /**
+     * 查询用户组拥有的权限列表
+     *
+     * @param userId 用户ID
+     */
+    List<String> selectPermissionsByGroup(Long userId);
+
+    /**
+     * 删除映射关系
+     *
+     * @param groupId      用户组ID
+     * @param permissionId 权限ID
+     */
+    boolean deleteRelation(Long groupId, Long permissionId);
+
+    /**
+     * 查询映射关系
+     *
+     * @param groupId      用户组ID
+     * @param permissionId 权限ID
+     */
+    List<GroupPermission> queryRelation(Long groupId, Long permissionId);
+
+    /**
+     * 统计映射关系
+     *
+     * @param groupId      用户组ID
+     * @param permissionId 权限ID
+     */
+    Integer countRelation(Long groupId, Long permissionId);
+
+    /**
+     * 创建映射关系
+     *
+     * @param groupId      用户组ID
+     * @param permissionId 权限ID
+     */
+    boolean createRelation(Long groupId, Long permissionId);
+
+    /**
+     * 分页查询映射关系
+     *
+     * @param groupId      用户组ID
+     * @param permissionId 权限ID
+     */
+    IPage<GroupPermission> pageRelation(Long groupId, Long permissionId, IPage<GroupPermission> page);
+
+}
