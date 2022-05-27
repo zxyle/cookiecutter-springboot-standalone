@@ -16,9 +16,10 @@ def remove_open_source_files():
 def remove_build_tool(tool: str):
     file_names = []
     if tool == "maven":
-        file_names.extend(["build.gradle", "settings.gradle", "build.gradle.kts", "settings.gradle.kts"])
+        file_names.extend(
+            ["build.gradle", "settings.gradle", "build.gradle.kts", "settings.gradle.kts", "gradlew", "gradlew.bat"])
     else:
-        file_names.extend(["pom.xml"])
+        file_names.extend(["pom.xml", "mvnw", "mvnw.bat"])
 
     remove_files(file_names)
 
