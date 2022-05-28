@@ -29,6 +29,8 @@ def git_init():
         'git init --initial-branch=master',
         'git config --local user.name "{{ cookiecutter.author_name }}"',
         'git config --local user.email "{{ cookiecutter.email }}"',
+        'git add .',
+        'git commit -m "Initial commit"',
         'git checkout -b dev/{{ cookiecutter.version }}'
     ]
     try:
