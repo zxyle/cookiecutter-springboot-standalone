@@ -15,4 +15,6 @@ public class DateFormatConsts {
 
     public static final String HH_MM_SS = "HH:mm:ss";
 
+    public static final String TIMEZONE = "GMT+8";
+
 }
