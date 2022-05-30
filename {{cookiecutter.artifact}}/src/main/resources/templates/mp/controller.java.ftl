@@ -120,7 +120,7 @@ public class ${table.controllerName} {
     /**
      * Excel数据导入
      */
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/${table.entityPath}s/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public String upload(@RequestParam("file") MultipartFile file) throws IOException {
         File dest = new File("/tmp/" + file.getOriginalFilename());
