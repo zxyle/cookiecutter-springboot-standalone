@@ -11,8 +11,6 @@ import java.util.List;
  */
 public interface IUserGroupService extends IService<UserGroup> {
 
-    String getSuperUser(Long groupId);
-
     /**
      * 删除映射关系
      *

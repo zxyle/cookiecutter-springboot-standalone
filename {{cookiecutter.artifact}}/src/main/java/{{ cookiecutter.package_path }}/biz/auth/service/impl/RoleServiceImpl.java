@@ -37,9 +37,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Autowired
     IUserRoleService userRoleService;
 
-    @Autowired
-    IRoleService roleService;
-
     /**
      * 查询用户组对应角色ID
      *
@@ -65,7 +62,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             // 查询用户组对应那些角色ID
             List<Long> rolesIds = selectRolesByGroup(ug.getGroupId());
             rolesIds.forEach(roleId -> {
-                Role role = roleService.queryById(roleId);
+                Role role = queryById(roleId);
                 if (role != null) {
                     roles.add(role.getCode());
                 }

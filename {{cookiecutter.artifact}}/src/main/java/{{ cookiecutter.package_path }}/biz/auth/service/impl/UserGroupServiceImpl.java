@@ -3,12 +3,9 @@ package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserGroupMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +16,6 @@ import java.util.List;
  */
 @Service
 public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup> implements IUserGroupService {
-
-    @Autowired
-    IUserService userService;
-
-    @Override
-    public String getSuperUser(Long groupId) {
-        UserGroup userGroup = baseMapper.selectOne(buildWrapper(0L, groupId));
-        User user = userService.queryById(userGroup.getUserId());
-        return user.getLoginName();
-    }
 
 
     /**
