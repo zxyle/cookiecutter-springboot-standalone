@@ -143,7 +143,7 @@ public class CodeGenerator {
         templateConfig.setService("templates/mp/service.java");
         templateConfig.setController("templates/mp/controller.java");
         templateConfig.setServiceImpl("templates/mp/serviceImpl.java");
-        // templateConfig.setXml("templates/mp/mapper.java");
+        templateConfig.setXml(null);
         mpg.setTemplate(templateConfig);
 
         // 策略配置
