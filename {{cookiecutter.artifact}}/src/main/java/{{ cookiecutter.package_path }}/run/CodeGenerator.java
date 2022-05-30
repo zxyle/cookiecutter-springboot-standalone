@@ -30,7 +30,7 @@ public class CodeGenerator {
     private static final String DB_PASSWORD = "123456";
     private static final String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
     private static final String PACKAGE_NAME = "{{ cookiecutter.basePackage }}.biz";
-    private static final String[] EXTRA_PACKAGE = {"request", "enums"};
+    private static final String[] EXTRA_PACKAGE = {"request", "enums", "response"};
 
     // 读取控制台内容
     public static String scanner(String tip) {
