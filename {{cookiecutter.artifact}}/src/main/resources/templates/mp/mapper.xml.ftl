@@ -37,12 +37,4 @@
 
 </#if>
 
-    <select id="selectAll" resultType="${package.Entity}.${entity}">
-        SELECT * FROM ${table.name}
-    </select>
-
-    <update id="truncate">
-        TRUNCATE TABLE ${table.name}
-    </update>
-
 </mapper>

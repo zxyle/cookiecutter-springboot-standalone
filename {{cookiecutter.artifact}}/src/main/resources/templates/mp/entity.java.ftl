@@ -1,5 +1,6 @@
 package ${package.Entity};
 
+import com.alibaba.excel.annotation.ExcelProperty;
 <#list table.importPackages as pkg>
 import ${pkg};
 </#list>
@@ -59,6 +60,7 @@ public class ${entity} implements Serializable {
     /**
      * ${field.comment}
      */
+    @ExcelProperty("${field.comment}")
         </#if>
     </#if>
     <#if field.keyFlag>

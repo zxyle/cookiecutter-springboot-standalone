@@ -2,6 +2,7 @@ package ${package.Mapper};
 
 import ${package.Entity}.${entity};
 import ${superMapperClassPackage};
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,9 +13,8 @@ import java.util.List;
 @Repository
 public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
 
-    List<${entity}> selectAll();
-
     // 截断表
+    @Update("TRUNCATE TABLE ${table.name}")
     void truncate();
 
 }
