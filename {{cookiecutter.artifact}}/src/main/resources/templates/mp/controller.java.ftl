@@ -105,7 +105,7 @@ public class ${table.controllerName} {
     }
 
     /**
-     * Excel导出
+     * Excel数据导出
      */
     @GetMapping("/${table.entityPath}s/export")
     public void export(HttpServletResponse response) throws IOException {
@@ -120,7 +120,7 @@ public class ${table.controllerName} {
     /**
      * Excel数据导入
      */
-    @PostMapping(value = "/${table.entityPath}s/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/${table.entityPath}s/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public String upload(@RequestParam("file") MultipartFile file) throws IOException {
         File dest = new File("/tmp/" + file.getOriginalFilename());
