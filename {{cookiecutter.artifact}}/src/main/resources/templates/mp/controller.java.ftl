@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ${package.Entity}.${entity};
@@ -30,6 +31,7 @@ import java.net.URLEncoder;
 /**
  * ${table.comment!}
  */
+@Slf4j
 <#if restControllerStyle>
 @RestController
 <#else>
