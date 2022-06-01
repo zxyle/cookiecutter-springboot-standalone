@@ -66,7 +66,7 @@ public class ${table.controllerName} {
     public ApiResponse<${entity}> add(@Valid @RequestBody ${entity} entity) {
         boolean success = thisService.save(entity);
         if (success) {
-        return new ApiResponse<>(entity);
+            return new ApiResponse<>(entity);
         }
         return new ApiResponse<>();
     }
