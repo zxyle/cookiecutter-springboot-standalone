@@ -25,7 +25,7 @@ def remove_build_tool(tool: str):
 
 
 def git_init():
-    cmds = [
+    commands = [
         'git init --initial-branch=master',
         'git config --local user.name "{{ cookiecutter.author_name }}"',
         'git config --local user.email "{{ cookiecutter.email }}"',
@@ -34,8 +34,8 @@ def git_init():
         'git checkout -b dev/{{ cookiecutter.version }}'
     ]
     try:
-        for cmd in cmds:
-            os.system(cmd)
+        for command in commands:
+            os.system(command)
     except:
         pass
 
