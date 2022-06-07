@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 模板表
+ * IP黑名单
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
