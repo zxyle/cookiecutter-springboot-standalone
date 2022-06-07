@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 模板表 Mapper 接口
+ * IP黑名单 Mapper 接口
  */
 @Repository
 public interface IpBlacklistMapper extends BaseMapper<Blacklist> {
