@@ -4,10 +4,10 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
+import {{ cookiecutter.basePackage }}.biz.auth.request.UpdateAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.group.AddGroupRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.group.MigrateGroupRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.request.group.UpdateGroupRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
@@ -104,7 +104,7 @@ public class GroupController extends AuthBaseController {
      */
     @SaCheckPermission("group-update")
     @PutMapping("/groups/{groupId}")
-    public ApiResponse<Group> update(@PathVariable Long groupId, @Valid @RequestBody UpdateGroupRequest request) {
+    public ApiResponse<Group> update(@PathVariable Long groupId, @Valid @RequestBody UpdateAuthRequest request) {
         Group group = new Group();
         BeanUtils.copyProperties(request, group);
         if (isSubGroup(groupId)) {
