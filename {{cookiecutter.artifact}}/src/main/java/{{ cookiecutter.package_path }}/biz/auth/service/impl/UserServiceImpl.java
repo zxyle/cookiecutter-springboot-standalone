@@ -1,5 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.PwdConstant;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
@@ -78,5 +80,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Cacheable(cacheNames = "userCache", key = "#userId")
     public User queryById(Long userId) {
         return getById(userId);
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param userId 用户ID
+     * @param newPwd 加密后的新密码
+     */
+    @Override
+    public boolean changePwd(Long userId, String newPwd) {
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set("pwd", newPwd);
+        updateWrapper.eq("id", userId);
+        return update(updateWrapper);
+    }
+
+    /**
+     * 通过手机号查询用户
+     *
+     * @param mobile 手机号
+     */
+    @Override
+    public User queryByMobile(String mobile) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("mobile", mobile);
+        return getOne(wrapper);
     }
 }

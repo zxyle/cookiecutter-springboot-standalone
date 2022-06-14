@@ -1,21 +1,22 @@
 package {{ cookiecutter.basePackage }}.common.controller;
 
-import cn.dev33.satoken.stp.StpUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
+import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 权限模块通用方法
+ */
 @Component
 public class AuthBaseController {
-
-    @Autowired
-    private IUserService userService;
 
     @Autowired
     IGroupService groupService;
@@ -26,31 +27,32 @@ public class AuthBaseController {
     /**
      * 获取当前登录用户ID
      */
-    public long getUserId() {
-        return StpUtil.getLoginIdAsLong();
+    public Long getUserId() {
+        return getLoggedInUser().getId();
     }
 
     /**
      * 获取当前登录用户信息
      */
-    public User getCurrentUser() {
-        long userId = getUserId();
-        return userService.queryById(userId);
+    public User getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        return loginUser.getUser();
     }
 
     /**
      * 是否为平台超级管理员
      */
     public boolean isSuper() {
-        User user = getCurrentUser();
+        User user = getLoggedInUser();
         return user.getIsSuper().equals(1);
     }
 
     /**
-     * 获取当前登陆用户名
+     * 获取当前登录用户名
      */
     public String getCurrentUsername() {
-        User user = getCurrentUser();
+        User user = getLoggedInUser();
         return user.getLoginName();
     }
 
@@ -58,7 +60,7 @@ public class AuthBaseController {
      * 获取当前登录用户所在的用户组ID
      */
     public Long getCurrentGroup() {
-        User user = getCurrentUser();
+        User user = getLoggedInUser();
         Long userId = user.getId();
         // TODO 目前只支持一个用户对应一个用户组
         List<UserGroup> groups = userGroupService.queryRelation(userId, 0L);

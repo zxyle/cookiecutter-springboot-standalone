@@ -3,7 +3,7 @@ package {{ cookiecutter.basePackage }}.common.request;
 public class BaseRequest {
 
     /**
-     * 请求时间毫秒戳
+     * 请求毫秒时间戳
      *
      * @mock 1644541518652
      */

@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.biz.user.request.password;
+package {{ cookiecutter.basePackage }}.biz.auth.request.password;
 
 import lombok.Data;
 

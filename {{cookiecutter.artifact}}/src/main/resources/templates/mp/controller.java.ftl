@@ -7,9 +7,9 @@ import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +31,6 @@ import java.net.URLEncoder;
 /**
  * ${table.comment!}
  */
-@Slf4j
 <#if restControllerStyle>
 @RestController
 <#else>
@@ -53,6 +52,7 @@ public class ${table.controllerName} {
     /**
      * 分页查询
      */
+    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-list')")
     @GetMapping("/${table.entityPath}s")
     public ApiResponse<PageVO<${entity}>> list(@Valid PaginationRequest request) {
         IPage<${entity}> page = PageRequestUtil.checkForMp(request);
@@ -64,6 +64,7 @@ public class ${table.controllerName} {
     /**
      * 新增${table.comment!}
      */
+    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-add')")
     @PostMapping("/${table.entityPath}s")
     public ApiResponse<${entity}> add(@Valid @RequestBody ${entity} entity) {
         boolean success = thisService.save(entity);
@@ -77,6 +78,7 @@ public class ${table.controllerName} {
     /**
      * 按ID查询${table.comment!}
      */
+    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-get')")
     @GetMapping("/${table.entityPath}s/{id}")
     public ApiResponse<${entity}> get(@PathVariable Long id) {
         return new ApiResponse<>(thisService.queryById(id));
@@ -85,30 +87,27 @@ public class ${table.controllerName} {
     /**
      * 按ID更新${table.comment!}
      */
+    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-update')")
     @PutMapping("/${table.entityPath}s/{id}")
     public ApiResponse<Object> update(@Valid @RequestBody ${entity} entity) {
         boolean success = thisService.updateById(entity);
-        if (success) {
-            return new ApiResponse<>("更新成功");
-        }
-        return new ApiResponse<>("更新失败");
+         return new ApiResponse<>(success);
     }
 
     /**
      * 按ID删除${table.comment!}
      */
+    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-delete')")
     @DeleteMapping("/${table.entityPath}s/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        if (success) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败");
+         return new ApiResponse<>(success);
     }
 
     /**
      * Excel数据导出
      */
+    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-export')")
     @GetMapping("/${table.entityPath}s/export")
     public void export(HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
@@ -122,14 +121,15 @@ public class ${table.controllerName} {
     /**
      * Excel数据导入
      */
-    @PostMapping(value = "/${table.entityPath}s/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-upload')")
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public String upload(@RequestParam("file") MultipartFile file) throws IOException {
         File dest = new File("/tmp/" + file.getOriginalFilename());
         file.transferTo(dest);
         AbstractListener<${entity}> abstractListener = new AbstractListener<>();
         abstractListener.setService(thisService);
-        EasyExcel.read(dest.getAbsolutePath(), ${entity}.class, abstractListener).sheet().doRead();
+        EasyExcel.read(dest.getAbsolutePath(), AbstractListener.class, abstractListener).sheet().doRead();
         return "写入数据成功";
     }
 

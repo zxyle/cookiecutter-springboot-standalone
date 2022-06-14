@@ -1,21 +1,25 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
-import cn.dev33.satoken.stp.StpUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
-import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserMapper;
-import {{ cookiecutter.basePackage }}.biz.user.request.password.ModifyByOldRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.password.ForgetByPhoneRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.password.ModifyByOldRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.response.AntdProResponse;
-import dev.zhengxiang.tool.crypto.Werkzeug;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * 密码管理
@@ -23,50 +27,53 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/password")
 @Slf4j
-@SaCheckLogin
 public class PasswordController extends AuthBaseController {
 
     @Autowired
-    UserMapper userMapper;
+    IUserService userService;
 
-    Werkzeug werkzeug = new Werkzeug();
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    LoginService loginService;
+
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
 
     /**
      * 修改密码
      */
-    @PostMapping("/modify")
-    public AntdProResponse modify(@Valid @RequestBody ModifyByOldRequest request) {
-        User user = getCurrentUser();
+    @PostMapping("/change")
+    public ApiResponse<Object> change(@Valid @RequestBody ModifyByOldRequest request) {
+        User user = getLoggedInUser();
 
-        AntdProResponse response = new AntdProResponse();
-        if (null != user && werkzeug.checkPasswordHash(user.getPwd(), request.getOldPassword())) {
-            User newUser = new User();
-            newUser.setPwd(werkzeug.generatePasswordHash(request.getNewPassword()));
-            newUser.setId(user.getId());
-            userMapper.updateById(newUser);
-            StpUtil.logout();
-            response.setSuccess(true);
-            return response;
+        if (null != user && passwordEncoder.matches(request.getOldPassword(), user.getPwd())) {
+            boolean s1 = userService.changePwd(user.getId(), passwordEncoder.encode(request.getNewPassword()));
+            // 退出当前登录状态
+            boolean s2 = loginService.logout();
+            return new ApiResponse<>(s1 && s2);
         }
 
-        return response;
+        return new ApiResponse<>("修改失败，旧密码错误", false);
     }
 
     /**
-     * 忘记密码(找回密码)
+     * 忘记/找回/重置密码(通过短信验证码)
      */
     @PostMapping("/forget")
-    public void forget() {
+    public ApiResponse<Object> forget(@Valid ForgetByPhoneRequest request) {
+        boolean success;
+        String key = "code:" + request.getMobile();
+        Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries(key);
+        String code = (String) entries.get("code");
+        Long userId = (Long) entries.get("userId");
+        if (userId != null && StringUtils.isNotBlank(code) && request.getCode().equalsIgnoreCase(code)) {
+            success = userService.changePwd(userId, passwordEncoder.encode(request.getNewPassword()));
+            return new ApiResponse<>(success);
+        }
 
+        return new ApiResponse<>(false);
     }
-
-    /**
-     * 重置密码
-     */
-    @PostMapping("/reset")
-    public void reset() {
-
-    }
-
 
 }

@@ -1,5 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -41,6 +44,9 @@ public class CaptchaController {
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    IUserService userService;
+
     /**
      * 生成base64格式图形验证码
      */
@@ -51,7 +57,7 @@ public class CaptchaController {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
 
-        String key = getCaptchaKey();
+        String key = getCaptchaKey(type);
         CaptchaPair captchaPair = captchaService.generate();
         stringRedisTemplate.opsForValue().set(key, captchaPair.getCode(), 60, TimeUnit.SECONDS);
         httpSession.setAttribute("needVerify", true);
@@ -73,7 +79,7 @@ public class CaptchaController {
         response.setDateHeader("Expires", 0);
         // 设置响应内容类型
         response.setContentType("image/jpeg");
-        String key = getCaptchaKey();
+        String key = getCaptchaKey("captcha");
         CaptchaPair captchaPair = captchaService.generate();
         stringRedisTemplate.opsForValue().set(key, captchaPair.getCode(), 60, TimeUnit.SECONDS);
         response.getOutputStream().write(captchaPair.getBytes());
@@ -87,8 +93,8 @@ public class CaptchaController {
      * @param code 用户输入结果
      */
     @GetMapping("/verify")
-    public boolean verify(@NotBlank String code) {
-        String key = getCaptchaKey();
+    public boolean verify(@NotBlank String code, String type) {
+        String key = getCaptchaKey(type);
         String correctResult = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isNotBlank(correctResult) &&
                 code.trim().equalsIgnoreCase(correctResult)) {
@@ -103,48 +109,69 @@ public class CaptchaController {
     /**
      * 发送短信验证码
      *
-     * @param phone 手机号
+     * @param mobile 手机号
      */
     @GetMapping("/send")
-    public ResponseEntity<Boolean> send(@NotBlank @Length(max = 11, min = 11) String phone) {
+    public ResponseEntity<Boolean> send(@NotBlank @Length(max = 11, min = 11) String mobile) {
         String type = "sms";
         if (isLocked(type)) {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
         }
 
-        String key = getCaptchaKey();
+        // 查询手机号绑定的用户
+        User user = userService.queryByMobile(mobile);
+        if (null == user) {
+            // 可能用户不存在
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
+        String key = getCaptchaKey(type);
         // 生成随机数字
         String code = CaptchaUtil.randCode(6);
-
-        // 写入redis
-        stringRedisTemplate.opsForValue().set(key, code, 15, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForHash().put(key, "mobile", mobile);
+        stringRedisTemplate.opsForHash().put(key, "userId", user.getId());
+        stringRedisTemplate.opsForHash().put(key, "code", code);
+        stringRedisTemplate.expire(key, Duration.ofMinutes(1));
 
         // 调用发送短信接口, 写入到消息队列中
         locked(type, 60);
         return ResponseEntity.ok(true);
     }
 
-    // 防刷限制
+    /**
+     * 防刷限制
+     *
+     * @param type    验证类型
+     * @param seconds 锁定秒数
+     */
     public void locked(String type, int seconds) {
         String lockKey = getLockKey(type);
         String code = "1";
         stringRedisTemplate.opsForValue().set(lockKey, code, seconds, TimeUnit.SECONDS);
     }
 
+    /**
+     * @param type 验证类型
+     */
     public boolean isLocked(String type) {
         String lockKey = getLockKey(type);
         return Boolean.TRUE.equals(stringRedisTemplate.hasKey(lockKey));
     }
 
+    /**
+     * @param type 验证类型
+     */
     public String getLockKey(String type) {
         String sessionId = httpSession.getId();
         return "lock:".concat(sessionId).concat(":").concat(type);
     }
 
-    public String getCaptchaKey() {
+    /**
+     * 获取key
+     */
+    public String getCaptchaKey(String type) {
         String sessionId = httpSession.getId();
-        return "captcha:".concat(sessionId);
+        return type + ":".concat(sessionId);
     }
 
 }

@@ -12,6 +12,7 @@ import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,6 +43,7 @@ public class RoleController extends AuthBaseController {
      * 角色查询
      */
     @GetMapping("/roles")
+    @PreAuthorize(value = "hasAuthority('roles-list')")
     public ApiResponse<PageVO<Role>> list(@Valid ListAuthRequest request) {
         // 模糊查询
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
@@ -56,6 +58,7 @@ public class RoleController extends AuthBaseController {
      * 新增角色
      */
     @PostMapping("/roles")
+    @PreAuthorize(value = "hasAuthority('roles-add')")
     public ApiResponse<Role> add(@Valid @RequestBody AddRoleRequest request) {
         Role role = new Role();
         BeanUtils.copyProperties(request, role);
@@ -71,33 +74,30 @@ public class RoleController extends AuthBaseController {
      * 按ID查询角色
      */
     @GetMapping("/roles/{roleId}")
+    @PreAuthorize(value = "hasAuthority('roles-get')")
     public ApiResponse<Role> get(@PathVariable Long roleId) {
-        return new ApiResponse<>(thisService.getById(roleId));
+        return new ApiResponse<>(thisService.queryById(roleId));
     }
 
     /**
      * 按ID更新角色
      */
     @PutMapping("/roles/{roleId}")
+    @PreAuthorize(value = "hasAuthority('roles-update')")
     public ApiResponse<Object> update(@Valid @RequestBody Role entity, @PathVariable Long roleId) {
         entity.setId(roleId);
         boolean success = thisService.updateById(entity);
-        if (success) {
-            return new ApiResponse<>("更新成功");
-        }
-        return new ApiResponse<>("更新失败");
+        return new ApiResponse<>(success);
     }
 
     /**
      * 按ID删除角色
      */
     @DeleteMapping("/roles/{roleId}")
+    @PreAuthorize(value = "hasAuthority('roles-delete')")
     public ApiResponse<Object> delete(@PathVariable Long roleId) {
         boolean success = thisService.delete(roleId);
-        if (success) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败");
+        return new ApiResponse<>(success);
     }
 
 }
