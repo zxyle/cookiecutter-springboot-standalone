@@ -28,4 +28,19 @@ public interface IUserService extends IService<User> {
      */
     User queryById(Long uid);
 
+    /**
+     * 修改密码
+     *
+     * @param userId 用户ID
+     * @param newPwd 加密后的新密码
+     */
+    boolean changePwd(Long userId, String newPwd);
+
+    /**
+     * 通过手机号查询用户
+     *
+     * @param mobile 手机号
+     */
+    User queryByMobile(String mobile);
+
 }

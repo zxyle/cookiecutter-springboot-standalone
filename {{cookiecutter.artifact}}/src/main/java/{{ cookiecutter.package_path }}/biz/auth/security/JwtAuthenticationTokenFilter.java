@@ -1,0 +1,72 @@
+package {{ cookiecutter.basePackage }}.biz.auth.security;
+
+import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConstant;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
+import io.jsonwebtoken.Claims;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.annotation.Resource;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+// JWT 过滤器
+@Component
+public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private IUserService userService;
+
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // 获取token, 不存在则放行
+        // String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = request.getHeader("token");
+        if (StringUtils.isBlank(token)) {
+            SecurityContextHolder.clearContext();
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 解析jwt, 解析失败则放行
+        String userId = "";
+        try {
+            Claims claims = JwtUtil.parseJWT(token);
+            userId = claims.getSubject();
+        } catch (Exception ignored) {
+            filterChain.doFilter(request, response);
+        }
+
+        // 从redis中获取用户权限信息(根据放在jwt的用户id)
+        String key = "permissions:" + userId;
+        List<String> permissions;
+        String value = stringRedisTemplate.opsForValue().get(key);
+        if (StringUtils.isBlank(value)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 获取权限信息封装到Authentication中
+        permissions = Arrays.asList(value.split(AuthConstant.DELIMITER));
+        LoginUser loginUser = new LoginUser(permissions, userService.queryById(Long.valueOf(userId)));
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        // 放行
+        filterChain.doFilter(request, response);
+    }
+}

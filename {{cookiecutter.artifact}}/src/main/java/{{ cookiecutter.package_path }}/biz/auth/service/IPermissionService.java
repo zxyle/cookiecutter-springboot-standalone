@@ -24,4 +24,11 @@ public interface IPermissionService extends IService<Permission> {
      */
     boolean delete(Long permissionId);
 
+    /**
+     * 查询用户所有权限码和用户所有角色码
+     *
+     * @param userId 用户ID
+     */
+    List<String> getSecurityPermissions(Long userId);
+
 }

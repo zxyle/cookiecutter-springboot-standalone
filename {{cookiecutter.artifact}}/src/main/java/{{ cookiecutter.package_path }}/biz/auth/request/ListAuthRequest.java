@@ -17,4 +17,8 @@ public class ListAuthRequest extends PaginationRequest {
      * 状态(1-正常 0-停用)
      */
     private Integer state;
+
+    // 创建时间
+
+    // code
 }

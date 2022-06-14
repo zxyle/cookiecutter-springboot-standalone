@@ -1,8 +1,12 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
+import {{ cookiecutter.basePackage }}.common.util.IpUtil;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,4 +33,35 @@ public class HealthController {
         map.put("ping", "pong");
         return map;
     }
+
+    /**
+     * 获取请求headers
+     */
+    @GetMapping("/headers")
+    public Map<String, String> headers(HttpServletRequest servletRequest) {
+        Map<String, String> headers = new HashMap<>();
+        Enumeration<String> headerNames = servletRequest.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String key = headerNames.nextElement();
+            headers.put(key, servletRequest.getHeader(key));
+        }
+        return headers;
+    }
+
+    /**
+     * 获取浏览器请求头
+     */
+    @GetMapping("/ua")
+    public String ua(HttpServletRequest servletRequest) {
+        return servletRequest.getHeader(HttpHeaders.USER_AGENT);
+    }
+
+    /**
+     * 获取请求IP
+     */
+    @GetMapping("/ip")
+    public String ip(HttpServletRequest servletRequest) {
+        return IpUtil.getIpAddr(servletRequest);
+    }
+
 }

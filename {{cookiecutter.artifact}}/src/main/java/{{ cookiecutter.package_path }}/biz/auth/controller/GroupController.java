@@ -1,6 +1,5 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
-import cn.dev33.satoken.annotation.SaCheckPermission;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
@@ -18,6 +17,7 @@ import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +44,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 用户组查询
      */
+    @PreAuthorize(value = "hasAuthority('groups-list')")
     @GetMapping("/groups")
     public ApiResponse<PageVO<Group>> list(@Valid ListAuthRequest request) {
         // 模糊查询
@@ -57,7 +58,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 获取用户组树状结构
      */
-    @SaCheckPermission("group-tree")
+    @PreAuthorize(value = "hasAuthority('groups-tree')")
     @GetMapping("/groups/tree")
     public ApiResponse<AntdTree2> tree() {
         Long groupId = getCurrentGroup();
@@ -68,7 +69,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 新增用户组
      */
-    @SaCheckPermission("group-add")
+    @PreAuthorize(value = "hasAuthority('groups-add')")
     @PostMapping("/groups")
     public ApiResponse<Object> add(@Valid @RequestBody AddGroupRequest request) {
         ApiResponse<Object> response = new ApiResponse<>();
@@ -90,6 +91,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 按ID查询用户组
      */
+    @PreAuthorize(value = "hasAuthority('groups-get')")
     @GetMapping("/groups/{groupId}")
     public ApiResponse<Group> get(@NotEmpty @PathVariable Long groupId) {
         // 判断用户是否具有访问权限
@@ -102,7 +104,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 按ID更新用户组
      */
-    @SaCheckPermission("group-update")
+    @PreAuthorize(value = "hasAuthority('groups-update')")
     @PutMapping("/groups/{groupId}")
     public ApiResponse<Group> update(@PathVariable Long groupId, @Valid @RequestBody UpdateAuthRequest request) {
         Group group = new Group();
@@ -116,9 +118,9 @@ public class GroupController extends AuthBaseController {
     }
 
     /**
-     * 删除用户组
+     * 按ID删除用户组
      */
-    @SaCheckPermission("group-delete")
+    @PreAuthorize(value = "hasAuthority('groups-delete')")
     @DeleteMapping("/groups/{groupId}")
     public ApiResponse<Object> delete(@PathVariable Long groupId) {
         ApiResponse<Object> response = new ApiResponse<>();
@@ -152,6 +154,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 用户组迁移
      */
+    @PreAuthorize(value = "hasAuthority('groups-migrate')")
     @PostMapping("/groups/migrate")
     public ApiResponse<Object> migrate(@Valid @RequestBody MigrateGroupRequest request) {
         ApiResponse<Object> response = new ApiResponse<>();

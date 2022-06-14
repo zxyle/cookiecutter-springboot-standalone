@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+
 /**
  * 用户
  */
@@ -56,5 +58,10 @@ public class User extends BaseEntity {
      * 超级管理员
      */
     private Integer isSuper;
+
+    /**
+     * 账号过期时间
+     */
+    private LocalDateTime expireTime;
 
 }

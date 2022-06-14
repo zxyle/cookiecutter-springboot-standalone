@@ -5,8 +5,6 @@ import ${superMapperClassPackage};
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * ${table.comment!} Mapper 接口
  */

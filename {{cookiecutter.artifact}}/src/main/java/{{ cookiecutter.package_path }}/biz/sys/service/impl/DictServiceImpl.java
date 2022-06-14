@@ -1,31 +1,49 @@
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.DictMapper;
-import {{ cookiecutter.basePackage }}.biz.sys.request.DictRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
-import {{ cookiecutter.basePackage }}.common.util.StringUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 字典数据表 服务实现类
  */
 @Service
+@CacheConfig(cacheNames = "dictCache")
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements IDictService {
 
+    /**
+     * 查询指定字典
+     *
+     * @param dictType  字典类型
+     * @param dictValue 字典值
+     */
     @Override
-    public IPage<Dict> getPageList(DictRequest request) {
-        IPage<Dict> page = PageRequestUtil.checkForMp(request);
+    @Cacheable(key = "#dictType+#dictValue")
+    public Dict queryDict(String dictType, String dictValue) {
         QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
-        if (StringUtil.isNotEmpty(request.getId())) {
-            queryWrapper.eq("id", request.getId());
-        }
-        queryWrapper.orderByDesc("id");
-        return baseMapper.selectPage(page, queryWrapper);
+        queryWrapper.eq("dict_type", dictType);
+        queryWrapper.eq("value", dictValue);
+        return getOne(queryWrapper);
+    }
+
+    /**
+     * 按dict_type查询所有
+     *
+     * @param dictType 字典类型
+     */
+    @Override
+    @Cacheable(key = "#dictType")
+    public List<Dict> listAllDicts(String dictType) {
+        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
+        wrapper.select("label, value");
+        wrapper.eq("dict_type", dictType);
+        return list(wrapper);
     }
 }

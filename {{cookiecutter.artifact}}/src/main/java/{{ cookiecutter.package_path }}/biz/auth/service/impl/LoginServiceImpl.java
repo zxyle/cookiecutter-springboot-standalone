@@ -1,0 +1,30 @@
+package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
+
+import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
+import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+
+@Service
+public class LoginServiceImpl implements LoginService {
+
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 退出登录
+     */
+    @Override
+    public boolean logout() {
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        Long userId = loginUser.getUser().getId();
+        SecurityContextHolder.clearContext();
+        // 删除redis中用户权限信息
+        return Boolean.TRUE.equals(stringRedisTemplate.delete("permissions:" + userId));
+    }
+}

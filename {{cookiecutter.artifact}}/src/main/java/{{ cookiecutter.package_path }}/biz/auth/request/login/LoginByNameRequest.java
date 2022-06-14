@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.biz.user.request;
+package {{ cookiecutter.basePackage }}.biz.auth.request.login;
 
 import lombok.Data;
 
@@ -25,15 +25,24 @@ public class LoginByNameRequest {
      */
     private String code;
 
-    // Y N
     /**
-     * 记住我
+     * 记住我(Y N)
      */
     private String rememberMe;
 
+    /**
+     *
+     */
     private boolean autoLogin;
 
+    /**
+     *
+     */
     private String type;
+
+    /**
+     *
+     */
     private String username;
 
 }

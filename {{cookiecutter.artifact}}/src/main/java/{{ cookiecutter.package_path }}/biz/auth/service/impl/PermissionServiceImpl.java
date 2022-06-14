@@ -47,6 +47,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Autowired
     IRolePermissionService rolePermissionService;
 
+    @Autowired
+    IRoleService roleService;
+
     // 查询角色对应的权限
     public List<String> selectRolesPermission(List<Long> roleIds) {
         List<String> permissions = new ArrayList<>();
@@ -103,5 +106,21 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         boolean s3 = userPermissionService.deleteRelation(0L, permissionId);
         boolean s4 = removeById(permissionId);
         return (s1 && s2) && (s3 && s4);
+    }
+
+    /**
+     * 查询用户所有权限码和用户所有角色码
+     *
+     * @param userId 用户ID
+     */
+    @Override
+    public List<String> getSecurityPermissions(Long userId) {
+        // 查询用户所有权限码
+        List<String> permissions = new ArrayList<>(getAllPermissions(userId));
+
+        // 查询用户所有角色码（spring security需要角色已ROLE_开头）
+        List<String> roles = roleService.getAllRoles(userId);
+        permissions.addAll(roles.stream().map(e -> "ROLE_" + e).collect(Collectors.toList()));
+        return permissions;
     }
 }

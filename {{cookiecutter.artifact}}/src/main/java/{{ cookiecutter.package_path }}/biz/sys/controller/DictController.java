@@ -1,82 +1,98 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
-import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
-import {{ cookiecutter.basePackage }}.biz.sys.request.DictRequest;
-import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.github.benmanes.caffeine.cache.Cache;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
+import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.PageVO;
+import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 字典数据
+ * 字典管理
  */
 @RestController
-@RequestMapping("/dict")
+@RequestMapping("/sys")
 public class DictController {
 
-    private final IDictService dictService;
+    IDictService thisService;
 
-    Cache<String, List<Dict>> dictListCache;
-
-    @Autowired
-    public DictController(IDictService dictService, Cache<String, List<Dict>> dictListCache) {
-        this.dictService = dictService;
-        this.dictListCache = dictListCache;
+    public DictController(IDictService thisService) {
+        this.thisService = thisService;
     }
 
     /**
-     * 字典分页
-     * @param request
-     * @return
+     * 分页查询
      */
-    @GetMapping("/pages")
-    public ResponseEntity<Object> list(DictRequest request) {
-        IPage<Dict> dictIPage = dictService.getPageList(request);
-        return ResponseEntity.ok(dictIPage);
+    @Cacheable(cacheNames = "dictCache")
+    @GetMapping("/dicts")
+    public ApiResponse<PageVO<Dict>> list(@Valid PaginationRequest request) {
+        IPage<Dict> page = PageRequestUtil.checkForMp(request);
+        IPage<Dict> list = thisService.page(page);
+        return PageRequestUtil.extractFromMp(list);
     }
 
+
     /**
-     * 字典列表
-     * @return
+     * 新增字典
      */
-    @GetMapping("/list")
-    public ResponseEntity<Object> list() {
-        List<Dict> dictList = dictListCache.getIfPresent("dictList");
-        if (null != dictList) {
-            return ResponseEntity.ok(dictList);
+    @Cacheable(cacheNames = "dictCache")
+    @PostMapping("/dicts")
+    public ApiResponse<Dict> add(@Valid @RequestBody Dict entity) {
+        boolean success = thisService.save(entity);
+        if (success) {
+            return new ApiResponse<>(entity);
         }
+        return new ApiResponse<>();
+    }
 
-        QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("id");
-        queryWrapper.orderByAsc("dict_sort");
 
-        dictList = dictService.list();
-        dictListCache.put("dictList", dictList);
-
-        return ResponseEntity.ok(dictList);
+    /**
+     * 按ID查询字典
+     */
+    @Cacheable(cacheNames = "dictCache", key = "#id")
+    @GetMapping("/dicts/{id}")
+    public ApiResponse<Dict> get(@PathVariable Long id) {
+        return new ApiResponse<>(thisService.getById(id));
     }
 
     /**
-     * 获取单个字典键值
-     * @param dictType
-     * @return
+     * 按类型查询字典
      */
-    @GetMapping("/get/{dict_type}")
-    public ResponseEntity<Object> getListByType(@NotEmpty @PathVariable("dict_type") String dictType) {
-        QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("dict_type", dictType);
-        queryWrapper.orderByAsc("dict_sort");
-        List<Dict> dictList = dictService.list(queryWrapper);
-        return ResponseEntity.ok(dictList);
+    @GetMapping("/dicts/dictType/{dictType}")
+    public ApiResponse<List<Dict>> getByDictType(@PathVariable String dictType) {
+        List<Dict> dicts = thisService.listAllDicts(dictType);
+        return new ApiResponse<>(dicts);
+    }
+
+
+    /**
+     * 按ID更新字典
+     */
+    @PutMapping("/dicts/{id}")
+    public ApiResponse<Object> update(@Valid @RequestBody Dict entity) {
+        boolean success = thisService.updateById(entity);
+        if (success) {
+            return new ApiResponse<>("更新成功");
+        }
+        return new ApiResponse<>("更新失败");
+    }
+
+    /**
+     * 按ID删除字典
+     */
+    @DeleteMapping("/dicts/{id}")
+    public ApiResponse<Object> delete(@PathVariable Long id) {
+        boolean success = thisService.removeById(id);
+        if (success) {
+            return new ApiResponse<>("删除成功");
+        }
+        return new ApiResponse<>("删除失败");
     }
 
 }
