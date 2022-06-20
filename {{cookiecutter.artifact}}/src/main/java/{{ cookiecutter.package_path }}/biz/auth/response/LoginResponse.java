@@ -31,8 +31,18 @@ public class LoginResponse {
     /**
      * 生日
      *
-     * @mock 1979-10-27
+     * @mock 1989-10-27
      */
     private Date birthday;
+
+    /**
+     * 令牌
+     */
+    private String token;
+
+    /**
+     * 头像链接
+     */
+    private String avatar;
 
 }

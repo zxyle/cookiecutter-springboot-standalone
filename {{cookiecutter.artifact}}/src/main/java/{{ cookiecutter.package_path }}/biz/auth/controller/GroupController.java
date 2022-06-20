@@ -16,7 +16,6 @@ import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +31,13 @@ import java.util.List;
 @RequestMapping("/auth")
 public class GroupController extends AuthBaseController {
 
-    @Autowired
     IUserGroupService userGroupService;
 
     IGroupService thisService;
 
-    public GroupController(IGroupService thisService) {
+    public GroupController(IGroupService thisService, IUserGroupService userGroupService) {
         this.thisService = thisService;
+        this.userGroupService = userGroupService;
     }
 
     /**

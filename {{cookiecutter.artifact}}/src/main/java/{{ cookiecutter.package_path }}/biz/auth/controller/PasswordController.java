@@ -9,7 +9,6 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,21 +24,24 @@ import java.util.Map;
  * 密码管理
  */
 @RestController
-@RequestMapping("/password")
+@RequestMapping("/auth/password")
 @Slf4j
 public class PasswordController extends AuthBaseController {
 
-    @Autowired
     IUserService userService;
 
-    @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Autowired
     LoginService loginService;
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
+
+    public PasswordController(PasswordEncoder passwordEncoder, LoginService loginService, IUserService userService) {
+        this.passwordEncoder = passwordEncoder;
+        this.loginService = loginService;
+        this.userService = userService;
+    }
 
     /**
      * 修改密码

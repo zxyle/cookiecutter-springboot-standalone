@@ -1,6 +1,8 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import cn.hutool.core.util.ObjectUtil;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
+import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
@@ -15,10 +17,11 @@ import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,25 +30,29 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/auth")
-public class UserGroupController {
+public class UserGroupController extends AuthBaseController {
 
     UserGroupMapper thisMapper;
 
     IUserGroupService thisService;
 
-    @Autowired
     IUserService userService;
 
-    public UserGroupController(UserGroupMapper thisMapper, IUserGroupService thisService) {
+    IPermissionService permissionService;
+
+    public UserGroupController(UserGroupMapper thisMapper, IUserGroupService thisService, IPermissionService permissionService, IUserService userService) {
         this.thisMapper = thisMapper;
         this.thisService = thisService;
+        this.permissionService = permissionService;
+        this.userService = userService;
     }
 
     /**
      * 分页查询用户 所属用户组
      */
+    @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/groups")
-    public ApiResponse<PageVO<UserGroup>> list(@Valid PaginationRequest request, @PathVariable Long userId) {
+    public ApiResponse<PageVO<UserGroup>> list(@Valid PaginationRequest request, @NotNull @PathVariable Long userId) {
         IPage<UserGroup> page = PageRequestUtil.checkForMp(request);
         IPage<UserGroup> list = thisService.pageRelation(userId, 0L, page);
         return PageRequestUtil.extractFromMp(list);
@@ -55,8 +62,9 @@ public class UserGroupController {
     /**
      * 新增用户
      */
+    @Secured(value = "ROLE_admin")
     @PostMapping("/groups/{groupId}/users")
-    public ApiResponse<Object> add(@Valid @RequestBody AddUserRequest request, @PathVariable Long groupId) {
+    public ApiResponse<Object> add(@Valid @RequestBody AddUserRequest request, @NotNull @PathVariable Long groupId) {
         request.setGroupId(groupId);
         User user = userService.addUser(request);
         if (ObjectUtil.isNotNull(user)) {
@@ -67,12 +75,14 @@ public class UserGroupController {
 
 
     /**
-     * 用户删除用户组
+     * 用户删除所属用户组关系
      */
+    @Secured(value = "ROLE_admin")
     @DeleteMapping("/users/{userId}/groups/{groupId}")
-    public ApiResponse<Object> delete(@PathVariable Long userId, @PathVariable Long groupId) {
+    public ApiResponse<Object> delete(@NotNull @PathVariable Long userId, @NotNull @PathVariable Long groupId) {
         boolean success = thisService.deleteRelation(userId, groupId);
         if (success) {
+            permissionService.refreshPermissions(userId);
             return new ApiResponse<>("删除成功");
         }
         return new ApiResponse<>("删除失败", false);
@@ -82,8 +92,9 @@ public class UserGroupController {
     /**
      * 查询用户组下所有用户
      */
+    @Secured(value = "ROLE_admin")
     @GetMapping("/groups/{groupId}/users")
-    public ApiResponse<List<UserVO>> listUsers(@PathVariable Long groupId) {
+    public ApiResponse<List<UserVO>> listUsers(@NotNull @PathVariable Long groupId) {
         List<UserVO> list = null;
         List<User> users = thisMapper.listUsers(groupId);
         if (CollectionUtils.isNotEmpty(users)) {
