@@ -31,4 +31,18 @@ public interface IPermissionService extends IService<Permission> {
      */
     List<String> getSecurityPermissions(Long userId);
 
+    /**
+     * 重新将新的权限码和角色码加载到redis中
+     *
+     * @param userId 用户ID
+     */
+    void refreshPermissions(Long userId);
+
+    /**
+     * 获取持有该权限的用户
+     *
+     * @param code 权限码
+     */
+    List<Long> holdPermission(String code);
+
 }

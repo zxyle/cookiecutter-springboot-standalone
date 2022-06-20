@@ -2,15 +2,18 @@ package {{ cookiecutter.basePackage }}.common.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
 import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 权限模块通用方法
@@ -23,6 +26,9 @@ public class AuthBaseController {
 
     @Autowired
     IUserGroupService userGroupService;
+
+    @Autowired
+    IUserRoleService userRoleService;
 
     /**
      * 获取当前登录用户ID
@@ -81,6 +87,26 @@ public class AuthBaseController {
     public boolean isSubGroup(Long groupId) {
         List<String> subGroups = getSubGroupIds();
         return subGroups.contains(String.valueOf(groupId));
+    }
+
+    /**
+     * 获取持有指定用户组的用户
+     *
+     * @param groupId 用户组ID
+     */
+    public List<Long> getUsersByGroup(Long groupId) {
+        List<UserGroup> groups = userGroupService.queryRelation(0L, groupId);
+        return groups.stream().map(UserGroup::getUserId).collect(Collectors.toList());
+    }
+
+    /**
+     * 获取持有指定角色的用户
+     *
+     * @param roleId 角色ID
+     */
+    public List<Long> getUsersByRole(Long roleId) {
+        List<UserRole> roles = userRoleService.queryRelation(0L, roleId);
+        return roles.stream().map(UserRole::getUserId).collect(Collectors.toList());
     }
 
 }

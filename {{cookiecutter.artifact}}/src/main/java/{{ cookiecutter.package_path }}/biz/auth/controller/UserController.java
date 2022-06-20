@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,6 +31,7 @@ public class UserController {
     /**
      * 分页查询用户
      */
+    @Secured(value = "ROLE_admin")
     @GetMapping("/users")
     public ApiResponse<PageVO<User>> list(@Valid ListAuthRequest request) {
         // 模糊查询
@@ -44,6 +46,7 @@ public class UserController {
     /**
      * 新增用户
      */
+    @Secured(value = "ROLE_admin")
     @PostMapping("/users")
     public ApiResponse<User> add(@Valid @RequestBody User entity) {
         boolean success = thisService.save(entity);
@@ -57,6 +60,7 @@ public class UserController {
     /**
      * 按ID查询用户
      */
+    @Secured(value = "ROLE_admin")
     @GetMapping("/users/{id}")
     public ApiResponse<User> get(@PathVariable Long id) {
         return new ApiResponse<>(thisService.getById(id));
@@ -65,6 +69,7 @@ public class UserController {
     /**
      * 按ID更新用户
      */
+    @Secured(value = "ROLE_admin")
     @PutMapping("/users/{id}")
     public ApiResponse<Object> update(@Valid @RequestBody User entity) {
         boolean success = thisService.updateById(entity);
@@ -77,6 +82,7 @@ public class UserController {
     /**
      * 按ID删除用户
      */
+    @Secured(value = "ROLE_admin")
     @DeleteMapping("/users/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
         boolean success = thisService.delete(id);

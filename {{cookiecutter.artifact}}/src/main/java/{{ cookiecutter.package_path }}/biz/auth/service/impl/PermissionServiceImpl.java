@@ -50,6 +50,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Autowired
     IRoleService roleService;
 
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
+
     // 查询角色对应的权限
     public List<String> selectRolesPermission(List<Long> roleIds) {
         List<String> permissions = new ArrayList<>();
@@ -122,5 +125,48 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         List<String> roles = roleService.getAllRoles(userId);
         permissions.addAll(roles.stream().map(e -> "ROLE_" + e).collect(Collectors.toList()));
         return permissions;
+    }
+
+    /**
+     * 重新将新的权限码和角色码加载到redis中
+     *
+     * @param userId 用户ID
+     */
+    @Override
+    public void refreshPermissions(Long userId) {
+        String key = "permissions:" + userId;
+        Boolean exist = stringRedisTemplate.hasKey(key);
+        // 只对已登录用户进行权限刷新
+        if (Boolean.TRUE.equals(exist)) {
+            // 将权限码和角色码存入redis
+            List<String> permissions = getSecurityPermissions(userId);
+            stringRedisTemplate.opsForValue().set(key, String.join(AuthConstant.DELIMITER, permissions), 1, TimeUnit.DAYS);
+        }
+    }
+
+    /**
+     * 获取持有该权限的用户
+     *
+     * @param code 权限码
+     */
+    @Override
+    public List<Long> holdPermission(String code) {
+        List<Long> users = new ArrayList<>();
+
+        Set<String> keys = stringRedisTemplate.keys("permissions:");
+        if (null != keys) {
+            // List<String> strings = stringRedisTemplate.opsForValue().multiGet(keys);
+            for (String key : keys) {
+                Long userId = Long.parseLong(key.split(":")[1]);
+                String value = stringRedisTemplate.opsForValue().get(key);
+                if (StringUtils.isNotBlank(value)) {
+                    List<String> permissions = Arrays.asList(value.split(AuthConstant.DELIMITER));
+                    if (permissions.contains(code)) {
+                        users.add(userId);
+                    }
+                }
+            }
+        }
+        return users;
     }
 }
