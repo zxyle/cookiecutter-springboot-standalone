@@ -1,5 +1,6 @@
 package {{ cookiecutter.basePackage }}.run;
 
+import {{ cookiecutter.basePackage }}.common.util.JdbcUtil;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -16,6 +17,9 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
 import java.io.File;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -24,8 +28,11 @@ import java.util.Scanner;
  * MybatisPlus代码生成
  */
 public class CodeGenerator {
+    private static final String DB_HOST = "127.0.0.1:3306";
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/app?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=GMT%2B8";
+    private static final String DB_NAME = "app";
+
+    private static final String JDBC_URL = "jdbc:mysql://" + DB_HOST + "/" + DB_NAME + "?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=GMT%2B8";
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "123456";
     private static final String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
@@ -137,7 +144,7 @@ public class CodeGenerator {
         TemplateConfig templateConfig = new TemplateConfig();
 
         // 配置自定义输出模板
-        //指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
+        // 指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
         templateConfig.setEntity("templates/mp/entity.java");
         templateConfig.setMapper("templates/mp/mapper.java");
         templateConfig.setService("templates/mp/service.java");
@@ -157,11 +164,56 @@ public class CodeGenerator {
         // strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
         // 写于父类中的公共字段
         strategy.setSuperEntityColumns("id");
-        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
+        String[] tables = scanner("表名，多个英文逗号分割").split(",");
+        strategy.setInclude(tables);
         strategy.setControllerMappingHyphenStyle(true);
-        strategy.setTablePrefix(pc.getModuleName() + "_");
+        String tablePrefix = pc.getModuleName() + "_";
+        strategy.setTablePrefix(tablePrefix);
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
+        genPermission(tables, tablePrefix);
+    }
+
+    public static String getComment(String tb) {
+        String comment = "";
+        JdbcUtil jdbcUtil = new JdbcUtil();
+        jdbcUtil.setURL(JDBC_URL);
+        jdbcUtil.setUSERNAME(DB_USERNAME);
+        jdbcUtil.setPASSWORD(DB_PASSWORD);
+        String sql = "SELECT `TABLE_COMMENT` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA` = ? AND `TABLE_NAME` = ? LIMIT 1";
+        PreparedStatement ps = jdbcUtil.createStatement(sql);
+        ResultSet rs;
+
+        try {
+            ps.setString(1, DB_NAME);
+            ps.setString(2, tb);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                comment = rs.getString("TABLE_COMMENT");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            jdbcUtil.close();
+
+        }
+        return comment;
+    }
+
+    // 生成权限码写入SQL
+    public static void genPermission(String[] tables, String tablePrefix) {
+        System.out.println("执行以下SQL：");
+        for (String table : tables) {
+            String comment = CodeGenerator.getComment(table);
+            String permission = table.replace(tablePrefix, "");
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-list', '%s列表查询');%n", permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-add', '新增%s');%n", permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-get', '按ID查询%s');%n", permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-update', '按ID更新%s');%n", permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-delete', '按ID删除%s');%n", permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-export', '%sExcel数据导出');%n", permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-upload', '%sExcel数据导入');%n", permission, comment);
+        }
     }
 }
