@@ -20,7 +20,7 @@ public class JwtUtil {
     public static final Long JWT_TTL = 60 * 60 * 1000L;// 60 * 60 *1000  一个小时
 
     // 设置秘钥明文
-    public static final String JWT_KEY = "yvRgrYkUQutOZFGVsMwUUxadRfHqAakm";
+    public static final String JWT_KEY = "{{ random_ascii_string(32) }}";
 
     public static String getUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
