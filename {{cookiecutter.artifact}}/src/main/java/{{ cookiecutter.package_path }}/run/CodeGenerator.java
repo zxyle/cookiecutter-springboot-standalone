@@ -178,9 +178,9 @@ public class CodeGenerator {
     public static String getComment(String tb) {
         String comment = "";
         JdbcUtil jdbcUtil = new JdbcUtil();
-        jdbcUtil.setURL(JDBC_URL);
-        jdbcUtil.setUSERNAME(DB_USERNAME);
-        jdbcUtil.setPASSWORD(DB_PASSWORD);
+        jdbcUtil.setUrl(JDBC_URL);
+        jdbcUtil.setUsername(DB_USERNAME);
+        jdbcUtil.setPassword(DB_PASSWORD);
         String sql = "SELECT `TABLE_COMMENT` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA` = ? AND `TABLE_NAME` = ? LIMIT 1";
         PreparedStatement ps = jdbcUtil.createStatement(sql);
         ResultSet rs;
