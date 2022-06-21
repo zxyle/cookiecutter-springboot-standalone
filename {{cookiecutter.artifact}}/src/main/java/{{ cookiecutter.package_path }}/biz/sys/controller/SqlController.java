@@ -10,7 +10,6 @@ import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,16 +29,16 @@ public class SqlController {
 
     ISqlService thisService;
 
-    @Autowired
-    SqlMapper sqlMapper;
+    SqlMapper thisMapper;
 
-    public SqlController(ISqlService thisService) {
+    public SqlController(ISqlService thisService, SqlMapper thisMapper) {
         this.thisService = thisService;
+        this.thisMapper = thisMapper;
     }
 
     @PostMapping("/sqls/execute")
     public List<Map<String, Object>> execute(@Valid @RequestBody SqlRequest request) {
-        return sqlMapper.execute(request.getSql());
+        return thisMapper.execute(request.getSql());
     }
 
     // 执行sql

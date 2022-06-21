@@ -33,6 +33,8 @@ public class UserRoleController extends AuthBaseController {
 
     /**
      * 分页查询用户的角色信息
+     *
+     * @param userId 用户ID
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/roles")
@@ -45,6 +47,8 @@ public class UserRoleController extends AuthBaseController {
 
     /**
      * 用户新增角色
+     *
+     * @param userId 用户ID
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/roles")
@@ -60,6 +64,9 @@ public class UserRoleController extends AuthBaseController {
 
     /**
      * 用户删除角色
+     *
+     * @param userId 用户ID
+     * @param roleId 角色ID
      */
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/users/{userId}/roles/{roleId}")

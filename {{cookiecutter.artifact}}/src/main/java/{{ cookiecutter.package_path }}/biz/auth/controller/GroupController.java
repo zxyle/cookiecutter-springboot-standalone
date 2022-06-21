@@ -89,6 +89,8 @@ public class GroupController extends AuthBaseController {
 
     /**
      * 按ID查询用户组
+     *
+     * @param groupId 用户组ID
      */
     @PreAuthorize(value = "hasAuthority('groups-get')")
     @GetMapping("/groups/{groupId}")
@@ -102,6 +104,8 @@ public class GroupController extends AuthBaseController {
 
     /**
      * 按ID更新用户组
+     *
+     * @param groupId 用户组ID
      */
     @PreAuthorize(value = "hasAuthority('groups-update')")
     @PutMapping("/groups/{groupId}")
@@ -118,6 +122,8 @@ public class GroupController extends AuthBaseController {
 
     /**
      * 按ID删除用户组
+     *
+     * @param groupId 用户组ID
      */
     @PreAuthorize(value = "hasAuthority('groups-delete')")
     @DeleteMapping("/groups/{groupId}")

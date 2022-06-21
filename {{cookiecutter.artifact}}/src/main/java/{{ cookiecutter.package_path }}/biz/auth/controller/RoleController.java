@@ -67,6 +67,8 @@ public class RoleController extends AuthBaseController {
 
     /**
      * 按ID查询角色
+     *
+     * @param roleId 角色ID
      */
     @GetMapping("/roles/{roleId}")
     @PreAuthorize(value = "hasAuthority('roles-get')")
@@ -76,6 +78,8 @@ public class RoleController extends AuthBaseController {
 
     /**
      * 按ID更新角色
+     *
+     * @param roleId 角色ID
      */
     @PutMapping("/roles/{roleId}")
     @PreAuthorize(value = "hasAuthority('roles-update')")
@@ -90,6 +94,8 @@ public class RoleController extends AuthBaseController {
 
     /**
      * 按ID删除角色
+     *
+     * @param roleId 角色ID
      */
     @DeleteMapping("/roles/{roleId}")
     @PreAuthorize(value = "hasAuthority('roles-delete')")

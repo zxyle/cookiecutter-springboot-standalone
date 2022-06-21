@@ -21,7 +21,9 @@ public class LoginLogController {
         this.thisService = thisService;
     }
 
-    // 增加查询分页查询全部
+    /**
+     * 分页查询
+     */
     @GetMapping("/logs")
     public void list() {
     }

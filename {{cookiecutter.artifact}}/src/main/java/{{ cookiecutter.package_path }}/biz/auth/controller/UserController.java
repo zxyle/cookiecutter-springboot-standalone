@@ -59,11 +59,13 @@ public class UserController {
 
     /**
      * 按ID查询用户
+     *
+     * @param userId 用户ID
      */
     @Secured(value = "ROLE_admin")
-    @GetMapping("/users/{id}")
-    public ApiResponse<User> get(@PathVariable Long id) {
-        return new ApiResponse<>(thisService.getById(id));
+    @GetMapping("/users/{userId}")
+    public ApiResponse<User> get(@PathVariable Long userId) {
+        return new ApiResponse<>(thisService.getById(userId));
     }
 
     /**
@@ -81,11 +83,13 @@ public class UserController {
 
     /**
      * 按ID删除用户
+     *
+     * @param userId 用户ID
      */
     @Secured(value = "ROLE_admin")
-    @DeleteMapping("/users/{id}")
-    public ApiResponse<Object> delete(@PathVariable Long id) {
-        boolean success = thisService.delete(id);
+    @DeleteMapping("/users/{userId}")
+    public ApiResponse<Object> delete(@PathVariable Long userId) {
+        boolean success = thisService.delete(userId);
         if (success) {
             return new ApiResponse<>("删除成功", true);
         }

@@ -7,14 +7,14 @@ public class AntdTree2 {
     /**
      * 行政区名称
      *
-     * @mock 广东省
+     * @mock 浙江省
      */
     private String label;
 
     /**
      * 行政区代码
      *
-     * @mock 440000
+     * @mock 330000
      */
     private String value;
 

@@ -32,6 +32,8 @@ public class UserPermissionController {
 
     /**
      * 分页查询用户权限
+     *
+     * @param userId 用户ID
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/permissions")
@@ -44,6 +46,8 @@ public class UserPermissionController {
 
     /**
      * 用户新增权限
+     *
+     * @param userId 用户ID
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/permissions")
@@ -61,6 +65,9 @@ public class UserPermissionController {
 
     /**
      * 删除用户权限
+     *
+     * @param userId 用户ID
+     * @param permissionId 权限ID
      */
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/users/{userId}/permissions/{permissionId}")

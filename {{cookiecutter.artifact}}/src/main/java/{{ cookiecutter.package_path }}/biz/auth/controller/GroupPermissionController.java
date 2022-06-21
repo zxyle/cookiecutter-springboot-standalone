@@ -33,6 +33,8 @@ public class GroupPermissionController extends AuthBaseController {
 
     /**
      * 分页查询用户组权限
+     *
+     * @param groupId 用户组ID
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/groups/{groupId}/permissions")
@@ -45,6 +47,8 @@ public class GroupPermissionController extends AuthBaseController {
 
     /**
      * 用户组新增权限
+     *
+     * @param groupId 用户组ID
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/groups/{groupId}/permissions")
@@ -63,6 +67,9 @@ public class GroupPermissionController extends AuthBaseController {
 
     /**
      * 删除用户组权限
+     *
+     * @param permissionId 权限ID
+     * @param groupId      用户组ID
      */
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/groups/{groupId}/permissions/{permissionId}")

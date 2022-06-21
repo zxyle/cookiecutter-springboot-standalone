@@ -33,8 +33,10 @@ public class AreaController {
     }
 
     /**
-     * 获取中国行政区划
-     * level: 1-国家 2-省级 3-市级 4-县区级 5-镇街级 6-社区、村级
+     * 获取中国行政区划树状结构
+     *
+     * @param rootId 根节点ID
+     * @param level  1-国家 2-省级 3-市级 4-县区级 5-镇街级 6-社区、村级
      */
     @GetMapping("/tree")
     @Cacheable(cacheNames = "areaCache", key = "#rootId+#level")
