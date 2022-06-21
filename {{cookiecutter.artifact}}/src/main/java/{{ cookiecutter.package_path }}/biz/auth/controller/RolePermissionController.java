@@ -34,6 +34,8 @@ public class RolePermissionController extends AuthBaseController {
 
     /**
      * 分页查询角色权限
+     *
+     * @param roleId 角色ID
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/roles/{roleId}/permissions")
@@ -46,6 +48,8 @@ public class RolePermissionController extends AuthBaseController {
 
     /**
      * 角色新增权限
+     *
+     * @param roleId 角色ID
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/roles/{roleId}/permissions")
@@ -64,6 +68,9 @@ public class RolePermissionController extends AuthBaseController {
 
     /**
      * 删除角色权限
+     *
+     * @param permissionId 权限ID
+     * @param roleId       角色ID
      */
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/roles/{roleId}/permissions/{permissionId}")

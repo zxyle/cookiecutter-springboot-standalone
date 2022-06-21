@@ -49,6 +49,8 @@ public class UserGroupController extends AuthBaseController {
 
     /**
      * 分页查询用户 所属用户组
+     *
+     * @param userId 用户ID
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/groups")
@@ -61,6 +63,8 @@ public class UserGroupController extends AuthBaseController {
 
     /**
      * 新增用户
+     *
+     * @param groupId 用户组ID
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/groups/{groupId}/users")
@@ -76,6 +80,9 @@ public class UserGroupController extends AuthBaseController {
 
     /**
      * 用户删除所属用户组关系
+     *
+     * @param userId  用户ID
+     * @param groupId 用户组ID
      */
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/users/{userId}/groups/{groupId}")
@@ -91,6 +98,8 @@ public class UserGroupController extends AuthBaseController {
 
     /**
      * 查询用户组下所有用户
+     *
+     * @param groupId 用户组ID
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/groups/{groupId}/users")

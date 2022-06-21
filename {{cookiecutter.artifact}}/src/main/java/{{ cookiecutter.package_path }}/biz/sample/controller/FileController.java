@@ -23,10 +23,7 @@ import java.io.IOException;
 public class FileController {
 
     /**
-     * 文件下载
-     *
-     * @return
-     * @throws IOException
+     * 文件下载示例
      */
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     public ResponseEntity<Object> downloadFile() throws IOException {
@@ -46,10 +43,6 @@ public class FileController {
 
     /**
      * 单文件上传
-     * <p>
-     * 注意事项:
-     * 1. PostMan中 form-data中的key 需要设置为该方法的形参名, 此例为file
-     * 2. 如果不同, 需要使用@RequestParam 进行指定
      */
     @PostMapping(value = "/upload1", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody

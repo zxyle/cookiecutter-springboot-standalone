@@ -14,6 +14,11 @@ import javax.validation.Valid;
 @RestController
 public class ValidationJsonController {
 
+    /**
+     * 请求体参数校验
+     *
+     * @param person 用户
+     */
     @PostMapping("/person")
     public ResponseEntity<Person> getPerson(@RequestBody @Valid Person person) {
         return ResponseEntity.ok().body(person);

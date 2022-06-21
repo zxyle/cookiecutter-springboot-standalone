@@ -1,7 +1,9 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request.password;
 
+import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
@@ -13,7 +15,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ModifyByOldRequest {
+@EqualsAndHashCode(callSuper = true)
+public class ModifyByOldRequest extends BaseRequest {
 
     /**
      * 旧密码

@@ -51,6 +51,8 @@ public class PermissionController extends AuthBaseController {
 
     /**
      * 按ID查询权限
+     *
+     * @param permissionId 权限ID
      */
     @GetMapping("/permissions/{permissionId}")
     @PreAuthorize(value = "hasAuthority('permissions-get')")
@@ -60,6 +62,8 @@ public class PermissionController extends AuthBaseController {
 
     /**
      * 按ID更新权限
+     *
+     * @param permissionId 权限ID
      */
     @PutMapping("/permissions/{permissionId}")
     @PreAuthorize(value = "hasAuthority('permissions-update')")
@@ -77,6 +81,8 @@ public class PermissionController extends AuthBaseController {
 
     /**
      * 按ID删除权限
+     *
+     * @param permissionId 权限ID
      */
     @DeleteMapping("/permissions/{permissionId}")
     @PreAuthorize(value = "hasAuthority('permissions-delete')")

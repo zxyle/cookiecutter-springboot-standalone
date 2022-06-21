@@ -33,6 +33,8 @@ public class GroupRoleController extends AuthBaseController {
 
     /**
      * 分页查询用户组角色
+     *
+     * @param groupId 用户组ID
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/groups/{groupId}/roles")
@@ -46,6 +48,8 @@ public class GroupRoleController extends AuthBaseController {
 
     /**
      * 用户组新增角色
+     *
+     * @param groupId 用户组ID
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/groups/{groupId}/roles")
@@ -64,6 +68,9 @@ public class GroupRoleController extends AuthBaseController {
 
     /**
      * 用户组删除角色
+     *
+     * @param groupId 用户组ID
+     * @param roleId 角色ID
      */
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/groups/{groupId}/roles/{roleId}")
