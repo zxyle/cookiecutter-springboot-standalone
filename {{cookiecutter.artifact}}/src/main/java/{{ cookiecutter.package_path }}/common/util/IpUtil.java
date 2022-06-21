@@ -75,7 +75,7 @@ public class IpUtil {
         if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
             if (LOCAL_IP.equals(ip) || ProjectConstant.DEFAULT_IP.equals(ip)) {
-                //根据网卡取本机配置的IP
+                // 根据网卡取本机配置的IP
                 InetAddress inet = null;
                 try {
                     inet = InetAddress.getLocalHost();

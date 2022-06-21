@@ -55,7 +55,7 @@ public class GroupRoleController extends AuthBaseController {
             boolean success = thisService.createRelation(groupId, roleId);
             if (success) {
                 List<Long> users = getUsersByGroup(groupId);
-                users.forEach(userId-> permissionService.refreshPermissions(userId));
+                users.forEach(userId -> permissionService.refreshPermissions(userId));
                 return new ApiResponse<>("新增成功", true);
             }
         }
@@ -71,7 +71,7 @@ public class GroupRoleController extends AuthBaseController {
         boolean success = thisService.deleteRelation(groupId, roleId);
         if (success) {
             List<Long> users = getUsersByGroup(groupId);
-            users.forEach(userId-> permissionService.refreshPermissions(userId));
+            users.forEach(userId -> permissionService.refreshPermissions(userId));
             return new ApiResponse<>("删除成功");
         }
         return new ApiResponse<>("删除失败", false);

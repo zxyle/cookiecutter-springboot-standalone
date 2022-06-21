@@ -3,8 +3,7 @@ package {{ cookiecutter.basePackage }}.common.util;
 import {{ cookiecutter.basePackage }}.common.constant.PageConsts;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
-import {{ cookiecutter.basePackage }}
-.common.response.PageVO;
+import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
