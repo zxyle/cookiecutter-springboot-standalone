@@ -26,7 +26,7 @@ public class AllowCrossDomainInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        //仅在非正式环境下生效
+        // 仅在非正式环境下生效
         if (!Arrays.asList(env.getActiveProfiles()).contains(ProjectConstant.PROD)) {
             String origin = httpServletRequest.getHeader("Origin");
             httpServletResponse.setHeader("Access-Control-Allow-Origin", StringUtil.isEmpty(origin) ? "*" : origin);

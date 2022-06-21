@@ -26,7 +26,7 @@ public class DingTalkAlarmServiceImpl implements MonitoringAlarmService {
                 .execute()
                 .body();
         DingTalkResponse response = JacksonUtil.deserialize(result, DingTalkResponse.class);
-        return response != null && response.getErrcode()== 0 && response.getErrmsg().equals("ok");
+        return response != null && response.getErrcode() == 0 && response.getErrmsg().equals("ok");
 
     }
 }

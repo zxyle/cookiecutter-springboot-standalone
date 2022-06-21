@@ -17,7 +17,6 @@ public class OperateLogController {
 
     /**
      * 获取操作日志列表
-     *
      */
     @PostMapping("/list")
     public void list(@Valid @RequestBody PaginationRequest request) {
