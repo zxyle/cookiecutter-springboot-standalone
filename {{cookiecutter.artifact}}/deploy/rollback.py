@@ -1,10 +1,11 @@
 # 安装包回滚
-# pip install inquirer
+# pip3 install inquirer -i https://mirrors.aliyun.com/pypi/simple/
 
-import os
 import glob
-import inquirer
+import os
 from os.path import basename
+
+import inquirer
 
 BACKUP_DIR = "./backup"
 
@@ -16,15 +17,10 @@ def scan_jars():
 def main():
     jars = scan_jars()
     questions = [
-        inquirer.List('version',
-                      message="你要回滚那次备份?",
-                      choices=jars,
-                      ),
-        inquirer.Confirm('goon',
-                         message="确定回滚该版本吗?", default=False),
+        inquirer.List('version', message="你要回滚那次备份?", choices=jars),
+        inquirer.Confirm('goon', message="确定回滚该版本吗?", default=False),
     ]
 
-    # 扫描备份文件夹 按日期倒序输出
     answers = inquirer.prompt(questions)
 
     jar = answers.get("version")
@@ -32,7 +28,7 @@ def main():
     if os.path.exists(fd):
         filename, t, comment = jar.rsplit(".", 2)
         os.system(f"cp {fd} {filename}")
-        print("回滚成功.")
+        print(f"已回滚到 {jar}.")
         os.remove(fd)
     else:
         print(f"文件: {fd} 不存在.")

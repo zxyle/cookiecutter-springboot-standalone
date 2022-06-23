@@ -1,12 +1,13 @@
 # 安装包备份
-# pip install inquirer
+# pip3 install inquirer -i https://mirrors.aliyun.com/pypi/simple/
 
 
-import os
 import glob
-import inquirer
-from os.path import basename
+import os
 from datetime import datetime
+from os.path import basename
+
+import inquirer
 
 BACKUP_DIR = "./backup"
 
@@ -23,10 +24,7 @@ def main():
 
     if len(jars) > 1:
         questions = [
-            inquirer.List('jar',
-                          message="你要备份那个jar包?",
-                          choices=jars,
-                          ),
+            inquirer.List('jar', message="要备份那个jar包?", choices=jars),
         ]
         answers = inquirer.prompt(questions)
         jar = answers.get("jar")
@@ -43,7 +41,7 @@ def main():
     target_dest = f"{BACKUP_DIR}/{jar}{suffix}"
     os.system(f"cp {jar} {target_dest}")
 
-    print(f"已备份到： {target_dest}")
+    print(f"已成功备份到： {target_dest}")
 
 
 if __name__ == '__main__':
