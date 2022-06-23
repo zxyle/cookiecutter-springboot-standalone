@@ -7,7 +7,7 @@
 ## 集成功能
 - 代码生成: 根据数据表快速生成`Entity`、`Controller`、`Mapper`、`Service`、`XML`等通用类
 - RESTful: `Controller` 默认已经实现列表分页查询、新增、按ID查询更新删除、Excel数据导入导出等接口
-- 权限认证: 实现RBAC模型 JWT
+- 权限认证: 实现RBAC0模型 JWT
 - 缓存： 
 - 系统管理： 
 - 监控
