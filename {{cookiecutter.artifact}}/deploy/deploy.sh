@@ -6,7 +6,7 @@ bash deploy.sh publish
 # 部署服务器
 server=root@127.0.0.1
 # 部署目录
-dir=/opt/webapps/{{ cookiecutter.artifact }}
+dir=/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact.replace('-api', '-web') }}
 # 编译后生成产物目录
 target=dist
 
