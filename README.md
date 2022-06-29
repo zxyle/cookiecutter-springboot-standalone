@@ -1,7 +1,7 @@
 # cookiecutter-springboot-standalone
 
 ## 项目介绍
-基于SpringBoot、Redis、MySql、MybatisPlus、SpringSecurity等技术实现的后端快速开发脚手架。
+基于SpringBoot、Redis、MySql、[MybatisPlus](https://baomidou.com/)、SpringSecurity等技术实现的后端快速开发脚手架。
 
 
 ## 集成功能
@@ -14,14 +14,14 @@
 - 系统告警：支持钉钉Hook告警
 - 字典管理、涵盖中国村社级行政区划
 - 图形验证码、短信验证码
-- 接口文档： 集成smart-doc接口文档, 相比swagger侵入性低、团队管理方便
+- 接口文档： 集成[smart-doc](https://smart-doc-group.github.io/#/zh-cn/)接口文档, 相比swagger侵入性低、团队管理方便
 - 参数校验
 - 统一接口返回
 - 部署管理： 开机自启、安装包备份、安装包回滚
 
 
 ## 使用步骤
-> 需系统安装python3
+> 需系统安装[python3](https://www.python.org/downloads/)
 ```bash
 $ pip3 install -U cookiecutter -i https://mirrors.aliyun.com/pypi/simple/
 $ cookiecutter https://jihulab.com/zxyle/cookiecutter-springboot-standalone.git 
