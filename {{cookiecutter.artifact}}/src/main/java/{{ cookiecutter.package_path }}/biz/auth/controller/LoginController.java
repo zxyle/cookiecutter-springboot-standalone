@@ -8,6 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.VerifyService;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,9 @@ public class LoginController {
 
     final AuthenticationManager authenticationManager;
 
+    final VerifyService verifyService;
+
+
     /**
      * 用户登录
      *
@@ -51,6 +55,9 @@ public class LoginController {
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginByNameRequest request, HttpServletRequest servletRequest) {
         String loginName = request.getLoginName();
+
+        // 检验验证码
+        verifyService.verify(request.getCode(), request.getCaptchaId());
 
         // 登录日志
         LoginLog loginLog = new LoginLog();
