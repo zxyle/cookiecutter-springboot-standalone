@@ -44,7 +44,7 @@ public class JacksonUtil {
     }
 
     /**
-     * 序列化
+     * 序列化对象
      */
     public static String serialize(Object obj) {
         String o;

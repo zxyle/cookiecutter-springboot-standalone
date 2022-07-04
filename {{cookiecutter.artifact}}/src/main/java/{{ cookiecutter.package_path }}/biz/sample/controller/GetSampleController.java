@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class GetSampleController {
+
     /**
      * RequestMapping方式的GET请求
      */
