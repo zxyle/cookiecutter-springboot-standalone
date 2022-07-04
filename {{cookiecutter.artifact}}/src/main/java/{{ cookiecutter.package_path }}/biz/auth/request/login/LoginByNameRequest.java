@@ -21,6 +21,11 @@ public class LoginByNameRequest {
     private String password;
 
     /**
+     * 验证码ID
+     */
+    private String captchaId;
+
+    /**
      * 短信或者邮件验证码
      */
     private String code;
