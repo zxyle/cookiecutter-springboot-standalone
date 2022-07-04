@@ -25,4 +25,8 @@ public class UserPermission extends BaseEntity {
      */
     private Long permissionId;
 
+    public UserPermission(Long userId, Long permissionId) {
+        this.userId = userId;
+        this.permissionId = permissionId;
+    }
 }

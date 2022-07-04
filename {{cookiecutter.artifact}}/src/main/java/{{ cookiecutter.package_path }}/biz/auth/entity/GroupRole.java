@@ -25,4 +25,8 @@ public class GroupRole extends BaseEntity {
      */
     private Long roleId;
 
+    public GroupRole(Long groupId, Long roleId) {
+        this.groupId = groupId;
+        this.roleId = roleId;
+    }
 }

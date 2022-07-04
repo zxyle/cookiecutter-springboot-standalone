@@ -2,7 +2,6 @@ package {{ cookiecutter.basePackage }}.biz.auth.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,7 +11,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("auth_user_group")
-@AllArgsConstructor
 public class UserGroup extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -27,4 +25,8 @@ public class UserGroup extends BaseEntity {
      */
     private Long groupId;
 
+    public UserGroup(Long userId, Long groupId) {
+        this.userId = userId;
+        this.groupId = groupId;
+    }
 }
