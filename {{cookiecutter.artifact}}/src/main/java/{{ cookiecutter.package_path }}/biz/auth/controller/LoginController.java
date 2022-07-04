@@ -56,8 +56,8 @@ public class LoginController {
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginByNameRequest request, HttpServletRequest servletRequest) {
         String loginName = request.getLoginName();
 
-        // 检验验证码
-        verifyService.verify(request.getCode(), request.getCaptchaId());
+        // 如需开启验证码，请取消注释下面代码
+        // verifyService.verify(request.getCode(), request.getCaptchaId());
 
         // 登录日志
         LoginLog loginLog = new LoginLog();

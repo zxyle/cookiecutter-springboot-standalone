@@ -41,7 +41,7 @@ public class RoleController extends AuthBaseController {
      * 角色列表查询
      */
     @GetMapping("/roles")
-    @PreAuthorize(value = "ck.hasPermit('auth:roles:list')")
+    @PreAuthorize("@ck.hasPermit('auth:roles:list')")
     public ApiResponse<PageVO<Role>> list(@Valid ListAuthRequest request) {
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
         // 模糊查询
@@ -56,7 +56,7 @@ public class RoleController extends AuthBaseController {
      * 新增角色
      */
     @PostMapping("/roles")
-    @PreAuthorize(value = "ck.hasPermit('auth:roles:add')")
+    @PreAuthorize("@ck.hasPermit('auth:roles:add')")
     public ApiResponse<Role> add(@Valid @RequestBody AddRoleRequest request) {
         Role role = new Role();
         BeanUtils.copyProperties(request, role);
@@ -71,7 +71,7 @@ public class RoleController extends AuthBaseController {
      * @param roleId 角色ID
      */
     @GetMapping("/roles/{roleId}")
-    @PreAuthorize(value = "ck.hasPermit('auth:roles:get')")
+    @PreAuthorize("@ck.hasPermit('auth:roles:get')")
     public ApiResponse<Role> get(@NotNull @PathVariable Long roleId) {
         return new ApiResponse<>(thisService.queryById(roleId));
     }
@@ -82,7 +82,7 @@ public class RoleController extends AuthBaseController {
      * @param roleId 角色ID
      */
     @PutMapping("/roles/{roleId}")
-    @PreAuthorize(value = "ck.hasPermit('auth:roles:update')")
+    @PreAuthorize("@ck.hasPermit('auth:roles:update')")
     public ApiResponse<Object> update(@Valid @RequestBody Role entity, @NotNull @PathVariable Long roleId) {
         entity.setId(roleId);
         boolean success = thisService.updateById(entity);
@@ -98,12 +98,11 @@ public class RoleController extends AuthBaseController {
      * @param roleId 角色ID
      */
     @DeleteMapping("/roles/{roleId}")
-    @PreAuthorize(value = "ck.hasPermit('auth:roles:delete')")
+    @PreAuthorize("@ck.hasPermit('auth:roles:delete')")
     public ApiResponse<Object> delete(@NotNull @PathVariable Long roleId) {
         boolean success = thisService.delete(roleId);
         List<Long> users = getUsersByRole(roleId);
         users.forEach(userId -> permissionService.refreshPermissions(userId));
         return new ApiResponse<>(success);
     }
-
 }

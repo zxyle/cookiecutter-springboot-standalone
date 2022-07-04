@@ -1,7 +1,5 @@
 package {{ cookiecutter.basePackage }}.common.request;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 分页请求对象
  */
@@ -26,7 +24,6 @@ public class PaginationRequest extends BaseRequest {
      *
      * @mock 10
      */
-    @NotNull
     private Integer pageSize;
 
     public Integer getPageNum() {

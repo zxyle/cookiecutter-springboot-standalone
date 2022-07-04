@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 public class ListAuthRequest extends PaginationRequest {
 
     /**
-     * 用户名、组名(支持模糊查询)
+     * 用户名、用户组名、角色名(支持模糊查询)
      */
     private String name;
 

@@ -9,16 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @ControllerAdvice
@@ -33,15 +31,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse> handleAccessDeniedException(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        return new ResponseEntity<>(new ApiResponse<>("不允许访问"), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new ApiResponse<>("无权限访问", false), HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(value = {Exception.class, NullPointerException.class, HttpMessageNotReadableException.class})
-    public ResponseEntity<ApiResponse> exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        logger.error("接口报错 路径:【{}】, 状态码:【{}】, 错误原因:【{}】.", request.getServletPath(), response.getStatus(), e.getMessage());
-        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, Constant.Response.ERROR_EXCEPTION, false);
-        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
     @ExceptionHandler(value = {CustomerException.class})
     public ResponseEntity<String> customerExceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
@@ -51,20 +43,28 @@ public class GlobalExceptionHandler {
     }
 
     // 处理JSON方式 数据校验失败
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ApiResponse<Object>> handleValidationExceptions(BindException ex) {
+        StringBuilder builder = new StringBuilder();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
+            builder.append(fieldName).append(":").append(errorMessage).append(";");
         });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, builder.toString(), false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // 处理表单方式 数据校验失败
     @ExceptionHandler(ConstraintViolationException.class)
     ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(value = {Exception.class, NullPointerException.class, HttpMessageNotReadableException.class})
+    public ResponseEntity<ApiResponse> exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
+        logger.error("接口报错 路径:【{}】, 状态码:【{}】, 错误原因:【{}】.", request.getServletPath(), response.getStatus(), e.getMessage());
+        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, e.getMessage(), false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
