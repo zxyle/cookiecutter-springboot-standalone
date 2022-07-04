@@ -1,5 +1,6 @@
 package {{ cookiecutter.basePackage }}.config;
 
+import {{ cookiecutter.basePackage }}.config.interceptor.TraceInterceptor;
 import {{ cookiecutter.basePackage }}.config.interceptor.UserAgentInterceptor;
 
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new TraceInterceptor()).addPathPatterns("/**");
         /*registry.addInterceptor(new LoginInterceptor())
                     .addPathPatterns("/admin/**")
                     .excludePathPatterns("/admin")

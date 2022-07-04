@@ -1,6 +1,7 @@
 package {{ cookiecutter.basePackage }}.common.response;
 
 import lombok.ToString;
+import org.slf4j.MDC;
 
 @ToString
 public class ApiResponse<T> {
@@ -26,6 +27,11 @@ public class ApiResponse<T> {
 
     private Object data;
 
+    /**
+     * 请求追踪ID
+     */
+    private String traceId;
+
     public ApiResponse() {
     }
 
@@ -48,12 +54,14 @@ public class ApiResponse<T> {
         setMessage(SUCCESS_MSG);
         setCode("0");
         setSuccess(true);
+        setTraceId(MDC.get("traceId"));
     }
 
     public ApiResponse(boolean success) {
         setSuccess(success);
         setMessage(success ? SUCCESS_MSG : FAILURE_MSG);
         setCode("0");
+        setTraceId(MDC.get("traceId"));
     }
 
     public ApiResponse<T> ok() {
@@ -111,5 +119,13 @@ public class ApiResponse<T> {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
     }
 }
