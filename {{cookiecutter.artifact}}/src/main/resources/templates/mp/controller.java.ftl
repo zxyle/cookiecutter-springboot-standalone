@@ -52,7 +52,7 @@ public class ${table.controllerName} {
     /**
      * 分页查询
      */
-    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-list')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
     @GetMapping("/${table.entityPath}s")
     public ApiResponse<PageVO<${entity}>> list(@Valid PaginationRequest request) {
         IPage<${entity}> page = PageRequestUtil.checkForMp(request);
@@ -64,7 +64,7 @@ public class ${table.controllerName} {
     /**
      * 新增${table.comment!}
      */
-    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-add')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:add')")
     @PostMapping("/${table.entityPath}s")
     public ApiResponse<${entity}> add(@Valid @RequestBody ${entity} entity) {
         boolean success = thisService.save(entity);
@@ -78,7 +78,7 @@ public class ${table.controllerName} {
     /**
      * 按ID查询${table.comment!}
      */
-    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-get')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:get')")
     @GetMapping("/${table.entityPath}s/{id}")
     public ApiResponse<${entity}> get(@PathVariable Long id) {
         return new ApiResponse<>(thisService.queryById(id));
@@ -87,7 +87,7 @@ public class ${table.controllerName} {
     /**
      * 按ID更新${table.comment!}
      */
-    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-update')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:update')")
     @PutMapping("/${table.entityPath}s/{id}")
     public ApiResponse<Object> update(@Valid @RequestBody ${entity} entity) {
         boolean success = thisService.updateById(entity);
@@ -97,7 +97,7 @@ public class ${table.controllerName} {
     /**
      * 按ID删除${table.comment!}
      */
-    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-delete')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:delete')")
     @DeleteMapping("/${table.entityPath}s/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
@@ -107,7 +107,7 @@ public class ${table.controllerName} {
     /**
      * Excel数据导出
      */
-    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-export')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:export')")
     @GetMapping("/${table.entityPath}s/export")
     public void export(HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
@@ -121,7 +121,7 @@ public class ${table.controllerName} {
     /**
      * Excel数据导入
      */
-    @PreAuthorize(value = "hasAuthority('${table.entityPath}s-upload')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:upload')")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public String upload(@RequestParam("file") MultipartFile file) throws IOException {

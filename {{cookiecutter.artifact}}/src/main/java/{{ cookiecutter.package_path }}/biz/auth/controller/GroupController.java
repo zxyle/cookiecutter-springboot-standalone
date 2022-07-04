@@ -43,10 +43,9 @@ public class GroupController extends AuthBaseController {
     /**
      * 用户组查询
      */
-    @PreAuthorize(value = "ck.hasPermit('auth:groups:list')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:list')")
     @GetMapping("/groups")
     public ApiResponse<PageVO<Group>> list(@Valid ListAuthRequest request) {
-        // 模糊查询
         QueryWrapper<Group> wrapper = new QueryWrapper<>();
         wrapper.likeRight(StringUtils.isNotBlank(request.getName()), "name", request.getName());
         IPage<Group> page = PageRequestUtil.checkForMp(request);
@@ -57,7 +56,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 获取用户组树状结构
      */
-    @PreAuthorize(value = "ck.hasPermit('auth:groups:tree')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:tree')")
     @GetMapping("/groups/tree")
     public ApiResponse<AntdTree2> tree() {
         Long groupId = getCurrentGroup();
@@ -68,7 +67,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 新增用户组
      */
-    @PreAuthorize(value = "ck.hasPermit('auth:groups:add')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:add')")
     @PostMapping("/groups")
     public ApiResponse<Object> add(@Valid @RequestBody AddGroupRequest request) {
         ApiResponse<Object> response = new ApiResponse<>();
@@ -92,7 +91,7 @@ public class GroupController extends AuthBaseController {
      *
      * @param groupId 用户组ID
      */
-    @PreAuthorize(value = "ck.hasPermit('auth:groups:get')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:get')")
     @GetMapping("/groups/{groupId}")
     public ApiResponse<Group> get(@NotEmpty @PathVariable Long groupId) {
         // 判断用户是否具有访问权限
@@ -107,7 +106,7 @@ public class GroupController extends AuthBaseController {
      *
      * @param groupId 用户组ID
      */
-    @PreAuthorize(value = "ck.hasPermit('auth:groups:update')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:update')")
     @PutMapping("/groups/{groupId}")
     public ApiResponse<Group> update(@PathVariable Long groupId, @Valid @RequestBody UpdateAuthRequest request) {
         Group group = new Group();
@@ -125,7 +124,7 @@ public class GroupController extends AuthBaseController {
      *
      * @param groupId 用户组ID
      */
-    @PreAuthorize(value = "ck.hasPermit('auth:groups:delete')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:delete')")
     @DeleteMapping("/groups/{groupId}")
     public ApiResponse<Object> delete(@PathVariable Long groupId) {
         ApiResponse<Object> response = new ApiResponse<>();
@@ -159,7 +158,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 用户组迁移
      */
-    @PreAuthorize(value = "ck.hasPermit('auth:groups:migrate')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:migrate')")
     @PostMapping("/groups/migrate")
     public ApiResponse<Object> migrate(@Valid @RequestBody MigrateGroupRequest request) {
         ApiResponse<Object> response = new ApiResponse<>();
@@ -178,5 +177,4 @@ public class GroupController extends AuthBaseController {
         response.setMessage("移动用户组成功.");
         return response;
     }
-
 }

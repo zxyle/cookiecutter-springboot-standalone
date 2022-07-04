@@ -36,7 +36,7 @@ public class CodeGenerator {
     private static final String DB_USERNAME = "root";
     private static final String DB_PASSWORD = "123456";
     private static final String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
-    private static final String PACKAGE_NAME = "{{ cookiecutter.basePackage }}.biz";
+    private static final String PACKAGE_NAME = "com.example.freewayapi.biz";
     private static final String[] EXTRA_PACKAGE = {"request", "enums", "response"};
 
     // 读取控制台内容
@@ -157,7 +157,7 @@ public class CodeGenerator {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setSuperEntityClass("{{ cookiecutter.basePackage }}.common.entity.BaseEntity");
+        strategy.setSuperEntityClass("com.example.freewayapi.common.entity.BaseEntity");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         // 公共父类
@@ -172,7 +172,7 @@ public class CodeGenerator {
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
-        genPermission(tables, tablePrefix);
+        genPermission(tables, tablePrefix, pc.getModuleName());
     }
 
     public static String getComment(String tb) {
@@ -202,18 +202,18 @@ public class CodeGenerator {
     }
 
     // 生成权限码写入SQL
-    public static void genPermission(String[] tables, String tablePrefix) {
+    public static void genPermission(String[] tables, String tablePrefix, String moduleName) {
         System.out.println("执行以下SQL：");
         for (String table : tables) {
             String comment = CodeGenerator.getComment(table);
             String permission = table.replace(tablePrefix, "");
-            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-list', '%s列表查询');%n", permission, comment);
-            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-add', '新增%s');%n", permission, comment);
-            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-get', '按ID查询%s');%n", permission, comment);
-            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-update', '按ID更新%s');%n", permission, comment);
-            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-delete', '按ID删除%s');%n", permission, comment);
-            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-export', '%sExcel数据导出');%n", permission, comment);
-            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%ss-upload', '%sExcel数据导入');%n", permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:list', '%s列表查询');%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:add', '新增%s');%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:get', '按ID查询%s');%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:update', '按ID更新%s');%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:delete', '按ID删除%s');%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:export', '%sExcel数据导出');%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:upload', '%sExcel数据导入');%n", moduleName, permission, comment);
         }
     }
 }
