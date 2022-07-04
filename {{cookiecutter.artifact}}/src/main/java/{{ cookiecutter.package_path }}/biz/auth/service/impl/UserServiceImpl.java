@@ -12,11 +12,11 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
-import dev.zhengxiang.tool.crypto.Werkzeug;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,9 +44,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String pwd = request.getPwd();
         User user = new User();
         BeanUtils.copyProperties(request, user);
-        Werkzeug werkzeug = new Werkzeug();
         pwd = StringUtils.isNotBlank(pwd) ? pwd : PwdConstant.DEFAULT_PWD;
-        user.setPwd(werkzeug.generatePasswordHash(pwd));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPwd(passwordEncoder.encode(pwd));
         save(user);
 
         // 创建映射
