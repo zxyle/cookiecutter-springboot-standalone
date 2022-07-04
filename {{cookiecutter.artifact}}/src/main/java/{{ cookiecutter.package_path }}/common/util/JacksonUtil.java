@@ -2,6 +2,7 @@ package {{ cookiecutter.basePackage }}.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * json工具类
  */
+@Slf4j
 public class JacksonUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -22,7 +24,7 @@ public class JacksonUtil {
             response = objectMapper.readValue(body, t);
             return response;
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("error: ", e);
         }
 
         return null;
@@ -50,7 +52,7 @@ public class JacksonUtil {
             o = objectMapper.writeValueAsString(obj);
             return o;
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("error: ", e);
         }
         return null;
     }

@@ -1,15 +1,11 @@
 package {{ cookiecutter.basePackage }}.biz.sample.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -19,6 +15,7 @@ import java.io.IOException;
 /**
  * 文件传输示例
  */
+@Slf4j
 @RestController
 public class FileController {
 
@@ -52,14 +49,8 @@ public class FileController {
         }
 
         String fileName = file.getOriginalFilename();
-        System.out.println("原始文件名是: " + fileName);
-
         String contentType = file.getContentType();
-        System.out.println(contentType);
-
-        System.out.println(file.getName());
-
-        System.out.println("文件大小: " + file.getSize() + "字节");
+        log.info("原始文件名是: {}, contentType: {}, 文件大小: {}B", fileName, contentType, file.getSize());
 
         String filePath = "D:/";
         File dest = new File(filePath + fileName);
@@ -68,7 +59,7 @@ public class FileController {
             file.transferTo(dest);
             return "上传到: " + dest.getAbsolutePath();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("error: ", e);
         }
         return "上传失败";
     }
@@ -81,8 +72,7 @@ public class FileController {
     public String upload2(MultipartFile[] files) {
         for (MultipartFile file : files) {
             String filename = file.getOriginalFilename();
-            System.out.println(file.getSize());
-            System.out.println(filename);
+            log.info("原始文件名是: {}, 文件大小: {}B", filename, file.getSize());
         }
 
         return "上传成功";

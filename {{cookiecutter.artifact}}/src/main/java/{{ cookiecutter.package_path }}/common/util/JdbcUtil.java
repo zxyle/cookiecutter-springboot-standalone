@@ -1,6 +1,7 @@
 package {{ cookiecutter.basePackage }}.common.util;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 
@@ -16,6 +17,7 @@ import java.sql.*;
  */
 
 @Data
+@Slf4j
 public class JdbcUtil {
 
     private String url;
@@ -52,7 +54,7 @@ public class JdbcUtil {
         try {
             ps = con.prepareStatement(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("error: ", e);
         }
         return ps;
     }
@@ -63,14 +65,14 @@ public class JdbcUtil {
             try {
                 ps.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("error: ", e);
             }
         }
         if (con != null) {
             try {
                 con.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("error: ", e);
             }
         }
     }
@@ -81,7 +83,7 @@ public class JdbcUtil {
             try {
                 rs.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("error: ", e);
             }
         }
         close();

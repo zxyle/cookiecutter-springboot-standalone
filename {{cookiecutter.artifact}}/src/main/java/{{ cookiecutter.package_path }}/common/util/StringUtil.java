@@ -1,6 +1,7 @@
 package {{ cookiecutter.basePackage }}.common.util;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -12,6 +13,7 @@ import java.util.Random;
 /**
  * 字符串操作工具类，扩展自 hutool.cn
  */
+@Slf4j
 public class StringUtil extends StrUtil {
 
     /**
@@ -84,8 +86,7 @@ public class StringUtil extends StrUtil {
             date1 = df1.parse(date.toString());
             df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         } catch (ParseException e) {
-
-            e.printStackTrace();
+            log.error("error: ", e);
         }
         return df2.format(date1);
     }
