@@ -28,7 +28,7 @@ public class PermissionController extends AuthBaseController {
      * 查询用户拥有所有权限信息
      */
     @GetMapping("/permissions")
-    @PreAuthorize(value = "hasAuthority('permissions-list')")
+    @PreAuthorize(value = "ck.hasPermit('auth:permissions:list')")
     public ApiResponse<List<String>> list() {
         List<String> permissions = thisService.getAllPermissions(getUserId());
         return new ApiResponse<>(permissions);
@@ -39,7 +39,7 @@ public class PermissionController extends AuthBaseController {
      * 新增权限
      */
     @PostMapping("/permissions")
-    @PreAuthorize(value = "hasAuthority('permissions-add')")
+    @PreAuthorize(value = "ck.hasPermit('auth:permissions:add')")
     public ApiResponse<Permission> add(@Valid @RequestBody Permission entity) {
         boolean success = thisService.save(entity);
         if (success) {
@@ -55,7 +55,7 @@ public class PermissionController extends AuthBaseController {
      * @param permissionId 权限ID
      */
     @GetMapping("/permissions/{permissionId}")
-    @PreAuthorize(value = "hasAuthority('permissions-get')")
+    @PreAuthorize(value = "ck.hasPermit('auth:permissions:get')")
     public ApiResponse<Permission> get(@NotNull @PathVariable Long permissionId) {
         return new ApiResponse<>(thisService.getById(permissionId));
     }
@@ -66,7 +66,7 @@ public class PermissionController extends AuthBaseController {
      * @param permissionId 权限ID
      */
     @PutMapping("/permissions/{permissionId}")
-    @PreAuthorize(value = "hasAuthority('permissions-update')")
+    @PreAuthorize(value = "ck.hasPermit('auth:permissions:update')")
     public ApiResponse<Object> update(@Valid @RequestBody Permission entity, @NotNull @PathVariable Long permissionId) {
         Permission permission = thisService.getById(permissionId);
         entity.setId(permissionId);
@@ -85,7 +85,7 @@ public class PermissionController extends AuthBaseController {
      * @param permissionId 权限ID
      */
     @DeleteMapping("/permissions/{permissionId}")
-    @PreAuthorize(value = "hasAuthority('permissions-delete')")
+    @PreAuthorize(value = "ck.hasPermit('auth:permissions:delete')")
     public ApiResponse<Object> delete(@NotNull @PathVariable Long permissionId) {
         Permission permission = thisService.getById(permissionId);
         boolean success = thisService.delete(permissionId);
