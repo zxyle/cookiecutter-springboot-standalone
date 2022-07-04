@@ -60,9 +60,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      */
     @Override
     public boolean createRelation(Long userId, Long permissionId) {
-        UserPermission entity = new UserPermission();
-        entity.setUserId(userId);
-        entity.setPermissionId(permissionId);
+        UserPermission entity = new UserPermission(userId, permissionId);
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {

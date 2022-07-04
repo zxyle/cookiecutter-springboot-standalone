@@ -60,9 +60,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      */
     @Override
     public boolean createRelation(Long roleId, Long permissionId) {
-        RolePermission entity = new RolePermission();
-        entity.setRoleId(roleId);
-        entity.setPermissionId(permissionId);
+        RolePermission entity = new RolePermission(roleId, permissionId);
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {

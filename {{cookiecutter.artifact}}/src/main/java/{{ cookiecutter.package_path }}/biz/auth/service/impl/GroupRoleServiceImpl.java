@@ -72,9 +72,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      */
     @Override
     public boolean createRelation(Long groupId, Long roleId) {
-        GroupRole entity = new GroupRole();
-        entity.setRoleId(roleId);
-        entity.setGroupId(groupId);
+        GroupRole entity = new GroupRole(groupId, roleId);
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {

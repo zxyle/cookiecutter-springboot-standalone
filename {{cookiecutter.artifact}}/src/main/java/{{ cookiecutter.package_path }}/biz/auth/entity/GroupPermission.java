@@ -25,4 +25,9 @@ public class GroupPermission extends BaseEntity {
      */
     private Long permissionId;
 
+    public GroupPermission(Long groupId, Long permissionId) {
+        this.groupId = groupId;
+        this.permissionId = permissionId;
+    }
+
 }

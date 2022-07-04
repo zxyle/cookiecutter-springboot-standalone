@@ -96,9 +96,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      */
     @Override
     public boolean createRelation(Long groupId, Long permissionId) {
-        GroupPermission entity = new GroupPermission();
-        entity.setPermissionId(permissionId);
-        entity.setGroupId(groupId);
+        GroupPermission entity = new GroupPermission(groupId, permissionId);
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
