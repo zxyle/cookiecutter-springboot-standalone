@@ -3,6 +3,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -50,5 +51,12 @@ public interface IUserRoleService extends IService<UserRole> {
      * @param roleId 角色ID
      */
     IPage<UserRole> pageRelation(Long userId, Long roleId, IPage<UserRole> page);
+
+    /**
+     * 查询用户所拥有的角色名称
+     *
+     * @param userId 用户ID
+     */
+    List<String> selectRoleByUserId(@Param("uid") long userId);
 
 }

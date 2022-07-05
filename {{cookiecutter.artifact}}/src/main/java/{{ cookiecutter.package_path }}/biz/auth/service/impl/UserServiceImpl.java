@@ -14,7 +14,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,14 +25,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
-    @Autowired
     IUserGroupService userGroupService;
 
-    @Autowired
     IUserRoleService userRoleService;
 
-    @Autowired
     IUserPermissionService userPermissionService;
+
+    public UserServiceImpl(IUserGroupService userGroupService, IUserRoleService userRoleService, IUserPermissionService userPermissionService) {
+        this.userGroupService = userGroupService;
+        this.userRoleService = userRoleService;
+        this.userPermissionService = userPermissionService;
+    }
 
     /**
      * 添加用户
@@ -49,7 +51,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setPwd(passwordEncoder.encode(pwd));
         save(user);
 
-        // 创建映射
+        // 添加用户组
         UserGroup userGroup = new UserGroup(user.getId(), request.getGroupId());
         userGroupService.save(userGroup);
         return user;

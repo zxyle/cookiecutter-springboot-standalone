@@ -60,9 +60,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      */
     @Override
     public boolean createRelation(Long userId, Long roleId) {
-        UserRole entity = new UserRole();
-        entity.setUserId(userId);
-        entity.setRoleId(roleId);
+        UserRole entity = new UserRole(userId, roleId);
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
@@ -79,7 +77,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     @Override
     public IPage<UserRole> pageRelation(Long userId, Long roleId, IPage<UserRole> iPage) {
         QueryWrapper<UserRole> wrapper = buildWrapper(userId, roleId);
-        wrapper.select("user_id, role_d");
+        wrapper.select("user_id, role_id");
         return page(iPage, wrapper);
     }
 
@@ -89,5 +87,15 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         wrapper.eq(userId != 0L, "user_id", userId);
         wrapper.eq(roleId != 0L, "role_id", roleId);
         return wrapper;
+    }
+
+    /**
+     * 查询用户所拥有的角色名称
+     *
+     * @param userId 用户ID
+     */
+    @Override
+    public List<String> selectRoleByUserId(long userId) {
+        return baseMapper.selectRoleByUid(userId);
     }
 }

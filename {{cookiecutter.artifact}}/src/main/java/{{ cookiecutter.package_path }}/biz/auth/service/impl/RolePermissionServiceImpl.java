@@ -88,4 +88,14 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         wrapper.eq(permissionId != 0L, "permission_id", permissionId);
         return wrapper;
     }
+
+    /**
+     * 查询角色所拥有的权限列表
+     *
+     * @param roleId 角色ID
+     */
+    @Override
+    public List<String> getPermissionNameByRoleId(long roleId) {
+        return baseMapper.getPermissionNameByRid(roleId);
+    }
 }

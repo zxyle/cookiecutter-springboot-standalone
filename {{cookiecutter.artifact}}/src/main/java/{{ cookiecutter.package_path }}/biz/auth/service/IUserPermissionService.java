@@ -51,4 +51,11 @@ public interface IUserPermissionService extends IService<UserPermission> {
      */
     IPage<UserPermission> pageRelation(Long userId, Long permissionId, IPage<UserPermission> page);
 
+    /**
+     * 查询用户直接拥有的权限代码列表
+     *
+     * @param userId 用户ID
+     */
+    List<String> selectPermissionNameByUserid(long userId);
+
 }

@@ -30,8 +30,8 @@
     <select id="selectRoleByUid" resultType="java.lang.String">
         SELECT b.code
         FROM auth_user_role a
-                 LEFT JOIN auth_role b
-                           ON a.role_id = b.id
+        LEFT JOIN auth_role b
+        ON a.role_id = b.id
         WHERE a.user_id = #{uid}
     </select>
 

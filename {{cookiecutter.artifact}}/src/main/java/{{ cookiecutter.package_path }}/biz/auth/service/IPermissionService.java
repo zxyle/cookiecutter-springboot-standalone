@@ -36,7 +36,7 @@ public interface IPermissionService extends IService<Permission> {
      *
      * @param userId 用户ID
      */
-    void refreshPermissions(Long userId);
+    boolean refreshPermissions(Long userId);
 
     /**
      * 获取持有该权限的用户
