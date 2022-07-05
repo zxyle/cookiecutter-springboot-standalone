@@ -12,7 +12,6 @@ import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.common.util.AreaNode;
 import {{ cookiecutter.basePackage }}.common.util.TreeUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +26,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements IGroupService {
 
-    @Autowired
     IGroupPermissionService groupPermissionService;
 
-    @Autowired
     IGroupRoleService groupRoleService;
 
-    @Autowired
     IUserGroupService userGroupService;
+
+    public GroupServiceImpl(IGroupPermissionService groupPermissionService, IGroupRoleService groupRoleService, IUserGroupService userGroupService) {
+        this.groupPermissionService = groupPermissionService;
+        this.groupRoleService = groupRoleService;
+        this.userGroupService = userGroupService;
+    }
 
     /**
      * 创建用户组

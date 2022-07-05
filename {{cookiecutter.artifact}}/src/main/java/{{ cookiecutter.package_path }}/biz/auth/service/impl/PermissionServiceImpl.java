@@ -1,16 +1,13 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConstant;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConstant;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.PermissionMapper;
-import {{ cookiecutter.basePackage }}.biz.auth.mapper.RolePermissionMapper;
-import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -30,40 +27,37 @@ import java.util.stream.Collectors;
 @Service
 public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService {
 
-    @Autowired
-    RolePermissionMapper rolePermissionMapper;
-
-    @Autowired
     IGroupRoleService groupRoleService;
 
-    @Autowired
-    UserPermissionMapper userPermissionMapper;
-
-    @Autowired
     IUserPermissionService userPermissionService;
 
-    @Autowired
     IUserRoleService userRoleService;
 
-    @Autowired
     IUserGroupService userGroupService;
 
-    @Autowired
     IGroupPermissionService groupPermissionService;
 
-    @Autowired
     IRolePermissionService rolePermissionService;
 
-    @Autowired
     IRoleService roleService;
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
+    public PermissionServiceImpl(IGroupRoleService groupRoleService, IUserPermissionService userPermissionService, IUserRoleService userRoleService, IUserGroupService userGroupService, IGroupPermissionService groupPermissionService, IRolePermissionService rolePermissionService, IRoleService roleService) {
+        this.groupRoleService = groupRoleService;
+        this.userPermissionService = userPermissionService;
+        this.userRoleService = userRoleService;
+        this.userGroupService = userGroupService;
+        this.groupPermissionService = groupPermissionService;
+        this.rolePermissionService = rolePermissionService;
+        this.roleService = roleService;
+    }
+
     // 查询角色对应的权限
     public List<String> selectRolesPermission(List<Long> roleIds) {
         List<String> permissions = new ArrayList<>();
-        roleIds.forEach(rid -> permissions.addAll(rolePermissionMapper.getPermissionNameByRid(rid)));
+        roleIds.forEach(roleId -> permissions.addAll(rolePermissionService.getPermissionNameByRoleId(roleId)));
         return permissions;
     }
 
@@ -93,7 +87,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public List<String> getAllPermissions(Long userId) {
         List<String> permissions = new ArrayList<>();
         // 用户直接拥有的权限
-        permissions.addAll(userPermissionMapper.selectPermissionNameByUid(userId));
+        permissions.addAll(userPermissionService.selectPermissionNameByUserid(userId));
         // 所在用户组拥有的权限
         permissions.addAll(groupPermissionService.selectPermissionsByGroup(userId));
         // 用户拥有角色所获得权限
@@ -140,7 +134,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
      * @param userId 用户ID
      */
     @Override
-    public void refreshPermissions(Long userId) {
+    public boolean refreshPermissions(Long userId) {
         String key = "permissions:" + userId;
         Boolean exist = stringRedisTemplate.hasKey(key);
         // 只对已登录用户进行权限刷新
@@ -148,7 +142,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             // 将权限码和角色码存入redis
             List<String> permissions = getSecurityPermissions(userId);
             stringRedisTemplate.opsForValue().set(key, String.join(AuthConstant.DELIMITER, permissions), 1, TimeUnit.DAYS);
+            return true;
         }
+        return false;
     }
 
     /**

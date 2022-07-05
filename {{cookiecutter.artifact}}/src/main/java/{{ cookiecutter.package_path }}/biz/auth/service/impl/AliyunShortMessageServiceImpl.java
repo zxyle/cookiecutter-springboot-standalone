@@ -1,5 +1,6 @@
-package {{ cookiecutter.basePackage }}.biz.auth.service;
+package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import {{ cookiecutter.basePackage }}.biz.auth.service.ShortMessageService;
 import org.springframework.stereotype.Service;
 
 /**

@@ -88,4 +88,14 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
         wrapper.eq(permissionId != 0L, "permission_id", permissionId);
         return wrapper;
     }
+
+    /**
+     * 查询用户直接拥有的权限代码列表
+     *
+     * @param userId 用户ID
+     */
+    @Override
+    public List<String> selectPermissionNameByUserid(long userId) {
+        return baseMapper.selectPermissionNameByUid(userId);
+    }
 }

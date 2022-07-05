@@ -5,9 +5,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.RoleMapper;
-import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,20 +20,20 @@ import java.util.stream.Collectors;
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
-    @Autowired
-    UserRoleMapper userRoleMapper;
-
-    @Autowired
     IUserGroupService userGroupService;
 
-    @Autowired
     IGroupRoleService groupRoleService;
 
-    @Autowired
     IRolePermissionService rolePermissionService;
 
-    @Autowired
     IUserRoleService userRoleService;
+
+    public RoleServiceImpl(IUserGroupService userGroupService, IGroupRoleService groupRoleService, IRolePermissionService rolePermissionService, IUserRoleService userRoleService) {
+        this.userGroupService = userGroupService;
+        this.groupRoleService = groupRoleService;
+        this.rolePermissionService = rolePermissionService;
+        this.userRoleService = userRoleService;
+    }
 
     /**
      * 查询用户组对应角色ID
@@ -55,7 +53,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Cacheable(cacheNames = "roleCache", key = "#userId")
     @Override
     public List<String> getAllRoles(Long userId) {
-        List<String> roles = new ArrayList<>(userRoleMapper.selectRoleByUid(userId));
+        List<String> roles = new ArrayList<>(userRoleService.selectRoleByUserId(userId));
 
         List<UserGroup> userGroups = userGroupService.queryRelation(userId, 0L);
         userGroups.forEach(ug -> {

@@ -25,4 +25,8 @@ public class UserRole extends BaseEntity {
      */
     private Long roleId;
 
+    public UserRole(Long userId, Long roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
+    }
 }
