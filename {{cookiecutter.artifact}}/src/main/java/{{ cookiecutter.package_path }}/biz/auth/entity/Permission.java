@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
  * 权限
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @TableName("auth_permission")
 public class Permission extends BaseEntity {
 

@@ -4,8 +4,19 @@ import lombok.Data;
 
 @Data
 public class AreaNode implements TreeNode {
+    /**
+     * 节点名称
+     */
     private String name;
+
+    /**
+     * 节点父ID
+     */
     private String parentId;
+
+    /**
+     * 节点ID
+     */
     private String id;
 
     @Override

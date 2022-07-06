@@ -2,6 +2,7 @@ package {{ cookiecutter.basePackage }}.common.response;
 
 import lombok.ToString;
 import org.slf4j.MDC;
+import org.springframework.http.HttpStatus;
 
 @ToString
 public class ApiResponse<T> {
@@ -12,16 +13,22 @@ public class ApiResponse<T> {
 
     /**
      * 状态码
+     *
+     * @mock 200
      */
     private String code;
 
     /**
      * 消息
+     *
+     * @mock 操作成功
      */
     private String message;
 
     /**
      * 是否成功
+     *
+     * @mock true
      */
     private boolean success;
 
@@ -29,6 +36,8 @@ public class ApiResponse<T> {
 
     /**
      * 请求追踪ID
+     *
+     * @mock 6dc01bc62c0d44018360af107673d71e
      */
     private String traceId;
 
@@ -38,21 +47,21 @@ public class ApiResponse<T> {
     public ApiResponse(String message) {
         setData(null);
         setMessage(message);
-        setCode("0");
+        setCode(String.valueOf(HttpStatus.OK.value()));
         setSuccess(true);
     }
 
     public ApiResponse(String message, boolean success) {
         setData(null);
         setMessage(message);
-        setCode("0");
+        setCode(String.valueOf(HttpStatus.OK.value()));
         setSuccess(success);
     }
 
     public ApiResponse(T data) {
         setData(data);
         setMessage(SUCCESS_MSG);
-        setCode("0");
+        setCode(String.valueOf(HttpStatus.OK.value()));
         setSuccess(true);
         setTraceId(MDC.get("traceId"));
     }
@@ -60,7 +69,7 @@ public class ApiResponse<T> {
     public ApiResponse(boolean success) {
         setSuccess(success);
         setMessage(success ? SUCCESS_MSG : FAILURE_MSG);
-        setCode("0");
+        setCode(String.valueOf(HttpStatus.OK.value()));
         setTraceId(MDC.get("traceId"));
     }
 
@@ -70,7 +79,7 @@ public class ApiResponse<T> {
 
     public ApiResponse<T> ok(T data) {
         setMessage(SUCCESS_MSG);
-        setCode("0");
+        setCode(String.valueOf(HttpStatus.OK.value()));
         setSuccess(true);
         setData(data);
         return this;
