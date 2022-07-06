@@ -1,18 +1,15 @@
 package {{ cookiecutter.basePackage }}.biz.sample.controller;
 
 import {{ cookiecutter.basePackage }}.biz.sample.entity.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Post请求示例
  */
 @Controller
+@Slf4j
 public class PostSampleController {
 
     /**
@@ -53,7 +50,7 @@ public class PostSampleController {
     @PostMapping("/post4")
     @ResponseBody
     public User post4(@RequestBody User user) {
-        System.out.println("上传过来的json数据是: " + user);
+        log.info("json请求体: {}", user);
         return user;
     }
 }

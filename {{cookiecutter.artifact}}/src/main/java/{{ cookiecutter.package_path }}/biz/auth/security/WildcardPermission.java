@@ -81,14 +81,15 @@ public class WildcardPermission {
     /**
      * 判断用户是否具有该权限
      *
-     * @param permission  待比对权限
-     * @param permissions 用户已拥有的权限列表
+     * @param permission         待比对权限
+     * @param permissionPatterns 用户已拥有的权限列表
      * @return true-有权限 false-无权限
      */
-    public boolean isPermit(String permission, List<String> permissions) {
-        if (permissions == null || permissions.size() == 0 || permission == null || permission.equals("")) return false;
+    public boolean isPermit(String permission, List<String> permissionPatterns) {
+        if (permissionPatterns == null || permissionPatterns.size() == 0 || permission == null || permission.equals(""))
+            return false;
 
-        for (String p : permissions) {
+        for (String p : permissionPatterns) {
             if (StrUtil.isBlank(p)) continue;
 
             if (format(p).isAllowed(permission)) {

@@ -20,6 +20,12 @@ public class CheckPermissionService {
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
+    /**
+     * 检查用户拥有的权限是否包含指定的权限
+     *
+     * @param permission 权限字符串
+     * @return 是否有权限
+     */
     public boolean hasPermit(String permission) {
         if (StringUtils.isEmpty(permission)) {
             return false;
@@ -33,7 +39,7 @@ public class CheckPermissionService {
         if (StringUtils.isBlank(value))
             return false;
 
-        List<String> permissions = Arrays.asList(value.split(AuthConstant.DELIMITER));
-        return wildcardPermission.isPermit(permission, permissions);
+        List<String> patterns = Arrays.asList(value.split(AuthConstant.DELIMITER));
+        return wildcardPermission.isPermit(permission, patterns);
     }
 }

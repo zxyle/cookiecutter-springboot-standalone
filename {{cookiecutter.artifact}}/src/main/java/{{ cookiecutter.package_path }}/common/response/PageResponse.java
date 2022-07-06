@@ -11,16 +11,22 @@ import java.util.List;
 public class PageResponse<T> {
     /**
      * 当前页
+     *
+     * @mock 1
      */
     private Integer current;
 
     /**
-     * 页数量
+     * 每页数量
+     *
+     * @mock 10
      */
     private Integer pageSize;
 
     /**
      * 总数
+     *
+     * @mock 100
      */
     private Long total;
 

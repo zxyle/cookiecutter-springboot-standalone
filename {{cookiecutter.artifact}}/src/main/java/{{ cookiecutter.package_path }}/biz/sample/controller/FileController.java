@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * 文件传输示例
@@ -26,7 +26,7 @@ public class FileController {
     public ResponseEntity<Object> downloadFile() throws IOException {
         String filename = "D:\\apache-tomcat-8.5.59.zip";
         File file = new File(filename);
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        InputStreamResource resource = new InputStreamResource(Files.newInputStream(file.toPath()));
         HttpHeaders headers = new HttpHeaders();
 
         headers.add("Content-Disposition", String.format("attachment; filename=\"%s\"", file.getName()));
