@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConstant;
+import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.LoginByNameRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
@@ -84,7 +84,7 @@ public class LoginController {
         response.setToken(jwt);
         response.setUsername(loginName);
         loginLog.setMsg("登录成功");
-        loginLog.setIsSuccess(AuthConstant.SUCCESS);
+        loginLog.setIsSuccess(AuthConst.SUCCESS);
         // TODO 改成异步插入
         // loginLogService.save(loginLog);
         return new ApiResponse<>(response);

@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * 角色信息
+ * 角色管理
  */
 @RestController
 @RequestMapping("/auth")

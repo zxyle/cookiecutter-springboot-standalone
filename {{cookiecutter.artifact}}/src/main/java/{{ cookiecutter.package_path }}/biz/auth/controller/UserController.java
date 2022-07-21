@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 用户
+ * 用户管理
  */
 @RestController
 @RequestMapping("/auth")

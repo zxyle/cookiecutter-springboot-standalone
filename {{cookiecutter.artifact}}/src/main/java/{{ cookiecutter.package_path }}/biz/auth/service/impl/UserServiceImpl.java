@@ -3,7 +3,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import {{ cookiecutter.basePackage }}.biz.auth.constant.PwdConstant;
+import {{ cookiecutter.basePackage }}.biz.auth.constant.PwdConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserMapper;
@@ -46,7 +46,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String pwd = request.getPwd();
         User user = new User();
         BeanUtils.copyProperties(request, user);
-        pwd = StringUtils.isNotBlank(pwd) ? pwd : PwdConstant.DEFAULT_PWD;
+        pwd = StringUtils.isNotBlank(pwd) ? pwd : PwdConst.DEFAULT_PWD;
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPwd(passwordEncoder.encode(pwd));
         save(user);

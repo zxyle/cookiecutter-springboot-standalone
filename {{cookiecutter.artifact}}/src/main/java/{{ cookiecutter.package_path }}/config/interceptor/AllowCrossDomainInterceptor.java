@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.config.interceptor;
 
-import {{ cookiecutter.basePackage }}.common.constant.ProjectConstant;
+import {{ cookiecutter.basePackage }}.common.constant.ProjectConst;
 import {{ cookiecutter.basePackage }}.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -27,7 +27,7 @@ public class AllowCrossDomainInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         // 仅在非正式环境下生效
-        if (!Arrays.asList(env.getActiveProfiles()).contains(ProjectConstant.PROD)) {
+        if (!Arrays.asList(env.getActiveProfiles()).contains(ProjectConst.PROD)) {
             String origin = httpServletRequest.getHeader("Origin");
             httpServletResponse.setHeader("Access-Control-Allow-Origin", StringUtil.isEmpty(origin) ? "*" : origin);
             httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, PATCH");

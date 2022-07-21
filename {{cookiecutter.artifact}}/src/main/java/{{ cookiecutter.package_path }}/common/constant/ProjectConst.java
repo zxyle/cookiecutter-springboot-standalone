@@ -3,9 +3,9 @@ package {{ cookiecutter.basePackage }}.common.constant;
 /**
  * 项目常量
  */
-public final class ProjectConstant {
+public final class ProjectConst {
 
-    private ProjectConstant() {
+    private ProjectConst() {
 
     }
 

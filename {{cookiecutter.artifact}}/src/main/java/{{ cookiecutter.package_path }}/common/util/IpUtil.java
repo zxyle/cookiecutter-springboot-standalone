@@ -1,7 +1,7 @@
 package {{ cookiecutter.basePackage }}.common.util;
 
 import cn.hutool.core.util.StrUtil;
-import {{ cookiecutter.basePackage }}.common.constant.ProjectConstant;
+import {{ cookiecutter.basePackage }}.common.constant.ProjectConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +74,7 @@ public class IpUtil {
         ip = getIp(request, ip);
         if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
-            if (LOCAL_IP.equals(ip) || ProjectConstant.DEFAULT_IP.equals(ip)) {
+            if (LOCAL_IP.equals(ip) || ProjectConst.DEFAULT_IP.equals(ip)) {
                 // 根据网卡取本机配置的IP
                 InetAddress inet = null;
                 try {

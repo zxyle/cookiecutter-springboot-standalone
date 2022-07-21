@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.common.util;
 
-import {{ cookiecutter.basePackage }}.common.constant.PageConsts;
+import {{ cookiecutter.basePackage }}.common.constant.PageConst;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
@@ -46,7 +46,7 @@ public class PageRequestUtil {
      * @return 有效页码大小
      */
     public static Integer checkPageNum(Integer pageNum) {
-        return valid(pageNum) ? PageConsts.DEFAULT_CURRENT : pageNum;
+        return valid(pageNum) ? PageConst.DEFAULT_CURRENT : pageNum;
     }
 
     /**
@@ -56,7 +56,7 @@ public class PageRequestUtil {
      * @return 有效分页大小
      */
     public static Integer checkPageSize(Integer pageSize) {
-        return checkPageSize(pageSize, PageConsts.DEFAULT_PAGE_SIZE);
+        return checkPageSize(pageSize, PageConst.DEFAULT_PAGE_SIZE);
     }
 
     /**
