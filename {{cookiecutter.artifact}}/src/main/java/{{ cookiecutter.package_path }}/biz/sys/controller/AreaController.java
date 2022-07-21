@@ -63,19 +63,12 @@ public class AreaController {
         }
 
         List<Area> areas = thisService.list(wrapper);
-        List<AreaNode> nodes = areas.stream().map(e -> {
-            AreaNode node = new AreaNode();
-            node.setId(e.getCode());
-            node.setName(e.getName());
-            node.setParentId(e.getParent());
-            return node;
-        }).collect(Collectors.toList());
+        List<AreaNode> nodes = areas.stream()
+                .map(node -> new AreaNode(node.getName(), node.getParent(), node.getCode()))
+                .collect(Collectors.toList());
 
-        AntdTree2 tree = new AntdTree2();
         List<AntdTree2> listTree = TreeUtil.createTree(nodes, rootId);
-        tree.setValue(rootCode);
-        tree.setLabel(rootName);
-        tree.setChildren(listTree);
+        AntdTree2 tree = new AntdTree2(rootName, rootCode, listTree);
         return new ApiResponse<>(tree);
     }
 }

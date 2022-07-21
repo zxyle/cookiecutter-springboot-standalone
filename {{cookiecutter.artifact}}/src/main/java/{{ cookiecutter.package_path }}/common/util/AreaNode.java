@@ -19,6 +19,12 @@ public class AreaNode implements TreeNode {
      */
     private String id;
 
+    public AreaNode(String name, String parentId, String id) {
+        this.name = name;
+        this.parentId = parentId;
+        this.id = id;
+    }
+
     @Override
     public String getName() {
         return name;
