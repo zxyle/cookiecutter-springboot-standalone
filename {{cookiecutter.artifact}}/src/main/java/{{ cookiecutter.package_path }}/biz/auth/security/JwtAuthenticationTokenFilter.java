@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.security;
 
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConstant;
+import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -61,7 +61,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
 
         // 获取权限信息封装到Authentication中
-        permissions = Arrays.asList(value.split(AuthConstant.DELIMITER));
+        permissions = Arrays.asList(value.split(AuthConst.DELIMITER));
         LoginUser loginUser = new LoginUser(permissions, userService.queryById(Long.valueOf(userId)));
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());

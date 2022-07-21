@@ -1,7 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConstant;
+import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
@@ -49,7 +49,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         // 将权限码和角色码存入redis
         String key = "permissions:" + userId;
-        stringRedisTemplate.opsForValue().set(key, String.join(AuthConstant.DELIMITER, permissions), 1, TimeUnit.DAYS);
+        stringRedisTemplate.opsForValue().set(key, String.join(AuthConst.DELIMITER, permissions), 1, TimeUnit.DAYS);
         return new LoginUser(permissions, one);
     }
 }

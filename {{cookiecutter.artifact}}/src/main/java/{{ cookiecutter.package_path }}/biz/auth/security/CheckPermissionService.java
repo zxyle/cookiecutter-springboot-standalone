@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.security;
 
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConstant;
+import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,7 +39,7 @@ public class CheckPermissionService {
         if (StringUtils.isBlank(value))
             return false;
 
-        List<String> patterns = Arrays.asList(value.split(AuthConstant.DELIMITER));
+        List<String> patterns = Arrays.asList(value.split(AuthConst.DELIMITER));
         return wildcardPermission.isPermit(permission, patterns);
     }
 }

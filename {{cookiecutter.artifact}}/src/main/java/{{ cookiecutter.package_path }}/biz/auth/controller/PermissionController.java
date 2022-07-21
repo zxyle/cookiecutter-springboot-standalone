@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * 权限信息
+ * 权限管理
  */
 @RestController
 @RequestMapping("/auth")

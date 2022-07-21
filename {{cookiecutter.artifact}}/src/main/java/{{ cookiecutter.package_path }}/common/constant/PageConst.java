@@ -3,7 +3,7 @@ package {{ cookiecutter.basePackage }}.common.constant;
 /**
  * 分页常量
  */
-public class PageConsts {
+public class PageConst {
     /**
      * 默认页码
      */

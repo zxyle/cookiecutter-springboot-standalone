@@ -1,7 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConstant;
+import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
@@ -141,7 +141,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         if (Boolean.TRUE.equals(exist)) {
             // 将权限码和角色码存入redis
             List<String> permissions = getSecurityPermissions(userId);
-            stringRedisTemplate.opsForValue().set(key, String.join(AuthConstant.DELIMITER, permissions), 1, TimeUnit.DAYS);
+            stringRedisTemplate.opsForValue().set(key, String.join(AuthConst.DELIMITER, permissions), 1, TimeUnit.DAYS);
             return true;
         }
         return false;
@@ -163,7 +163,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
                 Long userId = Long.parseLong(key.split(":")[1]);
                 String value = stringRedisTemplate.opsForValue().get(key);
                 if (StringUtils.isNotBlank(value)) {
-                    List<String> permissions = Arrays.asList(value.split(AuthConstant.DELIMITER));
+                    List<String> permissions = Arrays.asList(value.split(AuthConst.DELIMITER));
                     if (permissions.contains(code)) {
                         users.add(userId);
                     }

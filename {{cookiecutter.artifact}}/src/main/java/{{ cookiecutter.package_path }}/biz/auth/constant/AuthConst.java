@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.constant;
 
-public class AuthConstant {
+public class AuthConst {
 
     // 未锁定
     public static final int UNLOCKED = 0;

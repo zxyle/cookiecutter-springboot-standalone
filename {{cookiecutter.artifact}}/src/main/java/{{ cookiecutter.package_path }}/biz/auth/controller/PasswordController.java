@@ -57,7 +57,7 @@ public class PasswordController extends AuthBaseController {
             return new ApiResponse<>(s1 && s2);
         }
 
-        return new ApiResponse<>("修改失败，旧密码错误", false);
+        return new ApiResponse<>("修改密码失败", false);
     }
 
     /**

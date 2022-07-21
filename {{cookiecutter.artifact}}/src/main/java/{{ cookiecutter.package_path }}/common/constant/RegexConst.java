@@ -3,7 +3,7 @@ package {{ cookiecutter.basePackage }}.common.constant;
 /**
  * 正则表达式常量
  */
-public class RegexConsts {
+public class RegexConst {
 
     public static final String REGEX_MOBILE = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$";
 
