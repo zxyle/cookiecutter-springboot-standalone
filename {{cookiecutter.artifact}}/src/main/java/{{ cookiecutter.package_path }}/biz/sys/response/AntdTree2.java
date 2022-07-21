@@ -28,6 +28,12 @@ public class AntdTree2 {
         this.value = value;
     }
 
+    public AntdTree2(String label, String value, List<? extends AntdTree2> children) {
+        this.label = label;
+        this.value = value;
+        this.children = children;
+    }
+
     public AntdTree2() {
     }
 

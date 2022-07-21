@@ -122,13 +122,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         QueryWrapper<Group> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("id", "name", "parent_id");
         List<Group> groups = baseMapper.selectList(queryWrapper);
-        List<AreaNode> nodes = groups.stream().map(e -> {
-            AreaNode node = new AreaNode();
-            node.setId(String.valueOf(e.getId()));
-            node.setName(e.getName());
-            node.setParentId(String.valueOf(e.getParentId()));
-            return node;
-        }).collect(Collectors.toList());
+        List<AreaNode> nodes = groups.stream()
+                .map(node -> new AreaNode(node.getName(), String.valueOf(node.getParentId()), String.valueOf(node.getId())))
+                .collect(Collectors.toList());
 
         AntdTree2 tree = new AntdTree2();
         List<AntdTree2> listTree = TreeUtil.createTree(nodes, rootId);
