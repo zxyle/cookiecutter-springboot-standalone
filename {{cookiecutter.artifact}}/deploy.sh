@@ -16,7 +16,7 @@ function restart() {
 function publish() {
     package
     # TODO 增加jar包备份
-    scp -rvC $target/*.jar $server:$dir
+    scp -rvC ./target/*.jar $server:$dir
     restart
 }
 
