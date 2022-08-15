@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +67,14 @@ public class HealthController {
     @GetMapping("/ip")
     public String ip(HttpServletRequest servletRequest) {
         return IpUtil.getIpAddr(servletRequest);
+    }
+
+    /**
+     * 获取服务器时间
+     */
+    @GetMapping("/now")
+    public String now() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
 }
