@@ -10,10 +10,10 @@
 - 权限认证: 实现`RBAC0`权限模型（用户、用户组、角色、权限） JWT
 - 缓存： Caffeine + Redis 二级缓存
 - 系统管理： 登录日志、操作日志、友链、黑白名单、系统信息
-- 系统监控：
+- 字典管理、内置全国村社区级行政区划信息
+- 系统监控：心跳检测
 - 系统告警：支持钉钉Hook告警
-- 字典管理、涵盖中国村社级行政区划
-- 图形验证码、短信验证码
+- 支持图形验证码、短信验证码
 - 接口文档： 集成[smart-doc](https://smart-doc-group.github.io/#/zh-cn/)接口文档, 相比swagger侵入性低、团队管理方便
 - 参数校验
 - 统一接口返回
@@ -30,7 +30,7 @@ $ cookiecutter https://jihulab.com/zxyle/cookiecutter-springboot-standalone.git
 - 按提示输入项目信息，以完成项目创建（项目名称建议以-api结尾 如`shop-api`）
 - 修改mysql、redis连接信息。如果没有可用环境，推荐使用docker-compose进行创建
 - 将docs/ddl目录下的sql文件导入数据库
-- Enjoy code
+- 开始编码
 
 ## 待完成清单
 - [ ] 完善使用文档
