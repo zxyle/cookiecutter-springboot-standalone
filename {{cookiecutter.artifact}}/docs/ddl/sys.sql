@@ -54,6 +54,9 @@ CREATE TABLE `sys_dict` (
 BEGIN;
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('性别', 0, '男', 'male', 'gender');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('性别', 0, '女', 'female', 'gender');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('客户端类型', 0, 'PC', 'pc', 'agent');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('客户端类型', 0, 'H5', 'h5', 'agent');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('客户端类型', 0, 'APP', 'app', 'agent');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('政治面貌', 0, '群众', 'masses', 'political_status');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('政治面貌', 0, '民主党派', 'democratic-party', 'political_status');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('政治面貌', 0, '中共党员', 'cpc', 'political_status');
@@ -129,7 +132,7 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('受教育程度', 0, '大专', 'college', 'education');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('受教育程度', 0, '本科', 'undergraduate', 'education');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('受教育程度', 0, '硕士', 'master', 'education');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('受教育程度', 0, '博士', 'docter', 'education');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('受教育程度', 0, '博士', 'doctor', 'education');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('受教育程度', 0, '博士后', 'postdoc', 'education');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('生肖', 0, '鼠', 'rat', 'chinese_zodiac_signs');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('生肖', 0, '牛', 'ox', 'chinese_zodiac_signs');

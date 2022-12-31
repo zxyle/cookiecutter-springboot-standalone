@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.auth.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
