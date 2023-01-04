@@ -53,7 +53,7 @@ CREATE TABLE `sys_dict` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('性别', 0, '男', 'male', 'gender');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('性别', 0, '女', 'female', 'gender');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('性别', 1, '女', 'female', 'gender');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('客户端类型', 0, 'PC', 'pc', 'agent');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('客户端类型', 0, 'H5', 'h5', 'agent');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('客户端类型', 0, 'APP', 'app', 'agent');
@@ -205,6 +205,14 @@ CREATE TABLE `sys_friendly_url` (
   `status` tinyint NOT NULL COMMENT '1-启用 0-禁用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='友情链接';
+-- ----------------------------
+-- Records of sys_friendly_url
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_friendly_url` (`content`, `url`, `sort`, `status`) VALUES ('百度', 'https://www.baidu.com', 2, 1);
+INSERT INTO `sys_friendly_url` (`content`, `url`, `sort`, `status`) VALUES ('腾讯网', 'https://www.qq.com', 1, 1);
+INSERT INTO `sys_friendly_url` (`content`, `url`, `sort`, `status`) VALUES ('淘宝网', 'https://www.taobao.com', 3, 1);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_info
@@ -219,6 +227,26 @@ CREATE TABLE `sys_info` (
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '描述信息',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统信息';
+-- ----------------------------
+-- Records of sys_info
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('icp', '浙ICP备0000号', '备案号');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('name', 'XXX管理系统', '系统名称');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('version', 'V1.0.0', '版本');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('language', '简体中文', '语言');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('favicon', 'B', '网站logo');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('copyright', 'XX有限公司版权所有', '版权信息');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('email', 'xxx@example.com', '技术支持邮箱');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('keywords', 'XXX', 'SEO关键字');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('description', 'XXX', 'SEO描述');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('agreement', 'G', '协议文本');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('homepage', 'example.com', '主页');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('title', 'XXX', '网站标题');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('tel', '400-111-2222', '联系电话');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('address', '浙江省杭州市余杭区文一西路10000号', '联系地址');
+INSERT INTO `sys_info` (`param_key`, `param_value`, `description`) VALUES ('about', 'XX公司是一家什么公司', '关于我们');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_login_log
@@ -271,6 +299,13 @@ CREATE TABLE `sys_release` (
   `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '版本描述',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='发布版本';
+-- ----------------------------
+-- Records of sys_release
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_release` (`version`, `description`) VALUES ('V1.0.0', '第一个版本');
+INSERT INTO `sys_release` (`version`, `description`) VALUES ('v1.1.1', '第二版本');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_sql
