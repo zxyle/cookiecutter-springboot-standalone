@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sample.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,31 +20,65 @@ public class EmailService {
     @Autowired
     JavaMailSenderImpl javaMailSender;
 
+    @Value("${app.name}")
+    private String appName;
+
+    @Value("${spring.mail.username}")
+    private String sender;
+
+    /**
+     * 发送邮件验证码
+     *
+     * @param code 邮件验证码
+     * @param to   接收者邮箱地址
+     */
+    public boolean sendVerificationCode(String code, String to) {
+        String text = "邮箱验证码为<b style='color:red'>" + code + "</b>，验证码有效期为30分钟!";
+        String subject = "【" + appName + "】邮箱验证码";
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper;
+        try {
+            mimeMessageHelper = new MimeMessageHelper(message, true);
+            // 邮件发送人
+            mimeMessageHelper.setFrom(sender);
+            // 邮件接收人
+            mimeMessageHelper.setTo(to);
+            // 邮件主题
+            mimeMessageHelper.setSubject(subject);
+            // 邮件内容,HTML格式
+            mimeMessageHelper.setText(text, true);
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 发送普通文本邮件
      */
-    public void testSend01() {
+    public void testSend01(String to) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("这是邮件标题");
         message.setText("这是邮件内容");
-        message.setTo("168726413@qq.com");
-        message.setFrom("210797402@qq.com");
+        message.setTo(to);
+        message.setFrom(sender);
         javaMailSender.send(message);
     }
 
     /**
      * 带附件的邮件发送
      */
-    public void testSend02() throws MessagingException {
+    public void testSend02(String to) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setSubject("这是邮件标题");
         helper.setText("<b style='color:red'>这是邮件内容</b>", true);
-        helper.setTo("168726413@qq.com");
-        helper.setFrom("210797402@qq.com");
+        helper.setTo(to);
+        helper.setFrom(sender);
 
-        helper.addAttachment("1.jpg", new File("E:\\照片\\我的第一张身份证照片\\1508714734455.jpg"));
-        helper.addAttachment("2.jpg", new File("E:\\照片\\我的第一张身份证照片\\1508714741173.jpg"));
+        helper.addAttachment("1.jpg", new File("D:\\1.jpg"));
         javaMailSender.send(message);
 
     }

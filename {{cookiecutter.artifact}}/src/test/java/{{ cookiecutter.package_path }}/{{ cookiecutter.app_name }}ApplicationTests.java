@@ -3,9 +3,20 @@
 
 package {{ cookiecutter.basePackage }};
 
+import {{ cookiecutter.basePackage }}.biz.sample.service.EmailService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class {{ cookiecutter.app_name }}ApplicationTests {
+
+    @Autowired
+    EmailService emailService;
+
+    @Test
+    void send() {
+        emailService.sendVerificationCode("123456", "admin@example.com");
+    }
 
 }
