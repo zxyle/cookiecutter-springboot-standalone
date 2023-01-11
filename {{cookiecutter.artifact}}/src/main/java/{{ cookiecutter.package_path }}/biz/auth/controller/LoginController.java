@@ -53,11 +53,11 @@ public class LoginController {
      * 用户登录
      *
      * @param request 用户信息
-     * @apiNote 通过用户名和密码进行用户登录
+     * @apiNote 通过用户名/邮箱/手机号和密码进行用户登录
      */
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginByNameRequest request, HttpServletRequest servletRequest) {
-        String loginName = request.getLoginName();
+        String principal = request.getPrincipal();
 
         // 如需开启验证码，请取消注释下面代码
         // verifyService.verify(request.getCode(), request.getCaptchaId());
@@ -66,10 +66,10 @@ public class LoginController {
         LoginLog loginLog = new LoginLog();
         loginLog.setUa(servletRequest.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setIp(IpUtil.getIpAddr(servletRequest));
-        loginLog.setLoginName(loginName);
+        loginLog.setLoginName(principal);
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(request.getLoginName(), request.getPassword());
+                new UsernamePasswordAuthenticationToken(principal, request.getPassword());
         // AuthenticationManager authenticate进行用户认证
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         if (Objects.isNull(authenticate)) {
@@ -85,7 +85,7 @@ public class LoginController {
 
         LoginResponse response = new LoginResponse();
         response.setToken(jwt);
-        response.setUsername(loginName);
+        response.setUsername(principal);
         loginLog.setMsg("登录成功");
         loginLog.setIsSuccess(AuthConst.SUCCESS);
         // TODO 改成异步插入

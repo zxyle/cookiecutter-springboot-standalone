@@ -33,7 +33,7 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 图形验证码
+ * 图形数字验证码
  */
 @RestController
 @RequestMapping("/sys/captcha")
@@ -63,11 +63,14 @@ public class CaptchaController {
     @Value("${code.principal}")
     private String authMethod;
 
+    @Value("${code.ttl}")
+    private Integer ttl;
+
     @Autowired
     private EmailService emailService;
 
     /**
-     * 生成base64格式图形验证码
+     * 生成base64编码图形验证码
      */
     @GetMapping("/generate")
     public ApiResponse<CaptchaResponse> generate() {
@@ -84,13 +87,9 @@ public class CaptchaController {
      */
     @GetMapping("/captchaImage")
     public void get(HttpServletResponse response) throws IOException {
-        // 设置响应头
         response.setHeader("Pragma", "no-cache");
-        // 设置响应头
         response.setHeader("Cache-Control", "no-cache");
-        // 在代理服务器端防止缓冲
-        response.setDateHeader("Expires", 0);
-        // 设置响应内容类型
+        response.setDateHeader("Expires", 0);  // 在代理服务器端防止缓冲
         response.setContentType("image/jpeg");
         String key = IdUtil.simpleUUID();
         CaptchaPair captchaPair = captchaService.generate();
@@ -119,7 +118,7 @@ public class CaptchaController {
         // 查询手机号或邮箱绑定的用户
         User user = userService.queryByPrincipal(request.getMobile(), request.getEmail());
         if (null == user || isLocked(request.getPrincipal())) {
-            // 可能用户不存在
+            // 可能用户不存在或验证码请求频繁
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -139,7 +138,7 @@ public class CaptchaController {
         if (authMethod.equals("mobile")) {
             // TODO 调用发送短信接口, 写入到消息队列中
         }
-        locked(request.getPrincipal(), 60);
+        locked(request.getPrincipal(), ttl);
         return ResponseEntity.ok(true);
     }
 

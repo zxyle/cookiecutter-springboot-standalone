@@ -166,7 +166,9 @@ CREATE TABLE `auth_user` (
   `is_super` tinyint NOT NULL DEFAULT '0' COMMENT '超级管理员',
   `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_login_name` (`login_name`) USING BTREE
+  UNIQUE KEY `uk_login_name` (`login_name`) USING BTREE,
+  UNIQUE KEY `uk_mobile` (`mobile`) USING BTREE,
+  UNIQUE KEY `uk_email` (`email`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='用户';
 
 -- ----------------------------

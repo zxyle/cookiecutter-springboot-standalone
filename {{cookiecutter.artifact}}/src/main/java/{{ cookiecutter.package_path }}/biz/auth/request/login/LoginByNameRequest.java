@@ -4,24 +4,29 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request.login;
 
 import lombok.Data;
-
-import javax.validation.constraints.NotBlank;
+import org.apache.commons.lang3.StringUtils;
 
 // 用户名 + 密码方式登录
 @Data
 public class LoginByNameRequest {
-    // TODO 支持邮箱 手机号
+    /**
+     * 用户名登录（用户名、手机号、邮箱三选一）
+     */
+    private String loginName;
 
     /**
-     * 用户名
+     * 手机号登录（用户名、手机号、邮箱三选一）
      */
-    @NotBlank
-    private String loginName;
+    private String mobile;
+
+    /**
+     * 邮箱登录（用户名、手机号、邮箱三选一）
+     */
+    private String email;
 
     /**
      * 密码
      */
-    @NotBlank
     private String password;
 
     /**
@@ -39,19 +44,15 @@ public class LoginByNameRequest {
      */
     private String rememberMe;
 
-    /**
-     *
-     */
-    private boolean autoLogin;
-
-    /**
-     *
-     */
-    private String type;
-
-    /**
-     *
-     */
-    private String username;
+    public String getPrincipal() {
+        String result = "";
+        if (StringUtils.isNotBlank(getLoginName()))
+            result = "loginName#" + getLoginName();
+        if (StringUtils.isNotBlank(getMobile()))
+            result = "mobile#" + getMobile();
+        if (StringUtils.isNotBlank(getEmail()))
+            result = "email#" + getEmail();
+        return result;
+    }
 
 }

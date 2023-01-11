@@ -16,7 +16,7 @@ public class CaptchaResponse {
     private String captchaId;
 
     /**
-     * 图形验证码Base64编码
+     * base64编码的图形验证码
      */
     private String captcha;
 }

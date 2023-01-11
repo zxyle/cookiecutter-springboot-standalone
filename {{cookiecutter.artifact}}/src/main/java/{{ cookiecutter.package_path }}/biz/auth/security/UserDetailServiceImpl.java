@@ -9,6 +9,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,10 +35,27 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        String loginName = "";
+        String mobile = "";
+        String email = "";
+        String[] strings = username.split("#");
+        switch (strings[0]) {
+            case "loginName":
+                loginName = strings[1];
+                break;
+            case "mobile":
+                mobile = strings[1];
+                break;
+            case "email":
+                email = strings[1];
+                break;
+        }
 
         // 根据用户名查询用户信息
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("login_name", username);
+        wrapper.eq(StringUtils.isNotBlank(loginName), "login_name", loginName);
+        wrapper.eq(StringUtils.isNotBlank(email), "email", email);
+        wrapper.eq(StringUtils.isNotBlank(mobile), "mobile", mobile);
         User one = userService.getOne(wrapper);
 
         // 如果没有查询到对应用户
