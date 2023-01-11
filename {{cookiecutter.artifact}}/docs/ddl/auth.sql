@@ -173,7 +173,7 @@ CREATE TABLE `auth_user` (
 -- Records of auth_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user` (`login_name`, `pwd`, `real_name`, `mobile`, `email`, `telephone`, `user_lock`, `is_super`, `expire_time`) VALUES ('admin', '$2a$10$rgOjIXgsgQnox3GcCV7L2.aVNcDaXqgzKC.GWDu3PwGF12H83qfdi', 'admin', '13111111111', 'me@example.com', '057112345678', 0, 0, '2099-12-31 23:59:59');
+INSERT INTO `auth_user` (`login_name`, `pwd`, `real_name`, `mobile`, `email`, `telephone`, `user_lock`, `is_super`, `expire_time`) VALUES ('admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', 'admin', '13111111111', 'me@example.com', '057112345678', 0, 0, '2099-12-31 23:59:59');
 COMMIT;
 
 -- ----------------------------

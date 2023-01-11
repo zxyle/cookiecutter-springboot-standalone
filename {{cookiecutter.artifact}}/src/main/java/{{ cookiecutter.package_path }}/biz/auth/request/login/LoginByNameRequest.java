@@ -7,6 +7,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
+// 用户名 + 密码方式登录
 @Data
 public class LoginByNameRequest {
     // TODO 支持邮箱 手机号

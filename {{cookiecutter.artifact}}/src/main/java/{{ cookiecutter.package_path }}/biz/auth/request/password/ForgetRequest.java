@@ -5,23 +5,34 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.password;
 
 import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class ForgetByPhoneRequest extends BaseRequest {
+public class ForgetRequest extends BaseRequest {
 
     /**
-     * 手机号
+     * 手机号（手机号和邮箱二选一）
      *
      * @mock 13111111111
      */
-    @NotBlank
+    // @NotBlank
+    // @Length(min = 11, max = 11)
     private String mobile;
 
     /**
-     * 短信验证码
+     * 邮箱（手机号和邮箱二选一）
+     *
+     * @mock admin@example.com
+     */
+    // @NotBlank
+    // @Email
+    private String email;
+
+    /**
+     * 短信或邮件验证码
      *
      * @mock 123456
      */
@@ -36,4 +47,11 @@ public class ForgetByPhoneRequest extends BaseRequest {
     @NotBlank
     @Length(min = 8, max = 32)
     private String newPassword;
+
+    /**
+     * 获取主要账号（手机号或邮箱）
+     */
+    public String getPrincipal() {
+        return StringUtils.isNotBlank(getMobile()) ? getMobile() : getEmail();
+    }
 }

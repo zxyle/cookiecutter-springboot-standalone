@@ -33,8 +33,8 @@ public class EmailService {
      * @param to   接收者邮箱地址
      */
     public boolean sendVerificationCode(String code, String to) {
-        String text = "邮箱验证码为<b style='color:red'>" + code + "</b>，验证码有效期为30分钟!";
-        String subject = "【" + appName + "】邮箱验证码";
+        String text = String.format("邮箱验证码为<b style='color:red'>%s</b>，验证码有效期为30分钟!", code);
+        String subject = String.format("【%s】邮箱验证码", appName);
 
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;

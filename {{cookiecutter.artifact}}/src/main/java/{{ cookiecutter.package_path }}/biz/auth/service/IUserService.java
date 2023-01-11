@@ -40,10 +40,11 @@ public interface IUserService extends IService<User> {
     boolean changePwd(Long userId, String newPwd);
 
     /**
-     * 通过手机号查询用户
+     * 通过手机号或邮箱查询用户
      *
      * @param mobile 手机号
+     * @param email  邮箱号
      */
-    User queryByMobile(String mobile);
+    User queryByPrincipal(String mobile, String email);
 
 }

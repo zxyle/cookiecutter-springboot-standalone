@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 
 // 手机号+短信验证码登录
 @Data
-public class LoginByPhoneRequest {
+public class LoginByMobileRequest {
 
     /**
      * 手机号

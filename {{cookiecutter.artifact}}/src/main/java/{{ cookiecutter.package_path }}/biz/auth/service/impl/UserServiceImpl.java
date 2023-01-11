@@ -107,9 +107,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      * @param mobile 手机号
      */
     @Override
-    public User queryByMobile(String mobile) {
+    public User queryByPrincipal(String mobile, String email) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("mobile", mobile);
+        wrapper.eq(StringUtils.isNotBlank(mobile), "mobile", mobile);
+        wrapper.eq(StringUtils.isNotBlank(email), "email", email);
         return getOne(wrapper);
     }
 }

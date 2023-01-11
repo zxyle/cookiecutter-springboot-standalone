@@ -5,16 +5,18 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import cn.hutool.core.util.IdUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.request.SendCodeRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.sample.service.EmailService;
 import {{ cookiecutter.basePackage }}.biz.sys.response.CaptchaResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.VerifyService;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.time.Duration;
@@ -52,6 +53,18 @@ public class CaptchaController {
 
     @Autowired
     VerifyService verifyService;
+
+    @Value("${code.digits}")
+    private Integer digits;
+
+    @Value("${code.alive-time}")
+    private Integer aliveTime;
+
+    @Value("${code.principal}")
+    private String authMethod;
+
+    @Autowired
+    private EmailService emailService;
 
     /**
      * 生成base64格式图形验证码
@@ -99,32 +112,46 @@ public class CaptchaController {
     }
 
     /**
-     * 发送短信验证码
-     *
-     * @param mobile 手机号
+     * 发送短信邮件验证码
      */
     @GetMapping("/send")
-    public ResponseEntity<Boolean> send(@NotBlank @Length(max = 11, min = 11) String mobile) {
-        String type = "sms";
-
-        // 查询手机号绑定的用户
-        User user = userService.queryByMobile(mobile);
-        if (null == user) {
+    public ResponseEntity<Boolean> send(SendCodeRequest request) {
+        // 查询手机号或邮箱绑定的用户
+        User user = userService.queryByPrincipal(request.getMobile(), request.getEmail());
+        if (null == user || isLocked(request.getPrincipal())) {
             // 可能用户不存在
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        String key = "";
+        String key = "code:" + request.getPrincipal();
         // 生成随机数字
-        String code = CaptchaUtil.randCode(6);
-        stringRedisTemplate.opsForHash().put(key, "mobile", mobile);
-        stringRedisTemplate.opsForHash().put(key, "userId", user.getId());
+        String code = CaptchaUtil.randCode(digits);
+        stringRedisTemplate.opsForHash().put(key, "principal", request.getPrincipal());
+        stringRedisTemplate.opsForHash().put(key, "userId", String.valueOf(user.getId()));
         stringRedisTemplate.opsForHash().put(key, "code", code);
-        stringRedisTemplate.expire(key, Duration.ofMinutes(1));
+        stringRedisTemplate.expire(key, Duration.ofMinutes(aliveTime));
 
-        // 调用发送短信接口, 写入到消息队列中
-        // locked(type, 60);
+        if (authMethod.equals("email")) {
+            // 调用邮件发送方法
+            emailService.sendVerificationCode(code, user.getEmail());
+        }
+
+        if (authMethod.equals("mobile")) {
+            // TODO 调用发送短信接口, 写入到消息队列中
+        }
+        locked(request.getPrincipal(), 60);
         return ResponseEntity.ok(true);
+    }
+
+    // 防止验证码被滥用
+    public void locked(String principal, Integer ttl) {
+        String key = "locked:" + principal;
+        stringRedisTemplate.opsForValue().set(key, "lock", ttl, TimeUnit.SECONDS);
+    }
+
+    public boolean isLocked(String principal) {
+        String key = "locked:" + principal;
+        return Boolean.TRUE.equals(stringRedisTemplate.hasKey(key));
     }
 
 }

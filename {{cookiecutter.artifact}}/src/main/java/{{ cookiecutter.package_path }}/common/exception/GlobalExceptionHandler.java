@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiResponse> handleAuthException(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        return new ResponseEntity<>(new ApiResponse<>("用户名或密码错误"), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ApiResponse<>("用户名或密码错误", false), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
