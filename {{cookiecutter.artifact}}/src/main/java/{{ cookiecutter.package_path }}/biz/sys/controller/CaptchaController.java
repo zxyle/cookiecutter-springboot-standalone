@@ -6,8 +6,8 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import cn.hutool.core.util.IdUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.SendCodeRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.service.EmailCodeService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
-import {{ cookiecutter.basePackage }}.biz.sample.service.EmailService;
 import {{ cookiecutter.basePackage }}.biz.sys.response.CaptchaResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
@@ -67,7 +67,7 @@ public class CaptchaController {
     private Integer ttl;
 
     @Autowired
-    private EmailService emailService;
+    private EmailCodeService emailService;
 
     /**
      * 生成base64编码图形验证码

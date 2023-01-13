@@ -5,9 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
-
-import java.time.LocalDateTime;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,16 +17,6 @@ import lombok.EqualsAndHashCode;
 public class LoginLog extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
 
     /**
      * 登录用户名

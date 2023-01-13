@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.sample.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,41 +18,6 @@ public class EmailService {
     // 第1步: 注入邮件发送者
     @Autowired
     JavaMailSenderImpl javaMailSender;
-
-    @Value("${app.name}")
-    private String appName;
-
-    @Value("${spring.mail.username}")
-    private String sender;
-
-    /**
-     * 发送邮件验证码
-     *
-     * @param code 邮件验证码
-     * @param to   接收者邮箱地址
-     */
-    public boolean sendVerificationCode(String code, String to) {
-        String text = String.format("邮箱验证码为<b style='color:red'>%s</b>，验证码有效期为30分钟!", code);
-        String subject = String.format("【%s】邮箱验证码", appName);
-
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper;
-        try {
-            mimeMessageHelper = new MimeMessageHelper(message, true);
-            // 邮件发送人
-            mimeMessageHelper.setFrom(sender);
-            // 邮件接收人
-            mimeMessageHelper.setTo(to);
-            // 邮件主题
-            mimeMessageHelper.setSubject(subject);
-            // 邮件内容,HTML格式
-            mimeMessageHelper.setText(text, true);
-            javaMailSender.send(message);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
 
     /**
      * 发送普通文本邮件
