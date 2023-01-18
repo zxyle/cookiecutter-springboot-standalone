@@ -15,7 +15,7 @@ function restart() {
 
 function publish() {
     package
-    # TODO 增加jar包备份
+    # TODO 增加jar包备份 按日期进行备份
     scp -rvC ./target/*.jar $server:$dir
     restart
 }

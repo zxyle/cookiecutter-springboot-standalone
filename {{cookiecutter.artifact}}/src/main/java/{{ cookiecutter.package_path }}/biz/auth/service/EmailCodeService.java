@@ -24,6 +24,9 @@ public class EmailCodeService {
     @Value("${spring.mail.username}")
     private String sender;
 
+    @Value("${code.alive-time}")
+    private Integer aliveTime;
+
 
     /**
      * 发送邮件验证码
@@ -32,7 +35,7 @@ public class EmailCodeService {
      * @param to   接收者邮箱
      */
     public void sendVerificationCode(String code, String to) {
-        String text = String.format("邮箱验证码为<b>%s</b>，验证码有效期为30分钟!", code);
+        String text = String.format("邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!", code, aliveTime);
         String subject = String.format("【%s】邮箱验证码", appName);
 
         MimeMessage message = javaMailSender.createMimeMessage();
