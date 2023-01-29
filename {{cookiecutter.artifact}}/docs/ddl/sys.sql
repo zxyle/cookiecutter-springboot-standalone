@@ -162,6 +162,22 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('血型', 0, 'B型', 'B', 'blood_type');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('血型', 0, 'AB型', 'AB', 'blood_type');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('血型', 0, 'O型', 'O', 'blood_type');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, '126.com', '126.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, '139.com', '139.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, '163.com', '163.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, '189.com', '189.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'aliyun.com', 'aliyun.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'foxmail.com', 'foxmail.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'gmail.com', 'gmail.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'hotmail.com', 'hotmail.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'icloud.com', 'icloud.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'outlook.com', 'outlook.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'qq.com', 'qq.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'sina.cn', 'sina.cn', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'sina.com', 'sina.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'sohu.com', 'sohu.com', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'yahoo.cn', 'yahoo.cn', 'email_domain');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'yeah.net', 'yeah.net', 'email_domain');
 COMMIT;
 
 -- ----------------------------
