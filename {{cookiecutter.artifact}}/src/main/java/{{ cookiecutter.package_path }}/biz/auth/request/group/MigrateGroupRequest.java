@@ -8,7 +8,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 /**
- * 用户组迁移请求体
+ * 迁移用户组请求
  */
 @Data
 public class MigrateGroupRequest {

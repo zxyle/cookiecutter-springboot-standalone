@@ -7,6 +7,9 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * 删除用户组请求
+ */
 @Data
 public class DeleteGroupRequest {
 

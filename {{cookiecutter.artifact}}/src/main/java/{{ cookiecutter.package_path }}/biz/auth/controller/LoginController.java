@@ -4,17 +4,19 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
-import {{ cookiecutter.basePackage }}.biz.auth.request.login.LoginByNameRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.login.LoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
+import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
-import {{ cookiecutter.basePackage }}.biz.sys.service.VerifyService;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +48,9 @@ public class LoginController {
 
     final AuthenticationManager authenticationManager;
 
-    final VerifyService verifyService;
+    final CaptchaProperties captchaProperties;
+
+    final CodeService codeService;
 
 
     /**
@@ -56,11 +60,12 @@ public class LoginController {
      * @apiNote 通过用户名/邮箱/手机号和密码进行用户登录
      */
     @PostMapping("/login")
-    public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginByNameRequest request, HttpServletRequest servletRequest) {
+    public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest servletRequest) {
         String principal = request.getPrincipal();
-
-        // 如需开启验证码，请取消注释下面代码
-        // verifyService.verify(request.getCode(), request.getCaptchaId());
+        ApiResponse<LoginResponse> beforeLoginResponse = beforeLogin(request);
+        if (beforeLoginResponse != null) {
+            return beforeLoginResponse;
+        }
 
         // 登录日志
         LoginLog loginLog = new LoginLog();
@@ -85,7 +90,8 @@ public class LoginController {
 
         LoginResponse response = new LoginResponse();
         response.setToken(jwt);
-        response.setUsername(principal);
+        response.setUsername(loginUser.getUser().getLoginName());
+        response.setIsSuper(loginUser.getUser().getIsSuper());
         loginLog.setMsg("登录成功");
         loginLog.setIsSuccess(AuthConst.SUCCESS);
         // TODO 改成异步插入
@@ -100,6 +106,31 @@ public class LoginController {
     public ApiResponse<Object> logout() {
         boolean success = loginService.logout();
         return new ApiResponse<>(success);
+    }
+
+    /**
+     * 登录前条件判断
+     */
+    public ApiResponse<LoginResponse> beforeLogin(LoginRequest request) {
+        // 登录日志
+
+        if (StringUtils.isBlank(request.getPrincipal())) {
+            return new ApiResponse<>("无主账号信息", false);
+        }
+
+        // 验证码校验
+        if (captchaProperties.isOn()) {
+            boolean verify = codeService.verify(request.getCode(), request.getCaptchaId());
+            if (!verify) {
+                return new ApiResponse<>("验证码错误", false);
+            }
+        }
+        return null;
+    }
+
+    // 登录之后
+    public void afterLogin() {
+
     }
 
 }

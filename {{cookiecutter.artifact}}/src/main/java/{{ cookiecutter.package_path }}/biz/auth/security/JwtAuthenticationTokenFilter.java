@@ -31,6 +31,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private PasswordProperties passwordProperties;
+
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
@@ -39,19 +42,20 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         // 获取token, 不存在则放行
         // String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         String token = request.getHeader("token");
-        if (StringUtils.isBlank(token)) {
+        if (StringUtils.isBlank(token) || request.getServletPath().equals("/auth/user/login")) {
             SecurityContextHolder.clearContext();
             filterChain.doFilter(request, response);
             return;
         }
 
         // 解析jwt, 解析失败则放行
-        String userId = "";
+        String userId;
         try {
             Claims claims = JwtUtil.parseJWT(token);
             userId = claims.getSubject();
         } catch (Exception ignored) {
             filterChain.doFilter(request, response);
+            return;
         }
 
         // 从redis中获取用户权限信息(根据放在jwt的用户id)
@@ -65,7 +69,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         // 获取权限信息封装到Authentication中
         permissions = Arrays.asList(value.split(AuthConst.DELIMITER));
-        LoginUser loginUser = new LoginUser(permissions, userService.queryById(Long.valueOf(userId)));
+        LoginUser loginUser = new LoginUser(permissions, userService.queryById(Long.valueOf(userId)), passwordProperties);
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);

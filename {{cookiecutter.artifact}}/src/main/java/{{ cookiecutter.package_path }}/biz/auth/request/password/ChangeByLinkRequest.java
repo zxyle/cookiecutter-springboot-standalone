@@ -3,6 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.request.password;
 
-// 通过链接修改
-public class ModifyByLinkRequest {
+// 通过验证链接修改密码
+public class ChangeByLinkRequest {
 }

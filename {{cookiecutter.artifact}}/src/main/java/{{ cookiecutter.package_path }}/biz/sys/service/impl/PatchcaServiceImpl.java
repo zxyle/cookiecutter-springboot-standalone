@@ -3,6 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
+import cn.hutool.core.util.IdUtil;
+import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,9 @@ import org.patchca.color.SingleColorFactory;
 import org.patchca.filter.predefined.*;
 import org.patchca.service.ConfigurableCaptchaService;
 import org.patchca.utils.encoder.EncoderHelper;
+import org.patchca.word.RandomWordFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -21,10 +26,23 @@ import java.io.IOException;
 
 @Service
 @Slf4j
+@ConditionalOnProperty(prefix = "captcha", name = "kind", havingValue = "patchca")
 public class PatchcaServiceImpl implements CaptchaService {
+
+    @Autowired
+    CaptchaProperties captchaProperties;
+
 
     public ConfigurableCaptchaService randomCs() {
         ConfigurableCaptchaService cs = new ConfigurableCaptchaService();
+        RandomWordFactory wordFactory = new RandomWordFactory();
+        wordFactory.setMaxLength(captchaProperties.getDigits());
+        wordFactory.setMinLength(captchaProperties.getDigits());
+        wordFactory.setCharacters(captchaProperties.getCharacters());
+        cs.setWordFactory(wordFactory);
+        cs.setHeight(captchaProperties.getHeight());
+        cs.setWidth(captchaProperties.getWidth());
+
         switch ((int) (System.currentTimeMillis() % 3)) {
             case 0:
                 cs.setColorFactory(new SingleColorFactory(new Color(55, 246, 77)));
@@ -59,13 +77,14 @@ public class PatchcaServiceImpl implements CaptchaService {
 
     @Override
     public CaptchaPair generate() {
+        String captchaId = IdUtil.simpleUUID();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         String token = null;
         try {
-            token = EncoderHelper.getChallangeAndWriteImage(randomCs(), "png", byteArrayOutputStream);
+            token = EncoderHelper.getChallangeAndWriteImage(randomCs(), captchaProperties.getFormat(), byteArrayOutputStream);
         } catch (IOException e) {
             log.error("patchca error: ", e);
         }
-        return new CaptchaPair(byteArrayOutputStream, token);
+        return new CaptchaPair(byteArrayOutputStream, token, captchaId);
     }
 }

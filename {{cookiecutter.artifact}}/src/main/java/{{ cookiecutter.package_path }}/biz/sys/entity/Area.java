@@ -37,7 +37,7 @@ public class Area extends BaseEntity {
      *
      * @mock 330110
      */
-    private String parent;
+    private String parentId;
 
     /**
      * 行政区级别 （1-国家 2-省级 3-市级 4-县区级 5-镇街级 6-社区、村级）

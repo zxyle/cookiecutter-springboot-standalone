@@ -19,8 +19,8 @@ import java.util.UUID;
  */
 public class JwtUtil {
 
-    // 有效期为
-    public static final Long JWT_TTL = 60 * 60 * 1000L;// 60 * 60 *1000  一个小时
+    // 有效期（单位: 毫秒）
+    public static final Long JWT_TTL = 24 * 60 * 60 * 1000L;  // 一天
 
     // 设置秘钥明文
     public static final String JWT_KEY = "{{ random_ascii_string(32) }}";
@@ -40,7 +40,7 @@ public class JwtUtil {
     }
 
     /**
-     * 生成jtw
+     * 生成jwt token
      *
      * @param subject   token中要存放的数据（json格式）
      * @param ttlMillis token超时时间
@@ -58,9 +58,13 @@ public class JwtUtil {
         if (ttlMillis == null) {
             ttlMillis = JwtUtil.JWT_TTL;
         }
-        long expMillis = nowMillis + ttlMillis;
+        long expMillis = nowMillis + ttlMillis; // 过期时间
         Date expDate = new Date(expMillis);
         return Jwts.builder()
+                // HEADER
+                // .setHeaderParam("key", "value")
+                // PAYLOAD
+                // .claim("key", "value")
                 .setId(uuid)              // 唯一的ID
                 .setSubject(subject)      // 主题  可以是JSON数据
                 .setIssuer("sg")          // 签发者
@@ -72,13 +76,12 @@ public class JwtUtil {
     /**
      * 创建token
      *
-     * @param id
-     * @param subject
-     * @param ttlMillis
-     * @return
+     * @param id        唯一的ID
+     * @param subject   主题
+     * @param ttlMillis 过期时间
      */
     public static String createJWT(String id, String subject, Long ttlMillis) {
-        JwtBuilder builder = getJwtBuilder(subject, ttlMillis, id);// 设置过期时间
+        JwtBuilder builder = getJwtBuilder(subject, ttlMillis, id);  // 设置过期时间
         return builder.compact();
     }
 
@@ -91,17 +94,13 @@ public class JwtUtil {
     }
 
     /**
-     * 解析
-     *
-     * @param jwt
-     * @return
-     * @throws Exception
+     * 解析token
      */
-    public static Claims parseJWT(String jwt) throws Exception {
+    public static Claims parseJWT(String token) {
         SecretKey secretKey = generalKey();
         return Jwts.parser()
                 .setSigningKey(secretKey)
-                .parseClaimsJws(jwt)
+                .parseClaimsJws(token)
                 .getBody();
     }
 }

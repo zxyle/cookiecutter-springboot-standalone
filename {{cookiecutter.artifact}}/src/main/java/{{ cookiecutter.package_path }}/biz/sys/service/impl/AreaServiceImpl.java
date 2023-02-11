@@ -20,7 +20,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
     @Override
     public Area getAreaByCode(String code) {
         QueryWrapper<Area> wrapper = new QueryWrapper<>();
-        wrapper.select("code, name, parent, level");
+        wrapper.select("code, name, parent_id, level");
         wrapper.eq(StringUtils.isNotBlank(code), "code", code);
         return getOne(wrapper);
     }

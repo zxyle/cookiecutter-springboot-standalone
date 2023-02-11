@@ -3,7 +3,7 @@
 <mapper namespace="{{ cookiecutter.basePackage }}.biz.sys.mapper.AreaMapper">
 
     <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.sys.entity.Area">
-        SELECT  code, name, parent FROM sys_area
+        SELECT  code, name, parent_id FROM sys_area
 
     </select>
 </mapper>

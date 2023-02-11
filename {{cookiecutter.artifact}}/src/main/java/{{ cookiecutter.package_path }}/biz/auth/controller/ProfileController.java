@@ -10,7 +10,6 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,11 +26,14 @@ import javax.validation.Valid;
 @RequestMapping("/auth/profile")
 public class ProfileController extends AuthBaseController {
 
-    @Autowired
     IUserService userService;
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
+
+    public ProfileController(IUserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * 绑定手机号或邮箱号
@@ -44,7 +46,7 @@ public class ProfileController extends AuthBaseController {
 
         // 获取redis中验证码
         String key = "code:" + request.getPrincipal();
-        String code = stringRedisTemplate.opsForValue().get(key);
+        String code = (String) stringRedisTemplate.opsForHash().get(key, "code");
         // 校验是否正确
         if (code != null && code.equalsIgnoreCase(request.getCode())) {
             UpdateWrapper<User> wrapper = new UpdateWrapper<>();

@@ -11,4 +11,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ILoginLogService extends IService<LoginLog> {
 
+    /**
+     * 异步保存登录日志
+     */
+    boolean saveLoginLog(LoginLog loginLog);
+
 }

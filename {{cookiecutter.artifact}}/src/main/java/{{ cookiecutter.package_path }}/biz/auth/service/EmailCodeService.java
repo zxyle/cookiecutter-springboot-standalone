@@ -24,7 +24,7 @@ public class EmailCodeService {
     @Value("${spring.mail.username}")
     private String sender;
 
-    @Value("${code.alive-time}")
+    @Value("${captcha.alive-time}")
     private Integer aliveTime;
 
 
@@ -34,8 +34,8 @@ public class EmailCodeService {
      * @param code 验证码
      * @param to   接收者邮箱
      */
-    public void sendVerificationCode(String code, String to) {
-        String text = String.format("邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!", code, aliveTime);
+    public boolean sendVerificationCode(String code, String to) {
+        String content = String.format("邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!", code, aliveTime);
         String subject = String.format("【%s】邮箱验证码", appName);
 
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -43,16 +43,19 @@ public class EmailCodeService {
         try {
             mimeMessageHelper = new MimeMessageHelper(message, true);
             // 邮件发送人
-            mimeMessageHelper.setFrom(sender);
+            mimeMessageHelper.setFrom(appName + '<' + sender + '>');
             // 邮件接收人
             mimeMessageHelper.setTo(to);
             // 邮件主题
             mimeMessageHelper.setSubject(subject);
             // 邮件内容,HTML格式
-            mimeMessageHelper.setText(text, true);
+            mimeMessageHelper.setText(content, true);
             javaMailSender.send(message);
-        } catch (Exception e) {
-            e.printStackTrace();
+            return true;
+        } catch (Exception ignored) {
+
         }
+
+        return false;
     }
 }

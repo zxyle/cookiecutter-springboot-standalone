@@ -3,9 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.PwdConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
@@ -15,18 +13,28 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 /**
  * 用户 服务实现类
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
 
     IUserGroupService userGroupService;
 
@@ -97,6 +105,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public boolean changePwd(Long userId, String newPwd) {
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("pwd", newPwd);
+        updateWrapper.set("pwd_change_time", LocalDateTime.now());
         updateWrapper.eq("id", userId);
         return update(updateWrapper);
     }
@@ -112,5 +121,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         wrapper.eq(StringUtils.isNotBlank(mobile), "mobile", mobile);
         wrapper.eq(StringUtils.isNotBlank(email), "email", email);
         return getOne(wrapper);
+    }
+
+    /**
+     * 禁用用户
+     *
+     * @param userId 用户ID
+     */
+    @Override
+    public boolean disable(Long userId) {
+        User user = new User();
+        user.setId(userId);
+        user.setEnabled(AuthConst.DISABLED);
+        boolean success = updateById(user);
+        // 已经登录的用户，需要清除缓存
+        String key = "permissions:" + userId;
+        Boolean hasKey = stringRedisTemplate.hasKey(key);
+        if (hasKey == null || !hasKey) {
+            return success;
+        }
+        Boolean delete = stringRedisTemplate.delete(key);
+        return success && Boolean.TRUE.equals(delete);
     }
 }

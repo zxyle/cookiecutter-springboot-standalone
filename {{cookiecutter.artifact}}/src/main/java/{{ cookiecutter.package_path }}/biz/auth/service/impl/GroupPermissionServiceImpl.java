@@ -3,14 +3,14 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupPermission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +50,9 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      */
     @Override
     public boolean deleteRelation(Long groupId, Long permissionId) {
+        if (countRelation(groupId, permissionId) == 0) {
+            return true;
+        }
         return remove(buildWrapper(groupId, permissionId));
     }
 
@@ -110,8 +113,8 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
     // 构建wrapper
     public QueryWrapper<GroupPermission> buildWrapper(Long groupId, Long permissionId) {
         QueryWrapper<GroupPermission> wrapper = new QueryWrapper<>();
-        wrapper.eq(groupId != 0L, "group_id", groupId);
-        wrapper.eq(permissionId != 0L, "permission_id", permissionId);
+        wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
+        wrapper.eq(permissionId != null && permissionId != 0L, "permission_id", permissionId);
         return wrapper;
     }
 }

@@ -10,12 +10,16 @@
         <result column="name" property="name"/>
         <result column="code" property="code"/>
         <result column="description" property="description"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="kind" property="kind"/>
+        <result column="path" property="path"/>
+        <result column="sort" property="sort"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
-        create_time, update_time, name, code, description
+        create_time, update_time, name, code, description, parent_id, kind, path, sort
     </sql>
 
 

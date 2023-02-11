@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.LoginLogMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,5 +15,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> implements ILoginLogService {
+
+    @Async
+    @Override
+    public boolean saveLoginLog(LoginLog loginLog) {
+        return this.save(loginLog);
+    }
 
 }

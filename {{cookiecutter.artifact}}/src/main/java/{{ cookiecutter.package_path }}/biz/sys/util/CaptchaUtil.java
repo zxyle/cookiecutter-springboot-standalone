@@ -3,26 +3,56 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.util;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.Random;
 
 public class CaptchaUtil {
 
-    /**
-     * 随机生成数字验证码
-     *
-     * @param len 长度
-     */
-    public static String randCode(int len) {
-        String[] beforeShuffle = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
-        List<String> list = Arrays.asList(beforeShuffle);
-        Collections.shuffle(list);
-        StringBuilder sb = new StringBuilder();
-        for (String s : list) {
-            sb.append(s);
+    public static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
+    public static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static final String DIGIT = "0123456789";
+    public static final String SPECIAL_CHAR = "!@#$%^&*";
+
+    public static String randNumber(int len) {
+        return randCode(len, false, false, true, false);
+    }
+
+    public static String randAlphabeta(int len) {
+        return randCode(len, true, true, false, false);
+    }
+
+
+    public static String randCode(int len, boolean hasUpper, boolean hasLower, boolean hasDigit, boolean hasSpecialChar) {
+        String chars = "";
+        if (hasUpper) {
+            chars += UPPER;
         }
-        String afterShuffle = sb.toString();
-        return afterShuffle.substring(0, len);
+        if (hasLower) {
+            chars += LOWER;
+        }
+        if (hasDigit) {
+            chars += DIGIT;
+        }
+        if (hasSpecialChar) {
+            chars += SPECIAL_CHAR;
+        }
+        return randCode(len, chars);
+    }
+
+    /**
+     * 生成随机码
+     *
+     * @param len   长度
+     * @param chars 字符集
+     * @return 随机码
+     */
+    public static String randCode(int len, String chars) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            Random random = new Random();
+            int no = random.nextInt(chars.length());
+            builder.append(chars.charAt(no));
+
+        }
+        return builder.toString();
     }
 }

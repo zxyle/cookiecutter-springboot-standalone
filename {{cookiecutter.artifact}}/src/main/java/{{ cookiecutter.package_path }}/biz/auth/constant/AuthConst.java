@@ -17,4 +17,10 @@ public class AuthConst {
 
     public static final String DELIMITER = ",";
 
+    // 不可用
+    public static final int DISABLED = 0;
+
+    // 可用
+    public static final int ENABLED = 1;
+
 }

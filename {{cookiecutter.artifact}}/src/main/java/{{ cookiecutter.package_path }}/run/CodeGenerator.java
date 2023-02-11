@@ -210,6 +210,7 @@ public class CodeGenerator {
         for (String table : tables) {
             String comment = CodeGenerator.getComment(table);
             String permission = table.replace(tablePrefix, "");
+            System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:*', '%s所有权限');%n", moduleName, permission, comment);
             System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:list', '%s列表查询');%n", moduleName, permission, comment);
             System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:add', '新增%s');%n", moduleName, permission, comment);
             System.out.printf("INSERT INTO auth_permission(name,code) VALUES('%s:%ss:get', '按ID查询%s');%n", moduleName, permission, comment);

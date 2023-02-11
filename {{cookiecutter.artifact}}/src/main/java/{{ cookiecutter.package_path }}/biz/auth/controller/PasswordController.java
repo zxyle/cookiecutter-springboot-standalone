@@ -4,23 +4,29 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.request.password.ChangeByOldRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.ForgetRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.request.password.ModifyByOldRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.password.RandomRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.response.ResetPasswordResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.security.PasswordProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
+import {{ cookiecutter.basePackage }}.biz.auth.util.PasswordChecker;
+import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**
@@ -30,6 +36,9 @@ import java.util.Map;
 @RequestMapping("/auth/password")
 @Slf4j
 public class PasswordController extends AuthBaseController {
+
+    @Autowired
+    PasswordProperties passwordProperties;
 
     IUserService userService;
 
@@ -47,20 +56,20 @@ public class PasswordController extends AuthBaseController {
     }
 
     /**
-     * 修改密码
+     * 使用旧密码方式修改密码
      */
     @PostMapping("/change")
-    public ApiResponse<Object> change(@Valid @RequestBody ModifyByOldRequest request) {
+    public ApiResponse<Object> change(@Valid @RequestBody ChangeByOldRequest request) {
         User user = getLoggedInUser();
 
         if (null != user && passwordEncoder.matches(request.getOldPassword(), user.getPwd())) {
-            boolean isModified = userService.changePwd(user.getId(), passwordEncoder.encode(request.getNewPassword()));
+            boolean isChanged = userService.changePwd(user.getId(), passwordEncoder.encode(request.getNewPassword()));
             // 退出当前登录状态
             boolean isLoggedOut = loginService.logout();
-            return new ApiResponse<>(isModified && isLoggedOut);
+            return new ApiResponse<>(isChanged && isLoggedOut);
         }
 
-        return new ApiResponse<>("修改密码失败", false);
+        return new ApiResponse<>("修改密码失败，旧密码可能不正确。", false);
     }
 
     /**
@@ -78,10 +87,52 @@ public class PasswordController extends AuthBaseController {
         if (StringUtils.isNotBlank(code) && request.getCode().equalsIgnoreCase(code)) {
             success = userService.changePwd(userId, passwordEncoder.encode(request.getNewPassword()));
             Boolean isDeleted = stringRedisTemplate.delete(key);
+            log.info("{} 修改密码成功.", principal);
             return new ApiResponse<>(success && Boolean.TRUE.equals(isDeleted));
         }
 
         return new ApiResponse<>("找回密码失败", false);
+    }
+
+    /**
+     * 重置密码（支持系统管理员、组管理员重置密码）
+     *
+     * @param userId 用户ID
+     */
+    @Secured({"ROLE_admin", "ROLE_group-admin"})
+    @PostMapping("/reset")
+    public ApiResponse<ResetPasswordResponse> reset(@NotNull Long userId) {
+        String rawPassword = CaptchaUtil.randCode(passwordProperties.getMinLength(), passwordProperties.getChars());
+        boolean success = userService.changePwd(userId, passwordEncoder.encode(rawPassword));
+
+        if (success) {
+            // 退出当前登录状态
+            loginService.logout();
+            return new ApiResponse<>(new ResetPasswordResponse(rawPassword));
+        }
+        return new ApiResponse<>("重置密码失败", false);
+    }
+
+
+    /**
+     * 密码复杂度
+     *
+     * @param password 待检测密码
+     */
+    @GetMapping("/complexity")
+    public ApiResponse<Integer> complexity(@NotBlank String password) {
+        int score = PasswordChecker.checkPasswordComplexity(password);
+        return new ApiResponse<>(score);
+    }
+
+
+    /**
+     * 随机生成密码
+     */
+    @GetMapping("/random")
+    public ApiResponse<String> random(RandomRequest request) {
+        String s = CaptchaUtil.randCode(request.getLength(), request.getChars());
+        return new ApiResponse<>(s);
     }
 
 }

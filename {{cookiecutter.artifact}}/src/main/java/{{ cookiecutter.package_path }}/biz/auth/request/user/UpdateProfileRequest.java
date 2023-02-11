@@ -5,6 +5,9 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.user;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
+// 更新用户资料请求
 @Data
 public class UpdateProfileRequest {
     /**
@@ -15,23 +18,28 @@ public class UpdateProfileRequest {
     private String realName;
 
     /**
-     * 手机号
-     *
-     * @mock 13111111111
-     */
-    private String mobile;
-
-    /**
-     * 邮箱
-     *
-     * @mock me@example.com
-     */
-    private String email;
-
-    /**
      * 电话号
      *
      * @mock 123456
      */
     private String telephone;
+
+    /**
+     * 性别
+     *
+     * @mock 男
+     */
+    private String gender;
+
+    /**
+     * 生日
+     */
+    private LocalDate birthday;
+
+    /**
+     * 头像
+     */
+    private String avatar;
+
+
 }

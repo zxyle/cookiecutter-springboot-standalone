@@ -8,8 +8,12 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * 忘记/找回密码
+ */
 @Data
 public class ForgetRequest extends BaseRequest {
 
@@ -27,8 +31,8 @@ public class ForgetRequest extends BaseRequest {
      *
      * @mock admin@example.com
      */
-    // @NotBlank
-    // @Email
+    @NotBlank
+    @Email
     private String email;
 
     /**

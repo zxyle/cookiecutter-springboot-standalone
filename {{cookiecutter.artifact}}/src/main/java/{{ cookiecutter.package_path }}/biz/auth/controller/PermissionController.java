@@ -3,15 +3,20 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import cn.hutool.core.lang.tree.Tree;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
+import {{ cookiecutter.basePackage }}.biz.auth.request.permission.AddPermissionRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -25,6 +30,19 @@ public class PermissionController extends AuthBaseController {
 
     public PermissionController(IPermissionService thisService) {
         this.thisService = thisService;
+    }
+
+    /**
+     * 获取权限树
+     *
+     * @param rootPermissionId 根节点权限ID
+     * @apiNote 1. 该接口只有管理员才能访问 2. 该接口返回name-节点名、id-节点值、children-子节点、path-路由、sort-排序等字段
+     */
+    @Secured("ROLE_admin")
+    @GetMapping("/permissions/tree")
+    public ApiResponse<List<Tree<Integer>>> tree(@RequestParam(defaultValue = "1") Integer rootPermissionId) {
+        List<Tree<Integer>> tree = thisService.getTree(rootPermissionId);
+        return new ApiResponse<>(tree);
     }
 
     /**
@@ -43,7 +61,9 @@ public class PermissionController extends AuthBaseController {
      */
     @PostMapping("/permissions")
     @PreAuthorize("@ck.hasPermit('auth:permissions:add')")
-    public ApiResponse<Permission> add(@Valid @RequestBody Permission entity) {
+    public ApiResponse<Permission> add(@Valid @RequestBody AddPermissionRequest request) {
+        Permission entity = new Permission();
+        BeanUtils.copyProperties(request, entity);
         boolean success = thisService.save(entity);
         if (success) {
             return new ApiResponse<>(entity);
@@ -59,7 +79,7 @@ public class PermissionController extends AuthBaseController {
      */
     @GetMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permissions:get')")
-    public ApiResponse<Permission> get(@NotNull @PathVariable Long permissionId) {
+    public ApiResponse<Permission> get(@PathVariable Long permissionId) {
         return new ApiResponse<>(thisService.getById(permissionId));
     }
 
@@ -70,7 +90,7 @@ public class PermissionController extends AuthBaseController {
      */
     @PutMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permissions:update')")
-    public ApiResponse<Object> update(@Valid @RequestBody Permission entity, @NotNull @PathVariable Long permissionId) {
+    public ApiResponse<Object> update(@Valid @RequestBody Permission entity, @PathVariable Long permissionId) {
         Permission permission = thisService.getById(permissionId);
         entity.setId(permissionId);
         boolean success = thisService.updateById(entity);
@@ -79,7 +99,7 @@ public class PermissionController extends AuthBaseController {
             users.forEach(userId -> thisService.refreshPermissions(userId));
             return new ApiResponse<>("更新成功");
         }
-        return new ApiResponse<>("更新失败");
+        return new ApiResponse<>("更新失败", false);
     }
 
     /**
@@ -89,14 +109,19 @@ public class PermissionController extends AuthBaseController {
      */
     @DeleteMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permissions:delete')")
-    public ApiResponse<Object> delete(@NotNull @PathVariable Long permissionId) {
+    public ApiResponse<Object> delete(@PathVariable Long permissionId) {
+        if (thisService.isAlreadyUsed(permissionId)) {
+            return new ApiResponse<>("删除失败，该权限正在使用", false);
+        }
+
         Permission permission = thisService.getById(permissionId);
         boolean success = thisService.delete(permissionId);
         if (success) {
+            // 所有持有该权限的用户，都刷新权限
             List<Long> users = thisService.holdPermission(permission.getCode());
             users.forEach(userId -> thisService.refreshPermissions(userId));
             return new ApiResponse<>("删除成功");
         }
-        return new ApiResponse<>("删除失败");
+        return new ApiResponse<>("删除失败", false);
     }
 }

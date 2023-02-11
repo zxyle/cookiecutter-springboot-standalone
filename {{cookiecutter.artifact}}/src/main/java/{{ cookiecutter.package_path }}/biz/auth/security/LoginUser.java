@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +28,11 @@ public class LoginUser implements UserDetails {
      * 用户信息
      */
     private User user;
+
+    /**
+     * 密码配置信息
+     */
+    private PasswordProperties passwordProperties;
 
     public void setUser(User user) {
         this.user = user;
@@ -54,6 +60,7 @@ public class LoginUser implements UserDetails {
 
     /**
      * 判断当前账户是否过期（true-未过期 false-已过期）
+     * 报AccountExpiredException: User account has expired
      */
     @Override
     public boolean isAccountNonExpired() {
@@ -75,19 +82,27 @@ public class LoginUser implements UserDetails {
     }
 
     /**
-     * 判断当前密码是否过期
+     * 判断当前密码是否过期, 强制用户修改密码
+     * 报 CredentialsExpiredException User credentials have expired
      */
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        // 判断该时间与当前时间的差距，是否大于阈值，-1代表不限制
+        if (passwordProperties.getExpireDays() == -1) {
+            return true;
+        }
+
+        Duration duration = Duration.between(user.getPwdChangeTime(), LocalDateTime.now());
+        return duration.toDays() < passwordProperties.getExpireDays();
     }
 
     /**
      * 判断当前账户是否可用
+     * 报DisabledException: User is disabled
      */
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.getEnabled().equals(AuthConst.ENABLED);
     }
 
 }

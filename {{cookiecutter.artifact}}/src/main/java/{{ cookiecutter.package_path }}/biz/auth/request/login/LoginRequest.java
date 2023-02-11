@@ -6,27 +6,65 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.login;
 import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
+/**
+ * 使用(用户名、手机号、邮箱)其一 + 密码方式登录
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class LoginRequest extends BaseRequest {
+    /**
+     * 用户名登录（用户名、手机号、邮箱三选一）
+     */
+    private String loginName;
 
     /**
-     * 用户名
-     *
-     * @mock admin
-     * @since v1.0
+     * 手机号登录（用户名、手机号、邮箱三选一）
      */
-    @NotNull
-    private String username;
+    private String mobile;
+
+    /**
+     * 邮箱登录（用户名、手机号、邮箱三选一）
+     */
+    @NotBlank
+    private String email;
 
     /**
      * 密码
-     *
-     * @mock 12345678
-     * @since v1.0
      */
     private String password;
+
+    /**
+     * 验证码ID
+     */
+    private String captchaId;
+
+    /**
+     * 短信或者邮件验证码
+     */
+    private String code;
+
+    /**
+     * 记住我(Y N)
+     */
+    private String rememberMe;
+
+
+    /**
+     * 获取主账号
+     */
+    public String getPrincipal() {
+        String principal = "";
+        if (StringUtils.isNotBlank(getLoginName()))
+            principal = "loginName#" + getLoginName();
+        if (StringUtils.isNotBlank(getMobile()))
+            principal = "mobile#" + getMobile();
+        if (StringUtils.isNotBlank(getEmail()))
+            principal = "email#" + getEmail();
+        return principal;
+    }
+
 }

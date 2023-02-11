@@ -25,6 +25,10 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
@@ -179,6 +183,52 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!--项目的启动类-->
+                    <mainClass>{{ cookiecutter.group }}.{{ cookiecutter.artifact.replace('-', '') }}.{{ cookiecutter.app_name }}Application</mainClass>
+                    <!--解决windows命令行窗口中文乱码-->
+                    <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
+                    <layout>ZIP</layout>
+                    <!--配置需要打包进项目的jar-->
+                    <includes>
+                        <!--这里是填写需要包含进去的jar，
+                            必须项目中的某些模块，会经常变动，那么就应该将其坐标写进来
+                            如果没有则non-exists ，表示不打包依赖
+                        -->
+                        <include>
+                            <groupId>non-exists</groupId>
+                            <artifactId>non-exists</artifactId>
+                        </include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--此插件用于将依赖包抽出-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <excludeTransitive>false</excludeTransitive>
+                            <stripVersion>false</stripVersion>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- smart-doc接口文档工具 -->

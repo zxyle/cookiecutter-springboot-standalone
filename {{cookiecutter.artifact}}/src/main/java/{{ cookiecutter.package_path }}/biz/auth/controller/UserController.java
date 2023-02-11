@@ -3,31 +3,59 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
+import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
 import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.auth.request.user.AdminAddUserRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.user.UpdateProfileRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.service.*;
+import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户管理
  */
 @RestController
 @RequestMapping("/auth")
-public class UserController {
+public class UserController extends AuthBaseController {
+
+    @Autowired
+    IRoleService roleService;
+
+    @Autowired
+    IGroupService groupService;
+
+    IUserRoleService userRoleService;
+
+    IUserGroupService userGroupService;
+
+    PasswordEncoder passwordEncoder;
 
     IUserService thisService;
 
-    public UserController(IUserService thisService) {
+    public UserController(IUserRoleService userRoleService, IUserGroupService userGroupService, PasswordEncoder passwordEncoder, IUserService thisService) {
+        this.userRoleService = userRoleService;
+        this.userGroupService = userGroupService;
+        this.passwordEncoder = passwordEncoder;
         this.thisService = thisService;
     }
 
@@ -36,13 +64,35 @@ public class UserController {
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/users")
-    public ApiResponse<PageVO<User>> list(@Valid ListAuthRequest request) {
+    public ApiResponse<PageVO<UserResponse>> list(@Valid ListAuthRequest request) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
         // 模糊查询
-        QueryWrapper<Group> wrapper = new QueryWrapper<>();
-        wrapper.likeRight(StringUtils.isNotBlank(request.getName()), "name", request.getName());
+        wrapper.like(StringUtils.isNotBlank(request.getName()), "login_name", request.getName());
+        wrapper.eq(request.getState() != null, "enabled", request.getState());
         IPage<User> page = PageRequestUtil.checkForMp(request);
-        IPage<User> list = thisService.page(page);
-        return PageRequestUtil.extractFromMp(list);
+        IPage<User> list = thisService.page(page, wrapper);
+
+        // 增加角色和组信息
+        List<UserResponse> userResponses = list.getRecords().stream().map(user -> {
+            UserResponse userResponse = new UserResponse();
+            userResponse.setGroups(new ArrayList<>());
+            userResponse.setRoles(new ArrayList<>());
+            BeanUtils.copyProperties(user, userResponse);
+            List<UserRole> roles = userRoleService.queryRelation(user.getId(), 0L);
+            if (CollectionUtils.isNotEmpty(roles)) {
+                List<Long> roleIds = roles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
+                userResponse.setRoles(roleService.listByIds(roleIds));
+            }
+
+            List<UserGroup> groups = userGroupService.queryRelation(user.getId(), null);
+            if (CollectionUtils.isNotEmpty(groups)) {
+                List<Long> groupIds = groups.stream().map(UserGroup::getGroupId).collect(Collectors.toList());
+                userResponse.setGroups(groupService.listByIds(groupIds));
+            }
+
+            return userResponse;
+        }).collect(Collectors.toList());
+        return new ApiResponse<>(new PageVO<>(userResponses, list.getTotal()));
     }
 
 
@@ -51,12 +101,29 @@ public class UserController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users")
-    public ApiResponse<User> add(@Valid @RequestBody User entity) {
+    public ApiResponse<User> add(@Valid @RequestBody AdminAddUserRequest request) {
+        User entity = new User();
+        BeanUtils.copyProperties(request, entity);
+        entity.setPwd(passwordEncoder.encode(request.getPassword()));
         boolean success = thisService.save(entity);
+
         if (success) {
+            // 保存用户角色关系
+            if (CollectionUtils.isNotEmpty(request.getRoleIds())) {
+                List<Long> roleIds = request.getRoleIds();
+                for (Long roleId : roleIds) {
+                    userRoleService.createRelation(entity.getId(), roleId);
+                }
+            }
+
+            // 保存用户组关系
+            if (request.getGroupId() != null) {
+                userGroupService.createRelation(entity.getId(), request.getGroupId());
+            }
             return new ApiResponse<>(entity);
         }
-        return new ApiResponse<>();
+
+        return new ApiResponse<>("新增用户失败", false);
     }
 
 
@@ -72,16 +139,20 @@ public class UserController {
     }
 
     /**
-     * 按ID更新用户
+     * 按ID更新用户资料
      */
     @Secured(value = "ROLE_admin")
     @PutMapping("/users/{id}")
-    public ApiResponse<Object> update(@Valid @RequestBody User entity) {
+    public ApiResponse<Object> update(@Valid @RequestBody UpdateProfileRequest request, @PathVariable Long id) {
+        // TODO 用户自身允许更新资料
+        User entity = new User();
+        BeanUtils.copyProperties(request, entity);
+        entity.setId(id);
         boolean success = thisService.updateById(entity);
         if (success) {
             return new ApiResponse<>("更新成功");
         }
-        return new ApiResponse<>("更新失败");
+        return new ApiResponse<>("更新失败", false);
     }
 
     /**
@@ -94,9 +165,50 @@ public class UserController {
     public ApiResponse<Object> delete(@PathVariable Long userId) {
         boolean success = thisService.delete(userId);
         if (success) {
-            return new ApiResponse<>("删除成功", true);
+            return new ApiResponse<>("删除成功");
         }
         return new ApiResponse<>("删除失败", false);
     }
 
+    /**
+     * 禁用用户
+     *
+     * @param userId 用户ID
+     */
+    @Secured(value = "ROLE_admin")
+    @PutMapping("/users/{userId}/disable")
+    public ApiResponse<Object> disable(@PathVariable Long userId) {
+        // TODO 记录到操作日志
+
+        // 防止禁用自己
+        if (userId.equals(getUserId())) {
+            return new ApiResponse<>("禁用失败，不能禁用自己", false);
+        }
+
+        boolean success = thisService.disable(userId);
+        if (success) {
+            return new ApiResponse<>("禁用成功");
+        }
+
+        return new ApiResponse<>("禁用失败", false);
+    }
+
+    /**
+     * 启用用户
+     *
+     * @param userId 用户ID
+     */
+    @Secured(value = "ROLE_admin")
+    @PutMapping("/users/{userId}/enable")
+    public ApiResponse<Object> enable(@PathVariable Long userId) {
+        // TODO 记录到操作日志
+        User user = new User();
+        user.setId(userId);
+        user.setEnabled(AuthConst.ENABLED);
+        boolean success = thisService.updateById(user);
+        if (success) {
+            return new ApiResponse<>("启用成功");
+        }
+        return new ApiResponse<>("启用失败", false);
+    }
 }

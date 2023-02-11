@@ -6,6 +6,9 @@ package {{ cookiecutter.basePackage }}.biz.auth.request;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 @Data
 public class SendCodeRequest {
 
@@ -23,8 +26,8 @@ public class SendCodeRequest {
      *
      * @mock admin@example.com
      */
-    // @NotBlank
-    // @Email
+    @NotBlank
+    @Email
     private String email;
 
     /**

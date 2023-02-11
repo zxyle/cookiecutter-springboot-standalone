@@ -24,6 +24,11 @@ public class CaptchaPair {
     private String code;
 
     /**
+     * 验证码ID，通常是UUID
+     */
+    private String captchaId;
+
+    /**
      * 获取验证码图片Base64编码
      */
     public String getB64Image() {

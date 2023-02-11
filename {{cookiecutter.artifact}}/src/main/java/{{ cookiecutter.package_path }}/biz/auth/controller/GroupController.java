@@ -3,20 +3,20 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import cn.hutool.core.lang.tree.Tree;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
+import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.UpdateAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.group.AddGroupRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.group.MigrateGroupRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
-import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,7 +50,7 @@ public class GroupController extends AuthBaseController {
     @GetMapping("/groups")
     public ApiResponse<PageVO<Group>> list(@Valid ListAuthRequest request) {
         QueryWrapper<Group> wrapper = new QueryWrapper<>();
-        wrapper.likeRight(StringUtils.isNotBlank(request.getName()), "name", request.getName());
+        wrapper.like(StringUtils.isNotBlank(request.getName()), "name", request.getName());
         IPage<Group> page = PageRequestUtil.checkForMp(request);
         IPage<Group> list = thisService.page(page, wrapper);
         return PageRequestUtil.extractFromMp(list);
@@ -58,12 +58,13 @@ public class GroupController extends AuthBaseController {
 
     /**
      * 获取用户组树状结构
+     *
+     * @param rootId 根节点ID
      */
     @PreAuthorize("@ck.hasPermit('auth:groups:tree')")
     @GetMapping("/groups/tree")
-    public ApiResponse<AntdTree2> tree() {
-        Long groupId = getCurrentGroup();
-        AntdTree2 tree = thisService.getSubGroupTree(groupId);
+    public ApiResponse<List<Tree<Integer>>> tree(@RequestParam(defaultValue = "0") Integer rootId) {
+        List<Tree<Integer>> tree = thisService.getTree(rootId);
         return new ApiResponse<>(tree);
     }
 

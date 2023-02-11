@@ -11,7 +11,7 @@ CREATE TABLE `auth_group` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户组名称',
   `parent_id` bigint unsigned NOT NULL COMMENT '上级用户组ID',
-  `sort_no` int unsigned DEFAULT '1' COMMENT '显示顺序',
+  `sort` smallint unsigned DEFAULT '1' COMMENT '显示顺序',
   `description` varchar(255) DEFAULT NULL COMMENT '描述信息',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_name_parent_id` (`name`,`parent_id`) USING BTREE
@@ -21,7 +21,7 @@ CREATE TABLE `auth_group` (
 -- Records of auth_group
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_group` (`name`, `parent_id`, `sort_no`, `description`) VALUES ('root', 0, 1, '根用户组');
+INSERT INTO `auth_group` (`id`, `name`, `parent_id`, `sort`, `description`) VALUES (1, 'root', 0, 1, '根用户组');
 COMMIT;
 
 -- ----------------------------
@@ -83,24 +83,24 @@ CREATE TABLE `auth_permission` (
 -- Records of auth_permission
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('上帝权限', '*', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('用户组查询', 'auth:groups:list', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('获取用户组树状结构', 'auth:groups:tree', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('新增用户组', 'auth:groups:add', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('按ID查询用户组', 'auth:groups:get', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('按ID更新用户组', 'auth:groups:update', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('按ID删除用户组', 'auth:groups:delete', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('用户组迁移', 'auth:groups:migrate', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('角色查询', 'auth:roles:list', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('新增角色', 'auth:roles:add', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('按ID查询角色', 'auth:roles:get', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('按ID更新角色', 'auth:roles:update', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('按ID删除角色', 'auth:roles:delete', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('查询用户拥有所有权限信息', 'auth:permissions:list', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('新增权限', 'auth:permissions:add', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('按ID查询权限', 'auth:permissions:get', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('按ID更新权限', 'auth:permissions:update', NULL);
-INSERT INTO `auth_permission` (`name`, `code`, `description`) VALUES ('按ID删除权限', 'auth:permissions:delete', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (1, '上帝权限', '*', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (2, '用户组查询', 'auth:groups:list', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (3, '获取用户组树状结构', 'auth:groups:tree', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (4, '新增用户组', 'auth:groups:add', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (5, '按ID查询用户组', 'auth:groups:get', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (6, '按ID更新用户组', 'auth:groups:update', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (7, '按ID删除用户组', 'auth:groups:delete', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (8, '用户组迁移', 'auth:groups:migrate', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (9, '角色查询', 'auth:roles:list', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (10, '新增角色', 'auth:roles:add', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (11, '按ID查询角色', 'auth:roles:get', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (12, '按ID更新角色', 'auth:roles:update', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (13, '按ID删除角色', 'auth:roles:delete', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (14, '查询用户拥有所有权限信息', 'auth:permissions:list', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (15, '新增权限', 'auth:permissions:add', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (16, '按ID查询权限', 'auth:permissions:get', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (17, '按ID更新权限', 'auth:permissions:update', NULL);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`) VALUES (18, '按ID删除权限', 'auth:permissions:delete', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -122,10 +122,10 @@ CREATE TABLE `auth_role` (
 -- Records of auth_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_role` (`name`, `code`, `description`) VALUES ('上帝角色', 'god', '拥有系统所有权限');
-INSERT INTO `auth_role` (`name`, `code`, `description`) VALUES ('管理员', 'admin', NULL);
-INSERT INTO `auth_role` (`name`, `code`, `description`) VALUES ('来宾', 'guest', '基本登录、登出、密码管理');
-INSERT INTO `auth_role` (`name`, `code`, `description`) VALUES ('只读角色', 'readonly', '所有资源只读，无法修改删除和更新');
+INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (1, '上帝角色', 'god', '拥有系统所有权限');
+INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (2, '管理员', 'admin', '管理员权限');
+INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (3, '来宾', 'guest', '基本登录、登出、密码管理');
+INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (4, '只读角色', 'readonly', '所有资源只读，无法修改删除和更新');
 COMMIT;
 
 -- ----------------------------
@@ -165,17 +165,16 @@ CREATE TABLE `auth_user` (
   `user_lock` tinyint NOT NULL DEFAULT '0' COMMENT '锁1-上锁 0-解锁',
   `is_super` tinyint NOT NULL DEFAULT '0' COMMENT '超级管理员',
   `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
+  `pwd_change_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '密码上次修改时间',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_login_name` (`login_name`) USING BTREE,
-  UNIQUE KEY `uk_mobile` (`mobile`) USING BTREE,
-  UNIQUE KEY `uk_email` (`email`) USING BTREE
+  UNIQUE KEY `uk_login_name` (`login_name`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='用户';
 
 -- ----------------------------
 -- Records of auth_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user` (`login_name`, `pwd`, `real_name`, `mobile`, `email`, `telephone`, `user_lock`, `is_super`, `expire_time`) VALUES ('admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', 'admin', '13111111111', 'me@example.com', '057112345678', 0, 0, '2099-12-31 23:59:59');
+INSERT INTO `auth_user` (`id`, `login_name`, `pwd`, `real_name`, `mobile`, `email`, `telephone`, `user_lock`, `is_super`, `expire_time`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', 'admin', '13111111111', 'admin@example.com', '057112345678', 0, 0, '2099-12-31 23:59:59');
 COMMIT;
 
 -- ----------------------------
@@ -216,7 +215,7 @@ CREATE TABLE `auth_user_permission` (
 -- Records of auth_user_permission
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user_permission` (`user_id`, `permission_id`) VALUES (1, 1);
+INSERT INTO `auth_user_permission` (`id`, `user_id`, `permission_id`) VALUES (1, 1, 1);
 COMMIT;
 
 -- ----------------------------

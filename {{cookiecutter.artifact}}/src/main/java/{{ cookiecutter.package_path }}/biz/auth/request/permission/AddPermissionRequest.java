@@ -4,7 +4,46 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request.permission;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.validation.constraints.NotBlank;
 
 @Data
 public class AddPermissionRequest {
+
+    /**
+     * 权限名称
+     */
+    @NotBlank
+    private String name;
+
+    /**
+     * 权限代码
+     */
+    private String code;
+
+    /**
+     * 描述信息
+     */
+    private String description;
+
+    /**
+     * 父级权限ID
+     */
+    private Long parentId;
+
+    /**
+     * 权限类型（1：页面/路由，2：接口/功能 3：按钮/组件）
+     */
+    private Integer kind;
+
+    /**
+     * 页面路由（用于前端控制）
+     */
+    private String path;
+
+    /**
+     * 排序
+     */
+    private Integer sort;
 }

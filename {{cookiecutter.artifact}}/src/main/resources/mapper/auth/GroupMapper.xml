@@ -9,14 +9,14 @@
         <result column="update_time" property="updateTime" />
         <result column="name" property="name" />
         <result column="parent_id" property="parentId" />
-        <result column="sort_no" property="sortNo" />
+        <result column="sort" property="sort" />
         <result column="description" property="description" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
-        create_time, update_time, name, parent_id, sort_no, description
+        create_time, update_time, name, parent_id, sort, description
     </sql>
 
 

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 /**
- * IP黑名单
+ * IP白名单
  */
 @RestController
 @RequestMapping("/sys")

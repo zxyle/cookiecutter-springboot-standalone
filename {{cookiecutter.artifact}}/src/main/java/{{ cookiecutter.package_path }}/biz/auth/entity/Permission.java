@@ -33,4 +33,24 @@ public class Permission extends BaseEntity {
      */
     private String description;
 
+    /**
+     * 父级权限ID
+     */
+    private Long parentId;
+
+    /**
+     * 权限类型（1：页面/路由，2：接口/功能 3：按钮/组件）
+     */
+    private Integer kind;
+
+    /**
+     * 页面路由（用于前端控制）
+     */
+    private String path;
+
+    /**
+     * 排序
+     */
+    private Integer sort;
+
 }

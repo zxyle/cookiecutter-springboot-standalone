@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

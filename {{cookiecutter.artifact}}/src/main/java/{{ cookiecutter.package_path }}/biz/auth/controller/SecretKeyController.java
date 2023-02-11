@@ -3,6 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import cn.hutool.core.util.IdUtil;
+import {{ cookiecutter.basePackage }}.biz.auth.response.SecretKeyResponse;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import dev.zhengxiang.tool.crypto.PlainKeyPair;
 import dev.zhengxiang.tool.crypto.RSAEncrypt;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @Slf4j
-public class EncryptController {
+public class SecretKeyController {
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
@@ -28,8 +31,8 @@ public class EncryptController {
      * 获取RSA公钥
      */
     @RequestMapping("/getPublicKey")
-    public String getPublicKey() {
-        String sessionId = "";
+    public ApiResponse<SecretKeyResponse> getPublicKey() {
+        String sessionId = IdUtil.simpleUUID();
         String key = "privateKey:".concat(sessionId);
 
         try {
@@ -38,7 +41,8 @@ public class EncryptController {
             String privateKey = plainKeyPair.getPrivateKey();
             stringRedisTemplate.opsForValue().set(key, privateKey, 60, TimeUnit.SECONDS);
             // 将公钥传递给前端
-            return plainKeyPair.getPublicKey();
+            SecretKeyResponse data = new SecretKeyResponse(sessionId, plainKeyPair.getPublicKey());
+            return new ApiResponse<>(data);
         } catch (NoSuchAlgorithmException e) {
             log.error("error: ", e);
         }
@@ -46,7 +50,6 @@ public class EncryptController {
         // 前端使用公钥将关键信息加密，传递给后端
 
         // 后端使用私钥进行解密
-        return "";
-
+        return new ApiResponse<>(false);
     }
 }

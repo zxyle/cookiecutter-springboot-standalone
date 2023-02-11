@@ -89,9 +89,10 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:update')")
     @PutMapping("/${table.entityPath}s/{id}")
-    public ApiResponse<Object> update(@Valid @RequestBody ${entity} entity) {
+    public ApiResponse<Object> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
+        entity.setId(id);
         boolean success = thisService.updateById(entity);
-         return new ApiResponse<>(success);
+        return new ApiResponse<>(success);
     }
 
     /**

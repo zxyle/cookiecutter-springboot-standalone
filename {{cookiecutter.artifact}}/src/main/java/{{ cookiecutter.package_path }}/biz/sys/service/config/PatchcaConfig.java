@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.config;
 
+import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import org.patchca.color.ColorFactory;
 import org.patchca.color.GradientColorFactory;
 import org.patchca.color.RandomColorFactory;
@@ -15,6 +16,7 @@ import org.patchca.filter.predefined.MarbleRippleFilterFactory;
 import org.patchca.filter.predefined.WobbleRippleFilterFactory;
 import org.patchca.service.ConfigurableCaptchaService;
 import org.patchca.word.RandomWordFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -24,22 +26,25 @@ import java.util.Random;
 @Component
 public class PatchcaConfig {
 
+    @Autowired
+    CaptchaProperties captchaProperties;
+
     @Bean
     public ConfigurableCaptchaService configurableCaptchaService() {
         ConfigurableCaptchaService cs = new ConfigurableCaptchaService();
         cs.setWordFactory(randomWordFactory());
         cs.setColorFactory(getColorFactories()[new Random().nextInt(getColorFactories().length)]);
         cs.setFilterFactory(getFilterFactories()[new Random().nextInt(getFilterFactories().length)]);
-        cs.setHeight(CaptchaConst.HEIGHT);
-        cs.setWidth(CaptchaConst.WIDTH);
+        cs.setHeight(captchaProperties.getHeight());
+        cs.setWidth(captchaProperties.getWidth());
         return cs;
     }
 
     public RandomWordFactory randomWordFactory() {
         RandomWordFactory wf = new RandomWordFactory();
-        wf.setCharacters(CaptchaConst.CHARACTERS);
-        wf.setMaxLength(CaptchaConst.LENGTH);
-        wf.setMinLength(CaptchaConst.LENGTH);
+        wf.setCharacters(captchaProperties.getCharacters());
+        wf.setMaxLength(captchaProperties.getDigits());
+        wf.setMinLength(captchaProperties.getDigits());
         return wf;
     }
 

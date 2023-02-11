@@ -31,7 +31,7 @@ public class Group extends BaseEntity {
     /**
      * 显示顺序
      */
-    private Integer sortNo;
+    private Integer sort;
 
     /**
      * 描述信息

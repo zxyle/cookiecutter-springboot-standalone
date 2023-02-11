@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -39,7 +39,7 @@ public class LoginLog extends BaseEntity {
     private String msg;
 
     /**
-     * 1-成功 0-失败
+     * 登录是否成功（1-成功 0-失败）
      */
     private Integer isSuccess;
 

@@ -3,13 +3,13 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.security;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,6 +32,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private PasswordProperties passwordProperties;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -56,21 +59,21 @@ public class UserDetailServiceImpl implements UserDetailsService {
         wrapper.eq(StringUtils.isNotBlank(loginName), "login_name", loginName);
         wrapper.eq(StringUtils.isNotBlank(email), "email", email);
         wrapper.eq(StringUtils.isNotBlank(mobile), "mobile", mobile);
-        User one = userService.getOne(wrapper);
+        User user = userService.getOne(wrapper);
 
         // 如果没有查询到对应用户
-        if (null == one) {
+        if (null == user) {
             throw new UsernameNotFoundException("用户名或密码错误");
         }
 
-        long userId = one.getId();
+        long userId = user.getId();
 
         // 查询用户所有权限码和用户所有角色码
         List<String> permissions = permissionService.getSecurityPermissions(userId);
 
         // 将权限码和角色码存入redis
         String key = "permissions:" + userId;
-        stringRedisTemplate.opsForValue().set(key, String.join(AuthConst.DELIMITER, permissions), 1, TimeUnit.DAYS);
-        return new LoginUser(permissions, one);
+        stringRedisTemplate.opsForValue().set(key, String.join(AuthConst.DELIMITER, permissions), 24, TimeUnit.HOURS);
+        return new LoginUser(permissions, user, passwordProperties);
     }
 }

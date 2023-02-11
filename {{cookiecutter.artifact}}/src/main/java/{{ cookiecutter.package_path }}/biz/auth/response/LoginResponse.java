@@ -48,4 +48,8 @@ public class LoginResponse {
      */
     private String avatar;
 
+    /**
+     * 是否管理员
+     */
+    private Integer isSuper;
 }

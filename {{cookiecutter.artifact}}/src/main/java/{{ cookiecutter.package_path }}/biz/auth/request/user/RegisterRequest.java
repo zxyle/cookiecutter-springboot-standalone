@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request.user;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 
@@ -11,25 +12,36 @@ import javax.validation.constraints.NotBlank;
 public class RegisterRequest {
 
     /**
-     * 用户名
+     * 用户名注册（用户名、手机号、邮箱三选一）
      */
-    @NotBlank
+    // @NotBlank(message = "用户名不能为空")
+    // @Length(min = 5, max = 32, message = "用户名长度需要5~32位")
     private String loginName;
 
     /**
-     * 密码
+     * 手机号注册（用户名、手机号、邮箱三选一）
      */
-    @NotBlank
-    private String password;
-
-    /**
-     * 手机号
-     */
-    @NotBlank
     private String mobile;
 
     /**
-     * 图形或短信验证码
+     * 邮箱注册（用户名、手机号、邮箱三选一）
      */
+    @NotBlank(message = "邮箱不能为空")
+    private String email;
+
+    /**
+     * 邮件、短信、图形验证码
+     */
+    @NotBlank(message = "验证码不能为空")
     private String code;
+
+    /**
+     * 密码（长度需要8~32位）
+     *
+     * @mock lHfxoPrKOaWjSqwN
+     */
+    @NotBlank(message = "密码不能为空")
+    @Length(min = 8, max = 32, message = "密码长度需要8~32位")
+    private String password;
+
 }

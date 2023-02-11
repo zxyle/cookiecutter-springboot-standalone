@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -49,7 +48,7 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
                 .antMatchers("/auth/user/login").anonymous()
-                .antMatchers("/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers", "/getPublicKey").permitAll()
+                .antMatchers("/sys/dicts/**", "/sys/area/**", "/file/**", "/sys/infos", "/auth/register/**", "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers", "/getPublicKey").permitAll()
                 // 除上述请求 全部需要鉴权认证
                 .anyRequest().authenticated();
 

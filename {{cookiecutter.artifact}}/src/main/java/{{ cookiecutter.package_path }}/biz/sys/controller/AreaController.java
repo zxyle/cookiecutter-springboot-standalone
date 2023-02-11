@@ -47,7 +47,7 @@ public class AreaController {
             @RequestParam(value = "rootId", required = false, defaultValue = "0000") String rootId,
             @RequestParam(value = "level", required = false, defaultValue = "4") Integer level) {
         QueryWrapper<Area> wrapper = new QueryWrapper<>();
-        wrapper.select("code, name, parent, level");
+        wrapper.select("code, name, parent_id, level");
         wrapper.le("level", level);
         String rootName = "中国";
         String rootCode = "0000";
@@ -67,7 +67,7 @@ public class AreaController {
 
         List<Area> areas = thisService.list(wrapper);
         List<AreaNode> nodes = areas.stream()
-                .map(node -> new AreaNode(node.getName(), node.getParent(), node.getCode()))
+                .map(node -> new AreaNode(node.getName(), node.getParentId(), node.getCode()))
                 .collect(Collectors.toList());
 
         List<AntdTree2> listTree = TreeUtil.createTree(nodes, rootId);

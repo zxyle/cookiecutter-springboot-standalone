@@ -3,13 +3,18 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNodeConfig;
+import cn.hutool.core.lang.tree.TreeUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.PermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -174,5 +179,54 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             }
         }
         return users;
+    }
+
+
+    /**
+     * 获取权限树
+     *
+     * @param rootPermissionId 根节点权限ID
+     */
+    @Override
+    public List<Tree<Integer>> getTree(Integer rootPermissionId) {
+        // 查询所有数据
+        List<Permission> list = list();
+
+        TreeNodeConfig config = new TreeNodeConfig();
+        config.setNameKey("name");
+        config.setIdKey("id");
+        config.setWeightKey("sort");
+        // config可以配置属性字段名和排序等等
+        // config.setParentIdKey("parentId");
+        // config.setDeep(20);//最大递归深度  默认无限制
+        List<Tree<Integer>> treeNodes = TreeUtil.build(list, rootPermissionId, config, (object, tree) -> {
+            tree.setId(object.getId().intValue());// 必填属性
+            tree.setParentId(object.getParentId().intValue());// 必填属性
+            tree.setName(object.getName());
+            // 扩展属性 ...
+            tree.putExtra("path", object.getPath());
+            tree.putExtra("kind", object.getKind());
+            tree.putExtra("sort", object.getSort());
+            tree.putExtra("code", object.getCode());
+        });
+        return treeNodes;
+    }
+
+    /**
+     * 是否正在被使用
+     *
+     * @param permissionId 权限ID
+     * @return true:正在被使用 false:未被使用
+     */
+    @Override
+    public boolean isAlreadyUsed(Long permissionId) {
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        wrapper.eq("parent_id", permissionId);
+        List<Permission> permissions = list(wrapper);
+        Integer userPermissions = userPermissionService.countRelation(null, permissionId);
+        Integer rolePermissions = rolePermissionService.countRelation(null, permissionId);
+        Integer groupPermissions = groupPermissionService.countRelation(null, permissionId);
+        return userPermissions > 0 || rolePermissions > 0
+                || groupPermissions > 0 || CollectionUtils.isNotEmpty(permissions);
     }
 }

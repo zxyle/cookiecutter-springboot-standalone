@@ -3,12 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +28,9 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      */
     @Override
     public boolean deleteRelation(Long userId, Long roleId) {
+        if (countRelation(userId, roleId) == 0) {
+            return true;
+        }
         return remove(buildWrapper(userId, roleId));
     }
 
@@ -87,8 +90,8 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     // 构建wrapper
     public QueryWrapper<UserRole> buildWrapper(Long userId, Long roleId) {
         QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
-        wrapper.eq(userId != 0L, "user_id", userId);
-        wrapper.eq(roleId != 0L, "role_id", roleId);
+        wrapper.eq(userId != null && userId != 0L, "user_id", userId);
+        wrapper.eq(roleId != null && roleId != 0L, "role_id", roleId);
         return wrapper;
     }
 

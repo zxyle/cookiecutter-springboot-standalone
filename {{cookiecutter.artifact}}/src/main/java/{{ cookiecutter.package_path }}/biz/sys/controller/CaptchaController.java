@@ -3,29 +3,27 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
-import cn.hutool.core.util.IdUtil;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.config.AuthUserProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.request.SendCodeRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
+import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.EmailCodeService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.sys.response.CaptchaResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
-import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
-import {{ cookiecutter.basePackage }}.biz.sys.service.VerifyService;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
@@ -38,12 +36,8 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/sys/captcha")
 @Validated
+@Slf4j
 public class CaptchaController {
-
-    // 其他实现类 kaptchaServiceImpl
-    @Autowired
-    @Qualifier("patchcaServiceImpl")
-    CaptchaService captchaService;
 
     @Resource
     StringRedisTemplate stringRedisTemplate;
@@ -52,32 +46,24 @@ public class CaptchaController {
     IUserService userService;
 
     @Autowired
-    VerifyService verifyService;
+    CaptchaProperties captchaProperties;
 
-    @Value("${code.digits}")
-    private Integer digits;
-
-    @Value("${code.alive-time}")
-    private Integer aliveTime;
-
-    @Value("${code.principal}")
-    private String authMethod;
-
-    @Value("${code.ttl}")
-    private Integer ttl;
+    @Autowired
+    AuthUserProperties authUserProperties;
 
     @Autowired
     private EmailCodeService emailService;
+
+    @Autowired
+    CodeService codeService;
 
     /**
      * 生成base64编码图形验证码
      */
     @GetMapping("/generate")
     public ApiResponse<CaptchaResponse> generate() {
-        String key = IdUtil.simpleUUID();
-        CaptchaPair captchaPair = captchaService.generate();
-        stringRedisTemplate.opsForValue().set(key, captchaPair.getCode(), 60, TimeUnit.SECONDS);
-        CaptchaResponse response = new CaptchaResponse(key, captchaPair.getB64Image());
+        CaptchaPair captchaPair = codeService.send();
+        CaptchaResponse response = new CaptchaResponse(captchaPair.getCaptchaId(), captchaPair.getB64Image());
         return new ApiResponse<>(response);
     }
 
@@ -91,11 +77,13 @@ public class CaptchaController {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);  // 在代理服务器端防止缓冲
         response.setContentType("image/jpeg");
-        String key = IdUtil.simpleUUID();
-        CaptchaPair captchaPair = captchaService.generate();
-        stringRedisTemplate.opsForValue().set(key, captchaPair.getCode(), 60, TimeUnit.SECONDS);
+        CaptchaPair captchaPair = codeService.send();
+        Cookie cookie = new Cookie("captchaId", captchaPair.getCaptchaId());
+        cookie.setPath("/");
+        response.addCookie(cookie);
         response.getOutputStream().write(captchaPair.getBytes());
         response.getOutputStream().flush();
+        response.getOutputStream().close();
     }
 
 
@@ -105,8 +93,8 @@ public class CaptchaController {
      * @param code 用户输入结果
      */
     @GetMapping("/verify")
-    public ApiResponse<Object> verify(@NotBlank String code, @NotBlank String captchaId) {
-        boolean verify = verifyService.verify(code, captchaId);
+    public ApiResponse<Boolean> verify(@NotBlank String code, @NotBlank String captchaId) {
+        boolean verify = codeService.verify(code, captchaId);
         return new ApiResponse<>(verify);
     }
 
@@ -114,38 +102,35 @@ public class CaptchaController {
      * 发送短信邮件验证码
      */
     @GetMapping("/send")
-    public ResponseEntity<Boolean> send(SendCodeRequest request) {
-        // 查询手机号或邮箱绑定的用户
-        User user = userService.queryByPrincipal(request.getMobile(), request.getEmail());
-        if (null == user || isLocked(request.getPrincipal())) {
-            // 可能用户不存在或验证码请求频繁
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ApiResponse<Boolean> send(SendCodeRequest request) {
+        if (isLocked(request.getPrincipal())) {
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST.toString(), "请求验证码频繁", false);
         }
 
         String key = "code:" + request.getPrincipal();
         // 生成随机数字
-        String code = CaptchaUtil.randCode(digits);
+        String code = CaptchaUtil.randNumber(captchaProperties.getDigits());
         stringRedisTemplate.opsForHash().put(key, "principal", request.getPrincipal());
-        stringRedisTemplate.opsForHash().put(key, "userId", String.valueOf(user.getId()));
         stringRedisTemplate.opsForHash().put(key, "code", code);
-        stringRedisTemplate.expire(key, Duration.ofMinutes(aliveTime));
+        stringRedisTemplate.expire(key, Duration.ofMinutes(captchaProperties.getAliveTime()));
 
-        if (authMethod.equals("email")) {
+        if (authUserProperties.getPrincipal().equals("email")) {
             // 调用邮件发送方法
-            emailService.sendVerificationCode(code, user.getEmail());
+            boolean success = emailService.sendVerificationCode(code, request.getEmail());
+            log.info("给 {} 发送邮件验证码结果: {}", request.getEmail(), success);
         }
 
-        if (authMethod.equals("mobile")) {
+        if (authUserProperties.getPrincipal().equals("mobile")) {
             // TODO 调用发送短信接口, 写入到消息队列中
         }
-        locked(request.getPrincipal(), ttl);
-        return ResponseEntity.ok(true);
+        locked(request.getPrincipal(), captchaProperties.getBetween());
+        return new ApiResponse<>(true);
     }
 
     // 防止验证码被滥用
-    public void locked(String principal, Integer ttl) {
+    public void locked(String principal, Integer between) {
         String key = "locked:" + principal;
-        stringRedisTemplate.opsForValue().set(key, "lock", ttl, TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set(key, "lock", captchaProperties.getBetween(), TimeUnit.SECONDS);
     }
 
     public boolean isLocked(String principal) {

@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNodeConfig;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupPermissionService;
@@ -14,6 +14,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.common.util.AreaNode;
 import {{ cookiecutter.basePackage }}.common.util.TreeUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -62,9 +64,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         }
 
         // 获取用户组排序
-        if (null == group.getSortNo()) {
+        if (null == group.getSort()) {
             Integer count = count(group.getParentId());
-            group.setSortNo(count + 1);
+            group.setSort(count + 1);
         }
         baseMapper.insert(group);
         return group;
@@ -150,5 +152,32 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         boolean s3 = userGroupService.deleteRelation(0L, groupId);
         boolean s4 = removeById(groupId);
         return (s1 && s2) && (s3 && s4);
+    }
+
+    /**
+     * 获取权限树
+     *
+     * @param rootId 根节点ID
+     */
+    @Override
+    public List<Tree<Integer>> getTree(Integer rootId) {
+        // 查询所有数据
+        List<Group> list = list();
+
+        TreeNodeConfig config = new TreeNodeConfig();
+        config.setNameKey("name");
+        config.setIdKey("id");
+        config.setWeightKey("sort");
+        // config可以配置属性字段名和排序等等
+        // config.setParentIdKey("parentId");
+        // config.setDeep(20);//最大递归深度  默认无限制
+        List<Tree<Integer>> treeNodes = cn.hutool.core.lang.tree.TreeUtil.build(list, rootId, config, (object, tree) -> {
+            tree.setId(object.getId().intValue());// 必填属性
+            tree.setParentId(object.getParentId().intValue());// 必填属性
+            tree.setName(object.getName());
+            // 扩展属性 ...
+            tree.putExtra("sort", object.getSort());
+        });
+        return treeNodes;
     }
 }

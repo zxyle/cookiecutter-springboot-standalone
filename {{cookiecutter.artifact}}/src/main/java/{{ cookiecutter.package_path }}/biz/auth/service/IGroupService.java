@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
+import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
 import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
@@ -56,5 +57,13 @@ public interface IGroupService extends IService<Group> {
      * @param groupId 用户组ID
      */
     boolean delete(Long groupId);
+
+
+    /**
+     * 获取用户组树
+     *
+     * @param rootId 根节点ID
+     */
+    List<Tree<Integer>> getTree(Integer rootId);
 
 }

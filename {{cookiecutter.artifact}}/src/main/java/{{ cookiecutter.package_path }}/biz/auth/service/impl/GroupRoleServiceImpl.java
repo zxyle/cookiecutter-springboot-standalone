@@ -3,12 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupRoleService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +40,10 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      */
     @Override
     public boolean deleteRelation(Long groupId, Long roleId) {
+        if (countRelation(groupId, roleId) == 0) {
+            return true;
+        }
+
         return remove(buildWrapper(groupId, roleId));
     }
 
@@ -99,8 +103,8 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
     // 构建wrapper
     public QueryWrapper<GroupRole> buildWrapper(Long groupId, Long roleId) {
         QueryWrapper<GroupRole> wrapper = new QueryWrapper<>();
-        wrapper.eq(groupId != 0L, "group_id", groupId);
-        wrapper.eq(roleId != 0L, "role_id", roleId);
+        wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
+        wrapper.eq(roleId != null && roleId != 0L, "role_id", roleId);
         return wrapper;
     }
 }

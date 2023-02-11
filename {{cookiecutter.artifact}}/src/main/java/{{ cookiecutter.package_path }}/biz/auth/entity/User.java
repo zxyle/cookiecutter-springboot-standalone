@@ -3,12 +3,13 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -53,18 +54,46 @@ public class User extends BaseEntity {
     private String telephone;
 
     /**
-     * 锁1-上锁 0-解锁
+     * 账号是否锁定 （1-上锁 0-未锁）
      */
     private Integer userLock;
 
     /**
      * 超级管理员
      */
+    @JsonIgnore
     private Integer isSuper;
 
     /**
      * 账号过期时间
      */
+    @JsonIgnore
     private LocalDateTime expireTime;
+
+    /**
+     * 密码上次修改时间
+     */
+    @JsonIgnore
+    private LocalDateTime pwdChangeTime;
+
+    /**
+     * 账号可用 1-启用 0-禁用
+     */
+    private Integer enabled;
+
+    /**
+     * 性别 male-男性 female-女性
+     */
+    private String gender;
+
+    /**
+     * 头像url
+     */
+    private String avatar;
+
+    /**
+     * 生日 yyyy-MM-dd
+     */
+    private LocalDate birthday;
 
 }

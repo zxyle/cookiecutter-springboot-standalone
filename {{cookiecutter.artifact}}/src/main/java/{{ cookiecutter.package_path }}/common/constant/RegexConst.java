@@ -28,6 +28,7 @@ public class RegexConst {
 
     public static final String REGEX_KOREAN = "^[\uAC00-\uD7A3]+$";
 
+    // 6-18位字母、数字、下划线，必须以字母开头
     public static final String REGEX_USERNAME = "^[a-zA-Z]\\w{5,17}$";
 
     public static final String REGEX_PASSWORD = "^[a-zA-Z0-9]{6,16}$";

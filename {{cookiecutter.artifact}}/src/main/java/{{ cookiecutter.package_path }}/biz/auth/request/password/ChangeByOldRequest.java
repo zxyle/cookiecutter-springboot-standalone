@@ -19,7 +19,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ModifyByOldRequest extends BaseRequest {
+public class ChangeByOldRequest extends BaseRequest {
 
     /**
      * 旧密码

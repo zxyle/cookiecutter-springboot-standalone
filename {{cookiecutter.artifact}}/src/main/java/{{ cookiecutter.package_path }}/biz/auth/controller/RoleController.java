@@ -3,24 +3,23 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
-import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.role.AddRoleRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IRoleService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -48,10 +47,19 @@ public class RoleController extends AuthBaseController {
     public ApiResponse<PageVO<Role>> list(@Valid ListAuthRequest request) {
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
         // 模糊查询
-        wrapper.likeRight(StringUtils.isNotBlank(request.getName()), "name", request.getName());
+        wrapper.like(StringUtils.isNotBlank(request.getName()), "name", request.getName());
         IPage<Role> page = PageRequestUtil.checkForMp(request);
         IPage<Role> list = thisService.page(page, wrapper);
         return PageRequestUtil.extractFromMp(list);
+    }
+
+    /**
+     * 所有角色
+     */
+    @GetMapping("/roles/all")
+    @PreAuthorize("@ck.hasPermit('auth:roles:all')")
+    public ApiResponse<List<Role>> all() {
+        return new ApiResponse<>(thisService.list());
     }
 
 
@@ -75,7 +83,7 @@ public class RoleController extends AuthBaseController {
      */
     @GetMapping("/roles/{roleId}")
     @PreAuthorize("@ck.hasPermit('auth:roles:get')")
-    public ApiResponse<Role> get(@NotNull @PathVariable Long roleId) {
+    public ApiResponse<Role> get(@PathVariable Long roleId) {
         return new ApiResponse<>(thisService.queryById(roleId));
     }
 
@@ -86,7 +94,7 @@ public class RoleController extends AuthBaseController {
      */
     @PutMapping("/roles/{roleId}")
     @PreAuthorize("@ck.hasPermit('auth:roles:update')")
-    public ApiResponse<Object> update(@Valid @RequestBody Role entity, @NotNull @PathVariable Long roleId) {
+    public ApiResponse<Object> update(@Valid @RequestBody Role entity, @PathVariable Long roleId) {
         entity.setId(roleId);
         boolean success = thisService.updateById(entity);
         // 刷新持有该角色的用户权限缓存（改为异步操作）
@@ -102,10 +110,10 @@ public class RoleController extends AuthBaseController {
      */
     @DeleteMapping("/roles/{roleId}")
     @PreAuthorize("@ck.hasPermit('auth:roles:delete')")
-    public ApiResponse<Object> delete(@NotNull @PathVariable Long roleId) {
-        boolean success = thisService.delete(roleId);
+    public ApiResponse<Object> delete(@PathVariable Long roleId) {
         List<Long> users = getUsersByRole(roleId);
         users.forEach(userId -> permissionService.refreshPermissions(userId));
+        boolean success = thisService.delete(roleId);
         return new ApiResponse<>(success);
     }
 }

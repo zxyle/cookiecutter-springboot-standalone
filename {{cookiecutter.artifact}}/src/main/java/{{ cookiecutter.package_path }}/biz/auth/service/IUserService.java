@@ -3,9 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.AddUserRequest;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * 用户 服务类
@@ -46,5 +46,12 @@ public interface IUserService extends IService<User> {
      * @param email  邮箱号
      */
     User queryByPrincipal(String mobile, String email);
+
+    /**
+     * 禁用用户
+     *
+     * @param userId 用户ID
+     */
+    boolean disable(Long userId);
 
 }

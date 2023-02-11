@@ -26,8 +26,14 @@ public class LoginServiceImpl implements LoginService {
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         Long userId = loginUser.getUser().getId();
+        // 清除登录信息
         SecurityContextHolder.clearContext();
-        // 删除redis中用户权限信息
-        return Boolean.TRUE.equals(stringRedisTemplate.delete("permissions:" + userId));
+        // 删除redis中用户权限缓存
+        String key = "permissions:" + userId;
+        if (Boolean.FALSE.equals(stringRedisTemplate.hasKey(key))) {
+            // 用户可能没有登录或登录已过期
+            return true;
+        }
+        return Boolean.TRUE.equals(stringRedisTemplate.delete(key));
     }
 }
