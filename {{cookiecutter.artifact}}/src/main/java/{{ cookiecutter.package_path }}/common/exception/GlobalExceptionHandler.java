@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {Exception.class, NullPointerException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<ApiResponse> exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
         logger.error("接口报错 路径:【{}】, 状态码:【{}】, 错误原因:【{}】.", request.getServletPath(), response.getStatus(), e.getMessage());
-        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, e.getMessage(), false);
+        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "操作失败", false);
         return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
