@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,7 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
     List<UserRole> selectAll();
 
     // 截断表
+    @Update("TRUNCATE TABLE auth_user_role")
     void truncate();
 
     /**

@@ -6,6 +6,8 @@ package {{ cookiecutter.basePackage }}.biz.sys.request;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Data
 public class UploadRequest {
 
@@ -22,5 +24,5 @@ public class UploadRequest {
     /**
      * 待上传文件
      */
-    private MultipartFile file;
+    private List<MultipartFile> files;
 }

@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.config.AuthUserProperties;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.SendCodeRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
@@ -14,7 +15,6 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
@@ -39,23 +38,26 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class CaptchaController {
 
-    @Resource
     StringRedisTemplate stringRedisTemplate;
 
-    @Autowired
     IUserService userService;
 
-    @Autowired
     CaptchaProperties captchaProperties;
 
-    @Autowired
     AuthUserProperties authUserProperties;
 
-    @Autowired
-    private EmailCodeService emailService;
+    EmailCodeService emailService;
 
-    @Autowired
     CodeService codeService;
+
+    public CaptchaController(StringRedisTemplate stringRedisTemplate, IUserService userService, CaptchaProperties captchaProperties, AuthUserProperties authUserProperties, EmailCodeService emailService, CodeService codeService) {
+        this.stringRedisTemplate = stringRedisTemplate;
+        this.userService = userService;
+        this.captchaProperties = captchaProperties;
+        this.authUserProperties = authUserProperties;
+        this.emailService = emailService;
+        this.codeService = codeService;
+    }
 
     /**
      * 生成base64编码图形验证码
@@ -83,14 +85,14 @@ public class CaptchaController {
         response.addCookie(cookie);
         response.getOutputStream().write(captchaPair.getBytes());
         response.getOutputStream().flush();
-        response.getOutputStream().close();
     }
 
 
     /**
      * 校验短信、图形验证码
      *
-     * @param code 用户输入结果
+     * @param code      用户输入结果
+     * @param captchaId 图形验证码id
      */
     @GetMapping("/verify")
     public ApiResponse<Boolean> verify(@NotBlank String code, @NotBlank String captchaId) {
@@ -106,12 +108,18 @@ public class CaptchaController {
         if (isLocked(request.getPrincipal())) {
             return new ApiResponse<>(HttpStatus.BAD_REQUEST.toString(), "请求验证码频繁", false);
         }
+        User user = userService.queryByPrincipal(null, request.getEmail());
 
         String key = "code:" + request.getPrincipal();
         // 生成随机数字
         String code = CaptchaUtil.randNumber(captchaProperties.getDigits());
         stringRedisTemplate.opsForHash().put(key, "principal", request.getPrincipal());
         stringRedisTemplate.opsForHash().put(key, "code", code);
+        if (user != null && user.getId() != null) {
+            // 针对已经注册的用户, 保存用户id
+            stringRedisTemplate.opsForHash().put(key, "userId", String.valueOf(user.getId()));
+        }
+
         stringRedisTemplate.expire(key, Duration.ofMinutes(captchaProperties.getAliveTime()));
 
         if (authUserProperties.getPrincipal().equals("email")) {

@@ -9,12 +9,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.AddUserRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserPermissionService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -25,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 
 /**
  * 用户 服务实现类
@@ -96,21 +91,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     /**
-     * 修改密码
-     *
-     * @param userId 用户ID
-     * @param newPwd 加密后的新密码
-     */
-    @Override
-    public boolean changePwd(Long userId, String newPwd) {
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("pwd", newPwd);
-        updateWrapper.set("pwd_change_time", LocalDateTime.now());
-        updateWrapper.eq("id", userId);
-        return update(updateWrapper);
-    }
-
-    /**
      * 通过手机号查询用户
      *
      * @param mobile 手机号
@@ -142,5 +122,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         Boolean delete = stringRedisTemplate.delete(key);
         return success && Boolean.TRUE.equals(delete);
+    }
+
+    /**
+     * 启用用户
+     *
+     * @param userId 用户ID
+     */
+    @Override
+    public boolean enable(Long userId) {
+        // TODO 记录到操作日志
+        User user = new User();
+        user.setId(userId);
+        user.setEnabled(AuthConst.ENABLED);
+        return updateById(user);
+    }
+
+    /**
+     * 用户踢下线
+     *
+     * @param userId 用户ID
+     */
+    @Override
+    public boolean kick(Long userId) {
+        String key = "permissions:" + userId;
+        Boolean hasKey = stringRedisTemplate.hasKey(key);
+        if (hasKey == null || !hasKey) {
+            // 用户可能没有登录或登录已过期
+            return true;
+        }
+        Boolean delete = stringRedisTemplate.delete(key);
+        return Boolean.TRUE.equals(delete);
     }
 }

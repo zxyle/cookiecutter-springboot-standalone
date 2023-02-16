@@ -43,4 +43,14 @@ public class PasswordProperties {
      */
     private String complexity;
 
+    /**
+     * 密码历史记录数量 0代表不限制
+     */
+    private Integer historyCount;
+
+    /**
+     * 是否记录历史密码
+     */
+    private boolean enableHistory;
+
 }

@@ -28,17 +28,22 @@
         FROM auth_permission
     </select>
 
-    <select id="queryPermissionsByUid" resultType="java.lang.String">
+    <select id="queryPermissionsByUserId" resultType="java.lang.String">
         SELECT `code`
         FROM auth_permission
         WHERE id IN (
             SELECT permission_id
             FROM auth_role_permission
-            WHERE role_id IN (SELECT role_id FROM auth_user_role WHERE user_id = #{uid}))
+            WHERE role_id IN (SELECT role_id FROM auth_user_role WHERE user_id = #{userId}))
     </select>
 
-    <update id="truncate">
-        TRUNCATE TABLE auth_permission
-    </update>
+    <select id="selectMaxSort" resultType="java.lang.Integer">
+        SELECT
+            IFNULL( MAX( sort ), 0 ) AS sort
+        FROM
+            auth_permission
+        WHERE
+            parent_id = #{parentId}
+    </select>
 
 </mapper>

@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserPermission;
@@ -59,6 +60,6 @@ public interface IUserPermissionService extends IService<UserPermission> {
      *
      * @param userId 用户ID
      */
-    List<String> selectPermissionNameByUserid(long userId);
+    List<Permission> selectPermissionNameByUserid(long userId);
 
 }

@@ -5,12 +5,13 @@ package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import cn.hutool.core.lang.tree.Tree;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
+import {{ cookiecutter.basePackage }}.biz.auth.mapper.PermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.request.permission.AddPermissionRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.permission.TreePermissionRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,22 +27,27 @@ import java.util.List;
 @RequestMapping("/auth")
 public class PermissionController extends AuthBaseController {
 
+    PermissionMapper permissionMapper;
+
     IPermissionService thisService;
 
-    public PermissionController(IPermissionService thisService) {
+    public PermissionController(PermissionMapper permissionMapper, IPermissionService thisService) {
+        this.permissionMapper = permissionMapper;
         this.thisService = thisService;
     }
 
     /**
      * 获取权限树
      *
-     * @param rootPermissionId 根节点权限ID
      * @apiNote 1. 该接口只有管理员才能访问 2. 该接口返回name-节点名、id-节点值、children-子节点、path-路由、sort-排序等字段
      */
     @Secured("ROLE_admin")
     @GetMapping("/permissions/tree")
-    public ApiResponse<List<Tree<Integer>>> tree(@RequestParam(defaultValue = "1") Integer rootPermissionId) {
-        List<Tree<Integer>> tree = thisService.getTree(rootPermissionId);
+    public ApiResponse<List<Tree<Integer>>> tree(TreePermissionRequest request) {
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        wrapper.eq(request.getKind() != null, "kind", request.getKind());
+        List<Permission> list = thisService.list(wrapper);
+        List<Tree<Integer>> tree = thisService.getTree(list, request.getRootPermissionId());
         return new ApiResponse<>(tree);
     }
 
@@ -50,8 +56,8 @@ public class PermissionController extends AuthBaseController {
      */
     @GetMapping("/permissions")
     @PreAuthorize("@ck.hasPermit('auth:permissions:list')")
-    public ApiResponse<List<String>> list() {
-        List<String> permissions = thisService.getAllPermissions(getUserId());
+    public ApiResponse<List<Permission>> list() {
+        List<Permission> permissions = thisService.getAllPermissions(getUserId());
         return new ApiResponse<>(permissions);
     }
 
@@ -64,11 +70,18 @@ public class PermissionController extends AuthBaseController {
     public ApiResponse<Permission> add(@Valid @RequestBody AddPermissionRequest request) {
         Permission entity = new Permission();
         BeanUtils.copyProperties(request, entity);
+
+        // 计算排序
+        if (request.getParentId() != null) {
+            Integer sort = permissionMapper.selectMaxSort(request.getParentId());
+            entity.setSort(sort == null ? 1 : sort + 1);
+        }
+
         boolean success = thisService.save(entity);
         if (success) {
             return new ApiResponse<>(entity);
         }
-        return new ApiResponse<>();
+        return new ApiResponse<>("新增失败", false);
     }
 
 

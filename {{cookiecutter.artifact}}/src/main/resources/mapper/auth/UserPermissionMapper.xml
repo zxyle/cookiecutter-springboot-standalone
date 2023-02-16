@@ -25,16 +25,14 @@
         FROM auth_user_permission
     </select>
 
-    <select id="selectPermissionNameByUid" resultType="java.lang.String">
-        SELECT b.`code`
+    <select id="selectPermissionNameByUserId" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
+        SELECT
+            b.*
         FROM auth_user_permission a
-                 LEFT JOIN auth_permission b
-                           ON a.permission_id = b.id
-        WHERE a.user_id = #{userId}
+        LEFT JOIN auth_permission b
+        ON a.permission_id = b.id
+        WHERE
+            a.user_id = #{userId}
     </select>
-
-    <update id="truncate">
-        TRUNCATE TABLE auth_user_permission
-    </update>
 
 </mapper>

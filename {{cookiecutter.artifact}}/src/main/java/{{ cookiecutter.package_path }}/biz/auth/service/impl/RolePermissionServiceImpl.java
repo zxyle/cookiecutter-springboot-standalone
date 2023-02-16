@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.RolePermission;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.RolePermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IRolePermissionService;
@@ -101,7 +102,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      * @param roleId 角色ID
      */
     @Override
-    public List<String> getPermissionNameByRoleId(long roleId) {
-        return baseMapper.getPermissionNameByRid(roleId);
+    public List<Permission> getPermissionNameByRoleId(long roleId) {
+        return baseMapper.getPermissionNameByRoleId(roleId);
     }
 }

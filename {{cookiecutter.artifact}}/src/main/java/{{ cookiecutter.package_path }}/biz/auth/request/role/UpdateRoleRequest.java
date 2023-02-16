@@ -5,23 +5,18 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.role;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 
+/**
+ * 修改角色请求
+ */
 @Data
-public class AddRoleRequest {
+public class UpdateRoleRequest {
 
     /**
      * 角色名称
      */
-    @NotBlank(message = "角色名称不能为空")
     private String name;
-
-    /**
-     * 角色代码
-     */
-    @NotBlank(message = "角色代码不能为空")
-    private String code;
 
     /**
      * 描述信息
@@ -32,4 +27,5 @@ public class AddRoleRequest {
      * 权限id列表
      */
     private List<Long> permissionIds;
+
 }

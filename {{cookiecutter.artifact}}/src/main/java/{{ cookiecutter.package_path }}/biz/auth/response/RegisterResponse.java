@@ -5,11 +5,13 @@ package {{ cookiecutter.basePackage }}.biz.auth.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 注册结果
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class RegisterResponse {
 

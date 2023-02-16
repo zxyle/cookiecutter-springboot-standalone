@@ -13,6 +13,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
+import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/auth/user")
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-public class LoginController {
+public class LoginController extends AuthBaseController {
 
     final StringRedisTemplate stringRedisTemplate;
 
@@ -104,7 +105,7 @@ public class LoginController {
      */
     @PostMapping("/logout")
     public ApiResponse<Object> logout() {
-        boolean success = loginService.logout();
+        boolean success = loginService.logout(getUserId());
         return new ApiResponse<>(success);
     }
 

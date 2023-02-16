@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupPermission;
@@ -19,7 +20,7 @@ public interface IGroupPermissionService extends IService<GroupPermission> {
      *
      * @param userId 用户ID
      */
-    List<String> selectPermissionsByGroup(Long userId);
+    List<Permission> selectPermissionsByGroup(Long userId);
 
     /**
      * 删除映射关系

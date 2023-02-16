@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserPermission;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserPermissionService;
@@ -83,7 +84,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
     @Override
     public IPage<UserPermission> pageRelation(Long userId, Long permissionId, IPage<UserPermission> iPage) {
         QueryWrapper<UserPermission> wrapper = buildWrapper(userId, permissionId);
-        wrapper.select("user_id, permission_d");
+        wrapper.select("user_id, permission_id");
         return page(iPage, wrapper);
     }
 
@@ -101,7 +102,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      * @param userId 用户ID
      */
     @Override
-    public List<String> selectPermissionNameByUserid(long userId) {
-        return baseMapper.selectPermissionNameByUid(userId);
+    public List<Permission> selectPermissionNameByUserid(long userId) {
+        return baseMapper.selectPermissionNameByUserId(userId);
     }
 }

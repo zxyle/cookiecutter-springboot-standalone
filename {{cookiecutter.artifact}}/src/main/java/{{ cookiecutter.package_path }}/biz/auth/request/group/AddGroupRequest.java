@@ -37,7 +37,7 @@ public class AddGroupRequest {
      * @mock 1
      */
     @Positive
-    private Integer sortNo;
+    private Integer sort;
 
     /**
      * 描述信息

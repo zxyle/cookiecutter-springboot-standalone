@@ -23,12 +23,9 @@
         FROM auth_user_role
     </select>
 
-    <update id="truncate">
-        TRUNCATE TABLE auth_user_role
-    </update>
-
     <select id="selectRoleByUid" resultType="java.lang.String">
-        SELECT b.code
+        SELECT
+            b.code
         FROM auth_user_role a
         LEFT JOIN auth_role b
         ON a.role_id = b.id

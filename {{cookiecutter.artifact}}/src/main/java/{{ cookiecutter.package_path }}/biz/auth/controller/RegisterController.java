@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.config.AuthUserProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
+import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.RegisterRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.RegisterResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
@@ -40,6 +41,9 @@ public class RegisterController {
 
     @Autowired
     AuthUserProperties authUserProperties;
+
+    @Autowired
+    UserRoleMapper userRoleMapper;
 
     IUserRoleService userRoleService;
 
@@ -81,10 +85,6 @@ public class RegisterController {
             if (success && Boolean.TRUE.equals(deleted)) {
                 String token = null;
                 log.info("注册成功，用户ID：{}, 主账号: {}", user.getId(), request.getEmail());
-                // 分配角色 (注册企业角色)
-                UserRole userRole = new UserRole(user.getId(), 5L);
-                userRoleService.save(userRole);
-
                 if (authUserProperties.isAutoLogin()) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken("email#" + request.getEmail(), request.getPassword());
@@ -125,14 +125,19 @@ public class RegisterController {
     }
 
     /**
-     * 检查用户名是否被占用
+     * 检查用户名/邮箱/手机号是否被占用
+     *
+     * @param name   用户名
+     * @param email  邮箱
+     * @param mobile 手机号
+     * @return true: 被占用 false: 未被占用
      */
     public boolean isExisted(String name, String email, String mobile) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq(StringUtils.isNotBlank(name), "login_name", name);
         wrapper.eq(StringUtils.isNotBlank(email), "email", email);
         wrapper.eq(StringUtils.isNotBlank(mobile), "mobile", mobile);
-        List<User> users = userService.list(wrapper);
-        return !users.isEmpty();
+        int count = userService.count(wrapper);
+        return count > 0;
     }
 }

@@ -3,8 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.util;
 
-// Java implementation for the above approach
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;

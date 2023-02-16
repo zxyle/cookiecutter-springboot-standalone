@@ -33,7 +33,8 @@ public class CodeService {
     public CaptchaPair send() {
         CaptchaPair captchaPair = captchaService.generate();
         String redisKey = captchaProperties.getKeyPrefix() + captchaPair.getCaptchaId();
-        stringRedisTemplate.opsForValue().set(redisKey, captchaPair.getCode(), captchaProperties.getAliveTime(), TimeUnit.MINUTES);
+        String code = captchaPair.getCode();
+        stringRedisTemplate.opsForValue().set(redisKey, code, captchaProperties.getAliveTime(), TimeUnit.MINUTES);
         return captchaPair;
     }
 

@@ -4,12 +4,13 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.ChangeByOldRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.ForgetRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.RandomRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.ResetPasswordResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.security.PasswordProperties;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.PasswordChecker;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
@@ -17,7 +18,6 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +27,8 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,10 +39,9 @@ import java.util.Map;
 @Slf4j
 public class PasswordController extends AuthBaseController {
 
-    @Autowired
     PasswordProperties passwordProperties;
 
-    IUserService userService;
+    IPasswordService passwordService;
 
     PasswordEncoder passwordEncoder;
 
@@ -49,10 +50,11 @@ public class PasswordController extends AuthBaseController {
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
-    public PasswordController(PasswordEncoder passwordEncoder, LoginService loginService, IUserService userService) {
+    public PasswordController(PasswordEncoder passwordEncoder, LoginService loginService, IPasswordService passwordService, PasswordProperties passwordProperties) {
         this.passwordEncoder = passwordEncoder;
         this.loginService = loginService;
-        this.userService = userService;
+        this.passwordService = passwordService;
+        this.passwordProperties = passwordProperties;
     }
 
     /**
@@ -63,9 +65,10 @@ public class PasswordController extends AuthBaseController {
         User user = getLoggedInUser();
 
         if (null != user && passwordEncoder.matches(request.getOldPassword(), user.getPwd())) {
-            boolean isChanged = userService.changePwd(user.getId(), passwordEncoder.encode(request.getNewPassword()));
+            String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
+            boolean isChanged = passwordService.change(user.getId(), newEncodedPassword, ChangePasswordEnum.CHANGE_PASSWORD);
             // 退出当前登录状态
-            boolean isLoggedOut = loginService.logout();
+            boolean isLoggedOut = loginService.logout(user.getId());
             return new ApiResponse<>(isChanged && isLoggedOut);
         }
 
@@ -73,25 +76,32 @@ public class PasswordController extends AuthBaseController {
     }
 
     /**
-     * 忘记/找回/重置密码（通过短信或邮件验证码）
+     * 忘记/找回密码（通过短信或邮件验证码）
      */
     @PostMapping("/forget")
     public ApiResponse<Object> forget(@Valid @RequestBody ForgetRequest request) {
-        boolean success;
         String key = "code:" + request.getPrincipal();
+        Boolean hasKey = stringRedisTemplate.hasKey(key);
+        if (Boolean.FALSE.equals(hasKey)) {
+            return new ApiResponse<>("找回密码失败，验证码可能已过期", false);
+        }
+
         Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries(key);
         String code = (String) entries.get("code");
         String principal = (String) entries.get("principal");
-
+        if (null == entries.get("userId")) {
+            return new ApiResponse<>("用户不存在", false);
+        }
         Long userId = Long.valueOf(String.valueOf(entries.get("userId")));
         if (StringUtils.isNotBlank(code) && request.getCode().equalsIgnoreCase(code)) {
-            success = userService.changePwd(userId, passwordEncoder.encode(request.getNewPassword()));
+            String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
+            boolean success = passwordService.change(userId, newEncodedPassword, ChangePasswordEnum.FIND_PASSWORD);
             Boolean isDeleted = stringRedisTemplate.delete(key);
             log.info("{} 修改密码成功.", principal);
             return new ApiResponse<>(success && Boolean.TRUE.equals(isDeleted));
         }
 
-        return new ApiResponse<>("找回密码失败", false);
+        return new ApiResponse<>("找回密码失败，验证码可能错误", false);
     }
 
     /**
@@ -103,11 +113,12 @@ public class PasswordController extends AuthBaseController {
     @PostMapping("/reset")
     public ApiResponse<ResetPasswordResponse> reset(@NotNull Long userId) {
         String rawPassword = CaptchaUtil.randCode(passwordProperties.getMinLength(), passwordProperties.getChars());
-        boolean success = userService.changePwd(userId, passwordEncoder.encode(rawPassword));
+        String newEncodedPassword = passwordEncoder.encode(rawPassword);
+        boolean success = passwordService.change(userId, newEncodedPassword, ChangePasswordEnum.RESET_PASSWORD);
 
         if (success) {
             // 退出当前登录状态
-            loginService.logout();
+            loginService.logout(userId);
             return new ApiResponse<>(new ResetPasswordResponse(rawPassword));
         }
         return new ApiResponse<>("重置密码失败", false);
@@ -115,7 +126,7 @@ public class PasswordController extends AuthBaseController {
 
 
     /**
-     * 密码复杂度
+     * 密码复杂度计算（0-5分）
      *
      * @param password 待检测密码
      */
@@ -130,9 +141,13 @@ public class PasswordController extends AuthBaseController {
      * 随机生成密码
      */
     @GetMapping("/random")
-    public ApiResponse<String> random(RandomRequest request) {
-        String s = CaptchaUtil.randCode(request.getLength(), request.getChars());
-        return new ApiResponse<>(s);
+    public ApiResponse<List<String>> random(@Valid RandomRequest request) {
+        List<String> list = new ArrayList<>(request.getCount());
+        for (int i = 0; i < request.getCount(); i++) {
+            String pwd = CaptchaUtil.randCode(request.getLength(), request.getChars());
+            list.add(pwd);
+        }
+        return new ApiResponse<>(list);
     }
 
 }

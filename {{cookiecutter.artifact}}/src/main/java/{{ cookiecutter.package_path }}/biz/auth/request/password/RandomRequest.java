@@ -5,21 +5,45 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.password;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.DecimalMin;
 
 @Data
 public class RandomRequest {
 
-    @NotNull
+    /**
+     * 密码长度
+     *
+     * @mock 8
+     */
+    @DecimalMin(value = "1", message = "密码长度不能小于1")
     private Integer length;
 
+    /**
+     * 是否包含小写字母
+     */
     private Boolean hasLower;
 
+    /**
+     * 是否包含大写字母
+     */
     private Boolean hasUpper;
 
+    /**
+     * 是否包含数字
+     */
     private Boolean hasDigit;
 
+    /**
+     * 是否包含特殊字符
+     */
     private Boolean hasSpecialChar;
+
+    /**
+     * 生成数量
+     *
+     * @mock 100
+     */
+    private Integer count;
 
     public String getChars() {
         StringBuilder builder = new StringBuilder();
@@ -40,4 +64,7 @@ public class RandomRequest {
         return builder.toString();
     }
 
+    public Integer getCount() {
+        return count == null ? 1 : count;
+    }
 }

@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
@@ -201,14 +200,32 @@ public class UserController extends AuthBaseController {
     @Secured(value = "ROLE_admin")
     @PutMapping("/users/{userId}/enable")
     public ApiResponse<Object> enable(@PathVariable Long userId) {
-        // TODO 记录到操作日志
-        User user = new User();
-        user.setId(userId);
-        user.setEnabled(AuthConst.ENABLED);
-        boolean success = thisService.updateById(user);
+        boolean success = thisService.enable(userId);
         if (success) {
             return new ApiResponse<>("启用成功");
         }
         return new ApiResponse<>("启用失败", false);
+    }
+
+
+    /**
+     * 用户踢下线
+     *
+     * @param userId 用户ID
+     */
+    @Secured(value = {"ROLE_admin", "ROLE_group_admin"})
+    @PutMapping("/users/{userId}/kick")
+    public ApiResponse<Object> kick(@PathVariable Long userId) {
+        // TODO 记录到操作日志
+        // 防止踢下线自己
+        if (userId.equals(getUserId())) {
+            return new ApiResponse<>("踢下线失败，不能踢下线自己", false);
+        }
+
+        boolean success = thisService.kick(userId);
+        if (success) {
+            return new ApiResponse<>("踢下线成功");
+        }
+        return new ApiResponse<>("踢下线失败", false);
     }
 }

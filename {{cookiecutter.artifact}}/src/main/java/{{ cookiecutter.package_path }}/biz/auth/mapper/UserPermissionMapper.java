@@ -3,8 +3,10 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserPermission;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public interface UserPermissionMapper extends BaseMapper<UserPermission> {
     List<UserPermission> selectAll();
 
     // 截断表
+    @Update("TRUNCATE TABLE auth_user_permission")
     void truncate();
 
     /**
@@ -25,6 +28,6 @@ public interface UserPermissionMapper extends BaseMapper<UserPermission> {
      *
      * @param userId 用户ID
      */
-    List<String> selectPermissionNameByUid(long userId);
+    List<Permission> selectPermissionNameByUserId(long userId);
 
 }

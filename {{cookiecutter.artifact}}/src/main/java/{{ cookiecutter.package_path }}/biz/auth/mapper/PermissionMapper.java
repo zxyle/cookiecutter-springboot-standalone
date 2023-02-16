@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.springframework.data.repository.query.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,9 +19,16 @@ public interface PermissionMapper extends BaseMapper<Permission> {
     List<Permission> selectAll();
 
     // 截断表
+    @Update("TRUNCATE TABLE auth_permission")
     void truncate();
 
     // 查询用户所拥有的权限代码列表
-    List<String> queryPermissionsByUid(@Param("uid") long uid);
+    List<String> queryPermissionsByUserId(long userId);
 
+    /**
+     * 查询最大排序号
+     *
+     * @param parentId 父ID
+     */
+    Integer selectMaxSort(Long parentId);
 }

@@ -3,8 +3,10 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupPermission;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,9 +20,10 @@ public interface GroupPermissionMapper extends BaseMapper<GroupPermission> {
     List<GroupPermission> selectAll();
 
     // 截断表
+    @Update("TRUNCATE TABLE auth_group_permission")
     void truncate();
 
     // 查询用户组拥有的权限代码列表
-    List<String> getPermissionNameByGid(long gid);
+    List<Permission> getPermissionNameByGroupId(long groupId);
 
 }

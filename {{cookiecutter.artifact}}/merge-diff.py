@@ -78,6 +78,7 @@ def move_all_files(files):
 
 
 if __name__ == '__main__':
+    # 获取往前推一个版本的commit id
     first_commit = get_first_commit()
     print("first commit: " + first_commit)
     files = get_changed_files(first_commit, "HEAD")

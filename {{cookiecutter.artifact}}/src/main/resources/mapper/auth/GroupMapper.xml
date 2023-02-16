@@ -9,14 +9,14 @@
         <result column="update_time" property="updateTime" />
         <result column="name" property="name" />
         <result column="parent_id" property="parentId" />
-        <result column="sort" property="sort" />
+        <result column="sort_no" property="sortNo" />
         <result column="description" property="description" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
-        create_time, update_time, name, parent_id, sort, description
+        create_time, update_time, name, parent_id, sort_no, description
     </sql>
 
 
@@ -24,8 +24,13 @@
         SELECT * FROM auth_group
     </select>
 
-    <update id="truncate">
-        TRUNCATE TABLE auth_group
-    </update>
+    <select id="selectMaxSort" resultType="java.lang.Integer">
+        SELECT
+            IFNULL( MAX( sort ), 0 ) AS sort
+        FROM
+            auth_group
+        WHERE
+            parent_id = #{parentId}
+    </select>
 
 </mapper>

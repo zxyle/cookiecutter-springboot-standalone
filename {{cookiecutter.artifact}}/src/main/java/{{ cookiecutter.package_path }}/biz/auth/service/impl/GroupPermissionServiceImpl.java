@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupPermission;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupPermissionService;
@@ -35,10 +36,10 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      * @param userId 用户ID
      */
     @Override
-    public List<String> selectPermissionsByGroup(Long userId) {
-        List<String> permissions = new ArrayList<>();
+    public List<Permission> selectPermissionsByGroup(Long userId) {
+        List<Permission> permissions = new ArrayList<>();
         List<UserGroup> groups = userGroupService.queryRelation(userId, 0L);
-        groups.forEach(group -> permissions.addAll(baseMapper.getPermissionNameByGid(group.getGroupId())));
+        groups.forEach(group -> permissions.addAll(baseMapper.getPermissionNameByGroupId(group.getGroupId())));
         return permissions;
     }
 

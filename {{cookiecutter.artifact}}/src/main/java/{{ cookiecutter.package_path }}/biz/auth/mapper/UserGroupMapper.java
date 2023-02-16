@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public interface UserGroupMapper extends BaseMapper<UserGroup> {
     List<UserGroup> selectAll();
 
     // 截断表
+    @Update("TRUNCATE TABLE auth_user_group")
     void truncate();
 
     // 查询用户组下所有用户

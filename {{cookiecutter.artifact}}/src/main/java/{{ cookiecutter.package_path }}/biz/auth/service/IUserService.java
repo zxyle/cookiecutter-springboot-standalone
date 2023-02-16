@@ -32,14 +32,6 @@ public interface IUserService extends IService<User> {
     User queryById(Long uid);
 
     /**
-     * 修改密码
-     *
-     * @param userId 用户ID
-     * @param newPwd 加密后的新密码
-     */
-    boolean changePwd(Long userId, String newPwd);
-
-    /**
      * 通过手机号或邮箱查询用户
      *
      * @param mobile 手机号
@@ -54,4 +46,18 @@ public interface IUserService extends IService<User> {
      */
     boolean disable(Long userId);
 
+
+    /**
+     * 启用用户
+     *
+     * @param userId 用户ID
+     */
+    boolean enable(Long userId);
+
+    /**
+     * 用户踢下线
+     *
+     * @param userId 用户ID
+     */
+    boolean kick(Long userId);
 }

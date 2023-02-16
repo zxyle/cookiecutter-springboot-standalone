@@ -49,7 +49,7 @@ public class Permission extends BaseEntity {
     private String path;
 
     /**
-     * 排序
+     * 显示顺序
      */
     private Integer sort;
 

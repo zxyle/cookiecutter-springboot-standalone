@@ -26,15 +26,12 @@
     </select>
 
     <select id="listUsers" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.User">
-        SELECT b.*
+        SELECT
+            b.*
         FROM auth_user_group a
         LEFT JOIN auth_user b
         ON a.user_id = b.id
         WHERE a.group_id = #{groupId}
     </select>
-
-    <update id="truncate">
-        TRUNCATE TABLE auth_user_group
-    </update>
 
 </mapper>

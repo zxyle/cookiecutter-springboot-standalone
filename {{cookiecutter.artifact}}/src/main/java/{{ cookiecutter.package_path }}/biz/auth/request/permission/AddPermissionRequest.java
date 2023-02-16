@@ -43,7 +43,7 @@ public class AddPermissionRequest {
     private String path;
 
     /**
-     * 排序
+     * 显示顺序
      */
     private Integer sort;
 }

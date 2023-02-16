@@ -14,6 +14,6 @@ public interface ILoginLogService extends IService<LoginLog> {
     /**
      * 异步保存登录日志
      */
-    boolean saveLoginLog(LoginLog loginLog);
+    Boolean saveLoginLog(LoginLog loginLog);
 
 }

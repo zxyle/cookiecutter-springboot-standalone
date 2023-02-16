@@ -3,37 +3,26 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
-import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    IUserService userService;
 
     /**
      * 退出登录
      */
     @Override
-    public boolean logout() {
-        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        Long userId = loginUser.getUser().getId();
+    public boolean logout(Long userId) {
         // 清除登录信息
         SecurityContextHolder.clearContext();
         // 删除redis中用户权限缓存
-        String key = "permissions:" + userId;
-        if (Boolean.FALSE.equals(stringRedisTemplate.hasKey(key))) {
-            // 用户可能没有登录或登录已过期
-            return true;
-        }
-        return Boolean.TRUE.equals(stringRedisTemplate.delete(key));
+        return userService.kick(userId);
     }
 }

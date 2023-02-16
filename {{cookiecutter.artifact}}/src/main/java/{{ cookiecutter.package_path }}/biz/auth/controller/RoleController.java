@@ -4,9 +4,12 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.RolePermission;
 import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.role.AddRoleRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.role.UpdateRoleRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IRolePermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IRoleService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
@@ -14,6 +17,7 @@ import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,15 +33,17 @@ import java.util.List;
 @RequestMapping("/auth")
 public class RoleController extends AuthBaseController {
 
+    IRolePermissionService rolePermissionService;
+
     IRoleService thisService;
 
     IPermissionService permissionService;
 
-    public RoleController(IRoleService thisService, IPermissionService permissionService) {
+    public RoleController(IRolePermissionService rolePermissionService, IRoleService thisService, IPermissionService permissionService) {
+        this.rolePermissionService = rolePermissionService;
         this.thisService = thisService;
         this.permissionService = permissionService;
     }
-
 
     /**
      * 角色列表查询
@@ -72,7 +78,17 @@ public class RoleController extends AuthBaseController {
         Role role = new Role();
         BeanUtils.copyProperties(request, role);
         boolean success = thisService.save(role);
-        return new ApiResponse<>(success);
+        if (success && CollectionUtils.isNotEmpty(request.getPermissionIds())) {
+            // 保存角色权限关系
+            request.getPermissionIds().forEach(permissionId -> {
+                RolePermission rolePermission = new RolePermission(role.getId(), permissionId);
+                rolePermissionService.save(rolePermission);
+            });
+            // 刷新持有该角色的用户权限缓存（改为异步操作）
+            List<Long> users = getUsersByRole(role.getId());
+            users.forEach(userId -> permissionService.refreshPermissions(userId));
+        }
+        return new ApiResponse<>(role);
     }
 
 
@@ -94,12 +110,26 @@ public class RoleController extends AuthBaseController {
      */
     @PutMapping("/roles/{roleId}")
     @PreAuthorize("@ck.hasPermit('auth:roles:update')")
-    public ApiResponse<Object> update(@Valid @RequestBody Role entity, @PathVariable Long roleId) {
-        entity.setId(roleId);
-        boolean success = thisService.updateById(entity);
-        // 刷新持有该角色的用户权限缓存（改为异步操作）
-        List<Long> users = getUsersByRole(roleId);
-        users.forEach(userId -> permissionService.refreshPermissions(userId));
+    public ApiResponse<Object> update(@Valid @RequestBody UpdateRoleRequest request, @PathVariable Long roleId) {
+        // 更新角色信息
+        Role role = new Role();
+        BeanUtils.copyProperties(request, role);
+        role.setId(roleId);
+        boolean success = thisService.updateById(role);
+
+        // 更新角色权限关系
+        if (success && CollectionUtils.isNotEmpty(request.getPermissionIds())) {
+            // 删除原有角色权限关系
+            rolePermissionService.deleteRelation(roleId, null);
+
+            // 保存新的角色权限关系
+            request.getPermissionIds().forEach(permissionId ->
+                    rolePermissionService.createRelation(roleId, permissionId));
+
+            // 刷新持有该角色的用户权限缓存（改为异步操作）
+            List<Long> users = getUsersByRole(roleId);
+            users.forEach(userId -> permissionService.refreshPermissions(userId));
+        }
         return new ApiResponse<>(success);
     }
 

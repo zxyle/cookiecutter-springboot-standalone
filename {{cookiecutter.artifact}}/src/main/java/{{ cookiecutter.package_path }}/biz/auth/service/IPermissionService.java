@@ -19,7 +19,7 @@ public interface IPermissionService extends IService<Permission> {
      *
      * @param userId 用户ID
      */
-    List<String> getAllPermissions(Long userId);
+    List<Permission> getAllPermissions(Long userId);
 
     /**
      * 删除权限
@@ -52,9 +52,10 @@ public interface IPermissionService extends IService<Permission> {
     /**
      * 获取权限树
      *
+     * @param list             待组装权限列表
      * @param rootPermissionId 根节点权限ID
      */
-    List<Tree<Integer>> getTree(Integer rootPermissionId);
+    List<Tree<Integer>> getTree(List<Permission> list, Integer rootPermissionId);
 
     /**
      * 是否正在被使用
@@ -65,4 +66,11 @@ public interface IPermissionService extends IService<Permission> {
     boolean isAlreadyUsed(Long permissionId);
 
 
+    /**
+     * 递归获取所有子权限
+     *
+     * @param permissions 完整权限列表
+     * @param rootId      根节点ID
+     */
+    List<Permission> getAllChildren(List<Permission> permissions, Long rootId);
 }

@@ -18,13 +18,8 @@
         create_time, update_time, name, code, description
     </sql>
 
-
     <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Role">
         SELECT * FROM auth_role
     </select>
-
-    <update id="truncate">
-        TRUNCATE TABLE auth_role
-    </update>
 
 </mapper>

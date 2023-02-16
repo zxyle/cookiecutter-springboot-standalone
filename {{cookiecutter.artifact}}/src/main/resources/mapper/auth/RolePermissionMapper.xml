@@ -23,17 +23,13 @@
         FROM auth_role_permission
     </select>
 
-    <select id="getPermissionNameByRid" resultType="java.lang.String">
-        SELECT b.`code`
+    <select id="getPermissionNameByRoleId" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
+        SELECT
+            b.*
         FROM auth_role_permission a
-                 LEFT JOIN auth_permission b
-                           ON a.permission_id = b.id
+        LEFT JOIN auth_permission b
+        ON a.permission_id = b.id
         WHERE a.role_id = #{roleId};
-
     </select>
-
-    <update id="truncate">
-        TRUNCATE TABLE auth_role_permission
-    </update>
 
 </mapper>

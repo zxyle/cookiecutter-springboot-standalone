@@ -4,17 +4,31 @@
 package {{ cookiecutter.basePackage }}.biz.sys.response;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * wang-editor
  */
 @Data
+@NoArgsConstructor
 public class UploadData {
+
+    /**
+     * 是否上传成功
+     */
+    private boolean success;
 
     /**
      * 图片 src
      */
     private String url;
+
+    /**
+     * 图片 src
+     */
+    private List<String> urls;
 
     /**
      * 图片描述文字
