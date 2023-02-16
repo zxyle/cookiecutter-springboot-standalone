@@ -238,4 +238,43 @@ CREATE TABLE `auth_user_role` (
 BEGIN;
 COMMIT;
 
+-- ----------------------------
+-- Table structure for auth_profile
+-- ----------------------------
+DROP TABLE IF EXISTS `auth_profile`;
+CREATE TABLE `auth_profile` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
+  `birthday` date DEFAULT NULL COMMENT '出生日期',
+  `age` tinyint unsigned DEFAULT NULL COMMENT '年龄',
+  `gender` enum('male','female') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '性别',
+  `avatar` varchar(255) DEFAULT NULL COMMENT '头像',
+  `nickname` varchar(255) DEFAULT NULL COMMENT '昵称',
+  `qq` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'QQ',
+  `wechat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '微信',
+  `weibo` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '微博',
+  `intro` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '简介',
+  `address` varchar(255) DEFAULT NULL COMMENT '地址',
+  `region` char(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '地区',
+  `school` varchar(255) DEFAULT NULL COMMENT '学校',
+  `education` varchar(255) DEFAULT NULL COMMENT '学历',
+  `major` varchar(255) DEFAULT NULL COMMENT '专业',
+  `company` varchar(255) DEFAULT NULL COMMENT '公司',
+  `position` varchar(255) DEFAULT NULL COMMENT '职位',
+  `industry` varchar(255) DEFAULT NULL COMMENT '行业',
+  `profession` varchar(255) DEFAULT NULL COMMENT '职业',
+  `telephone` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '固定电话',
+PRIMARY KEY (`id`),
+UNIQUE KEY `uk_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户信息';
+
+-- ----------------------------
+-- Records of auth_profile
+-- ----------------------------
+BEGIN;
+INSERT INTO `auth_profile` (`id`, `user_id`, `birthday`, `age`, `gender`, `avatar`, `nickname`, `qq`, `wechat`, `weibo`, `intro`, `address`, `region`, `school`, `education`, `major`, `company`, `position`, `industry`, `profession`, `telephone`) VALUES (1, 1, '1969-10-01', 53, 'female', NULL, NULL, NULL, NULL, NULL, NULL, '杭州市', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+COMMIT;
+
 SET FOREIGN_KEY_CHECKS = 1;
