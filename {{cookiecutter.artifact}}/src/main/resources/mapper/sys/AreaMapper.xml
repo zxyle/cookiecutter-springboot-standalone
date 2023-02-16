@@ -4,6 +4,5 @@
 
     <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.sys.entity.Area">
         SELECT  code, name, parent_id FROM sys_area
-
     </select>
 </mapper>

@@ -6,9 +6,5 @@
         SELECT * FROM sys_info
     </select>
 
-    <update id="truncate">
-        truncate table sys_info
-    </update>
-
 
 </mapper>

@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Area;
+import {{ cookiecutter.basePackage }}.biz.sys.request.AreaRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IAreaService;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
@@ -14,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -37,15 +37,12 @@ public class AreaController {
 
     /**
      * 获取中国行政区划树状结构
-     *
-     * @param rootId 根节点ID
-     * @param level  1-国家 2-省级 3-市级 4-县区级 5-镇街级 6-社区、村级
      */
     @GetMapping("/tree")
-    @Cacheable(cacheNames = "areaCache", key = "#rootId+#level")
-    public ApiResponse<AntdTree2> tree(
-            @RequestParam(value = "rootId", required = false, defaultValue = "0000") String rootId,
-            @RequestParam(value = "level", required = false, defaultValue = "4") Integer level) {
+    @Cacheable(cacheNames = "areaCache", key = "#request.rootId+#request.level")
+    public ApiResponse<AntdTree2> tree(AreaRequest request) {
+        String rootId = request.getRootId();
+        Integer level = request.getLevel();
         QueryWrapper<Area> wrapper = new QueryWrapper<>();
         wrapper.select("code, name, parent_id, level");
         wrapper.le("level", level);

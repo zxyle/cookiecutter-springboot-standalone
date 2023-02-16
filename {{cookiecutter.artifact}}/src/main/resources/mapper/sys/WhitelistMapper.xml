@@ -24,8 +24,4 @@
         FROM sys_whitelist
     </select>
 
-    <update id="truncate">
-        TRUNCATE TABLE sys_whitelist
-    </update>
-
 </mapper>

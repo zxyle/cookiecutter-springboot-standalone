@@ -5,18 +5,22 @@ package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
-    @Autowired
     IUserService userService;
+
+    public LoginServiceImpl(IUserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * 退出登录
+     *
+     * @param userId 用户id
      */
     @Override
     public boolean logout(Long userId) {

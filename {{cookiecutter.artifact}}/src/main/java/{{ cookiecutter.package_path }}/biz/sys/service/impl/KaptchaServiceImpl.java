@@ -9,7 +9,6 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
 import com.google.code.kaptcha.Producer;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +22,13 @@ import java.io.IOException;
 @ConditionalOnProperty(prefix = "captcha", name = "kind", havingValue = "kaptcha")
 public class KaptchaServiceImpl implements CaptchaService {
 
-    @Autowired
     CaptchaProperties captchaProperties;
 
     private final Producer captchaProducer;
 
-    public KaptchaServiceImpl(Producer captchaProducer) {
+    public KaptchaServiceImpl(Producer captchaProducer, CaptchaProperties captchaProperties) {
         this.captchaProducer = captchaProducer;
+        this.captchaProperties = captchaProperties;
     }
 
     @Override

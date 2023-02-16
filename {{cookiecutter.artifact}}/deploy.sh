@@ -6,6 +6,7 @@ server=root@127.0.0.1
 dir=/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}/
 
 function package() {
+    git pull
     mvn clean package -Dmaven.test.skip=true
 }
 

@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
 import cn.hutool.http.HttpRequest;
+import {{ cookiecutter.basePackage }}.biz.sys.response.DingTalkResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.MonitoringAlarmService;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
 import org.springframework.beans.factory.annotation.Value;

@@ -20,19 +20,13 @@
         sql, success, author
     </sql>
 
-
     <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.sys.entity.Sql">
         SELECT *
         FROM sys_sql
     </select>
 
     <select id="execute" resultType="java.util.Map">
-        SELECT *
-        FROM ${sql}
+        ${sql}
     </select>
-
-    <update id="truncate">
-        TRUNCATE TABLE sys_sql
-    </update>
 
 </mapper>

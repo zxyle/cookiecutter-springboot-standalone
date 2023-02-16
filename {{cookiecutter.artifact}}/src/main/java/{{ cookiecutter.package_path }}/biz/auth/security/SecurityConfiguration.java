@@ -47,7 +47,7 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
-                .antMatchers("/auth/user/login").anonymous()
+                .antMatchers("/auth/user/login", "/sys/friendly/urls").anonymous()
                 .antMatchers("/sys/dicts/**", "/sys/area/**", "/file/**", "/sys/infos", "/auth/register/**", "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers", "/getPublicKey").permitAll()
                 // 除上述请求 全部需要鉴权认证
                 .anyRequest().authenticated();

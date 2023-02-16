@@ -7,7 +7,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +15,11 @@ import java.util.Properties;
 @Component
 public class KaptchaConfig {
 
-    @Autowired
     CaptchaProperties captchaProperties;
+
+    public KaptchaConfig(CaptchaProperties captchaProperties) {
+        this.captchaProperties = captchaProperties;
+    }
 
     @Bean
     public Producer captchaProducer() {

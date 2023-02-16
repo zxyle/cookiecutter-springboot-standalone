@@ -16,7 +16,6 @@ import org.patchca.filter.predefined.MarbleRippleFilterFactory;
 import org.patchca.filter.predefined.WobbleRippleFilterFactory;
 import org.patchca.service.ConfigurableCaptchaService;
 import org.patchca.word.RandomWordFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +25,11 @@ import java.util.Random;
 @Component
 public class PatchcaConfig {
 
-    @Autowired
     CaptchaProperties captchaProperties;
+
+    public PatchcaConfig(CaptchaProperties captchaProperties) {
+        this.captchaProperties = captchaProperties;
+    }
 
     @Bean
     public ConfigurableCaptchaService configurableCaptchaService() {

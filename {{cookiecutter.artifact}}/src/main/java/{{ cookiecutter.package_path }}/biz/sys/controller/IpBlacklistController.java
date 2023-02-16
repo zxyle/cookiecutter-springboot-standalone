@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Blacklist;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IIpBlacklistService;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,7 @@ public class IpBlacklistController {
     /**
      * 列表查询
      */
+    @PreAuthorize("@ck.hasPermit('sys:blacklist:list')")
     @GetMapping("/blacklists")
     public ApiResponse<List<Blacklist>> list() {
         QueryWrapper<Blacklist> wrapper = new QueryWrapper<>();

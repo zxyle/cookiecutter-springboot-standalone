@@ -20,11 +20,7 @@
 
 
     <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.sys.entity.Blacklist">
-        SELECT * FROM ip_blacklist
+        SELECT * FROM sys_blacklist
     </select>
-
-    <update id="truncate">
-        TRUNCATE TABLE ip_blacklist
-    </update>
 
 </mapper>

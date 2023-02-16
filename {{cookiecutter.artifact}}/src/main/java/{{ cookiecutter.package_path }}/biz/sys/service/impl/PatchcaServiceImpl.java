@@ -15,7 +15,6 @@ import org.patchca.filter.predefined.*;
 import org.patchca.service.ConfigurableCaptchaService;
 import org.patchca.utils.encoder.EncoderHelper;
 import org.patchca.word.RandomWordFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +28,11 @@ import java.io.IOException;
 @ConditionalOnProperty(prefix = "captcha", name = "kind", havingValue = "patchca")
 public class PatchcaServiceImpl implements CaptchaService {
 
-    @Autowired
     CaptchaProperties captchaProperties;
 
+    public PatchcaServiceImpl(CaptchaProperties captchaProperties) {
+        this.captchaProperties = captchaProperties;
+    }
 
     public ConfigurableCaptchaService randomCs() {
         ConfigurableCaptchaService cs = new ConfigurableCaptchaService();

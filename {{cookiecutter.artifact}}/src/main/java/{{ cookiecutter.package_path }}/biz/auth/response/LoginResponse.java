@@ -4,12 +4,19 @@
 package {{ cookiecutter.basePackage }}.biz.auth.response;
 
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Profile;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
 public class LoginResponse {
+
+    /**
+     * 用户信息
+     */
+    private Profile profile;
+
     /**
      * 用户名
      *

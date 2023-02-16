@@ -22,8 +22,4 @@
         SELECT * FROM sys_release
     </select>
 
-    <update id="truncate">
-        TRUNCATE TABLE sys_release
-    </update>
-
 </mapper>

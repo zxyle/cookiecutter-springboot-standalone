@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public interface WhitelistMapper extends BaseMapper<Whitelist> {
     List<Whitelist> selectAll();
 
     // 截断表
+    @Update("TRUNCATE TABLE sys_whitelist")
     void truncate();
 
 }

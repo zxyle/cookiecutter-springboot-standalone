@@ -14,6 +14,7 @@ import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +40,10 @@ public class SqlController {
         this.thisMapper = thisMapper;
     }
 
+    /**
+     * 执行sql
+     */
+    @PreAuthorize("@ck.hasPermit('sys:sql:execute')")
     @PostMapping("/sqls/execute")
     public List<Map<String, Object>> execute(@Valid @RequestBody SqlRequest request) {
         return thisMapper.execute(request.getSql());
@@ -57,6 +62,7 @@ public class SqlController {
     /**
      * 分页查询
      */
+    @PreAuthorize("@ck.hasPermit('sys:sql:list')")
     @GetMapping("/sqls")
     public ApiResponse<PageVO<Sql>> list(@Valid PaginationRequest request) {
         IPage<Sql> page = PageRequestUtil.checkForMp(request);
@@ -68,6 +74,7 @@ public class SqlController {
     /**
      * 新增SQL执行
      */
+    @PreAuthorize("@ck.hasPermit('sys:sql:add')")
     @PostMapping("/sqls")
     public ApiResponse<Sql> add(@Valid @RequestBody Sql entity) {
         boolean success = thisService.save(entity);
@@ -81,6 +88,7 @@ public class SqlController {
     /**
      * 按ID查询SQL执行
      */
+    @PreAuthorize("@ck.hasPermit('sys:sql:get')")
     @GetMapping("/sqls/{id}")
     public ApiResponse<Sql> get(@PathVariable Long id) {
         return new ApiResponse<>(thisService.queryById(id));
@@ -89,6 +97,7 @@ public class SqlController {
     /**
      * 按ID更新SQL执行
      */
+    @PreAuthorize("@ck.hasPermit('sys:sql:update')")
     @PutMapping("/sqls/{id}")
     public ApiResponse<Object> update(@Valid @RequestBody Sql entity) {
         boolean success = thisService.updateById(entity);
@@ -101,6 +110,7 @@ public class SqlController {
     /**
      * 按ID删除SQL执行
      */
+    @PreAuthorize("@ck.hasPermit('sys:sql:delete')")
     @DeleteMapping("/sqls/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
@@ -113,6 +123,7 @@ public class SqlController {
     /**
      * Excel导出
      */
+    @PreAuthorize("@ck.hasPermit('sys:sql:export')")
     @GetMapping("/sqls/export")
     public void export(HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);

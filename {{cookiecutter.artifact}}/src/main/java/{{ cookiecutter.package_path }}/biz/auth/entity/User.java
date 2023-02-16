@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -49,11 +48,6 @@ public class User extends BaseEntity {
     private String email;
 
     /**
-     * 固定电话
-     */
-    private String telephone;
-
-    /**
      * 账号是否锁定 （1-上锁 0-未锁）
      */
     private Integer userLock;
@@ -80,20 +74,5 @@ public class User extends BaseEntity {
      * 账号可用 1-启用 0-禁用
      */
     private Integer enabled;
-
-    /**
-     * 性别 male-男性 female-女性
-     */
-    private String gender;
-
-    /**
-     * 头像url
-     */
-    private String avatar;
-
-    /**
-     * 生日 yyyy-MM-dd
-     */
-    private LocalDate birthday;
 
 }

@@ -9,6 +9,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.IInfoService;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -47,6 +48,7 @@ public class InfoController {
     /**
      * 新增资源
      */
+    @PreAuthorize("@ck.hasPermit('sys:info:add')")
     @PostMapping("/infos")
     public ApiResponse<Info> add(@Valid @RequestBody Info entity) {
         boolean success = thisService.save(entity);
@@ -59,6 +61,7 @@ public class InfoController {
     /**
      * 按ID更新资源
      */
+    @PreAuthorize("@ck.hasPermit('sys:info:update')")
     @PutMapping("/infos/{id}")
     public ApiResponse<Object> update(@Valid @RequestBody Info entity) {
         thisService.updateById(entity);
@@ -69,6 +72,7 @@ public class InfoController {
     /**
      * 按ID删除资源
      */
+    @PreAuthorize("@ck.hasPermit('sys:info:delete')")
     @DeleteMapping("/infos/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
         thisService.removeById(id);

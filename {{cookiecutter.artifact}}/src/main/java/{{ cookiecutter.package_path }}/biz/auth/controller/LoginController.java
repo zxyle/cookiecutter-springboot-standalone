@@ -3,24 +3,21 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.LoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IProfileService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
-import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
-import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Objects;
 
 /**
  * 登录管理
@@ -53,6 +49,8 @@ public class LoginController extends AuthBaseController {
 
     final CodeService codeService;
 
+    final IProfileService profileService;
+
 
     /**
      * 用户登录
@@ -68,22 +66,10 @@ public class LoginController extends AuthBaseController {
             return beforeLoginResponse;
         }
 
-        // 登录日志
-        LoginLog loginLog = new LoginLog();
-        loginLog.setUa(servletRequest.getHeader(HttpHeaders.USER_AGENT));
-        loginLog.setIp(IpUtil.getIpAddr(servletRequest));
-        loginLog.setLoginName(principal);
-
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(principal, request.getPassword());
         // AuthenticationManager authenticate进行用户认证
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-        if (Objects.isNull(authenticate)) {
-            String error = "用户名或密码错误";
-            loginLog.setMsg(error);
-            // loginLogService.save(loginLog);
-            throw new RuntimeException(error);
-        }
 
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
         String userId = loginUser.getUser().getId().toString();
@@ -93,10 +79,7 @@ public class LoginController extends AuthBaseController {
         response.setToken(jwt);
         response.setUsername(loginUser.getUser().getLoginName());
         response.setIsSuper(loginUser.getUser().getIsSuper());
-        loginLog.setMsg("登录成功");
-        loginLog.setIsSuccess(AuthConst.SUCCESS);
-        // TODO 改成异步插入
-        // loginLogService.save(loginLog);
+        response.setProfile(profileService.queryByUserId(loginUser.getUser().getId()));
         return new ApiResponse<>(response);
     }
 
@@ -113,8 +96,6 @@ public class LoginController extends AuthBaseController {
      * 登录前条件判断
      */
     public ApiResponse<LoginResponse> beforeLogin(LoginRequest request) {
-        // 登录日志
-
         if (StringUtils.isBlank(request.getPrincipal())) {
             return new ApiResponse<>("无主账号信息", false);
         }

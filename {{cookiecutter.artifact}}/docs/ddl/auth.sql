@@ -161,7 +161,6 @@ CREATE TABLE `auth_user` (
   `real_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '真实姓名',
   `mobile` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '手机号码',
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '邮箱地址',
-  `telephone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '固定电话',
   `user_lock` tinyint NOT NULL DEFAULT '0' COMMENT '锁1-上锁 0-解锁',
   `is_super` tinyint NOT NULL DEFAULT '0' COMMENT '超级管理员',
   `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
@@ -174,7 +173,7 @@ CREATE TABLE `auth_user` (
 -- Records of auth_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user` (`id`, `login_name`, `pwd`, `real_name`, `mobile`, `email`, `telephone`, `user_lock`, `is_super`, `expire_time`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', 'admin', '13111111111', 'admin@example.com', '057112345678', 0, 0, '2099-12-31 23:59:59');
+INSERT INTO `auth_user` (`id`, `login_name`, `pwd`, `real_name`, `mobile`, `email`, `user_lock`, `is_super`, `expire_time`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', 'admin', '13111111111', 'admin@example.com', 0, 0, '2099-12-31 23:59:59');
 COMMIT;
 
 -- ----------------------------
@@ -247,10 +246,10 @@ CREATE TABLE `auth_profile` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
-  `birthday` date DEFAULT NULL COMMENT '出生日期',
+  `birthday` date DEFAULT NULL COMMENT '出生日期 yyyy-MM-dd',
   `age` tinyint unsigned DEFAULT NULL COMMENT '年龄',
-  `gender` enum('male','female') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '性别',
-  `avatar` varchar(255) DEFAULT NULL COMMENT '头像',
+  `gender` enum('male','female') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '性别 male-男性 female-女性',
+  `avatar` varchar(255) DEFAULT NULL COMMENT '头像url',
   `nickname` varchar(255) DEFAULT NULL COMMENT '昵称',
   `qq` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'QQ',
   `wechat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '微信',

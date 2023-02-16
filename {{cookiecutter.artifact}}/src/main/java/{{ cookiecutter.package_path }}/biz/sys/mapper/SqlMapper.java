@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Sql;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public interface SqlMapper extends BaseMapper<Sql> {
     List<Sql> selectAll();
 
     // 截断表
+    @Update("truncate table sys_sql")
     void truncate();
 
     List<Map<String, Object>> execute(String sql);

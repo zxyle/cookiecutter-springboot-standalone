@@ -30,7 +30,7 @@ public class Profile extends BaseEntity {
     private Long userId;
 
     /**
-     * 出生日期
+     * 出生日期 yyyy-MM-dd
      */
     private LocalDate birthday;
 
@@ -40,12 +40,12 @@ public class Profile extends BaseEntity {
     private Integer age;
 
     /**
-     * 性别
+     * 性别 male-男性 female-女性
      */
     private String gender;
 
     /**
-     * 头像
+     * 头像url
      */
     private String avatar;
 

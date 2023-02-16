@@ -22,9 +22,4 @@
         name, dict_sort, label, value, dict_type
     </sql>
 
-    <update id="truncate">
-        TRUNCATE TABLE sys_dict
-    </update>
-
-
 </mapper>

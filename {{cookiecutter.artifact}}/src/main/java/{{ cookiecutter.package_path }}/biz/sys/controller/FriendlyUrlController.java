@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.FriendlyUrl;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFriendlyUrlService;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +47,7 @@ public class FriendlyUrlController {
     /**
      * 添加友链
      */
+    @PreAuthorize("@ck.hasPermit('sys:friendly:add')")
     @PostMapping("/urls")
     public ApiResponse<FriendlyUrl> add(@Valid @RequestBody FriendlyUrl entity) {
         thisService.save(entity);
@@ -57,6 +59,7 @@ public class FriendlyUrlController {
      *
      * @param id 友链ID
      */
+    @PreAuthorize("@ck.hasPermit('sys:friendly:delete')")
     @DeleteMapping("/urls/{id}")
     public ApiResponse<FriendlyUrl> delete(@PathVariable("id") Long id) {
         FriendlyUrl entity = thisService.getById(id);
@@ -74,6 +77,7 @@ public class FriendlyUrlController {
      * @param entity 友链实体
      * @return 友链实体
      */
+    @PreAuthorize("@ck.hasPermit('sys:friendly:update')")
     @PutMapping("/urls/{id}")
     public ApiResponse<FriendlyUrl> update(@PathVariable("id") Long id, @Valid @RequestBody FriendlyUrl entity) {
         FriendlyUrl oldEntity = thisService.getById(id);
@@ -83,6 +87,5 @@ public class FriendlyUrlController {
         thisService.updateById(entity);
         return new ApiResponse<>(entity);
     }
-
 
 }

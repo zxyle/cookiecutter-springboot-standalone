@@ -7,6 +7,8 @@ public interface LoginService {
 
     /**
      * 退出登录
+     *
+     * @param userId 用户id
      */
     boolean logout(Long userId);
 }

@@ -8,7 +8,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.response.RegisterResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +31,7 @@ public class TokenController extends AuthBaseController {
     public static final int MAX_REFRESH_COUNT = 5;
 
     @Resource
-    RedisTemplate<String, Integer> redisTemplate;
+    StringRedisTemplate stringRedisTemplate;
 
     /**
      * 刷新/续约token
@@ -40,7 +41,7 @@ public class TokenController extends AuthBaseController {
         User user = getLoggedInUser();
         RegisterResponse response = refreshToken(user.getId().toString());
         if (response == null) {
-            return new ApiResponse<>("Token has been refreshed too many times.", false);
+            return new ApiResponse<>("令牌刷新次数过多", false);
         }
 
         return new ApiResponse<>(response);
@@ -55,13 +56,14 @@ public class TokenController extends AuthBaseController {
     public RegisterResponse refreshToken(String userId) {
         RegisterResponse response = new RegisterResponse();
         String key = "refresh:" + userId;
-        Integer count = redisTemplate.opsForValue().get(key);
-        if (count == null) {
+        String s = stringRedisTemplate.opsForValue().get(key);
+        if (StringUtils.isBlank(s)) {
             response.setToken(JwtUtil.createJWT(userId));
-            redisTemplate.opsForValue().set(key, 1, Duration.ofMinutes(WINDOW_MINUTES));
-        } else if (count < MAX_REFRESH_COUNT) {
+            stringRedisTemplate.opsForValue().increment(key);
+            stringRedisTemplate.expire(key, Duration.ofMinutes(WINDOW_MINUTES));
+        } else if (Integer.parseInt(s) < MAX_REFRESH_COUNT) {
             response.setToken(JwtUtil.createJWT(userId));
-            redisTemplate.opsForValue().increment(key);
+            stringRedisTemplate.opsForValue().increment(key);
         } else {
             return null;
         }

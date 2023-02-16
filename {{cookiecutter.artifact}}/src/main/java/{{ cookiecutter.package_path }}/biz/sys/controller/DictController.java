@@ -11,6 +11,7 @@ import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,6 +45,7 @@ public class DictController {
     /**
      * 新增字典
      */
+    @PreAuthorize("@ck.hasPermit('sys:dict:add')")
     @Cacheable(cacheNames = "dictCache")
     @PostMapping("/dicts")
     public ApiResponse<Dict> add(@Valid @RequestBody Dict entity) {
@@ -58,6 +60,7 @@ public class DictController {
     /**
      * 按ID查询字典
      */
+    @PreAuthorize("@ck.hasPermit('sys:dict:get')")
     @Cacheable(cacheNames = "dictCache", key = "#id")
     @GetMapping("/dicts/{id}")
     public ApiResponse<Dict> get(@PathVariable Long id) {
@@ -77,6 +80,7 @@ public class DictController {
     /**
      * 按ID更新字典
      */
+    @PreAuthorize("@ck.hasPermit('sys:dict:update')")
     @PutMapping("/dicts/{id}")
     public ApiResponse<Object> update(@Valid @RequestBody Dict entity) {
         boolean success = thisService.updateById(entity);
@@ -89,6 +93,7 @@ public class DictController {
     /**
      * 按ID删除字典
      */
+    @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
     @DeleteMapping("/dicts/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);

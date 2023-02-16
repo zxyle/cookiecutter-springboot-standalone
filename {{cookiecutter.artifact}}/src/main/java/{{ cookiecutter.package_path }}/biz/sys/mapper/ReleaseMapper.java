@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.mapper;
 
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Release;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public interface ReleaseMapper extends BaseMapper<Release> {
     List<Release> selectAll();
 
     // 截断表
+    @Update("TRUNCATE TABLE sys_release")
     void truncate();
 
 }

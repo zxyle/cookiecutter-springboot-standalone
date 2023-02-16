@@ -4,9 +4,12 @@
 package {{ cookiecutter.basePackage }}.biz.sys.request;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class AreaRequest {
+
+    public static final int DEFAULT_LEVEL = 4;
 
     /**
      * 根节点ID
@@ -14,7 +17,15 @@ public class AreaRequest {
     private String rootId;
 
     /**
-     * 最小级别
+     * 查询最小级别（1-国家 2-省级 3-市级 4-区县 5-镇街 6-村社）
      */
     private Integer level;
+
+    public String getRootId() {
+        return StringUtils.isBlank(rootId) ? "0000" : rootId;
+    }
+
+    public Integer getLevel() {
+        return level == null ? DEFAULT_LEVEL : level;
+    }
 }

@@ -12,6 +12,7 @@ import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +36,7 @@ public class WhitelistController {
     /**
      * 分页查询
      */
+    @PreAuthorize("@ck.hasPermit('sys:whitelist:list')")
     @GetMapping("/whitelists")
     public ApiResponse<PageVO<Whitelist>> list(@Valid PaginationRequest request) {
         IPage<Whitelist> page = PageRequestUtil.checkForMp(request);
@@ -46,6 +48,7 @@ public class WhitelistController {
     /**
      * 新增IP黑名单
      */
+    @PreAuthorize("@ck.hasPermit('sys:whitelist:add')")
     @PostMapping("/whitelists")
     public ApiResponse<Whitelist> add(@Valid @RequestBody Whitelist entity) {
         boolean success = thisService.save(entity);
@@ -59,6 +62,7 @@ public class WhitelistController {
     /**
      * 按ID查询IP黑名单
      */
+    @PreAuthorize("@ck.hasPermit('sys:whitelist:get')")
     @GetMapping("/whitelists/{id}")
     public ApiResponse<Whitelist> get(@PathVariable Long id) {
         return new ApiResponse<>(thisService.queryById(id));
@@ -67,6 +71,7 @@ public class WhitelistController {
     /**
      * 按ID更新IP黑名单
      */
+    @PreAuthorize("@ck.hasPermit('sys:whitelist:update')")
     @PutMapping("/whitelists/{id}")
     public ApiResponse<Object> update(@Valid @RequestBody Whitelist entity) {
         boolean success = thisService.updateById(entity);
@@ -79,6 +84,7 @@ public class WhitelistController {
     /**
      * 按ID删除IP黑名单
      */
+    @PreAuthorize("@ck.hasPermit('sys:whitelist:delete')")
     @DeleteMapping("/whitelists/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
@@ -91,6 +97,7 @@ public class WhitelistController {
     /**
      * Excel导出
      */
+    @PreAuthorize("@ck.hasPermit('sys:whitelist:export')")
     @GetMapping("/whitelists/export")
     public void export(HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);

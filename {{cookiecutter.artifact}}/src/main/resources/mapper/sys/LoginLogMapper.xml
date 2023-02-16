@@ -25,8 +25,4 @@
         SELECT * FROM sys_login_log
     </select>
 
-    <update id="truncate">
-        TRUNCATE TABLE sys_login_log
-    </update>
-
 </mapper>
