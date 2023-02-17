@@ -28,6 +28,11 @@ public class UserGroup extends BaseEntity {
      */
     private Long groupId;
 
+    /**
+     * 注释
+     */
+    private String remark;
+
     public UserGroup(Long userId, Long groupId) {
         this.userId = userId;
         this.groupId = groupId;

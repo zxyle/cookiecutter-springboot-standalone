@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 参数管理
+ * 系统信息管理
  */
 @RestController
 @RequestMapping("/sys")
@@ -32,7 +32,7 @@ public class InfoController {
     }
 
     /**
-     * 获取参数列表
+     * 获取系统信息列表
      */
     @Cacheable
     @GetMapping("/infos")
@@ -46,7 +46,7 @@ public class InfoController {
     }
 
     /**
-     * 新增资源
+     * 新增系统信息
      */
     @PreAuthorize("@ck.hasPermit('sys:info:add')")
     @PostMapping("/infos")
@@ -55,28 +55,34 @@ public class InfoController {
         if (success) {
             return new ApiResponse<>(entity);
         }
-        return new ApiResponse<>();
+        return new ApiResponse<>("新增失败", false);
     }
 
     /**
-     * 按ID更新资源
+     * 按ID更新系统信息
      */
     @PreAuthorize("@ck.hasPermit('sys:info:update')")
     @PutMapping("/infos/{id}")
     public ApiResponse<Object> update(@Valid @RequestBody Info entity) {
-        thisService.updateById(entity);
-        return new ApiResponse<>("更新成功");
+        boolean success = thisService.updateById(entity);
+        if (success) {
+            return new ApiResponse<>("更新成功");
+        }
+        return new ApiResponse<>("更新失败", false);
     }
 
 
     /**
-     * 按ID删除资源
+     * 按ID删除系统信息
      */
     @PreAuthorize("@ck.hasPermit('sys:info:delete')")
     @DeleteMapping("/infos/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
-        thisService.removeById(id);
-        return new ApiResponse<>("删除成功");
+        boolean success = thisService.removeById(id);
+        if (success) {
+            return new ApiResponse<>("删除成功");
+        }
+        return new ApiResponse<>("删除失败", false);
     }
 
 }

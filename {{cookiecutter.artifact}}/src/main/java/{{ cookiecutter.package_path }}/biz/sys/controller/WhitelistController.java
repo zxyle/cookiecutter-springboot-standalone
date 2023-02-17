@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 /**
- * IP白名单
+ * IP白名单管理
  */
 @RestController
 @RequestMapping("/sys")
@@ -46,7 +46,7 @@ public class WhitelistController {
 
 
     /**
-     * 新增IP黑名单
+     * 新增IP白名单
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:add')")
     @PostMapping("/whitelists")
@@ -55,12 +55,12 @@ public class WhitelistController {
         if (success) {
             return new ApiResponse<>(entity);
         }
-        return new ApiResponse<>();
+        return new ApiResponse<>("新增失败", false);
     }
 
 
     /**
-     * 按ID查询IP黑名单
+     * 按ID查询IP白名单
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:get')")
     @GetMapping("/whitelists/{id}")
@@ -69,7 +69,7 @@ public class WhitelistController {
     }
 
     /**
-     * 按ID更新IP黑名单
+     * 按ID更新IP白名单
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:update')")
     @PutMapping("/whitelists/{id}")
@@ -78,11 +78,11 @@ public class WhitelistController {
         if (success) {
             return new ApiResponse<>("更新成功");
         }
-        return new ApiResponse<>("更新失败");
+        return new ApiResponse<>("更新失败", false);
     }
 
     /**
-     * 按ID删除IP黑名单
+     * 按ID删除IP白名单
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:delete')")
     @DeleteMapping("/whitelists/{id}")
@@ -91,11 +91,11 @@ public class WhitelistController {
         if (success) {
             return new ApiResponse<>("删除成功");
         }
-        return new ApiResponse<>("删除失败");
+        return new ApiResponse<>("删除失败", false);
     }
 
     /**
-     * Excel导出
+     * Excel导出白名单
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:export')")
     @GetMapping("/whitelists/export")

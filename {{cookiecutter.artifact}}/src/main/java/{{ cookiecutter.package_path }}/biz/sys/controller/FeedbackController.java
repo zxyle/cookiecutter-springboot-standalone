@@ -1,4 +1,4 @@
-package ${package.Controller};
+package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -10,17 +10,10 @@ import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
-import ${package.Entity}.${entity};
-import ${package.Service}.${table.serviceName};
+import {{ cookiecutter.basePackage }}.biz.sys.entity.Feedback;
+import {{ cookiecutter.basePackage }}.biz.sys.service.IFeedbackService;
 import org.springframework.web.multipart.MultipartFile;
-<#if restControllerStyle>
 import org.springframework.web.bind.annotation.RestController;
-<#else>
-import org.springframework.stereotype.Controller;
-</#if>
-<#if superControllerClassPackage??>
-import ${superControllerClassPackage};
-</#if>
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -29,44 +22,36 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 /**
- * ${table.comment!}
+ * 意见反馈
  */
-<#if restControllerStyle>
 @RestController
-<#else>
-@Controller
-</#if>
-@RequestMapping("/${package.ModuleName}")
-<#if superControllerClass??>
-public class ${table.controllerName} extends ${superControllerClass} {
-<#else>
-public class ${table.controllerName} {
-</#if>
+@RequestMapping("/sys")
+public class FeedbackController {
 
-    ${table.serviceName} thisService;
+    IFeedbackService thisService;
 
-    public ${table.controllerName}(${table.serviceName} thisService) {
+    public FeedbackController(IFeedbackService thisService) {
         this.thisService = thisService;
     }
 
     /**
-     * ${table.comment!}列表分页查询
+     * 意见反馈列表分页查询
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
-    @GetMapping("/${table.entityPath}s")
-    public ApiResponse<PageVO<${entity}>> list(@Valid PaginationRequest request) {
-        IPage<${entity}> page = PageRequestUtil.checkForMp(request);
-        IPage<${entity}> list = thisService.pageQuery(page);
+    @PreAuthorize("@ck.hasPermit('sys:feedbacks:list')")
+    @GetMapping("/feedbacks")
+    public ApiResponse<PageVO<Feedback>> list(@Valid PaginationRequest request) {
+        IPage<Feedback> page = PageRequestUtil.checkForMp(request);
+        IPage<Feedback> list = thisService.pageQuery(page);
         return PageRequestUtil.extractFromMp(list);
     }
 
 
     /**
-     * 新增${table.comment!}
+     * 新增意见反馈
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:add')")
-    @PostMapping("/${table.entityPath}s")
-    public ApiResponse<${entity}> add(@Valid @RequestBody ${entity} entity) {
+    // @PreAuthorize("@ck.hasPermit('sys:feedbacks:add')")
+    @PostMapping("/feedbacks")
+    public ApiResponse<Feedback> add(@Valid @RequestBody Feedback entity) {
         boolean success = thisService.save(entity);
         if (success) {
             return new ApiResponse<>(entity);
@@ -76,20 +61,20 @@ public class ${table.controllerName} {
 
 
     /**
-     * 按ID查询${table.comment!}
+     * 按ID查询意见反馈
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:get')")
-    @GetMapping("/${table.entityPath}s/{id}")
-    public ApiResponse<${entity}> get(@PathVariable Long id) {
+    @PreAuthorize("@ck.hasPermit('sys:feedbacks:get')")
+    @GetMapping("/feedbacks/{id}")
+    public ApiResponse<Feedback> get(@PathVariable Long id) {
         return new ApiResponse<>(thisService.queryById(id));
     }
 
     /**
-     * 按ID更新${table.comment!}
+     * 按ID更新意见反馈
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:update')")
-    @PutMapping("/${table.entityPath}s/{id}")
-    public ApiResponse<Object> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
+    @PreAuthorize("@ck.hasPermit('sys:feedbacks:update')")
+    @PutMapping("/feedbacks/{id}")
+    public ApiResponse<Object> update(@Valid @RequestBody Feedback entity, @PathVariable Long id) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
         if (success) {
@@ -99,10 +84,10 @@ public class ${table.controllerName} {
     }
 
     /**
-     * 按ID删除${table.comment!}
+     * 按ID删除意见反馈
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:delete')")
-    @DeleteMapping("/${table.entityPath}s/{id}")
+    @PreAuthorize("@ck.hasPermit('sys:feedbacks:delete')")
+    @DeleteMapping("/feedbacks/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
         if (success) {
@@ -112,29 +97,29 @@ public class ${table.controllerName} {
     }
 
     /**
-     * Excel数据导出${table.comment!}
+     * Excel数据导出意见反馈
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:export')")
-    @GetMapping("/${table.entityPath}s/export")
+    @PreAuthorize("@ck.hasPermit('sys:feedbacks:export')")
+    @GetMapping("/feedbacks/export")
     public void export(HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        String fileName = "${table.comment!}";
+        String fileName = "意见反馈";
         String baseName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(), ${entity}.class).autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(thisService.list());
+        EasyExcel.write(response.getOutputStream(), Feedback.class).autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(thisService.list());
     }
 
 
     /**
-     * Excel数据导入${table.comment!}
+     * Excel数据导入意见反馈
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:upload')")
+    @PreAuthorize("@ck.hasPermit('sys:feedbacks:upload')")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public String upload(@RequestParam("file") MultipartFile file) throws IOException {
         File dest = new File("/tmp/" + file.getOriginalFilename());
         file.transferTo(dest);
-        AbstractListener<${entity}> abstractListener = new AbstractListener<>();
+        AbstractListener<Feedback> abstractListener = new AbstractListener<>();
         abstractListener.setService(thisService);
         EasyExcel.read(dest.getAbsolutePath(), AbstractListener.class, abstractListener).sheet().doRead();
         return "写入数据成功";

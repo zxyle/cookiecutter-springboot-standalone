@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +61,7 @@ public class PasswordController extends AuthBaseController {
     /**
      * 使用旧密码方式修改密码
      */
+    @PreAuthorize("@ck.hasPermit('auth:password:change')")
     @PostMapping("/change")
     public ApiResponse<Object> change(@Valid @RequestBody ChangeByOldRequest request) {
         User user = getLoggedInUser();
@@ -78,6 +80,7 @@ public class PasswordController extends AuthBaseController {
     /**
      * 忘记/找回密码（通过短信或邮件验证码）
      */
+    // @PreAuthorize("@ck.hasPermit('auth:password:forget')")
     @PostMapping("/forget")
     public ApiResponse<Object> forget(@Valid @RequestBody ForgetRequest request) {
         String key = "code:" + request.getPrincipal();
@@ -109,6 +112,7 @@ public class PasswordController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
+    @PreAuthorize("@ck.hasPermit('auth:password:reset')")
     @Secured({"ROLE_admin", "ROLE_group-admin"})
     @PostMapping("/reset")
     public ApiResponse<ResetPasswordResponse> reset(@NotNull Long userId) {
@@ -130,6 +134,7 @@ public class PasswordController extends AuthBaseController {
      *
      * @param password 待检测密码
      */
+    @PreAuthorize("@ck.hasPermit('auth:password:complexity')")
     @GetMapping("/complexity")
     public ApiResponse<Integer> complexity(@NotBlank String password) {
         int score = PasswordChecker.checkPasswordComplexity(password);
@@ -140,6 +145,7 @@ public class PasswordController extends AuthBaseController {
     /**
      * 随机生成密码
      */
+    @PreAuthorize("@ck.hasPermit('auth:password:random')")
     @GetMapping("/random")
     public ApiResponse<List<String>> random(@Valid RandomRequest request) {
         List<String> list = new ArrayList<>(request.getCount());

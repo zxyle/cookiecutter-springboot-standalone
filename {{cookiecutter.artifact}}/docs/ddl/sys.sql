@@ -114,7 +114,7 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('民族', 0, '怒族', 'Nu', 'nationality');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('民族', 0, '京族', 'Jing', 'nationality');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('民族', 0, '基诺族', 'Jino', 'nationality');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('民族', 0, '德昂族', 'De\'ang', 'nationality');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('民族', 0, '德昂族', 'Deang', 'nationality');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('民族', 0, '保安族', 'Baoan', 'nationality');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('民族', 0, '俄罗斯族', 'Russian', 'nationality');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('民族', 0, '裕固族', 'Yugur', 'nationality');
@@ -324,6 +324,20 @@ INSERT INTO `sys_release` (`version`, `description`) VALUES ('v1.1.1', '第二�
 COMMIT;
 
 -- ----------------------------
+-- Table structure for sys_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_setting`;
+CREATE TABLE `sys_setting` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '选项描述',
+  `option_label` varchar(255) NOT NULL COMMENT '选项',
+  `option_value` varchar(255) NOT NULL COMMENT '选项值',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统设置';
+
+-- ----------------------------
 -- Table structure for sys_sql
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_sql`;
@@ -351,6 +365,21 @@ CREATE TABLE `sys_task` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='定时任务';
 
 -- ----------------------------
+-- Table structure for sys_verification
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_verification`;
+CREATE TABLE `sys_verification` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `kind` enum('email','mobile') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '验证码类型',
+  `receiver` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '接收者',
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '内容',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='验证码发送记录';
+
+
+-- ----------------------------
 -- Table structure for sys_whitelist
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_whitelist`;
@@ -373,19 +402,5 @@ CREATE TABLE `template` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='模板表';
-
--- ----------------------------
--- Table structure for sys_verification
--- ----------------------------
-DROP TABLE IF EXISTS `sys_verification`;
-CREATE TABLE `sys_verification` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `kind` enum('email','mobile') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '验证码类型',
-  `receiver` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '接收者',
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '内容',
-PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='验证码发送记录';
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -1,0 +1,37 @@
+package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.Feedback;
+import {{ cookiecutter.basePackage }}.biz.sys.mapper.FeedbackMapper;
+import {{ cookiecutter.basePackage }}.biz.sys.service.IFeedbackService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+/**
+ * 意见反馈 服务实现类
+ */
+@Slf4j
+@Service
+public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> implements IFeedbackService {
+
+    /**
+     * 按ID查询
+     */
+    @Cacheable(cacheNames = "FeedbackCache", key = "#id")
+    @Override
+    public Feedback queryById(Long id) {
+        return getById(id);
+    }
+
+    /**
+     * 分页查询
+     */
+    @Cacheable(cacheNames = "FeedbackCache", key = "#p.getCurrent()+#p.getSize()")
+    @Override
+    public IPage<Feedback> pageQuery(IPage<Feedback> p) {
+        return page(p);
+    }
+
+}

@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +37,7 @@ public class TokenController extends AuthBaseController {
     /**
      * 刷新/续约token
      */
+    @PreAuthorize("@ck.hasPermission('auth:token:renew')")
     @RequestMapping("/renew")
     public ApiResponse<RegisterResponse> renew() {
         User user = getLoggedInUser();

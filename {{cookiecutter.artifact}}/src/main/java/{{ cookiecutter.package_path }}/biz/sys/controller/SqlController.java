@@ -60,7 +60,7 @@ public class SqlController {
     // 获取系统参数
 
     /**
-     * 分页查询
+     * SQL列表分页查询
      */
     @PreAuthorize("@ck.hasPermit('sys:sql:list')")
     @GetMapping("/sqls")
@@ -121,7 +121,7 @@ public class SqlController {
     }
 
     /**
-     * Excel导出
+     * Excel导出SQL
      */
     @PreAuthorize("@ck.hasPermit('sys:sql:export')")
     @GetMapping("/sqls/export")

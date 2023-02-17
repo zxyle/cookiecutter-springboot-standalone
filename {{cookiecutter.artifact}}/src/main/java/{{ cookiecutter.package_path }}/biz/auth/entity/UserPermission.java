@@ -28,6 +28,11 @@ public class UserPermission extends BaseEntity {
      */
     private Long permissionId;
 
+    /**
+     * 注释
+     */
+    private String remark;
+
     public UserPermission(Long userId, Long permissionId) {
         this.userId = userId;
         this.permissionId = permissionId;

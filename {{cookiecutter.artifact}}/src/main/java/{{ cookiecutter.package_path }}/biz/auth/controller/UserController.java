@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,7 +62,7 @@ public class UserController extends AuthBaseController {
     /**
      * 分页查询用户
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:list')")
     @GetMapping("/users")
     public ApiResponse<PageVO<UserResponse>> list(@Valid ListAuthRequest request) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -98,7 +99,7 @@ public class UserController extends AuthBaseController {
     /**
      * 新增用户
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:add')")
     @PostMapping("/users")
     public ApiResponse<User> add(@Valid @RequestBody AdminAddUserRequest request) {
         User entity = new User();
@@ -131,14 +132,14 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:get')")
     @GetMapping("/users/{userId}")
     public ApiResponse<User> get(@PathVariable Long userId) {
         return new ApiResponse<>(thisService.getById(userId));
     }
 
     /**
-     * 按ID更新用户资料
+     * 按ID更新用户资料（已被/profile接口取代）
      */
     @Secured(value = "ROLE_admin")
     @PutMapping("/users/{id}")
@@ -159,7 +160,7 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:delete')")
     @DeleteMapping("/users/{userId}")
     public ApiResponse<Object> delete(@PathVariable Long userId) {
         boolean success = thisService.delete(userId);
@@ -174,7 +175,7 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:disable')")
     @PutMapping("/users/{userId}/disable")
     public ApiResponse<Object> disable(@PathVariable Long userId) {
         // TODO 记录到操作日志
@@ -197,7 +198,7 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:enable')")
     @PutMapping("/users/{userId}/enable")
     public ApiResponse<Object> enable(@PathVariable Long userId) {
         boolean success = thisService.enable(userId);
@@ -213,7 +214,7 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @Secured(value = {"ROLE_admin", "ROLE_group_admin"})
+    @PreAuthorize("@ck.hasPermit('auth:user:kick')")
     @PutMapping("/users/{userId}/kick")
     public ApiResponse<Object> kick(@PathVariable Long userId) {
         // TODO 记录到操作日志

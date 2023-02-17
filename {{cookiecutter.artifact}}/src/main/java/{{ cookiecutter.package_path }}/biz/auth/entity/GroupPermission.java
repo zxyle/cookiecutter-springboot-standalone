@@ -28,6 +28,11 @@ public class GroupPermission extends BaseEntity {
      */
     private Long permissionId;
 
+    /**
+     * 注释
+     */
+    private String remark;
+
     public GroupPermission(Long groupId, Long permissionId) {
         this.groupId = groupId;
         this.permissionId = permissionId;

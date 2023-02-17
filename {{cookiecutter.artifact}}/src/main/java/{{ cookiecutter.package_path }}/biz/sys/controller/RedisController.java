@@ -3,15 +3,111 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import {{ cookiecutter.basePackage }}.biz.sys.request.redis.KeySetRequest;
+import {{ cookiecutter.basePackage }}.biz.sys.response.RedisKeyResponse;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/sys/redis")
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.Set;
+
+@RestController
+@RequestMapping("/sys")
 public class RedisController {
 
-    // 获取key数量
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
 
-    // 获取key列表
+    /**
+     * 获取key列表
+     *
+     * @param pattern 通配符，默认 *
+     */
+    @PreAuthorize("@ck.hasPermit('sys:keys:list')")
+    @GetMapping("/keys")
+    public ApiResponse<Set<String>> list(@RequestParam(defaultValue = "*") String pattern) {
+        Set<String> keys = stringRedisTemplate.keys(pattern);
+        return new ApiResponse<>(keys);
+    }
 
-    // 获取redis 系统参数
+    /**
+     * 删除key
+     *
+     * @param key key
+     */
+    @PreAuthorize("@ck.hasPermit('sys:keys:delete')")
+    @DeleteMapping("/keys/{key}")
+    public ApiResponse<String> delete(@PathVariable String key) {
+        Boolean hasKey = stringRedisTemplate.hasKey(key);
+        if (Boolean.FALSE.equals(hasKey)) {
+            return new ApiResponse<>("删除失败，key不存在", false);
+        }
+        Boolean delete = stringRedisTemplate.delete(key);
+        if (Boolean.TRUE.equals(delete)) {
+            return new ApiResponse<>("删除成功");
+        }
+        return new ApiResponse<>("删除失败", false);
+    }
+
+    /**
+     * 获取key的值
+     *
+     * @param key key
+     */
+    @PreAuthorize("@ck.hasPermit('sys:keys:get')")
+    @GetMapping("/keys/{key}")
+    public ApiResponse<RedisKeyResponse> get(@PathVariable String key) {
+        Boolean hasKey = stringRedisTemplate.hasKey(key);
+        if (Boolean.FALSE.equals(hasKey)) {
+            return new ApiResponse<>("获取失败，key不存在", false);
+        }
+
+        // 获取key基本信息
+        RedisKeyResponse keyResponse = new RedisKeyResponse(
+                key,
+                stringRedisTemplate.opsForValue().get(key),
+                stringRedisTemplate.getExpire(key),
+                stringRedisTemplate.type(key)
+        );
+
+        return new ApiResponse<>(keyResponse);
+    }
+
+    /**
+     * 设置key的值
+     */
+    @PreAuthorize("@ck.hasPermit('sys:keys:set')")
+    @PostMapping("/keys")
+    public void set(@Valid @RequestBody KeySetRequest request) {
+        stringRedisTemplate.opsForValue().set(request.getKey(), "value");
+
+    }
+
+    /**
+     * key 重命名
+     */
+    @PreAuthorize("@ck.hasPermit('sys:keys:rename')")
+    @PutMapping("/keys/{oldKey}/rename/{newKey}")
+    public ApiResponse<Object> rename(@PathVariable String oldKey, @PathVariable String newKey) {
+        Boolean hasKey = stringRedisTemplate.hasKey(oldKey);
+        if (Boolean.FALSE.equals(hasKey)) {
+            return new ApiResponse<>("重命名失败，key不存在", false);
+        }
+
+        stringRedisTemplate.rename(oldKey, newKey);
+        return new ApiResponse<>("重命名成功");
+    }
+
+    /**
+     * 设置过期时间
+     */
+    @PreAuthorize("@ck.hasPermit('sys:keys:expire')")
+    public void expire() {
+
+    }
+
 
 }

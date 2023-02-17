@@ -28,7 +28,7 @@ public class IpBlacklistController {
     }
 
     /**
-     * 列表查询
+     * 黑名单列表分页查询
      */
     @PreAuthorize("@ck.hasPermit('sys:blacklist:list')")
     @GetMapping("/blacklists")

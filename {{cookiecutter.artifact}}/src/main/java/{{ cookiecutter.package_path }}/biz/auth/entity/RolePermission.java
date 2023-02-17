@@ -28,6 +28,11 @@ public class RolePermission extends BaseEntity {
      */
     private Long permissionId;
 
+    /**
+     * 注释
+     */
+    private String remark;
+
     public RolePermission(Long roleId, Long permissionId) {
         this.roleId = roleId;
         this.permissionId = permissionId;

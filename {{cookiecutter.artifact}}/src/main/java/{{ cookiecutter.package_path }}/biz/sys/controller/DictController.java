@@ -53,7 +53,7 @@ public class DictController {
         if (success) {
             return new ApiResponse<>(entity);
         }
-        return new ApiResponse<>();
+        return new ApiResponse<>("新增失败", false);
     }
 
 
@@ -69,6 +69,8 @@ public class DictController {
 
     /**
      * 按类型查询字典
+     *
+     * @param dictType 字典类型
      */
     @GetMapping("/dicts/dictType/{dictType}")
     public ApiResponse<List<Dict>> getByDictType(@PathVariable String dictType) {
@@ -87,7 +89,7 @@ public class DictController {
         if (success) {
             return new ApiResponse<>("更新成功");
         }
-        return new ApiResponse<>("更新失败");
+        return new ApiResponse<>("更新失败", false);
     }
 
     /**
@@ -100,7 +102,7 @@ public class DictController {
         if (success) {
             return new ApiResponse<>("删除成功");
         }
-        return new ApiResponse<>("删除失败");
+        return new ApiResponse<>("删除失败", false);
     }
 
 }

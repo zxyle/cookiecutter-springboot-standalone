@@ -28,6 +28,11 @@ public class GroupRole extends BaseEntity {
      */
     private Long roleId;
 
+    /**
+     * 注释
+     */
+    private String remark;
+
     public GroupRole(Long groupId, Long roleId) {
         this.groupId = groupId;
         this.roleId = roleId;

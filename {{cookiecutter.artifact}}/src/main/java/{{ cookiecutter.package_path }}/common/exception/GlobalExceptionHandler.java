@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse> handleAccessDeniedException(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        return new ResponseEntity<>(new ApiResponse<>("无权限访问", false), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new ApiResponse<>("403","无权限访问", false), HttpStatus.FORBIDDEN);
     }
 
 

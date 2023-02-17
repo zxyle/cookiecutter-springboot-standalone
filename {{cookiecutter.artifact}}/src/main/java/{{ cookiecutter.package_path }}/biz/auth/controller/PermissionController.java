@@ -41,6 +41,7 @@ public class PermissionController extends AuthBaseController {
      *
      * @apiNote 1. 该接口只有管理员才能访问 2. 该接口返回name-节点名、id-节点值、children-子节点、path-路由、sort-排序等字段
      */
+    @PreAuthorize("@ck.hasPermit('auth:permissions:tree')")
     @Secured("ROLE_admin")
     @GetMapping("/permissions/tree")
     public ApiResponse<List<Tree<Integer>>> tree(TreePermissionRequest request) {

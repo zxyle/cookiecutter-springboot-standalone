@@ -18,9 +18,11 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +72,8 @@ public class LoginController extends AuthBaseController {
                 new UsernamePasswordAuthenticationToken(principal, request.getPassword());
         // AuthenticationManager authenticate进行用户认证
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        // 认证成功后，将认证信息存入SecurityContextHolder中
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
 
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
         String userId = loginUser.getUser().getId().toString();
@@ -86,6 +90,7 @@ public class LoginController extends AuthBaseController {
     /**
      * 退出登录
      */
+    @PreAuthorize("@ck.hasPermit('auth:user:logout')")
     @PostMapping("/logout")
     public ApiResponse<Object> logout() {
         boolean success = loginService.logout(getUserId());

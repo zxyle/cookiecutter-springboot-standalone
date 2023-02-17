@@ -3,10 +3,10 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.config.AuthUserProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.RegisterRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.RegisterResponse;
@@ -15,11 +15,11 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 /**
  * 注册管理
@@ -65,6 +64,7 @@ public class RegisterController {
     /**
      * 用户注册
      */
+    @PreAuthorize("@ck.hasPermit('auth:user:register')")
     @PostMapping("/")
     public ApiResponse<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         if (isExisted(request.getLoginName(), request.getEmail(), request.getMobile())) {
@@ -111,6 +111,7 @@ public class RegisterController {
      *
      * @param name 用户名
      */
+    @PreAuthorize("@ck.hasPermit('auth:user:check')")
     @GetMapping("/check")
     public ApiResponse<Boolean> check(@NotBlank String name) {
         if (isExisted(name, null, null)) {
@@ -119,7 +120,10 @@ public class RegisterController {
         return new ApiResponse<>("账号名已经被占用，请更换账号名重试", false);
     }
 
-    // 随机生成用户名
+    /**
+     * 随机生成用户名
+     */
+    @PreAuthorize("@ck.hasPermit('auth:user:random')")
     public void random() {
 
     }
