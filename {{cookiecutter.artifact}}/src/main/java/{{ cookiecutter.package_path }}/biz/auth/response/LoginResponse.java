@@ -25,38 +25,12 @@ public class LoginResponse {
     private String username;
 
     /**
-     * 年龄
-     *
-     * @mock 18
-     */
-    private Integer age;
-
-    /**
-     * 性别
-     *
-     * @mock 男
-     */
-    private String gender;
-
-    /**
-     * 生日
-     *
-     * @mock 1989-10-27
-     */
-    private Date birthday;
-
-    /**
      * 令牌
      */
     private String token;
 
     /**
-     * 头像链接
-     */
-    private String avatar;
-
-    /**
      * 是否管理员
      */
-    private Integer isSuper;
+    private boolean admin;
 }

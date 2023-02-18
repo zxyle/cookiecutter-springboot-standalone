@@ -82,7 +82,7 @@ public class LoginController extends AuthBaseController {
         LoginResponse response = new LoginResponse();
         response.setToken(jwt);
         response.setUsername(loginUser.getUser().getLoginName());
-        response.setIsSuper(loginUser.getUser().getIsSuper());
+        response.setAdmin(loginUser.getUser().getIsSuper() == 1);
         response.setProfile(profileService.queryByUserId(loginUser.getUser().getId()));
         return new ApiResponse<>(response);
     }

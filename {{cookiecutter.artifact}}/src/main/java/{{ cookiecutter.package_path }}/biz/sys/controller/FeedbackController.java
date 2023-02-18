@@ -66,7 +66,11 @@ public class FeedbackController {
     @PreAuthorize("@ck.hasPermit('sys:feedbacks:get')")
     @GetMapping("/feedbacks/{id}")
     public ApiResponse<Feedback> get(@PathVariable Long id) {
-        return new ApiResponse<>(thisService.queryById(id));
+        Feedback entity = thisService.queryById(id);
+        if (entity == null) {
+            return new ApiResponse<>("数据不存在", false);
+        }
+        return new ApiResponse<>(entity);
     }
 
     /**
@@ -116,13 +120,13 @@ public class FeedbackController {
     @PreAuthorize("@ck.hasPermit('sys:feedbacks:upload')")
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
-    public String upload(@RequestParam("file") MultipartFile file) throws IOException {
+    public ApiResponse<Object> upload(@RequestParam("file") MultipartFile file) throws IOException {
         File dest = new File("/tmp/" + file.getOriginalFilename());
         file.transferTo(dest);
         AbstractListener<Feedback> abstractListener = new AbstractListener<>();
         abstractListener.setService(thisService);
         EasyExcel.read(dest.getAbsolutePath(), AbstractListener.class, abstractListener).sheet().doRead();
-        return "写入数据成功";
+        return new ApiResponse<>("导入成功");
     }
 
 }
