@@ -62,7 +62,7 @@ public class AuthBaseController {
      */
     public String getCurrentUsername() {
         User user = getLoggedInUser();
-        return user.getLoginName();
+        return user.getUsername();
     }
 
     /**

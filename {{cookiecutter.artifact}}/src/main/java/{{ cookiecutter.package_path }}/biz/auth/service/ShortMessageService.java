@@ -6,5 +6,11 @@ package {{ cookiecutter.basePackage }}.biz.auth.service;
 
 public interface ShortMessageService {
 
-    boolean send(String mobile, String code);
+    /**
+     * 验证码短信
+     *
+     * @param mobile 手机号
+     * @param code   验证码
+     */
+    void send(String mobile, String code);
 }

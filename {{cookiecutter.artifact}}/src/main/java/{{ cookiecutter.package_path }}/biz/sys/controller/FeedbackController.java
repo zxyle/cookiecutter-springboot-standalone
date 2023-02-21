@@ -2,7 +2,6 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import {{ cookiecutter.basePackage }}.common.listener.AbstractListener;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
@@ -12,12 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Feedback;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFeedbackService;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 
@@ -49,7 +46,6 @@ public class FeedbackController {
     /**
      * 新增意见反馈
      */
-    // @PreAuthorize("@ck.hasPermit('sys:feedbacks:add')")
     @PostMapping("/feedbacks")
     public ApiResponse<Feedback> add(@Valid @RequestBody Feedback entity) {
         boolean success = thisService.save(entity);
@@ -111,22 +107,6 @@ public class FeedbackController {
         String baseName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
         response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
         EasyExcel.write(response.getOutputStream(), Feedback.class).autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(thisService.list());
-    }
-
-
-    /**
-     * Excel数据导入意见反馈
-     */
-    @PreAuthorize("@ck.hasPermit('sys:feedbacks:upload')")
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseBody
-    public ApiResponse<Object> upload(@RequestParam("file") MultipartFile file) throws IOException {
-        File dest = new File("/tmp/" + file.getOriginalFilename());
-        file.transferTo(dest);
-        AbstractListener<Feedback> abstractListener = new AbstractListener<>();
-        abstractListener.setService(thisService);
-        EasyExcel.read(dest.getAbsolutePath(), AbstractListener.class, abstractListener).sheet().doRead();
-        return new ApiResponse<>("导入成功");
     }
 
 }

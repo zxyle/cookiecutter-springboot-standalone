@@ -5,10 +5,14 @@ package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.RoleMapper;
+import {{ cookiecutter.basePackage }}.biz.auth.response.RoleResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +60,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Cacheable(cacheNames = "roleCache", key = "#userId")
     @Override
     public List<String> getAllRoles(Long userId) {
-        List<String> roles = new ArrayList<>(userRoleService.selectRoleByUserId(userId));
+        List<Role> roles = userRoleService.selectRoleByUserId(userId);
+        List<String> roleCodes = roles.stream().map(Role::getCode).collect(Collectors.toList());
 
         List<UserGroup> userGroups = userGroupService.queryRelation(userId, 0L);
         userGroups.forEach(ug -> {
@@ -65,12 +70,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             rolesIds.forEach(roleId -> {
                 Role role = queryById(roleId);
                 if (role != null) {
-                    roles.add(role.getCode());
+                    roleCodes.add(role.getCode());
                 }
             });
         });
 
-        return roles.stream().distinct().collect(Collectors.toList());
+        return roleCodes.stream().distinct().collect(Collectors.toList());
     }
 
     /**
@@ -97,5 +102,39 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public Role queryById(Long roleId) {
         return getById(roleId);
+    }
+
+    /**
+     * 判断角色是否已经被使用
+     *
+     * @param roleId 角色ID
+     * @return true 已经被使用 false 未被使用
+     */
+    @Override
+    public boolean isAlreadyUsed(Long roleId) {
+        if (userRoleService.countRelation(null, roleId) > 0) {
+            return true;
+        }
+
+        if (groupRoleService.countRelation(null, roleId) > 0) {
+            return true;
+        }
+        return rolePermissionService.countRelation(roleId, null) > 0;
+    }
+
+    /**
+     * 查询角色对应权限关系
+     *
+     * @param role 角色
+     * @return 包含权限关系的角色对象
+     */
+    @Override
+    public RoleResponse attachRoleInfo(Role role) {
+        RoleResponse response = new RoleResponse();
+        List<Permission> permissions = rolePermissionService.getPermissionByRoleId(role.getId());
+        if (CollectionUtils.isNotEmpty(permissions))
+            response.setPermissions(permissions);
+        BeanUtils.copyProperties(role, response);
+        return response;
     }
 }

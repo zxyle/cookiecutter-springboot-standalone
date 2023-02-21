@@ -3,34 +3,33 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.ChangeByOldRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.ForgetRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.RandomRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.password.ResetPasswordRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.ResetPasswordResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.security.PasswordProperties;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.*;
+import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.util.PasswordChecker;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 密码管理
@@ -40,6 +39,12 @@ import java.util.Map;
 @Slf4j
 public class PasswordController extends AuthBaseController {
 
+    @Autowired
+    IGroupService groupService;
+
+    @Autowired
+    IUserService userService;
+
     PasswordProperties passwordProperties;
 
     IPasswordService passwordService;
@@ -48,8 +53,8 @@ public class PasswordController extends AuthBaseController {
 
     LoginService loginService;
 
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    ValidateService validateService;
 
     public PasswordController(PasswordEncoder passwordEncoder, LoginService loginService, IPasswordService passwordService, PasswordProperties passwordProperties) {
         this.passwordEncoder = passwordEncoder;
@@ -80,50 +85,52 @@ public class PasswordController extends AuthBaseController {
     /**
      * 忘记/找回密码（通过短信或邮件验证码）
      */
-    // @PreAuthorize("@ck.hasPermit('auth:password:forget')")
     @PostMapping("/forget")
     public ApiResponse<Object> forget(@Valid @RequestBody ForgetRequest request) {
-        String key = "code:" + request.getPrincipal();
-        Boolean hasKey = stringRedisTemplate.hasKey(key);
-        if (Boolean.FALSE.equals(hasKey)) {
-            return new ApiResponse<>("找回密码失败，验证码可能已过期", false);
+        String account = request.getAccount();
+        String key = "code:" + account;
+        if (!validateService.validate(key, request.getCode())) {
+            return new ApiResponse<>("找回密码失败，验证码可能已过期或错误", false);
         }
 
-        Map<Object, Object> entries = stringRedisTemplate.opsForHash().entries(key);
-        String code = (String) entries.get("code");
-        String principal = (String) entries.get("principal");
-        if (null == entries.get("userId")) {
-            return new ApiResponse<>("用户不存在", false);
-        }
-        Long userId = Long.valueOf(String.valueOf(entries.get("userId")));
-        if (StringUtils.isNotBlank(code) && request.getCode().equalsIgnoreCase(code)) {
-            String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
-            boolean success = passwordService.change(userId, newEncodedPassword, ChangePasswordEnum.FIND_PASSWORD);
-            Boolean isDeleted = stringRedisTemplate.delete(key);
-            log.info("{} 修改密码成功.", principal);
-            return new ApiResponse<>(success && Boolean.TRUE.equals(isDeleted));
+        // 获取用户ID
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq(AccountUtil.isEmail(account), "email", account);
+        wrapper.eq(AccountUtil.isMobile(account), "mobile", account);
+        User user = userService.getOne(wrapper);
+        if (null == user) {
+            return new ApiResponse<>("找回密码失败，用户不存在", false);
         }
 
-        return new ApiResponse<>("找回密码失败，验证码可能错误", false);
+        // 修改密码
+        String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
+        boolean success = passwordService.change(user.getId(), newEncodedPassword, ChangePasswordEnum.FIND_PASSWORD);
+        return new ApiResponse<>(success);
     }
 
     /**
      * 重置密码（支持系统管理员、组管理员重置密码）
-     *
-     * @param userId 用户ID
      */
     @PreAuthorize("@ck.hasPermit('auth:password:reset')")
     @Secured({"ROLE_admin", "ROLE_group-admin"})
     @PostMapping("/reset")
-    public ApiResponse<ResetPasswordResponse> reset(@NotNull Long userId) {
-        String rawPassword = CaptchaUtil.randCode(passwordProperties.getMinLength(), passwordProperties.getChars());
+    public ApiResponse<ResetPasswordResponse> reset(@Valid @RequestBody ResetPasswordRequest request) {
+        // 防止将没有权限的用户密码重置
+        if (!groupService.hasManagePermission(getUserId(), request.getUserId())) {
+            return new ApiResponse<>("重置密码失败，没有权限", false);
+        }
+
+        Long userId = request.getUserId();
+        String rawPassword = request.getPassword();
+        rawPassword = StringUtils.isBlank(rawPassword) ?
+                CaptchaUtil.randCode(passwordProperties.getMinLength(), passwordProperties.getChars()) : rawPassword;
         String newEncodedPassword = passwordEncoder.encode(rawPassword);
         boolean success = passwordService.change(userId, newEncodedPassword, ChangePasswordEnum.RESET_PASSWORD);
 
         if (success) {
             // 退出当前登录状态
             loginService.logout(userId);
-            return new ApiResponse<>(new ResetPasswordResponse(rawPassword));
+            return new ApiResponse<>("重置密码成功");
         }
         return new ApiResponse<>("重置密码失败", false);
     }

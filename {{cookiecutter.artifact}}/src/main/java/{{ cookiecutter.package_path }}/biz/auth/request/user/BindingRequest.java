@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request.user;
 
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 
@@ -12,25 +11,15 @@ import javax.validation.constraints.NotBlank;
 public class BindingRequest {
 
     /**
-     * 待绑定的手机号
+     * 待绑定的手机号或邮箱
      */
-    private String mobile;
-
-    /**
-     * 待绑定的邮箱
-     */
-    private String email;
+    @NotBlank(message = "账号不能为空")
+    private String account;
 
     /**
      * 短信或邮箱验证码
      */
-    @NotBlank
+    @NotBlank(message = "验证码不能为空")
     private String code;
 
-    /**
-     * 获取主要账号（手机号或邮箱）
-     */
-    public String getPrincipal() {
-        return StringUtils.isNotBlank(getMobile()) ? getMobile() : getEmail();
-    }
 }

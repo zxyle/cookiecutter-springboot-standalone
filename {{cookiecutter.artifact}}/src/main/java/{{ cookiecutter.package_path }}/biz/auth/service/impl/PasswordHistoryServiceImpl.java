@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -25,8 +24,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMapper, PasswordHistory> implements IPasswordHistoryService {
 
-    @Autowired
     PasswordProperties passwordProperties;
+
+    public PasswordHistoryServiceImpl(PasswordProperties passwordProperties) {
+        this.passwordProperties = passwordProperties;
+    }
 
     /**
      * 按ID查询

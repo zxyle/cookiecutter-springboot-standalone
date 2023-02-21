@@ -3,11 +3,19 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Blacklist;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.IpBlacklistMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IIpBlacklistService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * IP黑名单 服务实现类
@@ -15,4 +23,31 @@ import org.springframework.stereotype.Service;
 @Service
 public class IpBlacklistServiceImpl extends ServiceImpl<IpBlacklistMapper, Blacklist> implements IIpBlacklistService {
 
+    @Cacheable(value = "blacklist")
+    @Override
+    public List<String> getBlacklist() {
+        QueryWrapper<Blacklist> wrapper = new QueryWrapper<>();
+        wrapper.select("ip");
+        List<Blacklist> list = list(wrapper);
+        if (CollectionUtils.isNotEmpty(list)) {
+            return list.stream().map(Blacklist::getIp).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    @CachePut(value = "blacklist")
+    @Override
+    public boolean addBlacklist(String ip) {
+        Blacklist blacklist = new Blacklist();
+        blacklist.setIp(ip);
+        boolean save = save(blacklist);
+
+        return false;
+    }
+
+    @Override
+    public boolean deleteBlacklist(Long id) {
+
+        return false;
+    }
 }

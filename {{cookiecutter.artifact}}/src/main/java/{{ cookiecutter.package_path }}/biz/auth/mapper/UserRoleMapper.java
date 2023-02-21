@@ -4,9 +4,8 @@
 package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
-import org.apache.ibatis.annotations.Update;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,17 +16,6 @@ import java.util.List;
 @Repository
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
-    List<UserRole> selectAll();
-
-    // 截断表
-    @Update("TRUNCATE TABLE auth_user_role")
-    void truncate();
-
-    /**
-     * 查询用户所拥有的角色名称
-     *
-     * @param uid 用户ID
-     */
-    List<String> selectRoleByUid(@Param("uid") long uid);
-
+    // 根据用户ID 查询该用户所拥有的角色信息
+    List<Role> selectRoleByUserId(Long userId);
 }

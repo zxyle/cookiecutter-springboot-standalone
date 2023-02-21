@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.service;
 import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
+import {{ cookiecutter.basePackage }}.biz.auth.response.GroupResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
 
 import java.util.List;
@@ -24,21 +25,13 @@ public interface IGroupService extends IService<Group> {
     Group create(List<String> subGroups, Group group);
 
     /**
-     * 判断用户组是否存在
-     *
-     * @param name     用户组名称
-     * @param parentId 上级用户组ID
-     * @return 是否存在
-     */
-    boolean exist(String name, Long parentId);
-
-    /**
      * 获取该用户组下 子用户组数量
      *
      * @param parentId 上级用户组ID
+     * @param name     用户组名称
      * @return 数量
      */
-    Integer count(Long parentId);
+    Integer count(Long parentId, String name);
 
 
     /**
@@ -52,7 +45,7 @@ public interface IGroupService extends IService<Group> {
     AntdTree2 getSubGroupTree(Long rootGroupId);
 
     /**
-     * 删除用户组
+     * 删除用户组及关联关系
      *
      * @param groupId 用户组ID
      */
@@ -65,5 +58,47 @@ public interface IGroupService extends IService<Group> {
      * @param rootId 根节点ID
      */
     List<Tree<Integer>> getTree(Integer rootId);
+
+    /**
+     * 获取所有子用户组（包含自身）
+     *
+     * @param groups  用户组列表
+     * @param groupId 根节点ID
+     */
+    List<Group> getAllChildren(List<Group> groups, Long groupId);
+
+    /**
+     * 判断一个用户是否有对另外一个用户的管理权限
+     *
+     * @param sourceUserId 管理员用户ID
+     * @param targetUserId 被管理的用户ID
+     * @return true 有权限，false 无权限
+     */
+    boolean hasManagePermission(Long sourceUserId, Long targetUserId);
+
+    boolean hasManagePermission2(Long sourceUserId, Long groupId);
+
+    /**
+     * 更新用户组关联关系
+     *
+     * @param groupId       用户组ID
+     * @param roleIds       角色ID
+     * @param permissionIds 权限ID
+     */
+    void updateRelation(Long groupId, List<Long> roleIds, List<Long> permissionIds);
+
+    /**
+     * 获取用户组详细信息
+     *
+     * @param group 用户组对象
+     */
+    GroupResponse attachGroupInfo(Group group);
+
+    /**
+     * 判断用户组是否已经被使用
+     *
+     * @param groupId 用户组ID
+     */
+    boolean isAlreadyUsed(Long groupId);
 
 }

@@ -240,14 +240,14 @@ INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`,
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (126, '按ID查询定时任务', 'sys:task:get', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (127, '按ID更新定时任务', 'sys:task:update', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (128, '按ID删除定时任务', 'sys:task:delete', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (129, 'sys:feedbacks:*', '意见反馈所有权限', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (130, 'sys:feedbacks:list', '意见反馈列表分页查询', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (131, 'sys:feedbacks:add', '新增意见反馈', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (132, 'sys:feedbacks:get', '按ID查询意见反馈', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (133, 'sys:feedbacks:update', '按ID更新意见反馈', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (134, 'sys:feedbacks:delete', '按ID删除意见反馈', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (135, 'sys:feedbacks:export', 'Excel数据导出意见反馈', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (136, 'sys:feedbacks:upload', 'Excel数据导入意见反馈', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (129, '意见反馈所有权限', 'sys:feedbacks:*', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (130, '意见反馈列表分页查询', 'sys:feedbacks:list', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (131, '新增意见反馈', 'sys:feedbacks:add', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (132, '按ID查询意见反馈', 'sys:feedbacks:get', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (133, '按ID更新意见反馈', 'sys:feedbacks:update', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (134, '按ID删除意见反馈', 'sys:feedbacks:delete', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (135, 'Excel数据导出意见反馈', 'sys:feedbacks:export', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (136, 'Excel数据导入意见反馈', 'sys:feedbacks:upload', NULL, 1, 2, NULL, 1);
 COMMIT;
 
 -- ----------------------------
@@ -345,6 +345,7 @@ INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) 
 INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (7, 3, 48, '注册用户拥有刷新/续约token');
 INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (8, 5, 3, '组管理员拥有用户管理');
 INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (9, 5, 32, '组管理员拥有用户组管理');
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (10, 5, 19, '组管理员拥有重置密码');
 COMMIT;
 
 -- ----------------------------
@@ -355,18 +356,17 @@ CREATE TABLE `auth_user` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `login_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '登录用户名',
-  `pwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
-  `real_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '真实姓名',
+  `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '登录用户名',
   `mobile` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '手机号码',
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '邮箱地址',
+  `email` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '邮箱地址',
+  `pwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
+  `nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '昵称',
   `user_lock` tinyint NOT NULL DEFAULT '0' COMMENT '锁1-上锁 0-解锁',
   `is_super` tinyint NOT NULL DEFAULT '0' COMMENT '超级管理员',
   `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
   `pwd_change_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '密码上次修改时间',
   `enabled` tinyint unsigned NOT NULL DEFAULT '1' COMMENT '账号可用 1-启用 0-禁用',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_email` (`email`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户';
 
 -- ----------------------------
@@ -388,6 +388,7 @@ CREATE TABLE `auth_user_group` (
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '注释',
+  `is_admin` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否是该组管理员',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户-用户组关联';

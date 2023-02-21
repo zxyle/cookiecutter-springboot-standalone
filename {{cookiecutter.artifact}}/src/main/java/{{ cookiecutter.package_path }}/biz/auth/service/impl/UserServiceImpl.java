@@ -4,19 +4,15 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
-import {{ cookiecutter.basePackage }}.biz.auth.constant.PwdConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserMapper;
-import {{ cookiecutter.basePackage }}.biz.auth.request.user.AddUserRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.commons.lang3.StringUtils;
+import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import org.springframework.beans.BeanUtils;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,71 +39,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         this.userPermissionService = userPermissionService;
     }
 
-    /**
-     * 添加用户
-     */
-    @Transactional
-    @Override
-    public User addUser(AddUserRequest request) {
-        String pwd = request.getPwd();
-        User user = new User();
-        BeanUtils.copyProperties(request, user);
-        pwd = StringUtils.isNotBlank(pwd) ? pwd : PwdConst.DEFAULT_PWD;
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        user.setPwd(passwordEncoder.encode(pwd));
-        save(user);
-
-        // 添加用户组
-        UserGroup userGroup = new UserGroup(user.getId(), request.getGroupId());
-        userGroupService.save(userGroup);
-        return user;
-    }
-
-    /**
-     * 删除用户
-     *
-     * @param userId 用户ID
-     */
+    // 删除用户及其关联角色、用户组、权限
     @Transactional
     @Override
     public boolean delete(Long userId) {
-        // TODO 判断当前登录用户能否删除指定用户
-        boolean s1 = removeById(userId);
-        boolean s2 = userPermissionService.deleteRelation(userId, 0L);
-        boolean s3 = userRoleService.deleteRelation(userId, 0L);
-        boolean s4 = userGroupService.deleteRelation(userId, 0L);
+        boolean s1 = userPermissionService.deleteRelation(userId, 0L);
+        boolean s2 = userRoleService.deleteRelation(userId, 0L);
+        boolean s3 = userGroupService.deleteRelation(userId, 0L);
+        boolean s4 = removeById(userId);
         return (s1 && s2) && (s3 && s4);
     }
 
-    /**
-     * 通过ID查询用户
-     *
-     * @param userId 用户ID
-     */
-    @Override
-    @Cacheable(cacheNames = "userCache", key = "#userId")
-    public User queryById(Long userId) {
-        return getById(userId);
-    }
 
-    /**
-     * 通过手机号查询用户
-     *
-     * @param mobile 手机号
-     */
-    @Override
-    public User queryByPrincipal(String mobile, String email) {
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq(StringUtils.isNotBlank(mobile), "mobile", mobile);
-        wrapper.eq(StringUtils.isNotBlank(email), "email", email);
-        return getOne(wrapper);
-    }
-
-    /**
-     * 禁用用户
-     *
-     * @param userId 用户ID
-     */
+    // 禁用用户
     @Override
     public boolean disable(Long userId) {
         User user = new User();
@@ -124,25 +68,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return success && Boolean.TRUE.equals(delete);
     }
 
-    /**
-     * 启用用户
-     *
-     * @param userId 用户ID
-     */
+    // 启用用户
     @Override
     public boolean enable(Long userId) {
-        // TODO 记录到操作日志
         User user = new User();
         user.setId(userId);
         user.setEnabled(AuthConst.ENABLED);
         return updateById(user);
     }
 
-    /**
-     * 用户踢下线
-     *
-     * @param userId 用户ID
-     */
+    // 用户踢下线
     @Override
     public boolean kick(Long userId) {
         String key = "permissions:" + userId;
@@ -153,5 +88,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         Boolean delete = stringRedisTemplate.delete(key);
         return Boolean.TRUE.equals(delete);
+    }
+
+    // 通过账号名查询用户
+    @Override
+    public User queryByAccount(String account) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq(AccountUtil.isUsername(account), "username", account);
+        wrapper.eq(AccountUtil.isEmail(account), "email", account);
+        wrapper.eq(AccountUtil.isMobile(account), "mobile", account);
+        return getOne(wrapper);
+    }
+
+    @Override
+    public UserResponse attachUserInfo(User user) {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setGroups(userGroupService.queryGroupByUserId(user.getId()));
+        userResponse.setRoles(userRoleService.selectRoleByUserId(user.getId()));
+        userResponse.setPermissions(userPermissionService.selectPermissionByUserId(user.getId()));
+        BeanUtils.copyProperties(user, userResponse);
+        return userResponse;
     }
 }

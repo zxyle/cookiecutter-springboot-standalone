@@ -6,7 +6,6 @@ package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.RolePermission;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,13 +16,7 @@ import java.util.List;
 @Repository
 public interface RolePermissionMapper extends BaseMapper<RolePermission> {
 
-    List<RolePermission> selectAll();
-
-    // 截断表
-    @Update("TRUNCATE TABLE auth_role_permission")
-    void truncate();
-
     // 查询角色所拥有的权限列表
-    List<Permission> getPermissionNameByRoleId(long roleId);
+    List<Permission> getPermissionByRoleId(long roleId);
 
 }

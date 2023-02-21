@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.PasswordHistory;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -18,13 +17,5 @@ public interface PasswordHistoryMapper extends BaseMapper<PasswordHistory> {
     // 截断表
     @Update("TRUNCATE TABLE auth_password_history")
     void truncate();
-
-    // 创建分区表
-    @Select("CREATE TABlE IF NOT EXISTS auth_password_history_${suffix} LIKE auth_password_history;")
-    void cloneTable(String suffix);
-
-    // 删除分区表
-    @Select("DROP TABlE IF EXISTS auth_password_history_${suffix} ;")
-    void dropTable(String suffix);
 
 }

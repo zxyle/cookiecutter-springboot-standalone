@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
@@ -40,9 +41,9 @@ public class EmailCodeServiceImpl implements EmailCodeService {
      * @param code 验证码
      * @param to   接收者邮箱
      */
+    @Async
     @Override
-    public boolean sendVerificationCode(String code, String to) {
-        // TODO 记录发送记录
+    public void sendVerificationCode(String code, String to) {
         String content = String.format("邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!", code, aliveTime);
         String subject = String.format("【%s】邮箱验证码", appName);
 
@@ -66,11 +67,9 @@ public class EmailCodeServiceImpl implements EmailCodeService {
             verification.setKind("email");
             verification.setReceiver(to);
             verificationService.save(verification);
-            return true;
         } catch (Exception ignored) {
 
         }
 
-        return false;
     }
 }

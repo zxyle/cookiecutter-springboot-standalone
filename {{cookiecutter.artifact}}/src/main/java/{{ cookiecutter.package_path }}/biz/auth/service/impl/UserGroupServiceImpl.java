@@ -3,12 +3,15 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserGroupMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +91,24 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
         return page(iPage, wrapper);
     }
 
+    /**
+     * 更新映射关系
+     *
+     * @param userId   用户ID
+     * @param groupIds 用户组ID列表
+     */
+    @Override
+    public void updateRelation(Long userId, List<Long> groupIds) {
+        if (CollectionUtils.isEmpty(groupIds) || userId == null || userId == 0L) {
+            return;
+        }
+
+        remove(buildWrapper(userId, null));
+        for (Long groupId : groupIds) {
+            createRelation(userId, groupId);
+        }
+    }
+
     // 构建wrapper
     public QueryWrapper<UserGroup> buildWrapper(Long userId, Long groupId) {
         QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
@@ -96,4 +117,13 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
         return wrapper;
     }
 
+    @Override
+    public List<Group> queryGroupByUserId(Long userId) {
+        return baseMapper.listGroups(userId);
+    }
+
+    @Override
+    public List<User> queryUserByGroupId(Long groupId) {
+        return baseMapper.listUsers(groupId);
+    }
 }

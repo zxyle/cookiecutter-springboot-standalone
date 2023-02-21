@@ -4,9 +4,12 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Profile;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IProfileService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +24,11 @@ public class ProfileController extends AuthBaseController {
 
     IProfileService thisService;
 
-    public ProfileController(IProfileService thisService) {
+    IUserService userService;
+
+    public ProfileController(IProfileService thisService, IUserService userService) {
         this.thisService = thisService;
+        this.userService = userService;
     }
 
 
@@ -45,6 +51,14 @@ public class ProfileController extends AuthBaseController {
         Long userId = getUserId();
         entity.setUserId(userId);
         Profile profile = thisService.updateProfile(entity);
+
+        // 更新auth_user中的nickname
+        if (StringUtils.isNotBlank(entity.getNickname())) {
+            User user = new User();
+            user.setId(userId);
+            user.setNickname(entity.getNickname());
+            userService.updateById(user);
+        }
         return new ApiResponse<>(profile);
     }
 }

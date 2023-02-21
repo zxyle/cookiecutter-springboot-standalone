@@ -4,60 +4,28 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
-import {{ cookiecutter.basePackage }}.biz.auth.request.user.AddUserRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
+import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 
 /**
  * 用户 服务类
  */
 public interface IUserService extends IService<User> {
 
-    /**
-     * 添加用户
-     */
-    User addUser(AddUserRequest request);
-
-    /**
-     * 删除用户
-     *
-     * @param userId 用户ID
-     */
+    // 删除用户及其关联角色、用户组、权限
     boolean delete(Long userId);
 
-    /**
-     * 通过ID查询用户
-     *
-     * @param uid 用户ID
-     */
-    User queryById(Long uid);
-
-    /**
-     * 通过手机号或邮箱查询用户
-     *
-     * @param mobile 手机号
-     * @param email  邮箱号
-     */
-    User queryByPrincipal(String mobile, String email);
-
-    /**
-     * 禁用用户
-     *
-     * @param userId 用户ID
-     */
+    // 禁用用户
     boolean disable(Long userId);
 
-
-    /**
-     * 启用用户
-     *
-     * @param userId 用户ID
-     */
+    // 启用用户
     boolean enable(Long userId);
 
-    /**
-     * 用户踢下线
-     *
-     * @param userId 用户ID
-     */
+    // 用户踢下线
     boolean kick(Long userId);
+
+    // 通过账号名查询用户
+    User queryByAccount(String account);
+
+    UserResponse attachUserInfo(User user);
 }

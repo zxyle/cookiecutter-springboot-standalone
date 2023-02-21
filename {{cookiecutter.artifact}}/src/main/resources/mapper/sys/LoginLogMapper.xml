@@ -7,7 +7,8 @@
         <result column="id" property="id" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
-        <result column="login_name" property="loginName" />
+        <result column="user_id" property="userId" />
+        <result column="account" property="account" />
         <result column="ip" property="ip" />
         <result column="ua" property="ua" />
         <result column="msg" property="msg" />
@@ -17,7 +18,7 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
-        create_time, update_time, login_name, ip, ua, msg, is_success
+        create_time, update_time, user_id, account, ip, ua, msg, is_success
     </sql>
 
 

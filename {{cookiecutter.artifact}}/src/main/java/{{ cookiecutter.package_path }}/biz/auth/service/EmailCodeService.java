@@ -11,5 +11,5 @@ public interface EmailCodeService {
      * @param code 验证码
      * @param to   接收者邮箱
      */
-    boolean sendVerificationCode(String code, String to);
+    void sendVerificationCode(String code, String to);
 }

@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.security;
 
 import cn.hutool.core.util.StrUtil;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,11 +14,24 @@ import java.util.List;
  */
 public class WildcardPermission {
 
+    /**
+     * 权限层级
+     */
     private final Integer level;
 
-    private static final String ASTERISK = "*";
+    /**
+     * 默认权限层级（模块:资源:操作）
+     */
     private static final Integer DEFAULT_LEVEL = 3;
 
+    /**
+     * 权限通配符
+     */
+    private static final String ASTERISK = "*";
+
+    /**
+     * 权限标识分隔符
+     */
     private static final String DELIMITER = ":";
 
     private String[] parts;
@@ -50,6 +64,11 @@ public class WildcardPermission {
         return isAllowed(parse(p));
     }
 
+    /**
+     * 解析权限通配符
+     *
+     * @param permission 权限标识符
+     */
     private WildcardPermission parse(String permission) {
         WildcardPermission wildcardPermission = new WildcardPermission();
         wildcardPermission.setParts(permission.split(DELIMITER, -1));
@@ -58,7 +77,7 @@ public class WildcardPermission {
 
 
     /**
-     * 填充权限通配符
+     * 在后面填充权限通配符
      *
      * @param wildcard 权限通配符
      * @return 完整权限通配符
@@ -69,7 +88,7 @@ public class WildcardPermission {
     }
 
     /**
-     * 格式化通配符
+     * 格式化通配符，补齐权限层级
      *
      * @param wildcard 权限通配符
      */
@@ -89,7 +108,7 @@ public class WildcardPermission {
      * @return true-有权限 false-无权限
      */
     public boolean isPermit(String permission, List<String> permissionPatterns) {
-        if (permissionPatterns == null || permissionPatterns.size() == 0 || permission == null || permission.equals(""))
+        if (CollectionUtils.isEmpty(permissionPatterns) || StrUtil.isEmpty(permission))
             return false;
 
         for (String p : permissionPatterns) {

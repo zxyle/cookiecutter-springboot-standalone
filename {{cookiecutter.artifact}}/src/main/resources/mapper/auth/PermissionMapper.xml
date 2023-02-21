@@ -2,48 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.mapper.PermissionMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
-        <result column="id" property="id"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
-        <result column="name" property="name"/>
-        <result column="code" property="code"/>
-        <result column="description" property="description"/>
-        <result column="parent_id" property="parentId"/>
-        <result column="kind" property="kind"/>
-        <result column="path" property="path"/>
-        <result column="sort" property="sort"/>
-    </resultMap>
-
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id,
-        create_time, update_time, name, code, description, parent_id, kind, path, sort
-    </sql>
-
-
-    <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
-        SELECT *
-        FROM auth_permission
-    </select>
-
     <select id="queryPermissionsByUserId" resultType="java.lang.String">
         SELECT `code`
-        FROM auth_permission
-        WHERE id IN (
-            SELECT permission_id
-            FROM auth_role_permission
-            WHERE role_id IN (SELECT role_id FROM auth_user_role WHERE user_id = #{userId}))
+        FROM `auth_permission`
+        WHERE `id` IN (
+            SELECT `permission_id`
+            FROM `auth_role_permission`
+            WHERE `role_id` IN (SELECT `role_id` FROM `auth_user_role` WHERE `user_id` = #{userId}))
     </select>
 
     <select id="selectMaxSort" resultType="java.lang.Integer">
         SELECT
             IFNULL( MAX( sort ), 0 ) AS sort
         FROM
-            auth_permission
+            `auth_permission`
         WHERE
-            parent_id = #{parentId}
+            `parent_id` = #{parentId}
     </select>
 
 </mapper>

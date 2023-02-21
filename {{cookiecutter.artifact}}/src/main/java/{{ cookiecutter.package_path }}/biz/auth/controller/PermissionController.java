@@ -94,7 +94,11 @@ public class PermissionController extends AuthBaseController {
     @GetMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permissions:get')")
     public ApiResponse<Permission> get(@PathVariable Long permissionId) {
-        return new ApiResponse<>(thisService.getById(permissionId));
+        Permission entity = thisService.getById(permissionId);
+        if (entity == null) {
+            return new ApiResponse<>("权限不存在", false);
+        }
+        return new ApiResponse<>(entity);
     }
 
     /**

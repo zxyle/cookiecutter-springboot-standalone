@@ -34,4 +34,21 @@ public class AccountUtil {
         return AccountEnum.ILLEGAL;
     }
 
+    /**
+     * 判断账号类型 (下同)
+     *
+     * @param account 账号
+     */
+    public static boolean isUsername(String account) {
+        return judge(account) == AccountEnum.USERNAME;
+    }
+
+    public static boolean isEmail(String account) {
+        return judge(account) == AccountEnum.EMAIL;
+    }
+
+    public static boolean isMobile(String account) {
+        return judge(account) == AccountEnum.MOBILE;
+    }
+
 }

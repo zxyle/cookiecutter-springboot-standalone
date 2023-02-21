@@ -95,7 +95,7 @@ public class LogAspect {
         System.out.println("UA: " + header);
         loginLog.setUa(servletRequest.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setIp(IpUtil.getIpAddr(servletRequest));
-        loginLog.setLoginName(request.getPrincipal());
+        loginLog.setAccount(request.getAccount());
         long start = System.currentTimeMillis();
         // 调用执行目标方法(result为目标方法执行结果)，必须有此行代码才会执行目标调用的方法（等价于@befor+@after），否则只会执行一次之前的（等价于@before）
         ApiResponse<LoginResponse> result = (ApiResponse) pjp.proceed();

@@ -12,22 +12,11 @@ import javax.validation.constraints.NotBlank;
 public class RegisterRequest {
 
     /**
-     * 用户名注册（用户名、手机号、邮箱三选一）
+     * 注册账号（支持输入用户名、手机号、邮箱）
      */
-    // @NotBlank(message = "用户名不能为空")
-    // @Length(min = 5, max = 32, message = "用户名长度需要5~32位")
-    private String loginName;
-
-    /**
-     * 手机号注册（用户名、手机号、邮箱三选一）
-     */
-    private String mobile;
-
-    /**
-     * 邮箱注册（用户名、手机号、邮箱三选一）
-     */
-    @NotBlank(message = "邮箱不能为空")
-    private String email;
+    @NotBlank(message = "注册账号不能为空")
+    @Length(min = 5, message = "注册账号长度为5个字符以上")
+    private String account;
 
     /**
      * 邮件、短信、图形验证码
@@ -43,5 +32,10 @@ public class RegisterRequest {
     @NotBlank(message = "密码不能为空")
     @Length(min = 8, max = 32, message = "密码长度需要8~32位")
     private String password;
+
+    /**
+     * 验证码ID（使用用户名注册，此属性必填）
+     */
+    private String captchaId;
 
 }

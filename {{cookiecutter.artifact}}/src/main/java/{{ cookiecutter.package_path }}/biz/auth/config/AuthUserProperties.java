@@ -48,4 +48,14 @@ public class AuthUserProperties {
      * 认证方式 （password-密码登录、qrcode-扫码登录、code-验证码登录）
      */
     private String verification;
+
+    /**
+     * 是否开放注册
+     */
+    private boolean openRegistration;
+
+    /**
+     * 注册后默认角色
+     */
+    private Long defaultRole;
 }

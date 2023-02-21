@@ -3,14 +3,17 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
-import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserRoleMapper;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
+import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserRoleMapper;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -87,6 +90,25 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         return page(iPage, wrapper);
     }
 
+    /**
+     * 更新用户角色关系
+     *
+     * @param userId  用户ID
+     * @param roleIds 角色ID列表
+     */
+    @Transactional
+    @Override
+    public void updateRelation(Long userId, List<Long> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds) || userId == null || userId == 0L) {
+            return;
+        }
+
+        remove(buildWrapper(userId, null));
+        for (Long roleId : roleIds) {
+            createRelation(userId, roleId);
+        }
+    }
+
     // 构建wrapper
     public QueryWrapper<UserRole> buildWrapper(Long userId, Long roleId) {
         QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
@@ -95,13 +117,9 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         return wrapper;
     }
 
-    /**
-     * 查询用户所拥有的角色名称
-     *
-     * @param userId 用户ID
-     */
+    // 根据用户ID 查询该用户所拥有的角色信息
     @Override
-    public List<String> selectRoleByUserId(long userId) {
-        return baseMapper.selectRoleByUid(userId);
+    public List<Role> selectRoleByUserId(Long userId) {
+        return baseMapper.selectRoleByUserId(userId);
     }
 }

@@ -16,13 +16,13 @@ public class MigrateGroupRequest {
     /**
      * 新用户组ID
      */
-    @NotNull
+    @NotNull(message = "新用户组ID不能为空")
     private Long parentId;
 
     /**
      * 当前用户组ID
      */
-    @NotNull
+    @NotNull(message = "当前用户组ID不能为空")
     private Long currentId;
 
 }

@@ -12,13 +12,13 @@ public class AddUserRequest {
     /**
      * 登录用户名
      */
-    @NotBlank
-    private String loginName;
+    @NotBlank(message = "登录用户名不能为空")
+    private String username;
 
     /**
      * 真实姓名
      */
-    @NotBlank
+    @NotBlank(message = "真实姓名不能为空")
     private String realName;
 
     /**

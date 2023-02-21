@@ -7,6 +7,8 @@ import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -23,4 +25,14 @@ public class UpdateAuthRequest extends BaseRequest {
      * 描述信息
      */
     private String description;
+
+    /**
+     * 权限ID列表
+     */
+    private List<Long> permissionIds;
+
+    /**
+     * 角色ID列表
+     */
+    private List<Long> roleIds;
 }

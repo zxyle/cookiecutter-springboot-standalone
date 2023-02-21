@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request.permission;
 
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 
@@ -14,7 +13,7 @@ public class AddPermissionRequest {
     /**
      * 权限名称
      */
-    @NotBlank
+    @NotBlank(message = "权限名称不能为空")
     private String name;
 
     /**

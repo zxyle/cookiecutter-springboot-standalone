@@ -8,10 +8,9 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.Blacklist;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IIpBlacklistService;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -36,6 +35,32 @@ public class IpBlacklistController {
         QueryWrapper<Blacklist> wrapper = new QueryWrapper<>();
         List<Blacklist> items = thisService.list(wrapper);
         return new ApiResponse<>(items);
+    }
+
+    /**
+     * 新增黑名单
+     */
+    @PreAuthorize("@ck.hasPermit('sys:blacklist:add')")
+    @PostMapping("/blacklists")
+    public ApiResponse<Blacklist> add(@Valid @RequestBody Blacklist entity) {
+        boolean success = thisService.save(entity);
+        if (success) {
+            return new ApiResponse<>(entity);
+        }
+        return new ApiResponse<>("新增失败", false);
+    }
+
+    /**
+     * 按ID删除黑名单
+     */
+    @PreAuthorize("@ck.hasPermit('sys:blacklist:delete')")
+    @DeleteMapping("/blacklists/{id}")
+    public ApiResponse<Object> delete(@PathVariable Long id) {
+        boolean success = thisService.removeById(id);
+        if (success) {
+            return new ApiResponse<>("删除成功");
+        }
+        return new ApiResponse<>("删除失败", false);
     }
 
 }

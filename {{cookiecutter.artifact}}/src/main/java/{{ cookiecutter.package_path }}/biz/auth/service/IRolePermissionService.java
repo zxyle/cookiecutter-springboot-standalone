@@ -55,12 +55,20 @@ public interface IRolePermissionService extends IService<RolePermission> {
      */
     IPage<RolePermission> pageRelation(Long roleId, Long permissionId, IPage<RolePermission> page);
 
+    /**
+     * 更新映射关系
+     *
+     * @param roleId        角色ID
+     * @param permissionIds 权限ID列表
+     */
+    boolean updateRelation(Long roleId, List<Long> permissionIds);
+
 
     /**
      * 查询角色所拥有的权限列表
      *
      * @param roleId 角色ID
      */
-    List<Permission> getPermissionNameByRoleId(long roleId);
+    List<Permission> getPermissionByRoleId(Long roleId);
 
 }

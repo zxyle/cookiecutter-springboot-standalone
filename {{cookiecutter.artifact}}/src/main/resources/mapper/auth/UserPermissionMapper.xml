@@ -2,34 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.mapper.UserPermissionMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="{{ cookiecutter.basePackage }}.biz.auth.entity.UserPermission">
-        <result column="id" property="id" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="user_id" property="userId" />
-        <result column="permission_id" property="permissionId" />
-    </resultMap>
-
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id,
-        create_time,
-        update_time,
-        user_id, permission_id
-    </sql>
-
-
-    <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.UserPermission">
-        SELECT *
-        FROM auth_user_permission
-    </select>
-
-    <select id="selectPermissionNameByUserId" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
+    <select id="selectPermissionByUserId" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
         SELECT
             b.*
-        FROM auth_user_permission a
-        LEFT JOIN auth_permission b
+        FROM `auth_user_permission` a
+        LEFT JOIN `auth_permission` b
         ON a.permission_id = b.id
         WHERE
             a.user_id = #{userId}

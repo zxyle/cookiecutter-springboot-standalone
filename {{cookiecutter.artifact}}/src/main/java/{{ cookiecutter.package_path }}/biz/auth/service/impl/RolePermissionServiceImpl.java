@@ -3,13 +3,14 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.RolePermission;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.RolePermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IRolePermissionService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +89,32 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         return page(iPage, wrapper);
     }
 
+    /**
+     * 更新映射关系
+     *
+     * @param roleId        角色ID
+     * @param permissionIds 权限ID列表
+     */
+    @Override
+    public boolean updateRelation(Long roleId, List<Long> permissionIds) {
+        if (CollectionUtils.isEmpty(permissionIds) || roleId == null || roleId == 0L) {
+            return false;
+        }
+
+        // 删除旧的映射关系
+        boolean del = deleteRelation(roleId, null);
+
+        boolean result = true;
+        // 创建新的映射关系
+        for (Long permissionId : permissionIds) {
+            boolean success = createRelation(roleId, permissionId);
+            if (!success) {
+                result = false;
+            }
+        }
+        return del && result;
+    }
+
     // 构建wrapper
     public QueryWrapper<RolePermission> buildWrapper(Long roleId, Long permissionId) {
         QueryWrapper<RolePermission> wrapper = new QueryWrapper<>();
@@ -102,7 +129,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      * @param roleId 角色ID
      */
     @Override
-    public List<Permission> getPermissionNameByRoleId(long roleId) {
-        return baseMapper.getPermissionNameByRoleId(roleId);
+    public List<Permission> getPermissionByRoleId(Long roleId) {
+        return baseMapper.getPermissionByRoleId(roleId);
     }
 }

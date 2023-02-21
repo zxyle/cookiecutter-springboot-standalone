@@ -15,7 +15,6 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,14 +61,14 @@ public class LoginController extends AuthBaseController {
      */
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest servletRequest) {
-        String principal = request.getPrincipal();
+        String account = request.getAccount();
         ApiResponse<LoginResponse> beforeLoginResponse = beforeLogin(request);
         if (beforeLoginResponse != null) {
             return beforeLoginResponse;
         }
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(principal, request.getPassword());
+                new UsernamePasswordAuthenticationToken(account, request.getPassword());
         // AuthenticationManager authenticate进行用户认证
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         // 认证成功后，将认证信息存入SecurityContextHolder中
@@ -81,8 +80,8 @@ public class LoginController extends AuthBaseController {
 
         LoginResponse response = new LoginResponse();
         response.setToken(jwt);
-        response.setUsername(loginUser.getUser().getLoginName());
-        response.setAdmin(loginUser.getUser().getIsSuper() == 1);
+        response.setUsername(loginUser.getUser().getUsername());
+        response.setAdmin(isSuper());
         response.setProfile(profileService.queryByUserId(loginUser.getUser().getId()));
         return new ApiResponse<>(response);
     }
@@ -101,10 +100,6 @@ public class LoginController extends AuthBaseController {
      * 登录前条件判断
      */
     public ApiResponse<LoginResponse> beforeLogin(LoginRequest request) {
-        if (StringUtils.isBlank(request.getPrincipal())) {
-            return new ApiResponse<>("无主账号信息", false);
-        }
-
         // 验证码校验
         if (captchaProperties.isOn()) {
             boolean verify = codeService.verify(request.getCode(), request.getCaptchaId());

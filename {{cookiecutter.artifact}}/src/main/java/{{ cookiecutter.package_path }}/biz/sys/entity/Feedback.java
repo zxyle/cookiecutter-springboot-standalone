@@ -2,7 +2,6 @@ package {{ cookiecutter.basePackage }}.biz.sys.entity;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.time.LocalDateTime;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,18 +15,6 @@ import lombok.EqualsAndHashCode;
 public class Feedback extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 创建时间
-     */
-    @ExcelProperty("创建时间")
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @ExcelProperty("更新时间")
-    private LocalDateTime updateTime;
 
     /**
      * 联系邮箱
@@ -46,6 +33,5 @@ public class Feedback extends BaseEntity {
      */
     @ExcelProperty("详细描述")
     private String description;
-
 
 }

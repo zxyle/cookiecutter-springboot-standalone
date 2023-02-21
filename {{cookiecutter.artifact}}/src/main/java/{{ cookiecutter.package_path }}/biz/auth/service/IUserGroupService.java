@@ -5,6 +5,8 @@ package {{ cookiecutter.basePackage }}.biz.auth.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 
 import java.util.List;
@@ -53,5 +55,17 @@ public interface IUserGroupService extends IService<UserGroup> {
      * @param groupId 用户组ID
      */
     IPage<UserGroup> pageRelation(Long userId, Long groupId, IPage<UserGroup> page);
+
+    /**
+     * 更新映射关系
+     *
+     * @param userId   用户ID
+     * @param groupIds 用户组ID列表
+     */
+    void updateRelation(Long userId, List<Long> groupIds);
+
+    List<Group> queryGroupByUserId(Long userId);
+
+    List<User> queryUserByGroupId(Long groupId);
 
 }

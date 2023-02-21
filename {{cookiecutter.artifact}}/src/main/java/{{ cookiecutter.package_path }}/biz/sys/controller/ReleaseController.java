@@ -7,10 +7,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Release;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IReleaseService;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -29,6 +29,7 @@ public class ReleaseController {
     /**
      * 获取版本列表
      */
+    @PreAuthorize("@ck.hasPermit('sys:release:list')")
     @GetMapping("/releases")
     public ApiResponse<List<Release>> list() {
         QueryWrapper<Release> wrapper = new QueryWrapper<>();
@@ -36,6 +37,60 @@ public class ReleaseController {
         wrapper.orderByDesc("create_time");
         List<Release> releases = thisService.list(wrapper);
         return new ApiResponse<>(releases);
+    }
+
+    /**
+     * 新增发布版本
+     */
+    @PreAuthorize("@ck.hasPermit('sys:release:add')")
+    @PostMapping("/releases")
+    public ApiResponse<Release> add(@Valid @RequestBody Release entity) {
+        boolean success = thisService.save(entity);
+        if (success) {
+            return new ApiResponse<>(entity);
+        }
+        return new ApiResponse<>("新增失败", false);
+    }
+
+
+    /**
+     * 按ID查询发布版本
+     */
+    @PreAuthorize("@ck.hasPermit('sys:release:get')")
+    @GetMapping("/releases/{id}")
+    public ApiResponse<Release> get(@PathVariable Long id) {
+        Release entity = thisService.getById(id);
+        if (entity == null) {
+            return new ApiResponse<>("数据不存在", false);
+        }
+        return new ApiResponse<>(entity);
+    }
+
+    /**
+     * 按ID更新发布版本
+     */
+    @PreAuthorize("@ck.hasPermit('sys:release:update')")
+    @PutMapping("/releases/{id}")
+    public ApiResponse<Object> update(@Valid @RequestBody Release entity, @PathVariable Long id) {
+        entity.setId(id);
+        boolean success = thisService.updateById(entity);
+        if (success) {
+            return new ApiResponse<>("更新成功");
+        }
+        return new ApiResponse<>("更新失败", false);
+    }
+
+    /**
+     * 按ID删除发布版本
+     */
+    @PreAuthorize("@ck.hasPermit('sys:release:delete')")
+    @DeleteMapping("/releases/{id}")
+    public ApiResponse<Object> delete(@PathVariable Long id) {
+        boolean success = thisService.removeById(id);
+        if (success) {
+            return new ApiResponse<>("删除成功");
+        }
+        return new ApiResponse<>("删除失败", false);
     }
 
 }

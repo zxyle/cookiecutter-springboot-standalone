@@ -8,7 +8,6 @@ import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

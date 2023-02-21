@@ -4,37 +4,18 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request;
 
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
 public class SendCodeRequest {
 
     /**
-     * 手机号（手机号和邮箱二选一）
-     *
-     * @mock 13111111111
+     * 注册账号（支持输入手机号、邮箱）
      */
-    // @NotBlank
-    // @Length(min = 11, max = 11)
-    private String mobile;
-
-    /**
-     * 邮箱（手机号和邮箱二选一）
-     *
-     * @mock admin@example.com
-     */
-    @NotBlank
-    @Email
-    private String email;
-
-    /**
-     * 获取主要账号（手机号或邮箱）
-     */
-    public String getPrincipal() {
-        return StringUtils.isNotBlank(getMobile()) ? getMobile() : getEmail();
-    }
+    @NotBlank(message = "注册账号不能为空")
+    @Length(min = 5, message = "注册账号长度为5个字符以上")
+    private String account;
 
 }

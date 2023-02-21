@@ -5,22 +5,13 @@ package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * 用户组信息 Mapper 接口
  */
 @Repository
 public interface GroupMapper extends BaseMapper<Group> {
-
-    List<Group> selectAll();
-
-    // 截断表
-    @Update("TRUNCATE TABLE auth_group")
-    void truncate();
 
     /**
      * 查询最大排序号

@@ -5,42 +5,31 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.password;
 
 import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 /**
  * 忘记/找回密码
  */
+@EqualsAndHashCode(callSuper = false)
 @Data
 public class ForgetRequest extends BaseRequest {
 
     /**
-     * 手机号（手机号和邮箱二选一）
-     *
-     * @mock 13111111111
+     * 注册账号（支持输入手机号、邮箱）
      */
-    // @NotBlank
-    // @Length(min = 11, max = 11)
-    private String mobile;
-
-    /**
-     * 邮箱（手机号和邮箱二选一）
-     *
-     * @mock admin@example.com
-     */
-    @NotBlank
-    @Email
-    private String email;
+    @NotBlank(message = "注册账号不能为空")
+    @Length(min = 5, message = "注册账号长度为5个字符以上")
+    private String account;
 
     /**
      * 短信或邮件验证码
      *
      * @mock 123456
      */
-    @NotBlank
+    @NotBlank(message = "验证码不能为空")
     private String code;
 
     /**
@@ -48,14 +37,8 @@ public class ForgetRequest extends BaseRequest {
      *
      * @mock lHfxoPrKOaWjSqwN
      */
-    @NotBlank
-    @Length(min = 8, max = 32)
+    @NotBlank(message = "新密码不能为空")
+    @Length(min = 8, max = 32, message = "新密码长度需要8~32位")
     private String newPassword;
 
-    /**
-     * 获取主要账号（手机号或邮箱）
-     */
-    public String getPrincipal() {
-        return StringUtils.isNotBlank(getMobile()) ? getMobile() : getEmail();
-    }
 }

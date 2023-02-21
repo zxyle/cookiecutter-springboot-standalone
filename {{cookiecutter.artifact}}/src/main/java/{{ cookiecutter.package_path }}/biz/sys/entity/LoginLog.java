@@ -19,9 +19,14 @@ public class LoginLog extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 登录用户名
+     * 用户ID
      */
-    private String loginName;
+    private Long userId;
+
+    /**
+     * 登录账号
+     */
+    private String account;
 
     /**
      * IP地址

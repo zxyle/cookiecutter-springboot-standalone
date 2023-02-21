@@ -5,8 +5,12 @@ package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupMapper;
+import {{ cookiecutter.basePackage }}.biz.auth.response.GroupResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupRoleService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupService;
@@ -14,13 +18,15 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.common.util.AreaNode;
 import {{ cookiecutter.basePackage }}.common.util.TreeUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,13 +63,12 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         }
 
         // 判断同级下, 是否有同名用户组
-        boolean exist = exist(group.getName(), group.getParentId());
-        if (exist) {
+        if (count(group.getParentId(), group.getName()) > 0) {
             log.info("同名用户组已存在");
             return null;
         }
 
-        // 获取用户组排序
+        // 计算用户组排序
         if (null == group.getSort()) {
             // 排序号 = 最大排序号 + 1
             Integer maxSort = baseMapper.selectMaxSort(group.getParentId());
@@ -74,31 +79,17 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     }
 
     /**
-     * 判断用户组是否存在
-     *
-     * @param name     用户组名称
-     * @param parentId 上级用户组ID
-     * @return 是否存在
-     */
-    @Override
-    public boolean exist(String name, Long parentId) {
-        QueryWrapper<Group> wrapper = new QueryWrapper<>();
-        wrapper.eq("parent_id", parentId);
-        wrapper.eq("name", name);
-        Integer count = baseMapper.selectCount(wrapper);
-        return count != 0;
-    }
-
-    /**
      * 获取该用户组下 子用户组数量
      *
      * @param parentId 上级用户组ID
+     * @param name     用户组名称
      * @return 数量
      */
     @Override
-    public Integer count(Long parentId) {
+    public Integer count(Long parentId, String name) {
         QueryWrapper<Group> wrapper = new QueryWrapper<>();
         wrapper.eq("parent_id", parentId);
+        wrapper.eq(StringUtils.isNotBlank(name), "name", name);
         return baseMapper.selectCount(wrapper);
     }
 
@@ -141,7 +132,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     }
 
     /**
-     * 删除用户组
+     * 删除用户组及关联关系
      *
      * @param groupId 用户组ID
      */
@@ -156,7 +147,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     }
 
     /**
-     * 获取权限树
+     * 获取用户组树
      *
      * @param rootId 根节点ID
      */
@@ -169,16 +160,141 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         config.setNameKey("name");
         config.setIdKey("id");
         config.setWeightKey("sort");
-        // config可以配置属性字段名和排序等等
-        // config.setParentIdKey("parentId");
-        // config.setDeep(20);//最大递归深度  默认无限制
-        List<Tree<Integer>> treeNodes = cn.hutool.core.lang.tree.TreeUtil.build(list, rootId, config, (object, tree) -> {
+        return cn.hutool.core.lang.tree.TreeUtil.build(list, rootId, config, (object, tree) -> {
             tree.setId(object.getId().intValue());// 必填属性
             tree.setParentId(object.getParentId().intValue());// 必填属性
             tree.setName(object.getName());
-            // 扩展属性 ...
             tree.putExtra("sort", object.getSort());
         });
-        return treeNodes;
+    }
+
+    /**
+     * 获取所有子用户组（包含自身）
+     *
+     * @param groups  用户组列表
+     * @param groupId 根节点ID
+     */
+    @Override
+    public List<Group> getAllChildren(List<Group> groups, Long groupId) {
+        List<Group> children = new ArrayList<>();
+        for (Group group : groups) {
+            if (group.getParentId().equals(groupId)) {
+                children.add(group);
+                children.addAll(getAllChildren(groups, group.getId()));
+            }
+        }
+        children.add(getById(groupId));
+        return children;
+    }
+
+    /**
+     * 判断一个用户是否有对另外一个用户的管理权限
+     *
+     * @param sourceUserId 管理员用户ID
+     * @param targetUserId 被管理的用户ID
+     * @return true 有权限，false 无权限
+     */
+    @Override
+    public boolean hasManagePermission(Long sourceUserId, Long targetUserId) {
+        // 查询当前用户有管理员权限的用户组
+        QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
+        wrapper.select("user_id, group_id");
+        wrapper.eq("user_id", sourceUserId);
+        wrapper.eq("is_admin", 1);
+        List<UserGroup> userGroups = userGroupService.list(wrapper);
+        if (CollectionUtils.isEmpty(userGroups)) {
+            return false;
+        }
+
+        List<Group> allGroups = new ArrayList<>();
+        List<Group> groups = list();
+        // 获取所有子用户组
+        for (UserGroup userGroup : userGroups) {
+            allGroups.addAll(getAllChildren(groups, userGroup.getGroupId()));
+        }
+
+        // 去重
+        allGroups = allGroups.stream().distinct().collect(Collectors.toList());
+
+        // 查询该用户所在的用户组
+        List<UserGroup> userGroups1 = userGroupService.queryRelation(targetUserId, null);
+
+        // 判断该用户是否在这些用户组下
+        for (UserGroup userGroup : userGroups1) {
+            for (Group group : allGroups) {
+                if (userGroup.getGroupId().equals(group.getId())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasManagePermission2(Long sourceUserId, Long groupId) {
+        QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
+        wrapper.select("user_id, group_id");
+        wrapper.eq("user_id", sourceUserId);
+        wrapper.eq("is_admin", 1);
+        List<UserGroup> list = userGroupService.list(wrapper);
+        if (CollectionUtils.isEmpty(list)) {
+            return false;
+        }
+
+        List<Group> allGroups = new ArrayList<>();
+        List<Group> groups = list();
+        // 获取所有子用户组
+        for (UserGroup userGroup : list) {
+            allGroups.addAll(getAllChildren(groups, userGroup.getGroupId()));
+        }
+
+        // 去重
+        allGroups = allGroups.stream().distinct().collect(Collectors.toList());
+
+        // 判断parentId是否在其中
+        List<Long> xxx = allGroups.stream().map(Group::getId).collect(Collectors.toList());
+        return xxx.contains(groupId);
+    }
+
+    /**
+     * 更新用户组关联关系
+     *
+     * @param groupId       用户组ID
+     * @param roleIds       角色ID
+     * @param permissionIds 权限ID
+     */
+    @Override
+    public void updateRelation(Long groupId, List<Long> roleIds, List<Long> permissionIds) {
+        groupPermissionService.updateRelation(groupId, permissionIds);
+        groupRoleService.updateRelation(groupId, roleIds);
+    }
+
+    /**
+     * 获取用户组详细信息
+     *
+     * @param group 用户组对象
+     */
+    @Override
+    public GroupResponse attachGroupInfo(Group group) {
+        GroupResponse response = new GroupResponse();
+        BeanUtils.copyProperties(group, response);
+        response.setPermissions(groupPermissionService.selectPermissionsByGroupId(group.getId()));
+        response.setRoles(groupRoleService.getRolesByGroupId(group.getId()));
+        response.setUsers(userGroupService.queryUserByGroupId(group.getId()));
+        return response;
+    }
+
+    /**
+     * 判断用户组是否已经被使用
+     *
+     * @param groupId 用户组ID
+     */
+    @Override
+    public boolean isAlreadyUsed(Long groupId) {
+        if (userGroupService.countRelation(0L, groupId) > 0) {
+            return true;
+        }
+
+        return count(groupId, null) > 0;
     }
 }

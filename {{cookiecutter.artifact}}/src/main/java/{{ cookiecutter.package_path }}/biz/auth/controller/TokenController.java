@@ -37,7 +37,7 @@ public class TokenController extends AuthBaseController {
     /**
      * 刷新/续约token
      */
-    @PreAuthorize("@ck.hasPermission('auth:token:renew')")
+    @PreAuthorize("@ck.hasPermit('auth:token:renew')")
     @RequestMapping("/renew")
     public ApiResponse<RegisterResponse> renew() {
         User user = getLoggedInUser();

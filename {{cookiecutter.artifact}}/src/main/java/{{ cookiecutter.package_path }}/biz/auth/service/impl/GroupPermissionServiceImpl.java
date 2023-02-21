@@ -12,6 +12,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -34,13 +35,18 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      * 查询用户组拥有的权限列表
      *
      * @param userId 用户ID
+     * @param groups 用户组
      */
     @Override
-    public List<Permission> selectPermissionsByGroup(Long userId) {
+    public List<Permission> selectPermissionsByGroup(Long userId, List<UserGroup> groups) {
         List<Permission> permissions = new ArrayList<>();
-        List<UserGroup> groups = userGroupService.queryRelation(userId, 0L);
-        groups.forEach(group -> permissions.addAll(baseMapper.getPermissionNameByGroupId(group.getGroupId())));
+        groups.forEach(group -> permissions.addAll(baseMapper.getPermissionByGroupId(group.getGroupId())));
         return permissions;
+    }
+
+    @Override
+    public List<Permission> selectPermissionsByGroupId(Long groupId) {
+        return baseMapper.getPermissionByGroupId(groupId);
     }
 
     /**
@@ -66,7 +72,6 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
     @Override
     public List<GroupPermission> queryRelation(Long groupId, Long permissionId) {
         QueryWrapper<GroupPermission> wrapper = buildWrapper(groupId, permissionId);
-        wrapper.select("group_id, permission_id");
         return list(wrapper);
     }
 
@@ -80,7 +85,6 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
     @Override
     public IPage<GroupPermission> pageRelation(Long groupId, Long permissionId, IPage<GroupPermission> iPage) {
         QueryWrapper<GroupPermission> wrapper = buildWrapper(groupId, permissionId);
-        wrapper.select("group_id, permission_id");
         return page(iPage, wrapper);
     }
 
@@ -111,9 +115,27 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
         return true;
     }
 
+    /**
+     * 更新映射关系
+     *
+     * @param groupId       用户组ID
+     * @param permissionIds 权限ID列表
+     */
+    @Override
+    public void updateRelation(Long groupId, List<Long> permissionIds) {
+        if (CollectionUtils.isEmpty(permissionIds) || groupId == null || groupId == 0L) {
+            return;
+        }
+        // 删除旧的关系
+        deleteRelation(groupId, null);
+        // 创建新的关系
+        permissionIds.forEach(permissionId -> createRelation(groupId, permissionId));
+    }
+
     // 构建wrapper
     public QueryWrapper<GroupPermission> buildWrapper(Long groupId, Long permissionId) {
         QueryWrapper<GroupPermission> wrapper = new QueryWrapper<>();
+        wrapper.select("group_id, permission_id");
         wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
         wrapper.eq(permissionId != null && permissionId != 0L, "permission_id", permissionId);
         return wrapper;

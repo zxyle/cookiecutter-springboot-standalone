@@ -18,6 +18,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +66,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     // 查询角色对应的权限
     public List<Permission> selectRolesPermission(List<Long> roleIds) {
         List<Permission> permissions = new ArrayList<>();
-        roleIds.forEach(roleId -> permissions.addAll(rolePermissionService.getPermissionNameByRoleId(roleId)));
+        roleIds.forEach(roleId -> permissions.addAll(rolePermissionService.getPermissionByRoleId(roleId)));
         return permissions;
     }
 
@@ -77,9 +78,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     // 查询用户-用户组-角色-权限
-    public List<Permission> selectPermissionByGroupRole(Long userId) {
+    public List<Permission> selectPermissionByGroupRole(List<UserGroup> groups) {
         List<Permission> permissions = new ArrayList<>();
-        List<UserGroup> groups = userGroupService.queryRelation(userId, 0L);
         groups.forEach(group -> permissions.addAll(selectRolesPermission(groupRoleService.selectRoleByGroup(group.getGroupId()))));
         return permissions;
     }
@@ -93,15 +93,16 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Cacheable(cacheNames = "permissionCache", key = "#userId")
     @Override
     public List<Permission> getAllPermissions(Long userId) {
+        List<UserGroup> groups = userGroupService.queryRelation(userId, 0L);
         List<Permission> permissions = new ArrayList<>();
         // 用户直接拥有的权限
-        permissions.addAll(userPermissionService.selectPermissionNameByUserid(userId));
+        permissions.addAll(userPermissionService.selectPermissionByUserId(userId));
         // 所在用户组拥有的权限
-        permissions.addAll(groupPermissionService.selectPermissionsByGroup(userId));
+        permissions.addAll(groupPermissionService.selectPermissionsByGroup(userId, groups));
         // 用户拥有角色所获得权限
         permissions.addAll(selectPermissionsByRole(userId));
         // 所在用户组拥有的角色 所拥有的权限
-        permissions.addAll(selectPermissionByGroupRole(userId));
+        permissions.addAll(selectPermissionByGroupRole(groups));
         return permissions.stream().distinct().collect(Collectors.toList());
     }
 
@@ -132,8 +133,11 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         List<Permission> permissions = new ArrayList<>(getAllPermissions(userId));
 
         // 获取子权限
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        wrapper.select("id,name,code,description,parent_id,kind,path,sort");
+        List<Permission> permissionList = list(wrapper);
         for (Permission permission : permissions) {
-            allPermissions.addAll(getAllChildren(list(), permission.getId()));
+            allPermissions.addAll(getAllChildren(permissionList, permission.getId()));
         }
         allPermissions.addAll(permissions);
 
@@ -150,8 +154,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
      *
      * @param userId 用户ID
      */
+    @Async
     @Override
-    public boolean refreshPermissions(Long userId) {
+    public void refreshPermissions(Long userId) {
         String key = "permissions:" + userId;
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         // 只对已登录用户进行权限刷新
@@ -160,9 +165,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             List<String> permissions = getSecurityPermissions(userId);
             String join = String.join(AuthConst.DELIMITER, permissions);
             stringRedisTemplate.opsForValue().set(key, join, 1, TimeUnit.DAYS);
-            return true;
         }
-        return false;
     }
 
     /**
@@ -204,10 +207,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         config.setNameKey("name");
         config.setIdKey("id");
         config.setWeightKey("sort");
-        // config可以配置属性字段名和排序等等
-        // config.setParentIdKey("parentId");
-        // config.setDeep(20);//最大递归深度  默认无限制
-        List<Tree<Integer>> treeNodes = TreeUtil.build(list, rootPermissionId, config, (object, tree) -> {
+        return TreeUtil.build(list, rootPermissionId, config, (object, tree) -> {
             tree.setId(object.getId().intValue());// 必填属性
             tree.setParentId(object.getParentId().intValue());// 必填属性
             tree.setName(object.getName());
@@ -217,7 +217,6 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             tree.putExtra("sort", object.getSort());
             tree.putExtra("code", object.getCode());
         });
-        return treeNodes;
     }
 
     /**

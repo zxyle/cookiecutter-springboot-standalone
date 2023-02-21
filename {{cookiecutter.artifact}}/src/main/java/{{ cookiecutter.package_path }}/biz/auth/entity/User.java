@@ -24,7 +24,7 @@ public class User extends BaseEntity {
     /**
      * 登录用户名
      */
-    private String loginName;
+    private String username;
 
     /**
      * 密码
@@ -33,9 +33,9 @@ public class User extends BaseEntity {
     private String pwd;
 
     /**
-     * 真实姓名
+     * 昵称
      */
-    private String realName;
+    private String nickname;
 
     /**
      * 手机号码
@@ -50,6 +50,7 @@ public class User extends BaseEntity {
     /**
      * 账号是否锁定 （1-上锁 0-未锁）
      */
+    @JsonIgnore
     private Integer userLock;
 
     /**

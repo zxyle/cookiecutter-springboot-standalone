@@ -3,12 +3,14 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
-import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
-import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupRoleMapper;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupRoleService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
+import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupRoleMapper;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupRoleService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -100,11 +102,34 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
         return page(iPage, wrapper);
     }
 
+    /**
+     * 更新映射关系
+     *
+     * @param groupId 用户组ID
+     * @param roleIds 角色ID列表
+     */
+    @Override
+    public void updateRelation(Long groupId, List<Long> roleIds) {
+        if (CollectionUtils.isEmpty(roleIds) || groupId == null || groupId == 0L) {
+            return;
+        }
+
+        // 删除旧的关联关系
+        deleteRelation(groupId, 0L);
+        // 创建新的关联关系
+        roleIds.forEach(roleId -> createRelation(groupId, roleId));
+    }
+
     // 构建wrapper
     public QueryWrapper<GroupRole> buildWrapper(Long groupId, Long roleId) {
         QueryWrapper<GroupRole> wrapper = new QueryWrapper<>();
         wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
         wrapper.eq(roleId != null && roleId != 0L, "role_id", roleId);
         return wrapper;
+    }
+
+    @Override
+    public List<Role> getRolesByGroupId(Long groupId) {
+        return baseMapper.getRolesByGroupId(groupId);
     }
 }

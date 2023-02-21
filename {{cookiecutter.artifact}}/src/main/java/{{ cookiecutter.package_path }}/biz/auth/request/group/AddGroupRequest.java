@@ -8,6 +8,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 /**
  * 增加用户组请求
@@ -20,7 +21,7 @@ public class AddGroupRequest {
      *
      * @mock 技术部
      */
-    @NotBlank
+    @NotBlank(message = "用户组名称不能为空")
     private String name;
 
     /**
@@ -28,7 +29,7 @@ public class AddGroupRequest {
      *
      * @mock 1
      */
-    @NotNull
+    @NotNull(message = "上级用户组ID不能为空")
     private Long parentId;
 
     /**
@@ -44,9 +45,14 @@ public class AddGroupRequest {
      */
     private String description;
 
-    // 负责人
-    // 联系电话
-    // 邮箱
-    // 用户组状态
+    /**
+     * 权限ID列表
+     */
+    private List<Long> permissionIds;
+
+    /**
+     * 角色ID列表
+     */
+    private List<Long> roleIds;
 
 }

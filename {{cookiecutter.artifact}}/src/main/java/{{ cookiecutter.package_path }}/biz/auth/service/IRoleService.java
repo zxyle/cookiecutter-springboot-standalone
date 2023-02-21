@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
+import {{ cookiecutter.basePackage }}.biz.auth.response.RoleResponse;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public interface IRoleService extends IService<Role> {
     List<String> getAllRoles(Long userId);
 
     /**
-     * 删除角色
+     * 删除角色及其关联关系
      *
      * @param roleId 角色ID
      */
@@ -34,4 +35,19 @@ public interface IRoleService extends IService<Role> {
      */
     Role queryById(Long roleId);
 
+    /**
+     * 判断角色是否已经被使用
+     *
+     * @param roleId 角色ID
+     * @return true 已经被使用 false 未被使用
+     */
+    boolean isAlreadyUsed(Long roleId);
+
+    /**
+     * 查询角色对应权限关系
+     *
+     * @param role 角色
+     * @return 包含权限关系的角色对象
+     */
+    RoleResponse attachRoleInfo(Role role);
 }

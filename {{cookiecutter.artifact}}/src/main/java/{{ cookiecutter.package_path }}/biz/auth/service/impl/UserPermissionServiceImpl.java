@@ -3,13 +3,14 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserPermission;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserPermissionService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
@@ -88,6 +89,26 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
         return page(iPage, wrapper);
     }
 
+    /**
+     * 更新映射关系
+     *
+     * @param userId        用户ID
+     * @param permissionIds 权限ID列表
+     */
+    @Override
+    public void updateRelation(Long userId, List<Long> permissionIds) {
+        if (CollectionUtils.isEmpty(permissionIds) || userId == null || userId == 0L) {
+            return;
+        }
+
+        // 删除旧的关联关系
+        remove(buildWrapper(userId, null));
+        // 创建新的关联关系
+        for (Long permissionId : permissionIds) {
+            createRelation(userId, permissionId);
+        }
+    }
+
     // 构建wrapper
     public QueryWrapper<UserPermission> buildWrapper(Long userId, Long permissionId) {
         QueryWrapper<UserPermission> wrapper = new QueryWrapper<>();
@@ -102,7 +123,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      * @param userId 用户ID
      */
     @Override
-    public List<Permission> selectPermissionNameByUserid(long userId) {
-        return baseMapper.selectPermissionNameByUserId(userId);
+    public List<Permission> selectPermissionByUserId(Long userId) {
+        return baseMapper.selectPermissionByUserId(userId);
     }
 }

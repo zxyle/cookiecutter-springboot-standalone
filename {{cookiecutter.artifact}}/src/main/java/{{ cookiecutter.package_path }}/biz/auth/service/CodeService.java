@@ -46,14 +46,18 @@ public class CodeService {
      * @return 校验结果 true-通过、 false-不通过
      */
     public boolean verify(String code, String captchaId) {
-        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(captchaId)) {
-            // throw new IllegalArgumentException("验证码不能为空");
+        if (StringUtils.isBlank(code) || StringUtils.isBlank(captchaId)) {
             return false;
         }
 
         String redisKey = captchaProperties.getKeyPrefix() + captchaId;
+        Boolean hasKey = stringRedisTemplate.hasKey(redisKey);
+        if (Boolean.FALSE.equals(hasKey)) {
+            return false;
+        }
+
         String captchaRedis = stringRedisTemplate.opsForValue().get(redisKey);
-        if (StringUtils.isEmpty(captchaRedis))
+        if (StringUtils.isBlank(captchaRedis))
             return false;
 
         boolean match = captchaRedis.trim().equalsIgnoreCase(code);

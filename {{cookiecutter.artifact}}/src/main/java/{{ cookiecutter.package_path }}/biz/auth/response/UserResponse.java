@@ -4,12 +4,15 @@
 package {{ cookiecutter.basePackage }}.biz.auth.response;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 public class UserResponse extends User {
 
@@ -24,4 +27,9 @@ public class UserResponse extends User {
      * 用户组列表
      */
     private List<Group> groups;
+
+    /**
+     * 权限列表
+     */
+    private List<Permission> permissions;
 }

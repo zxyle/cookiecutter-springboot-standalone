@@ -3,15 +3,21 @@
 
 package {{ cookiecutter.basePackage }}.config;
 
+import {{ cookiecutter.basePackage }}.biz.sys.service.IIpBlacklistService;
+import {{ cookiecutter.basePackage }}.config.interceptor.IpBlackListInterceptor;
 import {{ cookiecutter.basePackage }}.config.interceptor.TraceInterceptor;
 import {{ cookiecutter.basePackage }}.config.interceptor.UserAgentInterceptor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
+
+    @Autowired
+    IIpBlacklistService blacklistService;
 
     /**
      * 拦截器
@@ -20,6 +26,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new IpBlackListInterceptor(blacklistService)).addPathPatterns("/**");
         registry.addInterceptor(new TraceInterceptor()).addPathPatterns("/**");
         /*registry.addInterceptor(new LoginInterceptor())
                     .addPathPatterns("/admin/**")

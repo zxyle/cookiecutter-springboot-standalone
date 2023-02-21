@@ -3,31 +3,26 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.auth.config.AuthUserProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
 import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.AdminAddUserRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.request.user.UpdateProfileRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.user.UpdateUserRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,10 +34,13 @@ import java.util.stream.Collectors;
 public class UserController extends AuthBaseController {
 
     @Autowired
-    IRoleService roleService;
+    AuthUserProperties properties;
 
     @Autowired
     IGroupService groupService;
+
+    @Autowired
+    IUserPermissionService userPermissionService;
 
     IUserRoleService userRoleService;
 
@@ -66,64 +64,75 @@ public class UserController extends AuthBaseController {
     @GetMapping("/users")
     public ApiResponse<PageVO<UserResponse>> list(@Valid ListAuthRequest request) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        // 模糊查询
-        wrapper.like(StringUtils.isNotBlank(request.getName()), "login_name", request.getName());
-        wrapper.eq(request.getState() != null, "enabled", request.getState());
+        // FIXME 不能将没有权限的用户信息返回
+        if (StringUtils.isNotBlank(request.getName())) {
+            wrapper.and(i -> i.like("username", request.getName())
+                    .or().like("email", request.getName())
+                    .or().like("mobile", request.getName()));
+        }
+        wrapper.eq(request.getEnabled() != null, "enabled", request.getEnabled());
         IPage<User> page = PageRequestUtil.checkForMp(request);
         IPage<User> list = thisService.page(page, wrapper);
 
         // 增加角色和组信息
-        List<UserResponse> userResponses = list.getRecords().stream().map(user -> {
-            UserResponse userResponse = new UserResponse();
-            userResponse.setGroups(new ArrayList<>());
-            userResponse.setRoles(new ArrayList<>());
-            BeanUtils.copyProperties(user, userResponse);
-            List<UserRole> roles = userRoleService.queryRelation(user.getId(), 0L);
-            if (CollectionUtils.isNotEmpty(roles)) {
-                List<Long> roleIds = roles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
-                userResponse.setRoles(roleService.listByIds(roleIds));
-            }
-
-            List<UserGroup> groups = userGroupService.queryRelation(user.getId(), null);
-            if (CollectionUtils.isNotEmpty(groups)) {
-                List<Long> groupIds = groups.stream().map(UserGroup::getGroupId).collect(Collectors.toList());
-                userResponse.setGroups(groupService.listByIds(groupIds));
-            }
-
-            return userResponse;
-        }).collect(Collectors.toList());
+        List<UserResponse> userResponses = list.getRecords().stream()
+                .map(user -> thisService.attachUserInfo(user)).collect(Collectors.toList());
         return new ApiResponse<>(new PageVO<>(userResponses, list.getTotal()));
     }
 
 
     /**
-     * 新增用户
+     * 使用用户名创建用户
      */
     @PreAuthorize("@ck.hasPermit('auth:user:add')")
     @PostMapping("/users")
     public ApiResponse<User> add(@Valid @RequestBody AdminAddUserRequest request) {
+        User user = thisService.queryByAccount(request.getAccount());
+        if (user != null) {
+            return new ApiResponse<>("创建失败，账号已存在", false);
+        }
+
+        // 构建用户
         User entity = new User();
-        BeanUtils.copyProperties(request, entity);
+        entity.setUsername(request.getAccount());
         entity.setPwd(passwordEncoder.encode(request.getPassword()));
         boolean success = thisService.save(entity);
 
         if (success) {
-            // 保存用户角色关系
-            if (CollectionUtils.isNotEmpty(request.getRoleIds())) {
-                List<Long> roleIds = request.getRoleIds();
-                for (Long roleId : roleIds) {
-                    userRoleService.createRelation(entity.getId(), roleId);
-                }
-            }
+            // 赋予用户基本默认权限
+            userRoleService.createRelation(entity.getId(), properties.getDefaultRole());
+
+            // 更新用户角色关联关系
+            // FIXME 不能赋予超级管理员权限
+            userRoleService.updateRelation(entity.getId(), request.getRoleIds());
 
             // 保存用户组关系
-            if (request.getGroupId() != null) {
-                userGroupService.createRelation(entity.getId(), request.getGroupId());
-            }
+            // FIXME 考虑安全
+            userGroupService.updateRelation(entity.getId(), request.getGroupIds());
             return new ApiResponse<>(entity);
         }
 
-        return new ApiResponse<>("新增用户失败", false);
+        return new ApiResponse<>("创建用户失败", false);
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param userId 用户ID
+     */
+    @PreAuthorize("@ck.hasPermit('auth:user:update')")
+    @PutMapping("/users/{userId}")
+    public ApiResponse<Object> update(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
+        // 不能操作其他组的用户
+        if (!groupService.hasManagePermission(getUserId(), userId)) {
+            return new ApiResponse<>("更新失败，没有权限", false);
+        }
+
+        // FIXME 怎么防止赋予比操作者更高的权限
+        userRoleService.updateRelation(userId, request.getRoleIds());
+        userGroupService.updateRelation(userId, request.getGroupIds());
+        userPermissionService.updateRelation(userId, request.getPermissionIds());
+        return new ApiResponse<>("更新成功");
     }
 
 
@@ -134,25 +143,17 @@ public class UserController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:get')")
     @GetMapping("/users/{userId}")
-    public ApiResponse<User> get(@PathVariable Long userId) {
-        return new ApiResponse<>(thisService.getById(userId));
-    }
-
-    /**
-     * 按ID更新用户资料（已被/profile接口取代）
-     */
-    @Secured(value = "ROLE_admin")
-    @PutMapping("/users/{id}")
-    public ApiResponse<Object> update(@Valid @RequestBody UpdateProfileRequest request, @PathVariable Long id) {
-        // TODO 用户自身允许更新资料
-        User entity = new User();
-        BeanUtils.copyProperties(request, entity);
-        entity.setId(id);
-        boolean success = thisService.updateById(entity);
-        if (success) {
-            return new ApiResponse<>("更新成功");
+    public ApiResponse<UserResponse> get(@PathVariable Long userId) {
+        // 不能查询其他组的用户
+        if (!groupService.hasManagePermission(getUserId(), userId)) {
+            return new ApiResponse<>("查询失败，没有权限", false);
         }
-        return new ApiResponse<>("更新失败", false);
+
+        User user = thisService.getById(userId);
+        if (user != null) {
+            return new ApiResponse<>(thisService.attachUserInfo(user));
+        }
+        return new ApiResponse<>("用户不存在", false);
     }
 
     /**
@@ -163,9 +164,14 @@ public class UserController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:user:delete')")
     @DeleteMapping("/users/{userId}")
     public ApiResponse<Object> delete(@PathVariable Long userId) {
+        // 不能删除其他组的用户
+        if (!groupService.hasManagePermission(getUserId(), userId)) {
+            return new ApiResponse<>("删除失败，没有权限", false);
+        }
+
         boolean success = thisService.delete(userId);
         if (success) {
-            return new ApiResponse<>("删除成功");
+            return new ApiResponse<>("已成功删除该用户");
         }
         return new ApiResponse<>("删除失败", false);
     }
@@ -179,6 +185,10 @@ public class UserController extends AuthBaseController {
     @PutMapping("/users/{userId}/disable")
     public ApiResponse<Object> disable(@PathVariable Long userId) {
         // TODO 记录到操作日志
+        // 不能禁用其他组的用户
+        if (!groupService.hasManagePermission(getUserId(), userId)) {
+            return new ApiResponse<>("禁用失败，没有权限禁用该用户", false);
+        }
 
         // 防止禁用自己
         if (userId.equals(getUserId())) {
@@ -187,7 +197,7 @@ public class UserController extends AuthBaseController {
 
         boolean success = thisService.disable(userId);
         if (success) {
-            return new ApiResponse<>("禁用成功");
+            return new ApiResponse<>("已成功禁用该用户");
         }
 
         return new ApiResponse<>("禁用失败", false);
@@ -201,9 +211,13 @@ public class UserController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:user:enable')")
     @PutMapping("/users/{userId}/enable")
     public ApiResponse<Object> enable(@PathVariable Long userId) {
+        if (!groupService.hasManagePermission(getUserId(), userId)) {
+            return new ApiResponse<>("启用失败，没有权限", false);
+        }
+
         boolean success = thisService.enable(userId);
         if (success) {
-            return new ApiResponse<>("启用成功");
+            return new ApiResponse<>("已成功启用该用户");
         }
         return new ApiResponse<>("启用失败", false);
     }
@@ -218,9 +232,12 @@ public class UserController extends AuthBaseController {
     @PutMapping("/users/{userId}/kick")
     public ApiResponse<Object> kick(@PathVariable Long userId) {
         // TODO 记录到操作日志
-        // 防止踢下线自己
         if (userId.equals(getUserId())) {
             return new ApiResponse<>("踢下线失败，不能踢下线自己", false);
+        }
+
+        if (!groupService.hasManagePermission(getUserId(), userId)) {
+            return new ApiResponse<>("踢下线失败，没有权限", false);
         }
 
         boolean success = thisService.kick(userId);

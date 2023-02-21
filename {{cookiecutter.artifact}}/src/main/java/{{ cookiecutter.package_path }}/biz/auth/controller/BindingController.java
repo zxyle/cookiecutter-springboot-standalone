@@ -3,57 +3,62 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.BindingRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
+import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
+/**
+ * 绑定认证方式
+ */
 @RequestMapping("/auth")
 @RestController
 public class BindingController extends AuthBaseController {
     IUserService userService;
 
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
+    ValidateService validateService;
 
-    public BindingController(IUserService userService) {
+    public BindingController(IUserService userService, ValidateService validateService) {
         this.userService = userService;
+        this.validateService = validateService;
     }
 
     /**
-     * 绑定手机号或邮箱号
+     * 绑定手机号或邮箱
      */
     @PostMapping("/binding")
     public ApiResponse<Boolean> binding(@Valid @RequestBody BindingRequest request) {
-        boolean success = false;
-        // 获取当前登陆账号
-        User user = getLoggedInUser();
-
-        // 获取redis中验证码
-        String key = "code:" + request.getPrincipal();
-        String code = (String) stringRedisTemplate.opsForHash().get(key, "code");
-        // 校验是否正确
-        if (code != null && code.equalsIgnoreCase(request.getCode())) {
-            UpdateWrapper<User> wrapper = new UpdateWrapper<>();
-            wrapper.set(StringUtils.isNotBlank(request.getMobile()), "mobile", request.getMobile());
-            wrapper.set(StringUtils.isNotBlank(request.getEmail()), "email", request.getEmail());
-            wrapper.eq("id", user.getId());
-            success = userService.update(wrapper);
+        String account = request.getAccount();
+        if (userService.queryByAccount(account) != null) {
+            return new ApiResponse<>("该账号已绑定其他用户", false);
         }
 
-        // 删除key
-        Boolean delete = stringRedisTemplate.delete(key);
-        return new ApiResponse<>(success && Boolean.TRUE.equals(delete));
+        // 获取redis中验证码, 校验是否正确
+        String key = "code:" + account;
+        if (!validateService.validate(key, request.getCode())) {
+            return new ApiResponse<>("验证码错误", false);
+        }
+
+        // 更新用户信息
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.set(AccountUtil.isMobile(account), "mobile", account);
+        wrapper.set(AccountUtil.isEmail(account), "email", account);
+        wrapper.eq("id", getUserId());
+        boolean success = userService.update(wrapper);
+        if (!success) {
+            return new ApiResponse<>("绑定失败", false);
+        }
+
+        return new ApiResponse<>("绑定成功");
     }
 }

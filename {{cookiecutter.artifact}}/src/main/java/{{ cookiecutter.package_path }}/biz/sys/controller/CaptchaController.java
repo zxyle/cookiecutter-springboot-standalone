@@ -4,17 +4,16 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.config.AuthUserProperties;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.SendCodeRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
-import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.EmailCodeService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.*;
+import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.response.CaptchaResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
-import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -23,10 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,6 +49,15 @@ public class CaptchaController {
     EmailCodeService emailService;
 
     CodeService codeService;
+
+    @Autowired
+    ValidateService validateService;
+
+    @Autowired
+    HttpServletRequest servletRequest;
+
+    @Autowired
+    ShortMessageService shortMessageService;
 
     public CaptchaController(StringRedisTemplate stringRedisTemplate, IUserService userService, CaptchaProperties captchaProperties, AuthUserProperties authUserProperties, EmailCodeService emailService, CodeService codeService) {
         this.stringRedisTemplate = stringRedisTemplate;
@@ -100,49 +109,43 @@ public class CaptchaController {
         return new ApiResponse<>(verify);
     }
 
+    // TODO 安全隐患， 如果一个人频繁使用别人邮箱或手机号
+
     /**
      * 发送短信邮件验证码
      */
     @GetMapping("/send")
-    public ApiResponse<Boolean> send(SendCodeRequest request) {
-        if (isLocked(request.getPrincipal())) {
+    public ApiResponse<Boolean> send(@Valid SendCodeRequest request) {
+        String account = request.getAccount();
+
+        if (isLocked(account)) {
             return new ApiResponse<>(HttpStatus.BAD_REQUEST.toString(), "请求验证码频繁", false);
         }
-        User user = userService.queryByPrincipal(null, request.getEmail());
 
-        String key = "code:" + request.getPrincipal();
-        // 生成随机数字
-        String code = CaptchaUtil.randNumber(captchaProperties.getDigits());
-        stringRedisTemplate.opsForHash().put(key, "principal", request.getPrincipal());
-        stringRedisTemplate.opsForHash().put(key, "code", code);
-        if (user != null && user.getId() != null) {
-            // 针对已经注册的用户, 保存用户id
-            stringRedisTemplate.opsForHash().put(key, "userId", String.valueOf(user.getId()));
-        }
-
-        stringRedisTemplate.expire(key, Duration.ofMinutes(captchaProperties.getAliveTime()));
-
-        if (authUserProperties.getPrincipal().equals("email")) {
+        String code = validateService.send(account);
+        if (AccountUtil.isEmail(account)) {
             // 调用邮件发送方法
-            boolean success = emailService.sendVerificationCode(code, request.getEmail());
-            log.info("给 {} 发送邮件验证码结果: {}", request.getEmail(), success);
+            emailService.sendVerificationCode(code, account);
         }
 
-        if (authUserProperties.getPrincipal().equals("mobile")) {
-            // TODO 调用发送短信接口, 写入到消息队列中
+        if (AccountUtil.isMobile(account)) {
+            // 调用发送短信接口, 写入到消息队列中
+            shortMessageService.send(account, code);
         }
-        locked(request.getPrincipal(), captchaProperties.getBetween());
+
+        String ipAddr = IpUtil.getIpAddr(servletRequest);
+        locked(account, captchaProperties.getBetween(), ipAddr);
         return new ApiResponse<>(true);
     }
 
     // 防止验证码被滥用
-    public void locked(String principal, Integer between) {
-        String key = "locked:" + principal;
+    public void locked(String account, Integer between, String ipAddr) {
+        String key = String.format("locked:%s:%s", ipAddr, account);
         stringRedisTemplate.opsForValue().set(key, "lock", captchaProperties.getBetween(), TimeUnit.SECONDS);
     }
 
-    public boolean isLocked(String principal) {
-        String key = "locked:" + principal;
+    public boolean isLocked(String account) {
+        String key = "locked:" + account;
         return Boolean.TRUE.equals(stringRedisTemplate.hasKey(key));
     }
 

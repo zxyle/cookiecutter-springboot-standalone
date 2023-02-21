@@ -26,7 +26,7 @@ public class ChangeByOldRequest extends BaseRequest {
      *
      * @mock z8kE1dYBHPzlyqq1
      */
-    @NotBlank
+    @NotBlank(message = "旧密码不能为空")
     private String oldPassword;
 
     /**
@@ -34,8 +34,8 @@ public class ChangeByOldRequest extends BaseRequest {
      *
      * @mock lHfxoPrKOaWjSqwN
      */
-    @NotBlank
-    @Length(min = 8, max = 32)
+    @NotBlank(message = "新密码不能为空")
+    @Length(min = 8, max = 32, message = "新密码长度需要8~32位")
     private String newPassword;
 
 }

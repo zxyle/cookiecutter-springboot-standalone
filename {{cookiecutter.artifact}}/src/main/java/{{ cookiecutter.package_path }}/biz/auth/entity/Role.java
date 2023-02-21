@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 角色信息
+ * 角色
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

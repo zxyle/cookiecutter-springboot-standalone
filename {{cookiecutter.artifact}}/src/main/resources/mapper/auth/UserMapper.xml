@@ -2,20 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.mapper.UserMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="{{ cookiecutter.basePackage }}.biz.auth.entity.User">
-        <result column="id" property="id"/>
-        <result column="create_time" property="createTime"/>
-        <result column="update_time" property="updateTime"/>
-        <result column="login_name" property="loginName"/>
-        <result column="pwd" property="pwd"/>
-        <result column="real_name" property="realName"/>
-        <result column="mobile" property="mobile"/>
-        <result column="email" property="email"/>
-        <result column="user_lock" property="userLock"/>
-        <result column="is_super" property="isSuper"/>
-        <result column="expire_time" property="expireTime"/>
-        <result column="pwd_change_time" property="pwdChangeTime"/>
-        <result column="enabled" property="enabled"/>
-    </resultMap>
 </mapper>

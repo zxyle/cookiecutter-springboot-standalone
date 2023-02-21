@@ -5,9 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,14 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserMapper extends BaseMapper<User> {
-
-    @Select("SELECT * FROM `auth_user` WHERE login_name= #{loginName} limit 1 ")
-    User queryByLoginName(@Param("loginName") String loginName);
-
-    @Update("UPDATE `auth_user` SET `user_lock`=1 WHERE login_name= #{loginName}")
-    void lockUser(@Param("loginName") String loginName);
-
-    @Update("UPDATE `auth_user` SET `user_lock`=0 WHERE login_name= #{loginName}")
-    void unlockUser(@Param("loginName") String loginName);
 
 }

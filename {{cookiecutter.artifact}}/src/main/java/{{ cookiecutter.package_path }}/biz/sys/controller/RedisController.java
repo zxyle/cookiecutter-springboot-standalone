@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * Redis管理
+ */
 @RestController
 @RequestMapping("/sys")
 public class RedisController {
@@ -81,13 +85,21 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:keys:set')")
     @PostMapping("/keys")
-    public void set(@Valid @RequestBody KeySetRequest request) {
-        stringRedisTemplate.opsForValue().set(request.getKey(), "value");
+    public ApiResponse<Object> set(@Valid @RequestBody KeySetRequest request) {
+        // TODO 目前只支持STRING类型，后续增加其他类型支持
+        stringRedisTemplate.opsForValue().set(request.getName(), request.getValue());
 
+        if (request.getExpire() != null) {
+            stringRedisTemplate.expire(request.getName(), request.getExpire(), TimeUnit.SECONDS);
+        }
+        return new ApiResponse<>("设置成功");
     }
 
     /**
      * key 重命名
+     *
+     * @param oldKey 旧key
+     * @param newKey 新key
      */
     @PreAuthorize("@ck.hasPermit('sys:keys:rename')")
     @PutMapping("/keys/{oldKey}/rename/{newKey}")
@@ -103,11 +115,23 @@ public class RedisController {
 
     /**
      * 设置过期时间
+     *
+     * @param key     key
+     * @param seconds 过期时间，单位秒
      */
     @PreAuthorize("@ck.hasPermit('sys:keys:expire')")
-    public void expire() {
+    @PutMapping("/keys/{key}/expire/{seconds}")
+    public ApiResponse<Object> expire(@PathVariable String key, @PathVariable Integer seconds) {
+        Boolean hasKey = stringRedisTemplate.hasKey(key);
+        if (Boolean.FALSE.equals(hasKey)) {
+            return new ApiResponse<>("设置过期时间，key不存在", false);
+        }
 
+        Boolean expire = stringRedisTemplate.expire(key, seconds, TimeUnit.SECONDS);
+        if (Boolean.FALSE.equals(expire))
+            return new ApiResponse<>("设置过期时间失败", false);
+
+        return new ApiResponse<>("设置过期时间成功");
     }
-
 
 }

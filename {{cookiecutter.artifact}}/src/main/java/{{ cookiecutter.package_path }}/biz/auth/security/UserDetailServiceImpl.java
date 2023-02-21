@@ -7,8 +7,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,29 +35,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private PasswordProperties passwordProperties;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String loginName = "";
-        String mobile = "";
-        String email = "";
-        String[] strings = username.split("#");
-        switch (strings[0]) {
-            case "loginName":
-                loginName = strings[1];
-                break;
-            case "mobile":
-                mobile = strings[1];
-                break;
-            case "email":
-                email = strings[1];
-                break;
-        }
-
-        // 根据用户名查询用户信息
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq(StringUtils.isNotBlank(loginName), "login_name", loginName);
-        wrapper.eq(StringUtils.isNotBlank(email), "email", email);
-        wrapper.eq(StringUtils.isNotBlank(mobile), "mobile", mobile);
-        User user = userService.getOne(wrapper);
+    public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
+        // 根据账号查询用户信息
+        User user = userService.queryByAccount(account);
 
         // 如果没有查询到对应用户
         if (null == user) {
