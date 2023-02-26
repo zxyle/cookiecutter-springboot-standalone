@@ -50,7 +50,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 用户组查询
      */
-    @PreAuthorize("@ck.hasPermit('auth:groups:list')")
+    @PreAuthorize("@ck.hasPermit('auth:group:list')")
     @GetMapping("/groups")
     public ApiResponse<PageVO<GroupResponse>> list(@Valid ListAuthRequest request) {
         // 查询当前用户，所在用户组和所能管理的用户组
@@ -69,7 +69,7 @@ public class GroupController extends AuthBaseController {
      *
      * @param rootId 根节点ID
      */
-    @PreAuthorize("@ck.hasPermit('auth:groups:tree')")
+    @PreAuthorize("@ck.hasPermit('auth:group:tree')")
     @GetMapping("/groups/tree")
     public ApiResponse<List<Tree<Integer>>> tree(@RequestParam(defaultValue = "0") Integer rootId) {
         // 查询当前用户，所在用户组作为rootId
@@ -88,7 +88,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 创建用户组
      */
-    @PreAuthorize("@ck.hasPermit('auth:groups:add')")
+    @PreAuthorize("@ck.hasPermit('auth:group:add')")
     @PostMapping("/groups")
     public ApiResponse<Object> add(@Valid @RequestBody AddGroupRequest request) {
         if (!thisService.isAllowed(getUserId(), null, request.getParentId())) {
@@ -111,7 +111,7 @@ public class GroupController extends AuthBaseController {
      * @param groupId 用户组ID
      */
     @LogOperation("按ID查询用户组")
-    @PreAuthorize("@ck.hasPermit('auth:groups:get')")
+    @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}")
     public ApiResponse<GroupResponse> get(@PathVariable Long groupId) {
         if (!thisService.isAllowed(getUserId(), null, groupId)) {
@@ -128,7 +128,7 @@ public class GroupController extends AuthBaseController {
      * @param groupId 用户组ID
      */
     @LogOperation("按ID更新用户组")
-    @PreAuthorize("@ck.hasPermit('auth:groups:update')")
+    @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PutMapping("/groups/{groupId}")
     public ApiResponse<Group> update(@PathVariable Long groupId, @Valid @RequestBody UpdateAuthRequest request) {
         if (!thisService.isAllowed(getUserId(), null, groupId)) {
@@ -150,7 +150,7 @@ public class GroupController extends AuthBaseController {
      * @param groupId 用户组ID
      */
     @LogOperation("按ID删除用户组")
-    @PreAuthorize("@ck.hasPermit('auth:groups:delete')")
+    @PreAuthorize("@ck.hasPermit('auth:group:delete')")
     @DeleteMapping("/groups/{groupId}")
     public ApiResponse<Object> delete(@PathVariable Long groupId) {
         if (!thisService.isAllowed(getUserId(), null, groupId)) {
@@ -169,7 +169,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 用户组迁移
      */
-    @PreAuthorize("@ck.hasPermit('auth:groups:migrate')")
+    @PreAuthorize("@ck.hasPermit('auth:group:migrate')")
     @PostMapping("/groups/migrate")
     public ApiResponse<Object> migrate(@Valid @RequestBody MigrateGroupRequest request) {
         if (!isSubGroup(request.getParentId()) || !isSubGroup(request.getCurrentId())) {

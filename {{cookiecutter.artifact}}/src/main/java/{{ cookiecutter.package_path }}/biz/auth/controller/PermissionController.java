@@ -41,7 +41,7 @@ public class PermissionController extends AuthBaseController {
      *
      * @apiNote 1. 该接口只有管理员才能访问 2. 该接口返回name-节点名、id-节点值、children-子节点、path-路由、sort-排序等字段
      */
-    @PreAuthorize("@ck.hasPermit('auth:permissions:tree')")
+    @PreAuthorize("@ck.hasPermit('auth:permission:tree')")
     @Secured("ROLE_admin")
     @GetMapping("/permissions/tree")
     public ApiResponse<List<Tree<Integer>>> tree(TreePermissionRequest request) {
@@ -56,7 +56,7 @@ public class PermissionController extends AuthBaseController {
      * 查询用户拥有所有权限信息
      */
     @GetMapping("/permissions")
-    @PreAuthorize("@ck.hasPermit('auth:permissions:list')")
+    @PreAuthorize("@ck.hasPermit('auth:permission:list')")
     public ApiResponse<List<Permission>> list() {
         List<Permission> permissions = thisService.getAllPermissions(getUserId());
         return new ApiResponse<>(permissions);
@@ -67,7 +67,7 @@ public class PermissionController extends AuthBaseController {
      * 新增权限
      */
     @PostMapping("/permissions")
-    @PreAuthorize("@ck.hasPermit('auth:permissions:add')")
+    @PreAuthorize("@ck.hasPermit('auth:permission:add')")
     public ApiResponse<Permission> add(@Valid @RequestBody AddPermissionRequest request) {
         Permission entity = new Permission();
         BeanUtils.copyProperties(request, entity);
@@ -92,7 +92,7 @@ public class PermissionController extends AuthBaseController {
      * @param permissionId 权限ID
      */
     @GetMapping("/permissions/{permissionId}")
-    @PreAuthorize("@ck.hasPermit('auth:permissions:get')")
+    @PreAuthorize("@ck.hasPermit('auth:permission:get')")
     public ApiResponse<Permission> get(@PathVariable Long permissionId) {
         Permission entity = thisService.getById(permissionId);
         if (entity == null) {
@@ -107,7 +107,7 @@ public class PermissionController extends AuthBaseController {
      * @param permissionId 权限ID
      */
     @PutMapping("/permissions/{permissionId}")
-    @PreAuthorize("@ck.hasPermit('auth:permissions:update')")
+    @PreAuthorize("@ck.hasPermit('auth:permission:update')")
     public ApiResponse<Object> update(@Valid @RequestBody Permission entity, @PathVariable Long permissionId) {
         Permission permission = thisService.getById(permissionId);
         entity.setId(permissionId);
@@ -126,7 +126,7 @@ public class PermissionController extends AuthBaseController {
      * @param permissionId 权限ID
      */
     @DeleteMapping("/permissions/{permissionId}")
-    @PreAuthorize("@ck.hasPermit('auth:permissions:delete')")
+    @PreAuthorize("@ck.hasPermit('auth:permission:delete')")
     public ApiResponse<Object> delete(@PathVariable Long permissionId) {
         if (thisService.isAlreadyUsed(permissionId)) {
             return new ApiResponse<>("删除失败，该权限正在使用", false);

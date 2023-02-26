@@ -30,7 +30,7 @@ public class RedisController {
      *
      * @param pattern 通配符，默认 *
      */
-    @PreAuthorize("@ck.hasPermit('sys:keys:list')")
+    @PreAuthorize("@ck.hasPermit('sys:key:list')")
     @GetMapping("/keys")
     public ApiResponse<Set<String>> list(@RequestParam(defaultValue = "*") String pattern) {
         Set<String> keys = stringRedisTemplate.keys(pattern);
@@ -42,7 +42,7 @@ public class RedisController {
      *
      * @param key key
      */
-    @PreAuthorize("@ck.hasPermit('sys:keys:delete')")
+    @PreAuthorize("@ck.hasPermit('sys:key:delete')")
     @DeleteMapping("/keys/{key}")
     public ApiResponse<String> delete(@PathVariable String key) {
         Boolean hasKey = stringRedisTemplate.hasKey(key);
@@ -61,7 +61,7 @@ public class RedisController {
      *
      * @param key key
      */
-    @PreAuthorize("@ck.hasPermit('sys:keys:get')")
+    @PreAuthorize("@ck.hasPermit('sys:key:get')")
     @GetMapping("/keys/{key}")
     public ApiResponse<RedisKeyResponse> get(@PathVariable String key) {
         Boolean hasKey = stringRedisTemplate.hasKey(key);
@@ -83,7 +83,7 @@ public class RedisController {
     /**
      * 设置key的值
      */
-    @PreAuthorize("@ck.hasPermit('sys:keys:set')")
+    @PreAuthorize("@ck.hasPermit('sys:key:set')")
     @PostMapping("/keys")
     public ApiResponse<Object> set(@Valid @RequestBody KeySetRequest request) {
         // TODO 目前只支持STRING类型，后续增加其他类型支持
@@ -101,7 +101,7 @@ public class RedisController {
      * @param oldKey 旧key
      * @param newKey 新key
      */
-    @PreAuthorize("@ck.hasPermit('sys:keys:rename')")
+    @PreAuthorize("@ck.hasPermit('sys:key:rename')")
     @PutMapping("/keys/{oldKey}/rename/{newKey}")
     public ApiResponse<Object> rename(@PathVariable String oldKey, @PathVariable String newKey) {
         Boolean hasKey = stringRedisTemplate.hasKey(oldKey);
@@ -119,7 +119,7 @@ public class RedisController {
      * @param key     key
      * @param seconds 过期时间，单位秒
      */
-    @PreAuthorize("@ck.hasPermit('sys:keys:expire')")
+    @PreAuthorize("@ck.hasPermit('sys:key:expire')")
     @PutMapping("/keys/{key}/expire/{seconds}")
     public ApiResponse<Object> expire(@PathVariable String key, @PathVariable Integer seconds) {
         Boolean hasKey = stringRedisTemplate.hasKey(key);

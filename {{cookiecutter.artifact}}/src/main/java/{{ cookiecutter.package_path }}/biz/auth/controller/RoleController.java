@@ -46,7 +46,7 @@ public class RoleController extends AuthBaseController {
      * 角色列表分页查询
      */
     @GetMapping("/roles")
-    @PreAuthorize("@ck.hasPermit('auth:roles:list')")
+    @PreAuthorize("@ck.hasPermit('auth:role:list')")
     public ApiResponse<PageVO<RoleResponse>> list(@Valid ListAuthRequest request) {
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
         wrapper.select("id, name, code, description");
@@ -63,7 +63,7 @@ public class RoleController extends AuthBaseController {
      * 获取所有角色
      */
     @GetMapping("/roles/all")
-    @PreAuthorize("@ck.hasPermit('auth:roles:all')")
+    @PreAuthorize("@ck.hasPermit('auth:role:all')")
     public ApiResponse<List<RoleResponse>> all() {
         List<Role> roles = thisService.list();
 
@@ -78,7 +78,7 @@ public class RoleController extends AuthBaseController {
      * 创建角色
      */
     @PostMapping("/roles")
-    @PreAuthorize("@ck.hasPermit('auth:roles:add')")
+    @PreAuthorize("@ck.hasPermit('auth:role:add')")
     public ApiResponse<Role> add(@Valid @RequestBody AddRoleRequest request) {
         Role role = new Role();
         BeanUtils.copyProperties(request, role);
@@ -97,7 +97,7 @@ public class RoleController extends AuthBaseController {
      * @param roleId 角色ID
      */
     @GetMapping("/roles/{roleId}")
-    @PreAuthorize("@ck.hasPermit('auth:roles:get')")
+    @PreAuthorize("@ck.hasPermit('auth:role:get')")
     public ApiResponse<RoleResponse> get(@PathVariable Long roleId) {
         Role role = thisService.queryById(roleId);
         if (role == null) {
@@ -115,7 +115,7 @@ public class RoleController extends AuthBaseController {
      * @param roleId 角色ID
      */
     @PutMapping("/roles/{roleId}")
-    @PreAuthorize("@ck.hasPermit('auth:roles:update')")
+    @PreAuthorize("@ck.hasPermit('auth:role:update')")
     public ApiResponse<Object> update(@Valid @RequestBody UpdateRoleRequest request, @PathVariable Long roleId) {
         // 更新角色信息
         Role role = new Role();
@@ -141,7 +141,7 @@ public class RoleController extends AuthBaseController {
      * @param roleId 角色ID
      */
     @DeleteMapping("/roles/{roleId}")
-    @PreAuthorize("@ck.hasPermit('auth:roles:delete')")
+    @PreAuthorize("@ck.hasPermit('auth:role:delete')")
     public ApiResponse<Object> delete(@PathVariable Long roleId) {
         if (thisService.isAlreadyUsed(roleId)) {
             return new ApiResponse<>("该角色已被使用，无法删除", false);

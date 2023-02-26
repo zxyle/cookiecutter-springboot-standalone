@@ -38,7 +38,7 @@ public class FeedbackController {
     /**
      * 意见反馈列表分页查询
      */
-    @PreAuthorize("@ck.hasPermit('sys:feedbacks:list')")
+    @PreAuthorize("@ck.hasPermit('sys:feedback:list')")
     @GetMapping("/feedbacks")
     public ApiResponse<PageVO<Feedback>> list(@Valid OrderPageRequest request) {
         QueryWrapper<Feedback> wrapper = new QueryWrapper<>();
@@ -66,7 +66,7 @@ public class FeedbackController {
     /**
      * 按ID查询意见反馈
      */
-    @PreAuthorize("@ck.hasPermit('sys:feedbacks:get')")
+    @PreAuthorize("@ck.hasPermit('sys:feedback:get')")
     @GetMapping("/feedbacks/{id}")
     public ApiResponse<Feedback> get(@PathVariable Long id) {
         Feedback entity = thisService.queryById(id);
@@ -79,7 +79,7 @@ public class FeedbackController {
     /**
      * 按ID更新意见反馈
      */
-    @PreAuthorize("@ck.hasPermit('sys:feedbacks:update')")
+    @PreAuthorize("@ck.hasPermit('sys:feedback:update')")
     @PutMapping("/feedbacks/{id}")
     public ApiResponse<Object> update(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
         entity.setId(id);
@@ -93,7 +93,7 @@ public class FeedbackController {
     /**
      * 按ID删除意见反馈
      */
-    @PreAuthorize("@ck.hasPermit('sys:feedbacks:delete')")
+    @PreAuthorize("@ck.hasPermit('sys:feedback:delete')")
     @DeleteMapping("/feedbacks/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
@@ -106,7 +106,7 @@ public class FeedbackController {
     /**
      * Excel数据导出意见反馈
      */
-    @PreAuthorize("@ck.hasPermit('sys:feedbacks:export')")
+    @PreAuthorize("@ck.hasPermit('sys:feedback:export')")
     @GetMapping("/feedbacks/export")
     public void export(HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);

@@ -32,7 +32,7 @@ public class SettingController {
     /**
      * 系统设置分页查询
      */
-    @PreAuthorize("@ck.hasPermit('sys:settings:list')")
+    @PreAuthorize("@ck.hasPermit('sys:setting:list')")
     @GetMapping("/settings")
     public ApiResponse<PageVO<Setting>> page(@Valid PaginationRequest request) {
         IPage<Setting> page = PageRequestUtil.checkForMp(request);
@@ -44,7 +44,7 @@ public class SettingController {
     /**
      * 新增系统设置
      */
-    @PreAuthorize("@ck.hasPermit('sys:settings:add')")
+    @PreAuthorize("@ck.hasPermit('sys:setting:add')")
     @PostMapping("/settings")
     public ApiResponse<Setting> add(@Valid @RequestBody Setting entity) {
         boolean success = thisService.save(entity);
@@ -58,7 +58,7 @@ public class SettingController {
     /**
      * 按ID查询系统设置
      */
-    @PreAuthorize("@ck.hasPermit('sys:settings:get')")
+    @PreAuthorize("@ck.hasPermit('sys:setting:get')")
     @GetMapping("/settings/{id}")
     public ApiResponse<Setting> get(@PathVariable Long id) {
         Setting entity = thisService.queryById(id);
@@ -71,7 +71,7 @@ public class SettingController {
     /**
      * 按ID更新系统设置
      */
-    @PreAuthorize("@ck.hasPermit('sys:settings:update')")
+    @PreAuthorize("@ck.hasPermit('sys:setting:update')")
     @PutMapping("/settings/{id}")
     public ApiResponse<Object> update(@Valid @RequestBody Setting entity, @PathVariable Long id) {
         entity.setId(id);
@@ -85,7 +85,7 @@ public class SettingController {
     /**
      * 按ID删除系统设置
      */
-    @PreAuthorize("@ck.hasPermit('sys:settings:delete')")
+    @PreAuthorize("@ck.hasPermit('sys:setting:delete')")
     @DeleteMapping("/settings/{id}")
     public ApiResponse<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
