@@ -6,13 +6,16 @@
 - 字典接口增加多dictType查询
 - 增加操作日志支持
 - 增加前端对接文档
-- 增加初次登录修改密码支持
+- 增加初次登录修改密码支持 [#37](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/37)
 - 完全用户组管理员权限控制
 - 对手机号和邮箱进行脱敏
-- 增加IP黑白名单管理
+- 增加IP黑白名单管理 [#42](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/42)
 - 验证码300秒有效期内不再发送
 - 增加系统设置功能
-- 完善换绑
+- 完善换绑 [#39](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/39)
+
+## v1.2.0
+
 
 ## v1.1.2
 - 更换密码加盐工具
@@ -38,12 +41,12 @@
 ## v1.1.0
 
 ### 变更概览
-- 通用权限码设计与开发 #3
-- 日志增加traceId #10
-- 升级spring boot版本2.7.1和2.6.9 #9 
-- 添加常用正则表达式 #11
-- 完善验证码接口返回信息 #12
-- 完善友链相关接口 #13
+- 通用权限码设计与开发 [#3](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/3)
+- 日志增加traceId [#10](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/10)
+- 升级spring boot版本2.7.1和2.6.9 [#9](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/9) 
+- 添加常用正则表达式 [#11](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/11)
+- 完善验证码接口返回信息 [#12](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/12)
+- 完善友链相关接口 [#13](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/13)
 
 ## v1.0.0
 

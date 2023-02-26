@@ -1,7 +1,8 @@
 # cookiecutter-springboot-standalone
 
 ## 项目介绍
-基于[Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/html/)、Redis、MySql、[MybatisPlus](https://baomidou.com/)、[Spring Security](https://docs.spring.io/spring-security/reference/index.html)等技术实现的后端快速开发脚手架。 适合中小型项目
+基于[Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/html/)、Redis、MySql、[MybatisPlus](https://baomidou.com/)、[Spring Security](https://docs.spring.io/spring-security/reference/index.html)等技术实现的后端快速开发脚手架。 
+适合中小型项目快速搭建，提高开发效率，降低开发成本。
 
 
 ## 集成功能
@@ -11,7 +12,7 @@
 - 账号管理: 账号登录退出、账号启用停用、账号锁定、创建账号、下线账号
 - 权限认证: 已实现`RBAC0`权限模型（用户、用户组、角色、权限）
 - 缓存管理: Caffeine + Redis 二级缓存
-- 系统管理: 登录日志、操作日志、友情链接、IP黑白名单、系统信息、意见反馈、发布版本、redis管理等
+- 系统管理: 系统设置、登录日志、操作日志、友情链接、IP黑白名单、系统信息、意见反馈、发布版本、redis管理等
 - 字典管理: 内置全国村社级行政区划信息（64万条地名）、性别、客户端类型、民族、常用邮箱、国家、证件类型、亲属关系等
 - 系统监控: 心跳检测
 - 系统告警: 支持钉钉Hook告警
