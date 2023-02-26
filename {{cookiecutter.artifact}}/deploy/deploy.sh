@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # 前端部署命令
-bash deploy.sh publish
+# bash deploy.sh publish
 
 # 部署服务器
 server=root@127.0.0.1
