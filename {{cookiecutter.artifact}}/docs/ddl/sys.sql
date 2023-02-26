@@ -26,7 +26,9 @@ CREATE TABLE `sys_blacklist` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `ip` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'IP地址',
+  `ip` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'IP',
+  `end_time` datetime DEFAULT NULL COMMENT '截止日期',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_ip` (`ip`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='IP黑名单';
@@ -178,259 +180,6 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'sohu.com', 'sohu.com', 'email_domain');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'yahoo.cn', 'yahoo.cn', 'email_domain');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('邮箱', 0, 'yeah.net', 'yeah.net', 'email_domain');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '有限责任公司', '有限责任公司', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '股份有限公司', '股份有限公司', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '股份合作公司', '股份合作公司', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '国有企业', '国有企业', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '集体所有制', '集体所有制', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '个体工商户', '个体工商户', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '独资企业', '独资企业', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '有限合伙', '有限合伙', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '普通合伙', '普通合伙', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '外商投资企业', '外商投资企业', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '港、澳、台商投资企业', '港、澳、台商投资企业', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '联营企业', '联营企业', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('企业类型', 0, '私有企业', '私有企业', 'company_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '居民身份证', '0', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '护照', '1', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '军人证（军官证）', '2', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '驾照', '3', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '户口本', '4', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '学生证', '5', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '工作证', '6', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '出生证', '7', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '其它', '8', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '无证件', '9', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '士兵证', 'A', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '回乡证', 'B', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '临时身份证', 'C', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '警官证', 'D', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '台胞证', 'E', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '外国人永久居留身份证', 'I', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('证件类型', 0, '港澳台居民居住证', 'J', 'id_type');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '女儿', '06', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '祖父', '07', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '祖母', '08', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '孙子', '09', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '孙女', '10', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '外祖父', '11', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '外祖母', '12', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '外孙', '13', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '外孙女', '14', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '哥哥', '15', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '姐姐', '16', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '弟弟', '17', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '妹妹', '18', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '公公', '19', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '婆婆', '20', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '岳父', '21', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '岳母', '22', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '儿媳', '23', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '女婿', '24', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '其他亲属', '25', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '同事', '26', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '朋友', '27', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '雇主', '28', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '雇员', '29', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '其他', '30', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '本人', '00', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '丈夫', '01', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '妻子', '02', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '父亲', '03', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '母亲', '04', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '儿子', '05', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '父母', '31', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '子女', '32', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('亲属关系', 0, '配偶', '33', 'relation');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '中国', 'China', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '安哥拉', 'Angola', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '阿富汗', 'Afghanistan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '阿尔巴尼亚', 'Albania', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '阿尔及利亚', 'Algeria', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '安道尔共和国', 'Andorra', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '安圭拉岛', 'Anguilla', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '安提瓜和巴布达', 'Antigua and Barbuda', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '阿根廷', 'Argentina', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '亚美尼亚', 'Armenia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '阿森松', 'Ascension', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '澳大利亚', 'Australia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '奥地利', 'Austria', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '阿塞拜疆', 'Azerbaijan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴哈马', 'Bahamas', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴林', 'Bahrain', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '孟加拉国', 'Bangladesh', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴巴多斯', 'Barbados', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '白俄罗斯', 'Belarus', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '比利时', 'Belgium', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '伯利兹', 'Belize', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '贝宁', 'Benin', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '百慕大群岛', 'Bermuda Is', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '玻利维亚', 'Bolivia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '博茨瓦纳', 'Botswana', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴西', 'Brazil', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '文莱', 'Brunei', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '保加利亚', 'Bulgaria', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '布基纳法索', 'Burkina Faso', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '缅甸', 'Burma', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '布隆迪', 'Burundi', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '喀麦隆', 'Cameroon', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '加拿大', 'Canada', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '开曼群岛', 'Cayman Is', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '中非共和国', 'Central African Republic', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '乍得', 'Chad', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '智利', 'Chile', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '哥伦比亚', 'Colombia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '刚果', 'Congo', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '库克群岛', 'Cook Is', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '哥斯达黎加', 'Costa Rica', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '古巴', 'Cuba', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '塞浦路斯', 'Cyprus', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '捷克', 'Czech Republic', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '丹麦', 'Denmark', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '吉布提', 'Djibouti', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '多米尼加共和国', 'Dominica Rep', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '厄瓜多尔', 'Ecuador', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '埃及', 'Egypt', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '萨尔瓦多', 'EI Salvador', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '爱沙尼亚', 'Estonia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '埃塞俄比亚', 'Ethiopia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '斐济', 'Fiji', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '芬兰', 'Finland', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '法国', 'France', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '法属圭亚那', 'French Guiana', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '法属玻利尼西亚', 'French Polynesia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '加蓬', 'Gabon', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '冈比亚', 'Gambia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '格鲁吉亚', 'Georgia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '德国', 'Germany', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '加纳', 'Ghana', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '直布罗陀', 'Gibraltar', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '希腊', 'Greece', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '格林纳达', 'Grenada', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '关岛', 'Guam', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '危地马拉', 'Guatemala', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '几内亚', 'Guinea', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圭亚那', 'Guyana', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '海地', 'Haiti', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '洪都拉斯', 'Honduras', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '匈牙利', 'Hungary', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '冰岛', 'Iceland', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '印度', 'India', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '印度尼西亚', 'Indonesia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '伊朗', 'Iran', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '伊拉克', 'Iraq', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '爱尔兰', 'Ireland', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '以色列', 'Israel', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '意大利', 'Italy', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '科特迪瓦', 'Ivory Coast', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '牙买加', 'Jamaica', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '日本', 'Japan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '约旦', 'Jordan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '柬埔寨', 'Kampuchea (Cambodia )', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '哈萨克斯坦', 'Kazakstan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '肯尼亚', 'Kenya', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '韩国', 'Korea', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '科威特', 'Kuwait', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '吉尔吉斯坦', 'Kyrgyzstan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '老挝', 'Laos', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '拉脱维亚', 'Latvia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '黎巴嫩', 'Lebanon', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '莱索托', 'Lesotho', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '利比里亚', 'Liberia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '利比亚', 'Libya', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '列支敦士登', 'Liechtenstein', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '立陶宛', 'Lithuania', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '卢森堡', 'Luxembourg', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '马达加斯加', 'Madagascar', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '马拉维', 'Malawi', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '马来西亚', 'Malaysia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '马尔代夫', 'Maldives', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '马里', 'Mali', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '马耳他', 'Malta', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '马里亚那群岛', 'Mariana Is', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '马提尼克', 'Martinique', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '毛里求斯', 'Mauritius', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '墨西哥', 'Mexico', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '摩尔多瓦', 'Moldova', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '摩纳哥', 'Monaco', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '蒙古', 'Mongolia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '蒙特塞拉特岛', 'Montserrat Is', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '摩洛哥', 'Morocco', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '莫桑比克', 'Mozambique', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '纳米比亚', 'Namibia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '瑙鲁', 'Nauru', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '尼泊尔', 'Nepal', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '荷属安的列斯', 'Netheriands Antilles', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '荷兰', 'Netherlands', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '新西兰', 'New Zealand', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '尼加拉瓜', 'Nicaragua', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '尼日尔', 'Niger', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '尼日利亚', 'Nigeria', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '朝鲜', 'North Korea', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '挪威', 'Norway', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '阿曼', 'Oman', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴基斯坦', 'Pakistan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴拿马', 'Panama', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴布亚新几内亚', 'Papua New Cuinea', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴拉圭', 'Paraguay', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '秘鲁', 'Peru', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '菲律宾', 'Philippines', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '波兰', 'Poland', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '葡萄牙', 'Portugal', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '波多黎各', 'Puerto Rico', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '卡塔尔', 'Qatar', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '留尼旺', 'Reunion', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '罗马尼亚', 'Romania', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '俄罗斯', 'Russia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣卢西亚', 'Saint Lueia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣文森特岛', 'Saint Vincent', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '东萨摩亚(美)', 'Samoa Eastern', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '西萨摩亚', 'Samoa Western', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣马力诺', 'San Marino', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣多美和普林西比', 'Sao Tome and Principe', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '沙特阿拉伯', 'Saudi Arabia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '塞内加尔', 'Senegal', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '塞舌尔', 'Seychelles', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '塞拉利昂', 'Sierra Leone', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '新加坡', 'Singapore', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '斯洛伐克', 'Slovakia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '斯洛文尼亚', 'Slovenia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '所罗门群岛', 'Solomon Is', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '索马里', 'Somali', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '南非', 'South Africa', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '西班牙', 'Spain', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '斯里兰卡', 'SriLanka', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣卢西亚', 'St.Lucia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣文森特', 'St.Vincent', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '苏丹', 'Sudan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '苏里南', 'Suri\"name\"', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '斯威士兰', 'Swaziland', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '瑞典', 'Sweden', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '瑞士', 'Switzerland', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '叙利亚', 'Syria', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '塔吉克斯坦', 'Tajikstan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '坦桑尼亚', 'Tanzania', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '泰国', 'Thailand', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '多哥', 'Togo', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '汤加', 'Tonga', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '特立尼达和多巴哥', 'Trinidad and Tobago', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '突尼斯', 'Tunisia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '土耳其', 'Turkey', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '土库曼斯坦', 'Turkmenistan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '乌干达', 'Uganda', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '乌克兰', 'Ukraine', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '阿拉伯联合酋长国', 'United Arab Emirates', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '英国', 'United Kiongdom', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '美国', 'United States of America', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '乌拉圭', 'Uruguay', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '乌兹别克斯坦', 'Uzbekistan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '委内瑞拉', 'Venezuela', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '越南', 'Vietnam', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '也门', 'Yemen', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '南斯拉夫', 'Yugoslavia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '津巴布韦', 'Zimbabwe', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '扎伊尔', 'Zaire', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '赞比亚', 'Zambia', 'country');
 COMMIT;
 
 -- ----------------------------
@@ -541,18 +290,11 @@ CREATE TABLE `sys_operate_log` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `project` int DEFAULT NULL COMMENT '项目信息',
-  `action_type` int DEFAULT NULL,
-  `category` int DEFAULT NULL,
-  `client_ip` varchar(255) DEFAULT NULL,
-  `key_id` varchar(255) DEFAULT NULL,
-  `login_channel` varchar(255) DEFAULT NULL,
-  `login_edition` varchar(255) DEFAULT NULL,
-  `operate_result` varchar(255) DEFAULT NULL,
-  `operate_time` datetime DEFAULT NULL,
-  `remark` varchar(255) DEFAULT NULL,
-  `staff_id` int DEFAULT NULL,
-  `staffName` varchar(255) DEFAULT NULL,
+  `operate_time` datetime NOT NULL COMMENT '操作时间',
+  `user_id` bigint unsigned NOT NULL COMMENT '操作用户ID',
+  `operation_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '操作类型',
+  `object_id` bigint unsigned DEFAULT NULL COMMENT '操作对象ID',
+  `result` enum('true','false') NOT NULL DEFAULT 'false' COMMENT '操作结果',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作日志';
 
@@ -584,11 +326,68 @@ CREATE TABLE `sys_setting` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '选项描述',
-  `option_label` varchar(255) NOT NULL COMMENT '选项',
-  `option_value` varchar(255) NOT NULL COMMENT '选项值',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统设置';
+  `option_label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项',
+  `option_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项值',
+  `data_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'string' COMMENT 'Java数据类型',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项描述',
+  `default_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '默认值',
+PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统设置';
+
+-- ----------------------------
+-- Records of sys_setting
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.on', 'false', 'java.lang.Boolean', '登录是否开启图形验证码', 'false');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.alive-time', '30', 'java.lang.Integer', '验证码存活时间（单位：分钟）', '30');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.digits', '6', 'java.lang.Integer', '验证码位数/长度', '6');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.between', '60', 'java.lang.Integer', '两次验证码请求间隔时间（单位：秒）', '60');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.retry-times', '3', 'java.lang.Integer', '重试登录次数', '3');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.characters', '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ', 'java.lang.String', '验证码字符集(一般去掉1 l L 0 o O 易混淆字符)', '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.height', '70', 'java.lang.Integer', '高度像素', '70');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.width', '160', 'java.lang.Integer', '宽度像素', '160');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.font-size', '45', 'java.lang.Integer', '字体大小', '45');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.font-family', '宋体,楷体,微软雅黑', 'java.lang.String', '字体', '宋体,楷体,微软雅黑');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.kind', 'kaptcha', 'java.lang.String', '验证码种类 kaptcha、patchca', 'kaptcha');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.format', 'png', 'java.lang.String', '图片格式（jpg、png）', 'png');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.key-prefix', 'captcha:', 'java.lang.String', '验证码存储前缀', 'captcha:');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.expire-days', '90', 'java.lang.Integer', '密码过期天数（-1代表不限制）', '90');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.max-length', '32', 'java.lang.Integer', '最大长度', '32');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.min-length', '8', 'java.lang.Integer', '最小长度', '8');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.complexity', '32', 'java.lang.Integer', '密码复杂度', '32');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.chars', '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+`-={}|[]:;<>?,.', 'java.lang.String', '密码字符集', '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+`-={}|[]:;<>?,.');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.enable-history', 'false', 'java.lang.Boolean', '是否记录历史密码', 'false');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.history-count', '5', 'java.lang.Integer', '密码历史记录数量 0代表不限制', '5');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.max-failed-times', '5', 'java.lang.Integer', '最大登录失败次数', '5');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.lock-time', '30', 'java.lang.Integer', '锁定时间', '30');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.lock-time-unit', 'MINUTES', 'java.lang.String', '锁定时间单位', 'MINUTES');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.default-password', 'QAr$S2xreDb##tdm', 'java.lang.String', '默认密码', 'QAr$S2xreDb##tdm');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.verification', 'password', 'java.lang.String', '认证方式 （password-密码登录、qrcode-扫码登录、code-验证码登录）', 'password');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.open-registration', 'false', 'java.lang.Boolean', '是否开放用户注册', 'false');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.default-role', '3', 'java.lang.Long', '注册后默认角色ID', '3');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.reset', 'false', 'java.lang.Boolean', '初次登录后是否需修改密码', 'false');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.host', 'smtp.163.com', 'java.lang.String', NULL, 'smtp.163.com');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.port', '465', 'java.lang.Integer', NULL, '465');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.username', 'xxx@163.com', 'java.lang.String', NULL, 'xxx@163.com');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.password', 'xxx', 'java.lang.String', NULL, 'xxx');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.properties.mail.smtp.ssl.enable', 'true', 'java.lang.Boolean', NULL, 'true');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('dingtalk.access-token', 'PLEASE-REPLACE-ACCESS-TOKEN', 'java.lang.String', '钉钉告警token', 'PLEASE-REPLACE-ACCESS-TOKEN');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.name', 'XXX管理系统', 'java.lang.String', '系统名称', 'XXX管理系统');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.icp', '浙ICP备0000号', 'java.lang.String', '备案号', '浙ICP备0000号');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.version', 'V1.0.0', 'java.lang.String', '版本', 'V1.0.0');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.language', '简体中文', 'java.lang.String', '语言', '简体中文');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.favicon', 'B', 'java.lang.String', '网站logo', 'B');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.copyright', 'XX有限公司版权所有', 'java.lang.String', '版权信息', 'XX有限公司版权所有');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.email', 'xxx@example.com', 'java.lang.String', '技术支持邮箱', 'xxx@example.com');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.keywords', 'XXX', 'java.lang.String', 'SEO关键字', 'XXX');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.description', 'XXX', 'java.lang.String', 'SEO描述', 'XXX');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.agreement', 'G', 'java.lang.String', '协议文本', 'G');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.homepage', 'example.com', 'java.lang.String', '主页', 'example.com');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.title', 'XXX', 'java.lang.String', '网站标题', 'XXX');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.tel', '400-111-2222', 'java.lang.String', '联系电话', '400-111-2222');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.address', '浙江省杭州市余杭区文一西路10000号', 'java.lang.String', '联系地址', '浙江省杭州市余杭区文一西路10000号');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.about', 'XX公司是一家什么公司', 'java.lang.String', '关于我们', 'XX公司是一家什么公司');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for sys_sql
@@ -640,7 +439,9 @@ CREATE TABLE `sys_whitelist` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `ip` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'IP白名单',
+  `ip` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'IP',
+  `end_time` datetime DEFAULT NULL COMMENT '截止日期',
+  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_ip` (`ip`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='IP白名单';

@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Profile;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IProfileService;
@@ -35,6 +36,7 @@ public class ProfileController extends AuthBaseController {
     /**
      * 获取当前用户信息
      */
+    @LogOperation("获取当前用户信息")
     @PreAuthorize("@ck.hasPermit('auth:profile:get')")
     @GetMapping("/profile")
     public ApiResponse<Profile> get() {
@@ -45,6 +47,7 @@ public class ProfileController extends AuthBaseController {
     /**
      * 更新当前用户信息
      */
+    @LogOperation("更新当前用户信息")
     @PreAuthorize("@ck.hasPermit('auth:profile:update')")
     @PutMapping("/profile")
     public ApiResponse<Profile> update(@Valid @RequestBody Profile entity) {

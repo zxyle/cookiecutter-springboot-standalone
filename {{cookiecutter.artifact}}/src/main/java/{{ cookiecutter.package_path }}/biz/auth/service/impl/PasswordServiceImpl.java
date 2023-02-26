@@ -3,13 +3,15 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
 import {{ cookiecutter.basePackage }}.biz.auth.security.PasswordProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordHistoryService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,10 +25,13 @@ public class PasswordServiceImpl implements IPasswordService {
 
     IPasswordHistoryService passwordHistoryService;
 
-    public PasswordServiceImpl(IUserService userService, PasswordProperties passwordProperties, IPasswordHistoryService passwordHistoryService) {
+    PasswordEncoder passwordEncoder;
+
+    public PasswordServiceImpl(IUserService userService, PasswordProperties passwordProperties, IPasswordHistoryService passwordHistoryService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordProperties = passwordProperties;
         this.passwordHistoryService = passwordHistoryService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -41,15 +46,35 @@ public class PasswordServiceImpl implements IPasswordService {
         User user = userService.getById(userId);
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("pwd", newPwd);
+        updateWrapper.set("pwd", passwordEncoder.encode(newPwd.trim()));
         updateWrapper.set("pwd_change_time", LocalDateTime.now());
+        // 只有用户主动修改密码，页面才不会提示修改初始密码
+        if (user.getMustChangePwd() == 1 && policy.getEditedBy().equals("user")) {
+            updateWrapper.set("must_change_pwd", 0);
+            updateWrapper.set("expire_time", null);
+        }
         updateWrapper.eq("id", userId);
 
         boolean success = userService.update(updateWrapper);
         if (success && passwordProperties.isEnableHistory()) {
             // 记录密码修改日志
-            passwordHistoryService.recordPasswordHistory(user, newPwd, policy);
+            passwordHistoryService.record(user, newPwd, policy);
         }
         return success;
+    }
+
+    /**
+     * 校验密码是否正确
+     *
+     * @param raw     原始密码
+     * @param encoded 加密后的密码
+     * @return true: 正确; false: 错误
+     */
+    @Override
+    public boolean isCorrect(String raw, String encoded) {
+        if (StringUtils.isNotBlank(raw) || StringUtils.isBlank(encoded))
+            return false;
+
+        return passwordEncoder.matches(raw, encoded);
     }
 }

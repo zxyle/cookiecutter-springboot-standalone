@@ -3,18 +3,46 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
+    AuthenticationManager authenticationManager;
+
     IUserService userService;
 
-    public LoginServiceImpl(IUserService userService) {
+    public LoginServiceImpl(IUserService userService, AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.authenticationManager = authenticationManager;
+    }
+
+    /**
+     * 用户登录
+     *
+     * @param account  用户名/邮箱/手机号
+     * @param password 密码
+     * @return 用户信息
+     */
+    @Override
+    public User login(String account, String password) {
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(account, password);
+        // AuthenticationManager authenticate进行用户认证
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        // 认证成功后，将认证信息存入SecurityContextHolder中
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+
+        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+        return loginUser.getUser();
     }
 
     /**

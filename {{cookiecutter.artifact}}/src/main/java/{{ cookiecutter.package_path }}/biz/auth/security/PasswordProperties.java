@@ -7,6 +7,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * 密码策略配置
+ */
 @Data
 @Component
 @ConfigurationProperties(prefix = "pwd")
@@ -22,12 +25,6 @@ public class PasswordProperties {
      */
     private Integer expireDays;
 
-
-    /**
-     * 初次登录后是否重置密码
-     */
-    private Boolean reset;
-
     /**
      * 最大长度
      */
@@ -39,7 +36,7 @@ public class PasswordProperties {
     private Integer minLength;
 
     /**
-     * 复杂度
+     * 密码复杂度
      */
     private String complexity;
 

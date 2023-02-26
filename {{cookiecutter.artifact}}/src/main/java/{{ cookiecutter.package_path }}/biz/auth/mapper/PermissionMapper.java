@@ -16,7 +16,7 @@ import java.util.List;
 public interface PermissionMapper extends BaseMapper<Permission> {
 
     // 查询用户所拥有的权限代码列表
-    List<String> queryPermissionsByUserId(long userId);
+    List<String> queryPermissionsByUserId(Long userId);
 
     /**
      * 查询最大排序号

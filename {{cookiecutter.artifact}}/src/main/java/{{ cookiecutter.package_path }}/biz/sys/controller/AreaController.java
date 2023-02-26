@@ -58,7 +58,6 @@ public class AreaController {
         }
 
         if ((level - rootLevel) > 3) {
-            log.info("查询超过层级限制");
             return new ApiResponse<>("查询超过层级限制", false);
         }
 

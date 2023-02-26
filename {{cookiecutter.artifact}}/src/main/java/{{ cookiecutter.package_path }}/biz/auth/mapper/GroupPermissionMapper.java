@@ -17,6 +17,6 @@ import java.util.List;
 public interface GroupPermissionMapper extends BaseMapper<GroupPermission> {
 
     // 查询用户组拥有的权限代码列表
-    List<Permission> getPermissionByGroupId(long groupId);
+    List<Permission> getPermissionByGroupId(Long groupId);
 
 }

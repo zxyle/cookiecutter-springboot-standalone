@@ -76,7 +76,7 @@ CREATE TABLE `auth_password_history` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
-  `kind` enum('initial','reset','find','change') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码修改类型： 初始密码、重置密码、找回密码、修改密码',
+  `kind` enum('initial','reset','forget','change') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码修改类型： 初始密码、重置密码、找回密码、修改密码',
   `edited_by` enum('user','admin') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
   `after_pwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改后密码',
   `before_pwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改前密码',
@@ -366,6 +366,7 @@ CREATE TABLE `auth_user` (
   `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
   `pwd_change_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '密码上次修改时间',
   `enabled` tinyint unsigned NOT NULL DEFAULT '1' COMMENT '账号可用 1-启用 0-禁用',
+  `must_change_pwd` tinyint unsigned NOT NULL DEFAULT '1'  COMMENT '是否需要修改密码',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户';
 
@@ -388,7 +389,7 @@ CREATE TABLE `auth_user_group` (
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '注释',
-  `is_admin` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否是该组管理员',
+  `admin` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否是该组管理员',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户-用户组关联';

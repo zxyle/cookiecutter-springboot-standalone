@@ -72,6 +72,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
     @Override
     public List<GroupPermission> queryRelation(Long groupId, Long permissionId) {
         QueryWrapper<GroupPermission> wrapper = buildWrapper(groupId, permissionId);
+        wrapper.select("group_id, permission_id");
         return list(wrapper);
     }
 
@@ -85,6 +86,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
     @Override
     public IPage<GroupPermission> pageRelation(Long groupId, Long permissionId, IPage<GroupPermission> iPage) {
         QueryWrapper<GroupPermission> wrapper = buildWrapper(groupId, permissionId);
+        wrapper.select("group_id, permission_id");
         return page(iPage, wrapper);
     }
 
@@ -135,7 +137,6 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
     // 构建wrapper
     public QueryWrapper<GroupPermission> buildWrapper(Long groupId, Long permissionId) {
         QueryWrapper<GroupPermission> wrapper = new QueryWrapper<>();
-        wrapper.select("group_id, permission_id");
         wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
         wrapper.eq(permissionId != null && permissionId != 0L, "permission_id", permissionId);
         return wrapper;

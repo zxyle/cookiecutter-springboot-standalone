@@ -12,16 +12,18 @@ import lombok.EqualsAndHashCode;
 public class ListAuthRequest extends PaginationRequest {
 
     /**
-     * 用户名、用户组名、角色名(支持模糊查询)
+     * 查询关键词(支持模糊查询)
      */
-    private String name;
+    private String keyword;
 
     /**
      * 账号可用 1-启用 0-禁用
      */
     private Integer enabled;
 
-    // 创建时间
+    /**
+     * 是否返回拥有的角色、用户、用户组、权限信息
+     */
+    private boolean full;
 
-    // code
 }

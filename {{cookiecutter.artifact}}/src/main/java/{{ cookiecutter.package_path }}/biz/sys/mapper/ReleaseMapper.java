@@ -8,15 +8,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * 发布版本 Mapper 接口
  */
 @Repository
 public interface ReleaseMapper extends BaseMapper<Release> {
-
-    List<Release> selectAll();
 
     // 截断表
     @Update("TRUNCATE TABLE sys_release")

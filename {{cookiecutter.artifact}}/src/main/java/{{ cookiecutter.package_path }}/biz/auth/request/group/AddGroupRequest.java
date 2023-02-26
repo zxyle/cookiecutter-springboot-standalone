@@ -11,7 +11,7 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 /**
- * 增加用户组请求
+ * 创建用户组请求
  */
 @Data
 public class AddGroupRequest {
@@ -25,11 +25,12 @@ public class AddGroupRequest {
     private String name;
 
     /**
-     * 上级用户组ID
+     * 父级用户组ID
      *
      * @mock 1
      */
-    @NotNull(message = "上级用户组ID不能为空")
+    @Positive(message = "用户组ID必须为正整数")
+    @NotNull(message = "父级用户组ID不能为空")
     private Long parentId;
 
     /**
@@ -37,7 +38,7 @@ public class AddGroupRequest {
      *
      * @mock 1
      */
-    @Positive
+    @Positive(message = "排序号必须为正整数")
     private Integer sort;
 
     /**

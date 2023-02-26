@@ -11,22 +11,22 @@ public enum ChangePasswordEnum {
     /**
      * 初始密码
      */
-    INITIAL_PASSWORD("initial", "admin"),
+    INITIAL("initial", "admin"),
 
     /**
      * 重置密码
      */
-    RESET_PASSWORD("reset", "admin"),
+    RESET("reset", "admin"),
 
     /**
      * 找回密码
      */
-    FIND_PASSWORD("find", "user"),
+    FORGET("forget", "user"),
 
     /**
      * 修改密码
      */
-    CHANGE_PASSWORD("change", "user");
+    CHANGE("change", "user");
 
     /**
      * 密码修改类型

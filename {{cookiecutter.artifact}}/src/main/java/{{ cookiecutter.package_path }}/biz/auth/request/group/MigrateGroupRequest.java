@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.group;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 /**
  * 迁移用户组请求
@@ -16,12 +17,14 @@ public class MigrateGroupRequest {
     /**
      * 新用户组ID
      */
+    @Positive(message = "新用户组ID必须为正整数")
     @NotNull(message = "新用户组ID不能为空")
     private Long parentId;
 
     /**
      * 当前用户组ID
      */
+    @Positive(message = "当前用户组ID必须为正整数")
     @NotNull(message = "当前用户组ID不能为空")
     private Long currentId;
 

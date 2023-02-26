@@ -3,12 +3,11 @@
 
 package {{ cookiecutter.basePackage }}.config.interceptor;
 
-import org.springframework.http.HttpStatus;
+import {{ cookiecutter.basePackage }}.common.util.ResponseUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
 import java.util.regex.Pattern;
 
 public class UserAgentInterceptor implements HandlerInterceptor {
@@ -37,10 +36,7 @@ public class UserAgentInterceptor implements HandlerInterceptor {
 
             boolean isMatch = Pattern.matches(pattern, ua);
             if (isMatch) {
-                response.setContentType("text/html;charset=UTF-8");
-                PrintWriter writer = response.getWriter();
-                writer.println("禁止爬虫");
-                response.setStatus(HttpStatus.FORBIDDEN.value());
+                ResponseUtil.forbidden(response);
                 return false;
             }
         }

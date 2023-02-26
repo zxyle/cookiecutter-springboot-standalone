@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
+import {{ cookiecutter.basePackage }}.biz.sys.request.dict.MultiDictTypeRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
@@ -15,7 +16,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 字典管理
@@ -69,13 +72,15 @@ public class DictController {
 
     /**
      * 按类型查询字典
-     *
-     * @param dictType 字典类型
      */
-    @GetMapping("/dicts/dictType/{dictType}")
-    public ApiResponse<List<Dict>> getByDictType(@PathVariable String dictType) {
-        List<Dict> dicts = thisService.listAllDicts(dictType);
-        return new ApiResponse<>(dicts);
+    @GetMapping("/dicts/dictType")
+    public ApiResponse<Map<String, List<Dict>>> getByDictType(MultiDictTypeRequest request) {
+        Map<String, List<Dict>> map = new HashMap<>();
+        for (String type : request.getTypes()) {
+            List<Dict> dicts = thisService.listAllDicts(type);
+            map.put(type, dicts);
+        }
+        return new ApiResponse<>(map);
     }
 
 
@@ -84,7 +89,8 @@ public class DictController {
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:update')")
     @PutMapping("/dicts/{id}")
-    public ApiResponse<Object> update(@Valid @RequestBody Dict entity) {
+    public ApiResponse<Object> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
+        entity.setId(id);
         boolean success = thisService.updateById(entity);
         if (success) {
             return new ApiResponse<>("更新成功");

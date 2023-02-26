@@ -7,6 +7,9 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * 创建权限请求
+ */
 @Data
 public class AddPermissionRequest {
 

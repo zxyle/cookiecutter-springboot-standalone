@@ -70,6 +70,6 @@ public interface IGroupRoleService extends IService<GroupRole> {
      */
     IPage<GroupRole> pageRelation(Long groupId, Long roleId, IPage<GroupRole> page);
 
-    List<Role> getRolesByGroupId(Long groupId);
+    List<Role> selectRolesByGroupId(Long groupId);
 
 }

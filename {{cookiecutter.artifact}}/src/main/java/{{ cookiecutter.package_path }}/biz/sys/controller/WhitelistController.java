@@ -4,13 +4,15 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.alibaba.excel.EasyExcel;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
+import {{ cookiecutter.basePackage }}.biz.sys.request.KeyWordPaginationRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
-import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +36,18 @@ public class WhitelistController {
     }
 
     /**
-     * 分页查询
+     * 白名单列表分页查询
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:list')")
     @GetMapping("/whitelists")
-    public ApiResponse<PageVO<Whitelist>> list(@Valid PaginationRequest request) {
+    public ApiResponse<PageVO<Whitelist>> list(@Valid KeyWordPaginationRequest request) throws IOException {
+        QueryWrapper<Whitelist> wrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(request.getKeyword())) {
+            wrapper.and(w -> w.like("ip", request.getKeyword())
+                    .or().like("remark", request.getKeyword()));
+        }
         IPage<Whitelist> page = PageRequestUtil.checkForMp(request);
-        IPage<Whitelist> list = thisService.pageQuery(page);
+        IPage<Whitelist> list = thisService.pageQuery(page, wrapper);
         return PageRequestUtil.extractFromMp(list);
     }
 
@@ -73,7 +80,8 @@ public class WhitelistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:update')")
     @PutMapping("/whitelists/{id}")
-    public ApiResponse<Object> update(@Valid @RequestBody Whitelist entity) {
+    public ApiResponse<Object> update(@PathVariable Long id, @Valid @RequestBody Whitelist entity) {
+        entity.setId(id);
         boolean success = thisService.updateById(entity);
         if (success) {
             return new ApiResponse<>("更新成功");

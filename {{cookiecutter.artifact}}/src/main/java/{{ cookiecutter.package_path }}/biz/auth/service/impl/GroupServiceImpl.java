@@ -7,17 +7,11 @@ import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.*;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.GroupResponse;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupPermissionService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupRoleService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
-import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
-import {{ cookiecutter.basePackage }}.common.util.AreaNode;
-import {{ cookiecutter.basePackage }}.common.util.TreeUtil;
+import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -52,19 +46,13 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     /**
      * 创建用户组
      *
-     * @param subGroups 子用户组ID
-     * @param group     用户组对象
+     * @param group 用户组对象
      */
     @Override
-    public Group create(List<String> subGroups, Group group) {
-        if (!subGroups.contains(String.valueOf(group.getParentId()))) {
-            log.info("无法在该用户组下创建子用户组");
-            return null;
-        }
-
+    public Group create(Group group) {
         // 判断同级下, 是否有同名用户组
         if (count(group.getParentId(), group.getName()) > 0) {
-            log.info("同名用户组已存在");
+            log.info("{} 同级同名用户组已存在", group.getName());
             return null;
         }
 
@@ -99,36 +87,8 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     @Cacheable(cacheNames = "subGroupsCache", key = "#rootGroupId")
     @Override
     public List<String> getSubGroups(Long rootGroupId) {
-        AntdTree2 tree = getSubGroupTree(rootGroupId);
-        List<String> subGroups = TreeUtil.getAll(tree);
-        subGroups.add(String.valueOf(rootGroupId));
-        return subGroups;
-    }
-
-    /**
-     * 获取该用户组下所有子用户组树
-     */
-    @Cacheable(cacheNames = "groupCache", key = "#rootGroupId")
-    @Override
-    public AntdTree2 getSubGroupTree(Long rootGroupId) {
-        Group group = baseMapper.selectById(rootGroupId);
-        String rootId = String.valueOf(rootGroupId);
-        String rootName = group.getName();
-        String rootKey = String.valueOf(rootGroupId);
-
-        QueryWrapper<Group> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("id", "name", "parent_id");
-        List<Group> groups = baseMapper.selectList(queryWrapper);
-        List<AreaNode> nodes = groups.stream()
-                .map(node -> new AreaNode(node.getName(), String.valueOf(node.getParentId()), String.valueOf(node.getId())))
-                .collect(Collectors.toList());
-
-        AntdTree2 tree = new AntdTree2();
-        List<AntdTree2> listTree = TreeUtil.createTree(nodes, rootId);
-        tree.setValue(rootKey);
-        tree.setLabel(rootName);
-        tree.setChildren(listTree);
-        return tree;
+        List<Group> groups = getAllChildren(null, rootGroupId);
+        return groups.stream().map(e -> String.valueOf(e.getId())).distinct().collect(Collectors.toList());
     }
 
     /**
@@ -176,6 +136,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      */
     @Override
     public List<Group> getAllChildren(List<Group> groups, Long groupId) {
+        if (CollectionUtils.isEmpty(groups))
+            groups = list();
+
         List<Group> children = new ArrayList<>();
         for (Group group : groups) {
             if (group.getParentId().equals(groupId)) {
@@ -187,20 +150,13 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         return children;
     }
 
-    /**
-     * 判断一个用户是否有对另外一个用户的管理权限
-     *
-     * @param sourceUserId 管理员用户ID
-     * @param targetUserId 被管理的用户ID
-     * @return true 有权限，false 无权限
-     */
     @Override
-    public boolean hasManagePermission(Long sourceUserId, Long targetUserId) {
+    public boolean isAllowed(Long actionUserId, Long acceptUserId, Long acceptGroupId) {
         // 查询当前用户有管理员权限的用户组
         QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
         wrapper.select("user_id, group_id");
-        wrapper.eq("user_id", sourceUserId);
-        wrapper.eq("is_admin", 1);
+        wrapper.eq("user_id", actionUserId);
+        wrapper.eq("admin", 1);
         List<UserGroup> userGroups = userGroupService.list(wrapper);
         if (CollectionUtils.isEmpty(userGroups)) {
             return false;
@@ -214,46 +170,29 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         }
 
         // 去重
-        allGroups = allGroups.stream().distinct().collect(Collectors.toList());
+        List<Long> allGroupIds = allGroups.stream()
+                .map(Group::getId).distinct().collect(Collectors.toList());
 
-        // 查询该用户所在的用户组
-        List<UserGroup> userGroups1 = userGroupService.queryRelation(targetUserId, null);
+        if (acceptUserId != null) {
+            // 查询该用户所在的用户组
+            List<UserGroup> userGroups1 = userGroupService.queryRelation(acceptUserId, null);
+            if (CollectionUtils.isEmpty(userGroups1)) {
+                return false;
+            }
 
-        // 判断该用户是否在这些用户组下
-        for (UserGroup userGroup : userGroups1) {
-            for (Group group : allGroups) {
-                if (userGroup.getGroupId().equals(group.getId())) {
+            // 判断该用户是否在这些用户组下
+            for (UserGroup userGroup : userGroups1) {
+                if (allGroupIds.contains(userGroup.getGroupId())) {
                     return true;
                 }
             }
         }
+
+        if (acceptGroupId != null) {
+            // 判断parentId是否在其中
+            return allGroupIds.contains(acceptGroupId);
+        }
         return false;
-    }
-
-    @Override
-    public boolean hasManagePermission2(Long sourceUserId, Long groupId) {
-        QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
-        wrapper.select("user_id, group_id");
-        wrapper.eq("user_id", sourceUserId);
-        wrapper.eq("is_admin", 1);
-        List<UserGroup> list = userGroupService.list(wrapper);
-        if (CollectionUtils.isEmpty(list)) {
-            return false;
-        }
-
-        List<Group> allGroups = new ArrayList<>();
-        List<Group> groups = list();
-        // 获取所有子用户组
-        for (UserGroup userGroup : list) {
-            allGroups.addAll(getAllChildren(groups, userGroup.getGroupId()));
-        }
-
-        // 去重
-        allGroups = allGroups.stream().distinct().collect(Collectors.toList());
-
-        // 判断parentId是否在其中
-        List<Long> xxx = allGroups.stream().map(Group::getId).collect(Collectors.toList());
-        return xxx.contains(groupId);
     }
 
     /**
@@ -275,12 +214,24 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @param group 用户组对象
      */
     @Override
-    public GroupResponse attachGroupInfo(Group group) {
+    public GroupResponse attachGroupInfo(Group group, boolean full) {
         GroupResponse response = new GroupResponse();
         BeanUtils.copyProperties(group, response);
-        response.setPermissions(groupPermissionService.selectPermissionsByGroupId(group.getId()));
-        response.setRoles(groupRoleService.getRolesByGroupId(group.getId()));
-        response.setUsers(userGroupService.queryUserByGroupId(group.getId()));
+
+        if (full) {
+            List<Permission> permissions = groupPermissionService.selectPermissionsByGroupId(group.getId());
+            response.setPermissions(CollectionUtils.isNotEmpty(permissions) ? permissions : null);
+
+            List<Role> roles = groupRoleService.selectRolesByGroupId(group.getId());
+            response.setRoles(CollectionUtils.isNotEmpty(roles) ? roles : null);
+
+            List<User> users = userGroupService.selectUserByGroupId(group.getId());
+            // 对用户信息进行脱敏处理
+            List<UserResponse> collect = users.stream()
+                    .map(UserResponse::new).collect(Collectors.toList());
+            response.setUsers(CollectionUtils.isNotEmpty(collect) ? collect : null);
+        }
+
         return response;
     }
 

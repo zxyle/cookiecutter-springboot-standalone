@@ -66,7 +66,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     // 查询角色对应的权限
     public List<Permission> selectRolesPermission(List<Long> roleIds) {
         List<Permission> permissions = new ArrayList<>();
-        roleIds.forEach(roleId -> permissions.addAll(rolePermissionService.getPermissionByRoleId(roleId)));
+        roleIds.forEach(roleId -> permissions.addAll(rolePermissionService.selectPermissionByRoleId(roleId)));
         return permissions;
     }
 
@@ -178,16 +178,16 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         List<Long> users = new ArrayList<>();
 
         Set<String> keys = stringRedisTemplate.keys("permissions:");
-        if (null != keys) {
-            // List<String> strings = stringRedisTemplate.opsForValue().multiGet(keys);
-            for (String key : keys) {
-                Long userId = Long.parseLong(key.split(":")[1]);
-                String value = stringRedisTemplate.opsForValue().get(key);
-                if (StringUtils.isNotBlank(value)) {
-                    List<String> permissions = Arrays.asList(value.split(AuthConst.DELIMITER));
-                    if (permissions.contains(code)) {
-                        users.add(userId);
-                    }
+        if (null == keys)
+            return users;
+
+        for (String key : keys) {
+            Long userId = Long.parseLong(key.split(":")[1]);
+            String value = stringRedisTemplate.opsForValue().get(key);
+            if (StringUtils.isNotBlank(value)) {
+                List<String> permissions = Arrays.asList(value.split(AuthConst.DELIMITER));
+                if (permissions.contains(code)) {
+                    users.add(userId);
                 }
             }
         }

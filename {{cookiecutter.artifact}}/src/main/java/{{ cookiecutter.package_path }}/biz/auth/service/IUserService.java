@@ -7,6 +7,9 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * 用户 服务类
  */
@@ -27,5 +30,23 @@ public interface IUserService extends IService<User> {
     // 通过账号名查询用户
     User queryByAccount(String account);
 
-    UserResponse attachUserInfo(User user);
+    // 查询用户拥有的角色、用户组、权限
+    UserResponse attachUserInfo(User user, boolean full);
+
+    // 更新用户关联的角色、用户组、权限
+    void updateRelation(Long userId, List<Long> roleIds, List<Long> groupIds, List<Long> permissionIds);
+
+    /**
+     * 标记用户过期
+     *
+     * @param userId    用户ID
+     * @param expiredAt 过期时间，如果为null，则标记为当前时间
+     */
+    void markExpired(Long userId, LocalDateTime expiredAt);
+
+    // 创建用户
+    User create(String account, String password);
+
+    // 获取所有有管理权限用户组成员
+    List<Long> getAllChildren(Long userId);
 }

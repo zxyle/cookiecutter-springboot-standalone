@@ -3,13 +3,19 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.WhitelistMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * IP黑名单 服务实现类
@@ -31,8 +37,19 @@ public class WhitelistServiceImpl extends ServiceImpl<WhitelistMapper, Whitelist
      */
     @Cacheable(cacheNames = "WhitelistCache", key = "#p.getCurrent()+#p.getSize()")
     @Override
-    public IPage<Whitelist> pageQuery(IPage<Whitelist> p) {
-        return page(p);
+    public IPage<Whitelist> pageQuery(IPage<Whitelist> p, QueryWrapper<Whitelist> wrapper) {
+        return page(p, wrapper);
     }
 
+    @Override
+    public List<String> getWhitelist() {
+        QueryWrapper<Whitelist> wrapper = new QueryWrapper<>();
+        wrapper.select("ip");
+        wrapper.isNull("end_time").or().ge("end_time", System.currentTimeMillis());
+        List<Whitelist> list = list(wrapper);
+        if (CollectionUtils.isNotEmpty(list)) {
+            return list.stream().map(Whitelist::getIp).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
 }

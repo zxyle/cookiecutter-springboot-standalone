@@ -8,8 +8,8 @@ public interface EmailCodeService {
     /**
      * 发送邮件验证码
      *
-     * @param code 验证码
-     * @param to   接收者邮箱
+     * @param code      验证码
+     * @param recipient 接收者邮箱
      */
-    void sendVerificationCode(String code, String to);
+    void sendVerificationCode(String recipient, String code);
 }

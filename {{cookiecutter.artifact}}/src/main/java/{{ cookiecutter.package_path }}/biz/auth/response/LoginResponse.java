@@ -3,12 +3,16 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.response;
 
-
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Profile;
 import lombok.Data;
 
 @Data
 public class LoginResponse {
+
+    /**
+     * 用户ID
+     */
+    private Long userId;
 
     /**
      * 用户信息
@@ -23,7 +27,7 @@ public class LoginResponse {
     private String username;
 
     /**
-     * 令牌
+     * JWT令牌
      */
     private String token;
 
@@ -31,4 +35,9 @@ public class LoginResponse {
      * 是否管理员
      */
     private boolean admin;
+
+    /**
+     * 是否需要修改密码, 返回true后, 跳转到修改密码页面
+     */
+    private boolean mustChangePwd;
 }

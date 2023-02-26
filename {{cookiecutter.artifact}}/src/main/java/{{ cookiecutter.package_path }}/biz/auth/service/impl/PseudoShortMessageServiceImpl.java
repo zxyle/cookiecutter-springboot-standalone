@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.ShortMessageService;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Verification;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IVerificationService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class PseudoShortMessageServiceImpl implements ShortMessageService {
 
+    @Value("${app.name}")
+    private String appName;
+
     IVerificationService verificationService;
 
     public PseudoShortMessageServiceImpl(IVerificationService verificationService) {
@@ -26,19 +30,20 @@ public class PseudoShortMessageServiceImpl implements ShortMessageService {
     /**
      * 发送验证码短信
      *
-     * @param mobile 手机号
-     * @param code   验证码
+     * @param recipient 手机号
+     * @param code      验证码
      */
     @Async
     @Override
-    public void send(String mobile, String code) {
-        String content = "您的验证码是：" + code + "，请在页面中提交验证码完成验证。";
+    public void send(String recipient, String code) {
+        String template = "【%s】验证码：%s，5分钟内有效，为了保障您的账户安全，请勿向他人泄漏验证码信息";
+        String content = String.format(template, appName, code);
         log.info(content);
 
         // 记录短信验证码发送记录
         Verification verification = new Verification();
         verification.setKind("mobile");
-        verification.setReceiver(mobile);
+        verification.setReceiver(recipient);
         verification.setContent(content);
         verificationService.save(verification);
     }

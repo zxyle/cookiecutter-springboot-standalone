@@ -3,16 +3,19 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.response;
 
+import cn.hutool.core.util.DesensitizedUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class UserResponse extends User {
 
@@ -32,4 +35,25 @@ public class UserResponse extends User {
      * 权限列表
      */
     private List<Permission> permissions;
+
+    public UserResponse() {
+    }
+
+    public UserResponse(User user) {
+        BeanUtils.copyProperties(user, this);
+    }
+
+    @Override
+    public String getEmail() {
+        if (StringUtils.isNotBlank(super.getEmail()))
+            super.setEmail(DesensitizedUtil.email(super.getEmail()));
+        return super.getEmail();
+    }
+
+    @Override
+    public String getMobile() {
+        if (StringUtils.isNotBlank(super.getMobile()))
+            super.setMobile(DesensitizedUtil.mobilePhone(super.getMobile()));
+        return super.getMobile();
+    }
 }

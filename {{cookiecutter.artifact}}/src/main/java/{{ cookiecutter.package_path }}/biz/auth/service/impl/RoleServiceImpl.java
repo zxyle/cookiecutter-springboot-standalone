@@ -17,7 +17,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -116,10 +115,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
             return true;
         }
 
-        if (groupRoleService.countRelation(null, roleId) > 0) {
-            return true;
-        }
-        return rolePermissionService.countRelation(roleId, null) > 0;
+        return groupRoleService.countRelation(null, roleId) > 0;
     }
 
     /**
@@ -129,12 +125,21 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
      * @return 包含权限关系的角色对象
      */
     @Override
-    public RoleResponse attachRoleInfo(Role role) {
+    public RoleResponse attachRoleInfo(Role role, boolean full) {
         RoleResponse response = new RoleResponse();
-        List<Permission> permissions = rolePermissionService.getPermissionByRoleId(role.getId());
-        if (CollectionUtils.isNotEmpty(permissions))
-            response.setPermissions(permissions);
+
+        if (full) {
+            List<Permission> permissions = rolePermissionService.selectPermissionByRoleId(role.getId());
+            response.setPermissions(CollectionUtils.isNotEmpty(permissions) ? permissions : null);
+        }
+
         BeanUtils.copyProperties(role, response);
         return response;
+    }
+
+    // 更新角色权限关系
+    @Override
+    public void updateRelation(Long roleId, List<Long> permissionIds) {
+        rolePermissionService.updateRelation(roleId, permissionIds);
     }
 }

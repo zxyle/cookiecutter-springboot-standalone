@@ -46,6 +46,10 @@ public class CodeService {
      * @return 校验结果 true-通过、 false-不通过
      */
     public boolean verify(String code, String captchaId) {
+        if (!captchaProperties.isOn()) {
+            return true;
+        }
+
         if (StringUtils.isBlank(code) || StringUtils.isBlank(captchaId)) {
             return false;
         }

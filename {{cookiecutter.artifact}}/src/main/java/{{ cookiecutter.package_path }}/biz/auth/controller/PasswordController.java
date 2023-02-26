@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.ChangeByOldRequest;
@@ -11,6 +12,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.request.password.ForgetRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.RandomRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.ResetPasswordRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.ResetPasswordResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.response.password.PasswordComplexityResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.security.PasswordProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
@@ -20,10 +22,8 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,28 +39,25 @@ import java.util.List;
 @Slf4j
 public class PasswordController extends AuthBaseController {
 
-    @Autowired
     IGroupService groupService;
 
-    @Autowired
     IUserService userService;
 
-    PasswordProperties passwordProperties;
+    PasswordProperties properties;
 
     IPasswordService passwordService;
 
-    PasswordEncoder passwordEncoder;
-
     LoginService loginService;
 
-    @Autowired
     ValidateService validateService;
 
-    public PasswordController(PasswordEncoder passwordEncoder, LoginService loginService, IPasswordService passwordService, PasswordProperties passwordProperties) {
-        this.passwordEncoder = passwordEncoder;
+    public PasswordController(LoginService loginService, IPasswordService passwordService, PasswordProperties properties, IGroupService groupService, IUserService userService, ValidateService validateService) {
         this.loginService = loginService;
         this.passwordService = passwordService;
-        this.passwordProperties = passwordProperties;
+        this.properties = properties;
+        this.groupService = groupService;
+        this.userService = userService;
+        this.validateService = validateService;
     }
 
     /**
@@ -71,15 +68,14 @@ public class PasswordController extends AuthBaseController {
     public ApiResponse<Object> change(@Valid @RequestBody ChangeByOldRequest request) {
         User user = getLoggedInUser();
 
-        if (null != user && passwordEncoder.matches(request.getOldPassword(), user.getPwd())) {
-            String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
-            boolean isChanged = passwordService.change(user.getId(), newEncodedPassword, ChangePasswordEnum.CHANGE_PASSWORD);
+        if (null != user && passwordService.isCorrect(request.getNewPassword(), user.getPwd())) {
+            boolean succ = passwordService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.CHANGE);
             // 退出当前登录状态
             boolean isLoggedOut = loginService.logout(user.getId());
-            return new ApiResponse<>(isChanged && isLoggedOut);
+            return new ApiResponse<>(succ && isLoggedOut);
         }
 
-        return new ApiResponse<>("修改密码失败，旧密码可能不正确。", false);
+        return new ApiResponse<>("修改失败，旧密码可能不正确", false);
     }
 
     /**
@@ -103,29 +99,28 @@ public class PasswordController extends AuthBaseController {
         }
 
         // 修改密码
-        String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
-        boolean success = passwordService.change(user.getId(), newEncodedPassword, ChangePasswordEnum.FIND_PASSWORD);
+        boolean success = passwordService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.FORGET);
         return new ApiResponse<>(success);
     }
 
     /**
      * 重置密码（支持系统管理员、组管理员重置密码）
      */
+    @LogOperation("重置密码")
     @PreAuthorize("@ck.hasPermit('auth:password:reset')")
     @Secured({"ROLE_admin", "ROLE_group-admin"})
     @PostMapping("/reset")
     public ApiResponse<ResetPasswordResponse> reset(@Valid @RequestBody ResetPasswordRequest request) {
-        // 防止将没有权限的用户密码重置
-        if (!groupService.hasManagePermission(getUserId(), request.getUserId())) {
+        if (!groupService.isAllowed(getUserId(), request.getUserId(), null)) {
             return new ApiResponse<>("重置密码失败，没有权限", false);
         }
 
+        // 考虑新密码来源 1.前端用户传入 2.后端随机生成 3.系统配置
         Long userId = request.getUserId();
         String rawPassword = request.getPassword();
         rawPassword = StringUtils.isBlank(rawPassword) ?
-                CaptchaUtil.randCode(passwordProperties.getMinLength(), passwordProperties.getChars()) : rawPassword;
-        String newEncodedPassword = passwordEncoder.encode(rawPassword);
-        boolean success = passwordService.change(userId, newEncodedPassword, ChangePasswordEnum.RESET_PASSWORD);
+                CaptchaUtil.randCode(properties.getMinLength(), properties.getChars()) : rawPassword;
+        boolean success = passwordService.change(userId, rawPassword, ChangePasswordEnum.RESET);
 
         if (success) {
             // 退出当前登录状态
@@ -143,14 +138,14 @@ public class PasswordController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:password:complexity')")
     @GetMapping("/complexity")
-    public ApiResponse<Integer> complexity(@NotBlank String password) {
+    public ApiResponse<PasswordComplexityResponse> complexity(@NotBlank String password) {
         int score = PasswordChecker.checkPasswordComplexity(password);
-        return new ApiResponse<>(score);
+        return new ApiResponse<>(new PasswordComplexityResponse(score));
     }
 
 
     /**
-     * 随机生成密码
+     * 生成随机密码
      */
     @PreAuthorize("@ck.hasPermit('auth:password:random')")
     @GetMapping("/random")

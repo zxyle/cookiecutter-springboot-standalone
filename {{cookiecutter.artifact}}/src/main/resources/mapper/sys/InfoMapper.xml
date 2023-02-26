@@ -2,9 +2,4 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="{{ cookiecutter.basePackage }}.biz.sys.mapper.InfoMapper">
 
-    <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.sys.entity.Info">
-        SELECT * FROM sys_info
-    </select>
-
-
 </mapper>

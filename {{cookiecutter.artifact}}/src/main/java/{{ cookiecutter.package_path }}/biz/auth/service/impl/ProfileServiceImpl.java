@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,17 @@ public class ProfileServiceImpl extends ServiceImpl<ProfileMapper, Profile> impl
             return getOne(wrapper);
         }
         return profile;
+    }
+
+    // 删除用户资料
+    @CacheEvict(key = "#userId")
+    @Override
+    public boolean delete(Long userId) {
+        QueryWrapper<Profile> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
+        if (count(wrapper) == 0)
+            return true;
+
+        return remove(wrapper);
     }
 }

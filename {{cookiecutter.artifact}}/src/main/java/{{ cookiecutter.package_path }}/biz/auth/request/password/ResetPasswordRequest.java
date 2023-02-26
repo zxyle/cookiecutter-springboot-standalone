@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.password;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 /**
  * 重置密码请求
@@ -16,6 +17,7 @@ public class ResetPasswordRequest {
     /**
      * 用户ID
      */
+    @Positive(message = "用户ID必须为正整数")
     @NotNull(message = "用户ID不能为空")
     private Long userId;
 

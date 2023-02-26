@@ -7,9 +7,9 @@
             b.*
         FROM `auth_user_permission` a
         LEFT JOIN `auth_permission` b
-        ON a.permission_id = b.id
+        ON a.`permission_id` = b.`id`
         WHERE
-            a.user_id = #{userId}
+            a.`user_id` = #{userId}
     </select>
 
 </mapper>

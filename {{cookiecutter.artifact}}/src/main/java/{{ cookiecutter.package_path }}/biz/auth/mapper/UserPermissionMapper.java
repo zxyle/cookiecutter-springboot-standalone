@@ -21,6 +21,6 @@ public interface UserPermissionMapper extends BaseMapper<UserPermission> {
      *
      * @param userId 用户ID
      */
-    List<Permission> selectPermissionByUserId(long userId);
+    List<Permission> selectPermissionByUserId(Long userId);
 
 }

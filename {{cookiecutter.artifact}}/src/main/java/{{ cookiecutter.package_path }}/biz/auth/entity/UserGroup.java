@@ -33,6 +33,11 @@ public class UserGroup extends BaseEntity {
      */
     private String remark;
 
+    /**
+     * 是否是该组管理员
+     */
+    private Integer admin;
+
     public UserGroup(Long userId, Long groupId) {
         this.userId = userId;
         this.groupId = groupId;

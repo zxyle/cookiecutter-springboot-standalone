@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.common.exception;
 
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.constant.Constant;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -38,6 +38,13 @@ public class GlobalExceptionHandler {
     }
 
 
+    // AnonymousAuthenticationToken  -> UsernamePasswordAuthenticationToken
+    @ExceptionHandler(ClassCastException.class)
+    public ResponseEntity<ApiResponse> handleClassCastException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+        return new ResponseEntity<>(new ApiResponse<>("200", "登录失效", false), HttpStatus.FORBIDDEN);
+    }
+
+
     @ExceptionHandler(value = {CustomerException.class})
     public ResponseEntity<String> customerExceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
         logger.error(request.getServletPath(), response.getStatus(), e.getMessage());
@@ -66,7 +73,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {Exception.class, NullPointerException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<ApiResponse> exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        logger.error("接口报错 路径:【{}】, 状态码:【{}】, 错误原因:【{}】.", request.getServletPath(), response.getStatus(), e.getMessage());
         ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "操作失败", false);
         return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

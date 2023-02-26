@@ -118,12 +118,12 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
     }
 
     @Override
-    public List<Group> queryGroupByUserId(Long userId) {
+    public List<Group> selectGroupByUserId(Long userId) {
         return baseMapper.listGroups(userId);
     }
 
     @Override
-    public List<User> queryUserByGroupId(Long groupId) {
+    public List<User> selectUserByGroupId(Long groupId) {
         return baseMapper.listUsers(groupId);
     }
 }

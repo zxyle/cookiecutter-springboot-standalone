@@ -3,7 +3,18 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
+import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+
 public interface LoginService {
+
+    /**
+     * 用户登录
+     *
+     * @param account  用户名/邮箱/手机号
+     * @param password 密码
+     * @return 用户信息
+     */
+    User login(String account, String password);
 
     /**
      * 退出登录

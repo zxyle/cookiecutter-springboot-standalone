@@ -17,9 +17,4 @@
         create_time, update_time, version, description
     </sql>
 
-
-    <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.sys.entity.Release">
-        SELECT * FROM sys_release
-    </select>
-
 </mapper>

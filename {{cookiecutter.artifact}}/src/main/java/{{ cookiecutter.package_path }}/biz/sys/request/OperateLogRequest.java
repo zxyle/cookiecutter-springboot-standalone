@@ -9,7 +9,19 @@ import lombok.Data;
 @Data
 public class OperateLogRequest extends PaginationRequest {
 
+    /**
+     * 操作用户ID
+     */
+    private Long userId;
+
+    /**
+     * 操作开始日期
+     */
+    // FIXME 改为时间格式
     private String startDate;
 
+    /**
+     * 操作结束
+     */
     private String endDate;
 }

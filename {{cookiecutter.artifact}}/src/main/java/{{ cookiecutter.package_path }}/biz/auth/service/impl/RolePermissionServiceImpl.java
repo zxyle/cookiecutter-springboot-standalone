@@ -129,7 +129,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      * @param roleId 角色ID
      */
     @Override
-    public List<Permission> getPermissionByRoleId(Long roleId) {
+    public List<Permission> selectPermissionByRoleId(Long roleId) {
         return baseMapper.getPermissionByRoleId(roleId);
     }
 }

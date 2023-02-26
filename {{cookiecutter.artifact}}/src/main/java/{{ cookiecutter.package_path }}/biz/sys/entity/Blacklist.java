@@ -8,6 +8,8 @@ import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+
 /**
  * IP黑名单
  */
@@ -22,5 +24,15 @@ public class Blacklist extends BaseEntity {
      * IP地址
      */
     private String ip;
+
+    /**
+     * 截止时间
+     */
+    private LocalDateTime endTime;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
 }

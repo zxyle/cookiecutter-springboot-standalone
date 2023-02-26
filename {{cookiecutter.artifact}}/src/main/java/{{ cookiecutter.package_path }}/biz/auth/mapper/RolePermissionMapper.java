@@ -17,6 +17,6 @@ import java.util.List;
 public interface RolePermissionMapper extends BaseMapper<RolePermission> {
 
     // 查询角色所拥有的权限列表
-    List<Permission> getPermissionByRoleId(long roleId);
+    List<Permission> getPermissionByRoleId(Long roleId);
 
 }

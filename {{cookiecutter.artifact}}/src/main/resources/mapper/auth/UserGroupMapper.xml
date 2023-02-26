@@ -13,11 +13,16 @@
 
     <select id="listGroups" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Group">
         SELECT
-            b.*
-        FROM `auth_user_group` a
+            b.`name`,
+            b.`parent_id`,
+            b.`description`,
+            b.`sort`
+        FROM
+            `auth_user_group` a
         LEFT JOIN `auth_group` b
-        ON a.group_id = b.id
-        WHERE a.user_id = #{userId}
+            ON a.`group_id` = b.`id`
+        WHERE
+            a.`user_id` = 1
     </select>
 
 </mapper>

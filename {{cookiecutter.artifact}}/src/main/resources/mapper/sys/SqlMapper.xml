@@ -20,11 +20,6 @@
         sql, success, author
     </sql>
 
-    <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.sys.entity.Sql">
-        SELECT *
-        FROM sys_sql
-    </select>
-
     <select id="execute" resultType="java.util.Map">
         ${sql}
     </select>

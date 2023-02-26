@@ -42,4 +42,9 @@ public class AdminAddUserRequest {
      */
     private List<Long> groupIds;
 
+    /**
+     * 是否需要修改密码
+     */
+    private boolean mustChangePwd;
+
 }

@@ -22,4 +22,14 @@ public class BindingRequest {
     @NotBlank(message = "验证码不能为空")
     private String code;
 
+    /**
+     * 已绑定账号
+     */
+    private String oldAccount;
+
+    /**
+     * 已绑定账号验证码
+     */
+    private String oldCode;
+
 }

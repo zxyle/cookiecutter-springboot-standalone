@@ -4,11 +4,11 @@
 
     <select id="selectMaxSort" resultType="java.lang.Integer">
         SELECT
-            IFNULL( MAX( sort ), 0 ) AS sort
+            IFNULL( MAX( `sort` ), 0 ) AS sort
         FROM
             `auth_group`
         WHERE
-            parent_id = #{parentId}
+            `parent_id` = #{parentId}
     </select>
 
 </mapper>

@@ -14,4 +14,14 @@ public interface IPasswordService {
      * @param newPwd 加密后的新密码
      */
     boolean change(Long userId, String newPwd, ChangePasswordEnum policy);
+
+
+    /**
+     * 校验密码是否正确
+     *
+     * @param raw     原始密码
+     * @param encoded 加密后的密码
+     * @return true: 正确; false: 错误
+     */
+    boolean isCorrect(String raw, String encoded);
 }

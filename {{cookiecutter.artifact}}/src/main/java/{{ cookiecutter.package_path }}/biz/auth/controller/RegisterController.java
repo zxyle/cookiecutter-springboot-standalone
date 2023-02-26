@@ -8,61 +8,55 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.RegisterRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.RegisterResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 注册管理
  */
 @Slf4j
 @RestController
-@RequestMapping("/auth/register")
+@RequestMapping("/auth/user")
 public class RegisterController {
 
-    @Autowired
-    IUserRoleService userRoleService;
+    AuthUserProperties properties;
 
-    @Autowired
-    AuthUserProperties authUserProperties;
-
-    @Autowired
     ValidateService validateService;
 
-    @Autowired
     CodeService codeService;
 
     IUserService userService;
 
-    PasswordEncoder passwordEncoder;
+    PasswordEncoder encoder;
 
-    AuthenticationManager authenticationManager;
-
-    public RegisterController(IUserService userService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public RegisterController(IUserService userService, AuthUserProperties properties, ValidateService validateService, CodeService codeService, PasswordEncoder encoder) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
+        this.properties = properties;
+        this.validateService = validateService;
+        this.codeService = codeService;
+        this.encoder = encoder;
     }
 
     /**
      * 用户注册
      */
-    @PostMapping("/")
+    @PostMapping("/register")
     public ApiResponse<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         String account = request.getAccount();
         // 检查是否开放注册
-        if (!authUserProperties.isOpenRegistration()) {
+        if (!properties.isOpenRegistration()) {
             return new ApiResponse<>("系统未开放注册", false);
         }
 
@@ -79,34 +73,21 @@ public class RegisterController {
         }
 
         // 检查是否已被占用
-        if (isRegistered(account)) {
+        if (userService.queryByAccount(account) != null) {
             return new ApiResponse<>("账号已被占用", false);
         }
 
         // 创建用户
-        User user = buildUser(request);
+        User user = userService.create(account, encoder.encode(request.getPassword()));
         boolean success = userService.save(user);
         if (!success) {
             return new ApiResponse<>("注册失败", false);
         }
 
         // 赋予默认角色
-        userRoleService.createRelation(user.getId(), authUserProperties.getDefaultRole());
+        List<Long> roleIds = Collections.singletonList(properties.getDefaultRole());
+        userService.updateRelation(user.getId(), roleIds, null, null);
         return new ApiResponse<>("注册成功");
-    }
-
-    public User buildUser(RegisterRequest request) {
-        User user = new User();
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        user.setPwd(encodedPassword);
-        if (AccountUtil.isMobile(request.getAccount())) {
-            user.setMobile(request.getAccount());
-        } else if (AccountUtil.isEmail(request.getAccount())) {
-            user.setEmail(request.getAccount());
-        } else {
-            user.setUsername(request.getAccount());
-        }
-        return user;
     }
 
     /**
@@ -117,7 +98,7 @@ public class RegisterController {
     @PreAuthorize("@ck.hasPermit('auth:user:check')")
     @GetMapping("/check")
     public ApiResponse<Boolean> check(@NotBlank String account) {
-        if (isRegistered(account)) {
+        if (userService.queryByAccount(account) == null) {
             return new ApiResponse<>("可以注册");
         }
         return new ApiResponse<>("账号名已经被占用，请更换账号名重试", false);
@@ -125,20 +106,14 @@ public class RegisterController {
 
     /**
      * 随机生成用户名
-     */
-    @PreAuthorize("@ck.hasPermit('auth:user:random')")
-    public void random() {
-
-    }
-
-    /**
-     * 检查用户名/邮箱/手机号是否被占用
      *
-     * @param account 用户名、邮箱、手机号
-     * @return true: 被占用 false: 未被占用
+     * @param prefix 前缀
      */
-    public boolean isRegistered(String account) {
-        User user = userService.queryByAccount(account);
-        return user != null;
+    @GetMapping("/random")
+    @PreAuthorize("@ck.hasPermit('auth:user:random')")
+    public ApiResponse<List<String>> random(String prefix) {
+        List<String> list = new ArrayList<>();
+        list.add(prefix + "_001");
+        return new ApiResponse<>(list);
     }
 }

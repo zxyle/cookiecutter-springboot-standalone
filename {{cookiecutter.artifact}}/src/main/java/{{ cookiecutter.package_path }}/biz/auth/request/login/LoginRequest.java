@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank;
 public class LoginRequest extends BaseRequest {
 
     /**
-     * 注册账号（支持输入用户名、手机号、邮箱）
+     * 注册账号（用户名/邮箱/手机号）
      */
     @NotBlank(message = "注册账号不能为空")
     @Length(min = 5, message = "注册账号长度为5个字符以上")
@@ -36,13 +36,8 @@ public class LoginRequest extends BaseRequest {
     private String captchaId;
 
     /**
-     * 短信或者邮件验证码
+     * 短信、邮件、图形验证码
      */
     private String code;
-
-    /**
-     * 记住我(Y N)
-     */
-    private String rememberMe;
 
 }

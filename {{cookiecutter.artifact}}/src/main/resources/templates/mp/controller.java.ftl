@@ -27,6 +27,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * ${table.comment!}
@@ -50,15 +51,28 @@ public class ${table.controllerName} {
     }
 
     /**
-     * ${table.comment!}列表分页查询
+     * ${table.comment!}分页查询
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
     @GetMapping("/${table.entityPath}s")
-    public ApiResponse<PageVO<${entity}>> list(@Valid PaginationRequest request) {
+    public ApiResponse<PageVO<${entity}>> page(@Valid PaginationRequest request) {
         IPage<${entity}> page = PageRequestUtil.checkForMp(request);
         IPage<${entity}> list = thisService.pageQuery(page);
         return PageRequestUtil.extractFromMp(list);
     }
+
+
+    // /**
+    //  * ${table.comment!}列表查询
+    //  */
+    // @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
+    // @GetMapping("/${table.entityPath}s")
+    // public ApiResponse<List<${entity}>> list() {
+    //     QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
+    //     // wrapper.select();
+    //     // wrapper.eq();
+    //     return new ApiResponse<>(thisService.list(wrapper));
+    // }
 
 
     /**

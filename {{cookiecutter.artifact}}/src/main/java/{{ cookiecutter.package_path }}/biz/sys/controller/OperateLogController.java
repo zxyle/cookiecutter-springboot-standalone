@@ -3,11 +3,16 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
-import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
+import {{ cookiecutter.basePackage }}.biz.sys.request.OperateLogRequest;
+import {{ cookiecutter.basePackage }}.biz.sys.service.IOperateLogService;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.PageVO;
+import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -15,14 +20,28 @@ import javax.validation.Valid;
  * 操作日志
  */
 @RestController
-@RequestMapping("/sys/log")
+@RequestMapping("/sys")
 public class OperateLogController {
 
-    /**
-     * 获取操作日志列表
-     */
-    @PostMapping("/list")
-    public void list(@Valid @RequestBody PaginationRequest request) {
+    IOperateLogService thisService;
 
+    public OperateLogController(IOperateLogService thisService) {
+        this.thisService = thisService;
     }
+
+    /**
+     * 操作日志分页查询
+     */
+    @PreAuthorize("@ck.hasPermit('sys:operate:list')")
+    @GetMapping("/operates")
+    public ApiResponse<PageVO<OperateLog>> page(@Valid OperateLogRequest request) {
+        QueryWrapper<OperateLog> wrapper = new QueryWrapper<>();
+        wrapper.eq(request.getUserId() != null, "user_id", request.getUserId());
+        wrapper.between(request.getStartDate() != null && request.getEndDate() != null,
+                "operate_time", request.getStartDate(), request.getEndDate());
+        IPage<OperateLog> page = PageRequestUtil.checkForMp(request);
+        IPage<OperateLog> list = thisService.page(page, wrapper);
+        return PageRequestUtil.extractFromMp(list);
+    }
+
 }

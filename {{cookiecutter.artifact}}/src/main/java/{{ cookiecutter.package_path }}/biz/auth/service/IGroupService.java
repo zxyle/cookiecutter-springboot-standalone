@@ -7,7 +7,6 @@ import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
 import {{ cookiecutter.basePackage }}.biz.auth.response.GroupResponse;
-import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
 
 import java.util.List;
 
@@ -19,10 +18,9 @@ public interface IGroupService extends IService<Group> {
     /**
      * 创建用户组
      *
-     * @param subGroups 子用户组ID
-     * @param group     用户组对象
+     * @param group 用户组对象
      */
-    Group create(List<String> subGroups, Group group);
+    Group create(Group group);
 
     /**
      * 获取该用户组下 子用户组数量
@@ -40,17 +38,11 @@ public interface IGroupService extends IService<Group> {
     List<String> getSubGroups(Long rootGroupId);
 
     /**
-     * 获取该用户组下所有子用户组树
-     */
-    AntdTree2 getSubGroupTree(Long rootGroupId);
-
-    /**
      * 删除用户组及关联关系
      *
      * @param groupId 用户组ID
      */
     boolean delete(Long groupId);
-
 
     /**
      * 获取用户组树
@@ -68,15 +60,14 @@ public interface IGroupService extends IService<Group> {
     List<Group> getAllChildren(List<Group> groups, Long groupId);
 
     /**
-     * 判断一个用户是否有对另外一个用户的管理权限
+     * 判断一个用户是否有对另一个用户或另一个用户组的管理权限
      *
-     * @param sourceUserId 管理员用户ID
-     * @param targetUserId 被管理的用户ID
+     * @param actionUserId  管理员用户ID
+     * @param acceptUserId  被管理的用户ID
+     * @param acceptGroupId 用户组ID
      * @return true 有权限，false 无权限
      */
-    boolean hasManagePermission(Long sourceUserId, Long targetUserId);
-
-    boolean hasManagePermission2(Long sourceUserId, Long groupId);
+    boolean isAllowed(Long actionUserId, Long acceptUserId, Long acceptGroupId);
 
     /**
      * 更新用户组关联关系
@@ -92,7 +83,7 @@ public interface IGroupService extends IService<Group> {
      *
      * @param group 用户组对象
      */
-    GroupResponse attachGroupInfo(Group group);
+    GroupResponse attachGroupInfo(Group group, boolean full);
 
     /**
      * 判断用户组是否已经被使用

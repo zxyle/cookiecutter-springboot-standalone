@@ -19,8 +19,4 @@
         create_time, update_time, content, url, sort, status
     </sql>
 
-    <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.sys.entity.FriendlyUrl">
-        SELECT * FROM sys_friendly_url
-    </select>
-
 </mapper>

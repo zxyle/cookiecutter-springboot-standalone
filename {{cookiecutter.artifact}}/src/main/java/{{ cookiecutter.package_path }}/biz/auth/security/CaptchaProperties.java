@@ -48,12 +48,12 @@ public class CaptchaProperties {
     private String characters;
 
     /**
-     * 高度
+     * 高度像素
      */
     private Integer height;
 
     /**
-     * 宽度
+     * 宽度像素
      */
     private Integer width;
 

@@ -3,20 +3,25 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.*;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户 服务实现类
@@ -33,10 +38,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     IUserPermissionService userPermissionService;
 
-    public UserServiceImpl(IUserGroupService userGroupService, IUserRoleService userRoleService, IUserPermissionService userPermissionService) {
+    IGroupService groupService;
+
+    IProfileService profileService;
+
+    public UserServiceImpl(IUserGroupService userGroupService, IUserRoleService userRoleService, IUserPermissionService userPermissionService, IGroupService groupService, IProfileService profileService) {
         this.userGroupService = userGroupService;
         this.userRoleService = userRoleService;
         this.userPermissionService = userPermissionService;
+        this.groupService = groupService;
+        this.profileService = profileService;
     }
 
     // 删除用户及其关联角色、用户组、权限
@@ -47,7 +58,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         boolean s2 = userRoleService.deleteRelation(userId, 0L);
         boolean s3 = userGroupService.deleteRelation(userId, 0L);
         boolean s4 = removeById(userId);
-        return (s1 && s2) && (s3 && s4);
+        boolean s5 = profileService.delete(userId);
+        return (s1 && s2) && (s3 && s4) && s5;
     }
 
 
@@ -58,14 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setId(userId);
         user.setEnabled(AuthConst.DISABLED);
         boolean success = updateById(user);
-        // 已经登录的用户，需要清除缓存
-        String key = "permissions:" + userId;
-        Boolean hasKey = stringRedisTemplate.hasKey(key);
-        if (hasKey == null || !hasKey) {
-            return success;
-        }
-        Boolean delete = stringRedisTemplate.delete(key);
-        return success && Boolean.TRUE.equals(delete);
+        return success && kick(userId);
     }
 
     // 启用用户
@@ -100,13 +105,86 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return getOne(wrapper);
     }
 
+    // 查询用户拥有的角色、用户组、权限
     @Override
-    public UserResponse attachUserInfo(User user) {
+    public UserResponse attachUserInfo(User user, boolean full) {
         UserResponse userResponse = new UserResponse();
-        userResponse.setGroups(userGroupService.queryGroupByUserId(user.getId()));
-        userResponse.setRoles(userRoleService.selectRoleByUserId(user.getId()));
-        userResponse.setPermissions(userPermissionService.selectPermissionByUserId(user.getId()));
+        if (full) {
+            List<Group> groups = userGroupService.selectGroupByUserId(user.getId());
+            userResponse.setGroups(CollectionUtils.isNotEmpty(groups) ? groups : null);
+
+            List<Role> roles = userRoleService.selectRoleByUserId(user.getId());
+            userResponse.setRoles(CollectionUtils.isNotEmpty(roles) ? roles : null);
+
+            List<Permission> permissions = userPermissionService.selectPermissionByUserId(user.getId());
+            userResponse.setPermissions(CollectionUtils.isNotEmpty(permissions) ? permissions : null);
+        }
+
         BeanUtils.copyProperties(user, userResponse);
         return userResponse;
+    }
+
+    // 更新用户关联的角色、用户组、权限
+    @Override
+    public void updateRelation(Long userId, List<Long> roleIds, List<Long> groupIds, List<Long> permissionIds) {
+        userRoleService.updateRelation(userId, roleIds);
+        userGroupService.updateRelation(userId, groupIds);
+        userPermissionService.updateRelation(userId, permissionIds);
+    }
+
+    /**
+     * 标记用户过期
+     *
+     * @param userId    用户ID
+     * @param expiredAt 过期时间，如果为null，则标记为当前时间
+     */
+    @Override
+    public void markExpired(Long userId, LocalDateTime expiredAt) {
+        User user = new User();
+        user.setId(userId);
+        expiredAt = expiredAt == null ? LocalDateTime.now() : expiredAt;
+        user.setExpireTime(expiredAt);
+        updateById(user);
+    }
+
+    // 创建用户
+    @Override
+    public User create(String account, String encodedPassword) {
+        User user = new User();
+        user.setPwd(encodedPassword);
+        if (AccountUtil.isMobile(account)) {
+            user.setMobile(account);
+        } else if (AccountUtil.isEmail(account)) {
+            user.setEmail(account);
+        } else {
+            user.setUsername(account);
+        }
+        return user;
+    }
+
+    // 获取所有有管理权限用户组成员
+    @Override
+    public List<Long> getAllChildren(Long userId) {
+        // 查询用户有管理员权限的用户组
+        QueryWrapper<UserGroup> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("user_id, group_id");
+        queryWrapper.eq("user_id", userId);
+        queryWrapper.eq("admin", AuthConst.ENABLED);
+        List<UserGroup> userGroups = userGroupService.list(queryWrapper);
+
+        // 查询用户组的所有子用户组
+        List<Group> allGroups = new ArrayList<>();
+        List<Group> groups = groupService.list();
+        for (UserGroup userGroup : userGroups) {
+            allGroups.addAll(groupService.getAllChildren(groups, userGroup.getGroupId()));
+        }
+
+        // 查询用户组下的所有用户
+        QueryWrapper<UserGroup> userGroupQueryWrapper = new QueryWrapper<>();
+        userGroupQueryWrapper.select("user_id, group_id");
+        List<Long> groupIds = allGroups.stream().distinct().map(Group::getId).collect(Collectors.toList());
+        userGroupQueryWrapper.in("group_id", groupIds);
+        List<UserGroup> userGroupList = userGroupService.list(userGroupQueryWrapper);
+        return userGroupList.stream().map(UserGroup::getUserId).collect(Collectors.toList());
     }
 }

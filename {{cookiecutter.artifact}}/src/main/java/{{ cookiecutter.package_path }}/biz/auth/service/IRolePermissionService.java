@@ -69,6 +69,6 @@ public interface IRolePermissionService extends IService<RolePermission> {
      *
      * @param roleId 角色ID
      */
-    List<Permission> getPermissionByRoleId(Long roleId);
+    List<Permission> selectPermissionByRoleId(Long roleId);
 
 }

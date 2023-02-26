@@ -3,11 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.entity;
 
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  * IP白名单
@@ -22,8 +23,17 @@ public class Whitelist extends BaseEntity {
     /**
      * IP白名单
      */
-    @ExcelProperty("IP白名单")
     private String ip;
+
+    /**
+     * 截止时间
+     */
+    private LocalDateTime endTime;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
 
 }

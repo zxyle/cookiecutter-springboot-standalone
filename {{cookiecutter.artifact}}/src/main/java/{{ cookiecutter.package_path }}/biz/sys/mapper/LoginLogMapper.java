@@ -8,15 +8,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * 登录日志 Mapper 接口
  */
 @Repository
 public interface LoginLogMapper extends BaseMapper<LoginLog> {
-
-    List<LoginLog> selectAll();
 
     // 截断表
     @Update("TRUNCATE TABLE sys_login_log")

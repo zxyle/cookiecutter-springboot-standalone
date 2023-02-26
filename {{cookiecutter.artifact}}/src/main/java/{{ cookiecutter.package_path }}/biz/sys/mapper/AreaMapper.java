@@ -15,6 +15,4 @@ import java.util.List;
 @Repository
 public interface AreaMapper extends BaseMapper<Area> {
 
-    List<Area> selectAll();
-
 }

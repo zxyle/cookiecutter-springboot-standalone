@@ -104,7 +104,7 @@ public class SqlController {
         if (success) {
             return new ApiResponse<>("更新成功");
         }
-        return new ApiResponse<>("更新失败");
+        return new ApiResponse<>("更新失败", false);
     }
 
     /**

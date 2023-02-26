@@ -64,8 +64,8 @@ public interface IUserGroupService extends IService<UserGroup> {
      */
     void updateRelation(Long userId, List<Long> groupIds);
 
-    List<Group> queryGroupByUserId(Long userId);
+    List<Group> selectGroupByUserId(Long userId);
 
-    List<User> queryUserByGroupId(Long groupId);
+    List<User> selectUserByGroupId(Long groupId);
 
 }

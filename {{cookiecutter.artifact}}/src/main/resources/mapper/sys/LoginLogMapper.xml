@@ -22,8 +22,4 @@
     </sql>
 
 
-    <select id="selectAll" resultType="{{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog">
-        SELECT * FROM sys_login_log
-    </select>
-
 </mapper>

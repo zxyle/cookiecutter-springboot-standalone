@@ -129,7 +129,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
     }
 
     @Override
-    public List<Role> getRolesByGroupId(Long groupId) {
+    public List<Role> selectRolesByGroupId(Long groupId) {
         return baseMapper.getRolesByGroupId(groupId);
     }
 }

@@ -3,9 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
+
+import java.util.List;
 
 /**
  * IP黑名单 服务类
@@ -20,6 +23,8 @@ public interface IWhitelistService extends IService<Whitelist> {
     /**
      * 分页查询
      */
-    IPage<Whitelist> pageQuery(IPage<Whitelist> page);
+    IPage<Whitelist> pageQuery(IPage<Whitelist> page, QueryWrapper<Whitelist> wrapper);
+
+    List<String> getWhitelist();
 
 }

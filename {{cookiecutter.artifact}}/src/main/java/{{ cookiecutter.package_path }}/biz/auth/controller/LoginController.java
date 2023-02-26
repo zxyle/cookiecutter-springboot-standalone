@@ -3,25 +3,20 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.LoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
-import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
-import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IProfileService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 /**
  * 登录管理
@@ -38,15 +34,9 @@ import javax.validation.Valid;
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class LoginController extends AuthBaseController {
 
-    final StringRedisTemplate stringRedisTemplate;
-
-    final ILoginLogService loginLogService;
+    final IUserService userService;
 
     final LoginService loginService;
-
-    final AuthenticationManager authenticationManager;
-
-    final CaptchaProperties captchaProperties;
 
     final CodeService codeService;
 
@@ -61,34 +51,31 @@ public class LoginController extends AuthBaseController {
      */
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest servletRequest) {
-        String account = request.getAccount();
         ApiResponse<LoginResponse> beforeLoginResponse = beforeLogin(request);
         if (beforeLoginResponse != null) {
             return beforeLoginResponse;
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(account, request.getPassword());
-        // AuthenticationManager authenticate进行用户认证
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-        // 认证成功后，将认证信息存入SecurityContextHolder中
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
-
-        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-        String userId = loginUser.getUser().getId().toString();
-        String jwt = JwtUtil.createJWT(userId);
-
+        User user = loginService.login(request.getAccount(), request.getPassword());
+        Long userId = user.getId();
         LoginResponse response = new LoginResponse();
-        response.setToken(jwt);
-        response.setUsername(loginUser.getUser().getUsername());
+        response.setToken(JwtUtil.createJWT(userId.toString()));
+        response.setUsername(user.getUsername());
         response.setAdmin(isSuper());
-        response.setProfile(profileService.queryByUserId(loginUser.getUser().getId()));
+        response.setProfile(profileService.queryByUserId(userId));
+
+        // 用户初次登录后，需要在24小时内修改密码，否则到期后无法登录
+        if (user.getMustChangePwd() == 1) {
+            response.setMustChangePwd(true);
+            userService.markExpired(userId, LocalDateTime.now().plusHours(24));
+        }
         return new ApiResponse<>(response);
     }
 
     /**
      * 退出登录
      */
+    @LogOperation("退出登录")
     @PreAuthorize("@ck.hasPermit('auth:user:logout')")
     @PostMapping("/logout")
     public ApiResponse<Object> logout() {
@@ -101,18 +88,11 @@ public class LoginController extends AuthBaseController {
      */
     public ApiResponse<LoginResponse> beforeLogin(LoginRequest request) {
         // 验证码校验
-        if (captchaProperties.isOn()) {
-            boolean verify = codeService.verify(request.getCode(), request.getCaptchaId());
-            if (!verify) {
-                return new ApiResponse<>("验证码错误", false);
-            }
+        boolean verify = codeService.verify(request.getCode(), request.getCaptchaId());
+        if (!verify) {
+            return new ApiResponse<>("验证码可能错误或过期", false);
         }
         return null;
-    }
-
-    // 登录之后
-    public void afterLogin() {
-
     }
 
 }

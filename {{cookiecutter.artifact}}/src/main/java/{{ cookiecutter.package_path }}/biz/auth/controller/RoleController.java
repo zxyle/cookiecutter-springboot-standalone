@@ -11,7 +11,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.request.role.AddRoleRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.role.UpdateRoleRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.RoleResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IRolePermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IRoleService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
@@ -34,14 +33,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/auth")
 public class RoleController extends AuthBaseController {
 
-    IRolePermissionService rolePermissionService;
-
     IRoleService thisService;
 
     IPermissionService permissionService;
 
-    public RoleController(IRolePermissionService rolePermissionService, IRoleService thisService, IPermissionService permissionService) {
-        this.rolePermissionService = rolePermissionService;
+    public RoleController(IRoleService thisService, IPermissionService permissionService) {
         this.thisService = thisService;
         this.permissionService = permissionService;
     }
@@ -53,12 +49,13 @@ public class RoleController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:roles:list')")
     public ApiResponse<PageVO<RoleResponse>> list(@Valid ListAuthRequest request) {
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
+        wrapper.select("id, name, code, description");
         // 模糊查询
-        wrapper.like(StringUtils.isNotBlank(request.getName()), "name", request.getName());
+        wrapper.like(StringUtils.isNotBlank(request.getKeyword()), "name", request.getKeyword());
         IPage<Role> page = PageRequestUtil.checkForMp(request);
         IPage<Role> list = thisService.page(page, wrapper);
         List<RoleResponse> collect = list.getRecords().stream()
-                .map(role-> thisService.attachRoleInfo(role)).collect(Collectors.toList());
+                .map(role -> thisService.attachRoleInfo(role, request.isFull())).collect(Collectors.toList());
         return new ApiResponse<>(new PageVO<>(collect, list.getTotal()));
     }
 
@@ -72,7 +69,7 @@ public class RoleController extends AuthBaseController {
 
         // 查询角色对应权限关系
         List<RoleResponse> list = roles.stream()
-                .map(role-> thisService.attachRoleInfo(role)).collect(Collectors.toList());
+                .map(role -> thisService.attachRoleInfo(role, true)).collect(Collectors.toList());
         return new ApiResponse<>(list);
     }
 
@@ -88,7 +85,7 @@ public class RoleController extends AuthBaseController {
         boolean success = thisService.save(role);
         if (success && CollectionUtils.isNotEmpty(request.getPermissionIds())) {
             // 保存角色权限关系
-            rolePermissionService.updateRelation(role.getId(), request.getPermissionIds());
+            thisService.updateRelation(role.getId(), request.getPermissionIds());
         }
         return new ApiResponse<>(role);
     }
@@ -108,7 +105,7 @@ public class RoleController extends AuthBaseController {
         }
 
         // 查询角色对应权限关系
-        RoleResponse response = thisService.attachRoleInfo(role);
+        RoleResponse response = thisService.attachRoleInfo(role, true);
         return new ApiResponse<>(response);
     }
 
@@ -129,7 +126,7 @@ public class RoleController extends AuthBaseController {
         // 更新角色权限关系
         if (success && CollectionUtils.isNotEmpty(request.getPermissionIds())) {
             // 更新角色权限关联关系
-            rolePermissionService.updateRelation(roleId, request.getPermissionIds());
+            thisService.updateRelation(roleId, request.getPermissionIds());
 
             // 刷新持有该角色的用户权限缓存
             List<Long> users = getUsersByRole(roleId);

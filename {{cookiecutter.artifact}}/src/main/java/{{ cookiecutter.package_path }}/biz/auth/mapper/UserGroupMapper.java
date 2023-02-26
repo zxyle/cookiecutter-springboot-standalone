@@ -18,8 +18,9 @@ import java.util.List;
 public interface UserGroupMapper extends BaseMapper<UserGroup> {
 
     // 查询用户组下所有用户
-    List<User> listUsers(long groupId);
+    List<User> listUsers(Long groupId);
 
-    List<Group> listGroups(long userId);
+    // 查询用户所属的用户组
+    List<Group> listGroups(Long userId);
 
 }

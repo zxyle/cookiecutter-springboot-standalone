@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
-import {{ cookiecutter.basePackage }}.biz.auth.config.AuthUserProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.request.SendCodeRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
@@ -40,11 +39,7 @@ public class CaptchaController {
 
     StringRedisTemplate stringRedisTemplate;
 
-    IUserService userService;
-
     CaptchaProperties captchaProperties;
-
-    AuthUserProperties authUserProperties;
 
     EmailCodeService emailService;
 
@@ -59,11 +54,9 @@ public class CaptchaController {
     @Autowired
     ShortMessageService shortMessageService;
 
-    public CaptchaController(StringRedisTemplate stringRedisTemplate, IUserService userService, CaptchaProperties captchaProperties, AuthUserProperties authUserProperties, EmailCodeService emailService, CodeService codeService) {
+    public CaptchaController(StringRedisTemplate stringRedisTemplate, CaptchaProperties captchaProperties, EmailCodeService emailService, CodeService codeService) {
         this.stringRedisTemplate = stringRedisTemplate;
-        this.userService = userService;
         this.captchaProperties = captchaProperties;
-        this.authUserProperties = authUserProperties;
         this.emailService = emailService;
         this.codeService = codeService;
     }
@@ -118,6 +111,13 @@ public class CaptchaController {
     public ApiResponse<Boolean> send(@Valid SendCodeRequest request) {
         String account = request.getAccount();
 
+        // 验证码300秒有效期内不再发送
+        String key = "code:" + account;
+        Long expire = stringRedisTemplate.getExpire(key);
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key)) && (expire != null && expire > 300)) {
+            return new ApiResponse<>("验证码仍在有效期内", true);
+        }
+
         if (isLocked(account)) {
             return new ApiResponse<>(HttpStatus.BAD_REQUEST.toString(), "请求验证码频繁", false);
         }
@@ -125,7 +125,7 @@ public class CaptchaController {
         String code = validateService.send(account);
         if (AccountUtil.isEmail(account)) {
             // 调用邮件发送方法
-            emailService.sendVerificationCode(code, account);
+            emailService.sendVerificationCode(account, code);
         }
 
         if (AccountUtil.isMobile(account)) {
@@ -135,7 +135,7 @@ public class CaptchaController {
 
         String ipAddr = IpUtil.getIpAddr(servletRequest);
         locked(account, captchaProperties.getBetween(), ipAddr);
-        return new ApiResponse<>(true);
+        return new ApiResponse<>("验证码发送成功", true);
     }
 
     // 防止验证码被滥用

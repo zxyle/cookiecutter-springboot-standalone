@@ -17,8 +17,6 @@ import java.util.Map;
 @Repository
 public interface SqlMapper extends BaseMapper<Sql> {
 
-    List<Sql> selectAll();
-
     // 截断表
     @Update("truncate table sys_sql")
     void truncate();

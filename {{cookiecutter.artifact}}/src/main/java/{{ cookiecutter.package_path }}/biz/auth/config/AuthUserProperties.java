@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 用户认证策略配置
+ */
 @Data
 @Component
 @ConfigurationProperties(prefix = "auth.user")
@@ -35,11 +38,6 @@ public class AuthUserProperties {
     private boolean autoLogin;
 
     /**
-     * 主账号类型 （loginName-用户名、email-邮箱、mobile-手机号）
-     */
-    private String principal;
-
-    /**
      * 默认密码
      */
     private String defaultPassword;
@@ -50,12 +48,17 @@ public class AuthUserProperties {
     private String verification;
 
     /**
-     * 是否开放注册
+     * 是否开放用户注册
      */
     private boolean openRegistration;
 
     /**
-     * 注册后默认角色
+     * 注册后默认角色ID
      */
     private Long defaultRole;
+
+    /**
+     * 初次登录后是否需修改密码
+     */
+    private boolean reset;
 }

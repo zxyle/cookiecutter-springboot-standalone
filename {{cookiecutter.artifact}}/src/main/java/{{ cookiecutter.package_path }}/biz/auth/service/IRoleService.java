@@ -49,5 +49,8 @@ public interface IRoleService extends IService<Role> {
      * @param role 角色
      * @return 包含权限关系的角色对象
      */
-    RoleResponse attachRoleInfo(Role role);
+    RoleResponse attachRoleInfo(Role role, boolean full);
+
+    // 更新角色权限关系
+    void updateRelation(Long roleId, List<Long> permissionIds);
 }

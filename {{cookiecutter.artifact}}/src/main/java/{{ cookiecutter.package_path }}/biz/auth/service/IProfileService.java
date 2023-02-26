@@ -26,5 +26,7 @@ public interface IProfileService extends IService<Profile> {
      */
     Profile updateProfile(Profile profile);
 
+    // 删除用户资料
+    boolean delete(Long userId);
 
 }

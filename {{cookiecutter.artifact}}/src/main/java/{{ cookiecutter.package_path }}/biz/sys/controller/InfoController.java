@@ -63,7 +63,8 @@ public class InfoController {
      */
     @PreAuthorize("@ck.hasPermit('sys:info:update')")
     @PutMapping("/infos/{id}")
-    public ApiResponse<Object> update(@Valid @RequestBody Info entity) {
+    public ApiResponse<Object> update(@PathVariable Long id, @Valid @RequestBody Info entity) {
+        entity.setId(id);
         boolean success = thisService.updateById(entity);
         if (success) {
             return new ApiResponse<>("更新成功");

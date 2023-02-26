@@ -76,4 +76,9 @@ public class User extends BaseEntity {
      */
     private Integer enabled;
 
+    /**
+     * 是否需要修改密码
+     */
+    private Integer mustChangePwd;
+
 }
