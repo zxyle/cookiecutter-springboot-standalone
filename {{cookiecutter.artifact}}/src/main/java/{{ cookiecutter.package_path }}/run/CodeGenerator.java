@@ -210,14 +210,14 @@ public class CodeGenerator {
         for (String table : tables) {
             String comment = CodeGenerator.getComment(table);
             String permission = table.replace(tablePrefix, "");
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%ss:*', '%s所有权限', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%ss:list', '%s列表分页查询', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%ss:add', '新增%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%ss:get', '按ID查询%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%ss:update', '按ID更新%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%ss:delete', '按ID删除%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%ss:export', 'Excel数据导出%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%ss:upload', 'Excel数据导入%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:*', '%s所有权限', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:list', '%s列表分页查询', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:add', '新增%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:get', '按ID查询%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:update', '按ID更新%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:delete', '按ID删除%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:export', 'Excel数据导出%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
+            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:upload', 'Excel数据导入%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
         }
     }
 }
