@@ -26,7 +26,7 @@ public class JwtUtil {
     public static final String JWT_KEY = "{{ random_ascii_string(32) }}";
 
     public static String getUUID() {
-        return UUID.randomUUID().toString().replaceAll("-", "");
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     /**

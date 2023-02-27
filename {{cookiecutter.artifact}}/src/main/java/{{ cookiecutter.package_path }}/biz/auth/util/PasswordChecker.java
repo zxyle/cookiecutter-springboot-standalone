@@ -26,7 +26,7 @@ public class PasswordChecker {
         }
 
         // Check for digits
-        Pattern digit = Pattern.compile("[0-9]");
+        Pattern digit = Pattern.compile("\\d");
         Matcher hasDigit = digit.matcher(password);
         if (hasDigit.find()) {
             score++;
@@ -45,12 +45,6 @@ public class PasswordChecker {
         }
 
         return score;
-    }
-
-    public static void main(String[] args) {
-        String password = "Password123!";
-        int score = checkPasswordComplexity(password);
-        System.out.println("Password score: " + score);
     }
 }
 

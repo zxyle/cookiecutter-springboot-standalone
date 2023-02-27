@@ -72,6 +72,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
+            return true;
         }
         return true;
     }

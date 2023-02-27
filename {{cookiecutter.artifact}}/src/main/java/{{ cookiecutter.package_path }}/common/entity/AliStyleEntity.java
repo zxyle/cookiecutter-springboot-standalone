@@ -26,13 +26,13 @@ public class AliStyleEntity extends LiteEntity {
      */
     @TableField(fill = FieldFill.INSERT)
     @JsonFormat(pattern = DateFormatConst.YYYY_MM_DD_HH_MM_SS, timezone = DateFormatConst.TIMEZONE)
-    private LocalDateTime gmt_create;
+    private LocalDateTime gmtCreate;
 
     /**
      * 数据行最后更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @JsonFormat(pattern = DateFormatConst.YYYY_MM_DD_HH_MM_SS, timezone = DateFormatConst.TIMEZONE)
-    private LocalDateTime gmt_modified;
+    private LocalDateTime gmtModified;
 
 }

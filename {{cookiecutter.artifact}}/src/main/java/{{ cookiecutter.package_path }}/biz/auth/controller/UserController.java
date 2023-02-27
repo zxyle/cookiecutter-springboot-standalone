@@ -12,7 +12,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.AdminAddUserRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.UpdateUserRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
@@ -38,17 +37,14 @@ public class UserController extends AuthBaseController {
 
     AuthUserProperties properties;
 
-    IGroupService groupService;
-
     PasswordEncoder encoder;
 
     IUserService thisService;
 
-    public UserController(AuthUserProperties properties, IGroupService groupService, PasswordEncoder encoder, IUserService thisService) {
+    public UserController(AuthUserProperties properties, PasswordEncoder encoder, IUserService thisService) {
         this.encoder = encoder;
         this.thisService = thisService;
         this.properties = properties;
-        this.groupService = groupService;
     }
 
     /**

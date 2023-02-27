@@ -18,8 +18,8 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
 
     @Async
     @Override
-    public Boolean saveLoginLog(LoginLog loginLog) {
-        return this.save(loginLog);
+    public void saveLoginLog(LoginLog loginLog) {
+        this.save(loginLog);
     }
 
 }

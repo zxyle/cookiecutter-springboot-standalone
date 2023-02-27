@@ -58,7 +58,7 @@ public class PasswordServiceImpl implements IPasswordService {
         boolean success = userService.update(updateWrapper);
         if (success && passwordProperties.isEnableHistory()) {
             // 记录密码修改日志
-            passwordHistoryService.record(user, newPwd, policy);
+            passwordHistoryService.insert(user, newPwd, policy);
         }
         return success;
     }

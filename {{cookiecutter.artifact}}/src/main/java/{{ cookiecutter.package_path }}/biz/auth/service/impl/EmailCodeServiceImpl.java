@@ -7,7 +7,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.EmailCodeService;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Verification;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IVerificationService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,7 +20,6 @@ import javax.mail.internet.MimeMessage;
 public class EmailCodeServiceImpl implements EmailCodeService {
 
     // 第1步: 注入邮件发送者
-    @Autowired
     JavaMailSenderImpl javaMailSender;
 
     @Value("${app.name}")
@@ -33,9 +31,12 @@ public class EmailCodeServiceImpl implements EmailCodeService {
     @Value("${captcha.alive-time}")
     private Integer aliveTime;
 
-    @Autowired
     IVerificationService verificationService;
 
+    public EmailCodeServiceImpl(JavaMailSenderImpl javaMailSender, IVerificationService verificationService) {
+        this.javaMailSender = javaMailSender;
+        this.verificationService = verificationService;
+    }
 
     /**
      * 发送邮件验证码
@@ -70,8 +71,8 @@ public class EmailCodeServiceImpl implements EmailCodeService {
             verification.setKind("email");
             verification.setReceiver(recipient);
             verificationService.save(verification);
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            log.error("发送邮件验证码失败", e);
         }
 
     }

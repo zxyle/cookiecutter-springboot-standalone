@@ -72,6 +72,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
+            return true;
         }
         return true;
     }

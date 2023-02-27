@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,19 +30,19 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiResponse> handleAuthException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<Object>> handleAuthException(HttpServletRequest request, Exception e, HttpServletResponse response) {
         return new ResponseEntity<>(new ApiResponse<>("用户名或密码错误", false), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiResponse> handleAccessDeniedException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<Object>> handleAccessDeniedException(HttpServletRequest request, Exception e, HttpServletResponse response) {
         return new ResponseEntity<>(new ApiResponse<>("403", "权限不足", false), HttpStatus.FORBIDDEN);
     }
 
 
     // AnonymousAuthenticationToken  -> UsernamePasswordAuthenticationToken
     @ExceptionHandler(ClassCastException.class)
-    public ResponseEntity<ApiResponse> handleClassCastException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<Object>> handleClassCastException(HttpServletRequest request, Exception e, HttpServletResponse response) {
         return new ResponseEntity<>(new ApiResponse<>("200", "登录失效", false), HttpStatus.FORBIDDEN);
     }
 
@@ -71,8 +73,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    // 处理密码过期
+    @ExceptionHandler(AccountExpiredException.class)
+    ResponseEntity<ApiResponse<Object>> handleAccountExpiredException(AccountExpiredException e) {
+        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "该账号密码已过期，请联系管理员", false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    // 处理账号禁用
+    @ExceptionHandler(DisabledException.class)
+    ResponseEntity<ApiResponse<Object>> handleDisabledException(DisabledException e) {
+        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "该账号已被停用", false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
     @ExceptionHandler(value = {Exception.class, NullPointerException.class, HttpMessageNotReadableException.class})
-    public ResponseEntity<ApiResponse> exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<Object>> exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
         ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "操作失败", false);
         return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

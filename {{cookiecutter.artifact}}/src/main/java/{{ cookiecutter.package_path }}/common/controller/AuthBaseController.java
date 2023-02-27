@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
 public class AuthBaseController {
 
     @Autowired
-    IGroupService groupService;
+    protected IGroupService groupService;
 
     @Autowired
-    IUserGroupService userGroupService;
+    protected IUserGroupService userGroupService;
 
     @Autowired
-    IUserRoleService userRoleService;
+    protected IUserRoleService userRoleService;
 
     /**
      * 获取当前登录用户ID

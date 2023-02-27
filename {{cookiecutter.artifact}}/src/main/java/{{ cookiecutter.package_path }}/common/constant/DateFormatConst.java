@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.common.constant;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**

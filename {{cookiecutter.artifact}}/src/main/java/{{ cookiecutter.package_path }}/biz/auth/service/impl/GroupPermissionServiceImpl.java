@@ -113,6 +113,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
+            return true;
         }
         return true;
     }

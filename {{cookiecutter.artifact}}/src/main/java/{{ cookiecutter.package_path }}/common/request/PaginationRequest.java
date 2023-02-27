@@ -29,6 +29,11 @@ public class PaginationRequest extends BaseRequest {
      */
     private Integer pageSize;
 
+    /**
+     * 是否导出当前页
+     */
+    private boolean export;
+
     public Integer getPageNum() {
         return pageNum;
     }
@@ -53,4 +58,11 @@ public class PaginationRequest extends BaseRequest {
         this.pageSize = pageSize;
     }
 
+    public boolean isExport() {
+        return export;
+    }
+
+    public void setExport(boolean export) {
+        this.export = export;
+    }
 }

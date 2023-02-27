@@ -31,7 +31,7 @@ public interface IPasswordHistoryService extends IService<PasswordHistory> {
      * @param newPwd 新密码
      * @param policy 密码策略
      */
-    void record(User user, String newPwd, ChangePasswordEnum policy);
+    void insert(User user, String newPwd, ChangePasswordEnum policy);
 
 
 }

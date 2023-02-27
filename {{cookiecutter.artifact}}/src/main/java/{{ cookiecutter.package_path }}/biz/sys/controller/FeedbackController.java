@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
-import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
@@ -40,12 +40,23 @@ public class FeedbackController {
      */
     @PreAuthorize("@ck.hasPermit('sys:feedback:list')")
     @GetMapping("/feedbacks")
-    public ApiResponse<PageVO<Feedback>> list(@Valid OrderPageRequest request) {
+    public ApiResponse<PageVO<Feedback>> list(@Valid OrderPageRequest request, HttpServletResponse response) throws IOException {
         QueryWrapper<Feedback> wrapper = new QueryWrapper<>();
-        wrapper.orderBy(EntityUtil.getFields(Feedback.class).contains(request.getSort()),
-                request.getOrder(), request.getSort());
+        wrapper.orderBy(EntityUtil.getFields(Feedback.class).contains(request.getField()),
+                request.getOrder(), request.getField());
         IPage<Feedback> page = PageRequestUtil.checkForMp(request);
         IPage<Feedback> list = thisService.pageQuery(page, wrapper);
+
+        // 数据导出
+        if (request.isExport()) {
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            String fileName = "意见反馈";
+            String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
+            EasyExcelFactory.write(response.getOutputStream(), Feedback.class)
+                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(list.getRecords());
+            return null;
+        }
         return PageRequestUtil.extractFromMp(list);
     }
 
@@ -101,19 +112,6 @@ public class FeedbackController {
             return new ApiResponse<>("删除成功");
         }
         return new ApiResponse<>("删除失败", false);
-    }
-
-    /**
-     * Excel数据导出意见反馈
-     */
-    @PreAuthorize("@ck.hasPermit('sys:feedback:export')")
-    @GetMapping("/feedbacks/export")
-    public void export(HttpServletResponse response) throws IOException {
-        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        String fileName = "意见反馈";
-        String baseName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
-        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(), Feedback.class).autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(thisService.list());
     }
 
 }

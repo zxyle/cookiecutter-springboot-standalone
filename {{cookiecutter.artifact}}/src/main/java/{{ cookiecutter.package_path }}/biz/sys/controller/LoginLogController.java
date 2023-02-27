@@ -3,10 +3,20 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.PageVO;
+import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.LoginLogMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * 登录日志
@@ -25,10 +35,15 @@ public class LoginLogController {
     }
 
     /**
-     * 分页查询
+     * 登录日志列表分页查询
      */
+    @PreAuthorize("@ck.hasPermit('sys:login:list')")
     @GetMapping("/logs")
-    public void list() {
+    public ApiResponse<PageVO<LoginLog>> list(@Valid PaginationRequest request) {
+        QueryWrapper<LoginLog> wrapper = new QueryWrapper<>();
+        IPage<LoginLog> page = PageRequestUtil.checkForMp(request);
+        IPage<LoginLog> list = thisService.page(page, wrapper);
+        return PageRequestUtil.extractFromMp(list);
     }
 
 }

@@ -74,6 +74,7 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
+            return true;
         }
         return true;
     }

@@ -15,8 +15,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.request.UpdateAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.group.AddGroupRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.group.MigrateGroupRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.GroupResponse;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
@@ -38,29 +36,20 @@ import java.util.stream.Collectors;
 @RequestMapping("/auth")
 public class GroupController extends AuthBaseController {
 
-    IUserGroupService userGroupService;
-
-    IGroupService thisService;
-
-    public GroupController(IGroupService thisService, IUserGroupService userGroupService) {
-        this.thisService = thisService;
-        this.userGroupService = userGroupService;
-    }
-
     /**
      * 用户组查询
      */
-    @PreAuthorize("@ck.hasPermit('auth:group:list')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:list')")
     @GetMapping("/groups")
     public ApiResponse<PageVO<GroupResponse>> list(@Valid ListAuthRequest request) {
         // 查询当前用户，所在用户组和所能管理的用户组
         QueryWrapper<Group> wrapper = new QueryWrapper<>();
-        wrapper.in("id", thisService.getSubGroups(getUserId()));
+        wrapper.in("id", groupService.getSubGroups(getUserId()));
         wrapper.like(StringUtils.isNotBlank(request.getKeyword()), "name", request.getKeyword());
         IPage<Group> page = PageRequestUtil.checkForMp(request);
-        IPage<Group> list = thisService.page(page, wrapper);
+        IPage<Group> list = groupService.page(page, wrapper);
         List<GroupResponse> collect = list.getRecords().stream()
-                .map(group -> thisService.attachGroupInfo(group, request.isFull())).collect(Collectors.toList());
+                .map(group -> groupService.attachGroupInfo(group, request.isFull())).collect(Collectors.toList());
         return new ApiResponse<>(new PageVO<>(collect, list.getTotal()));
     }
 
@@ -69,7 +58,7 @@ public class GroupController extends AuthBaseController {
      *
      * @param rootId 根节点ID
      */
-    @PreAuthorize("@ck.hasPermit('auth:group:tree')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:tree')")
     @GetMapping("/groups/tree")
     public ApiResponse<List<Tree<Integer>>> tree(@RequestParam(defaultValue = "0") Integer rootId) {
         // 查询当前用户，所在用户组作为rootId
@@ -81,25 +70,25 @@ public class GroupController extends AuthBaseController {
             rootId = list.get(0).getGroupId().intValue();
         }
 
-        List<Tree<Integer>> tree = thisService.getTree(rootId);
+        List<Tree<Integer>> tree = groupService.getTree(rootId);
         return new ApiResponse<>(tree);
     }
 
     /**
      * 创建用户组
      */
-    @PreAuthorize("@ck.hasPermit('auth:group:add')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:add')")
     @PostMapping("/groups")
     public ApiResponse<Object> add(@Valid @RequestBody AddGroupRequest request) {
-        if (!thisService.isAllowed(getUserId(), null, request.getParentId())) {
+        if (!groupService.isAllowed(getUserId(), null, request.getParentId())) {
             return new ApiResponse<>("无权限创建该用户组", false);
         }
 
         Group group = new Group();
         BeanUtils.copyProperties(request, group);
-        Group result = thisService.create(group);
+        Group result = groupService.create(group);
         if (result != null) {
-            thisService.updateRelation(result.getId(), request.getRoleIds(), request.getPermissionIds());
+            groupService.updateRelation(result.getId(), request.getRoleIds(), request.getPermissionIds());
             return new ApiResponse<>(result);
         }
         return new ApiResponse<>("创建用户组失败", false);
@@ -111,15 +100,15 @@ public class GroupController extends AuthBaseController {
      * @param groupId 用户组ID
      */
     @LogOperation("按ID查询用户组")
-    @PreAuthorize("@ck.hasPermit('auth:group:get')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:get')")
     @GetMapping("/groups/{groupId}")
     public ApiResponse<GroupResponse> get(@PathVariable Long groupId) {
-        if (!thisService.isAllowed(getUserId(), null, groupId)) {
+        if (!groupService.isAllowed(getUserId(), null, groupId)) {
             return new ApiResponse<>("无权限查询该用户组", false);
         }
 
-        Group group = thisService.getById(groupId);
-        return new ApiResponse<>(thisService.attachGroupInfo(group, true));
+        Group group = groupService.getById(groupId);
+        return new ApiResponse<>(groupService.attachGroupInfo(group, true));
     }
 
     /**
@@ -128,10 +117,10 @@ public class GroupController extends AuthBaseController {
      * @param groupId 用户组ID
      */
     @LogOperation("按ID更新用户组")
-    @PreAuthorize("@ck.hasPermit('auth:group:update')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:update')")
     @PutMapping("/groups/{groupId}")
     public ApiResponse<Group> update(@PathVariable Long groupId, @Valid @RequestBody UpdateAuthRequest request) {
-        if (!thisService.isAllowed(getUserId(), null, groupId)) {
+        if (!groupService.isAllowed(getUserId(), null, groupId)) {
             return new ApiResponse<>("无权限更新该用户组", false);
         }
 
@@ -139,9 +128,9 @@ public class GroupController extends AuthBaseController {
         Group group = new Group();
         BeanUtils.copyProperties(request, group);
         group.setId(groupId);
-        thisService.updateById(group);
-        thisService.updateRelation(groupId, request.getRoleIds(), request.getPermissionIds());
-        return new ApiResponse<>(thisService.getById(groupId));
+        groupService.updateById(group);
+        groupService.updateRelation(groupId, request.getRoleIds(), request.getPermissionIds());
+        return new ApiResponse<>(groupService.getById(groupId));
     }
 
     /**
@@ -150,26 +139,26 @@ public class GroupController extends AuthBaseController {
      * @param groupId 用户组ID
      */
     @LogOperation("按ID删除用户组")
-    @PreAuthorize("@ck.hasPermit('auth:group:delete')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:delete')")
     @DeleteMapping("/groups/{groupId}")
     public ApiResponse<Object> delete(@PathVariable Long groupId) {
-        if (!thisService.isAllowed(getUserId(), null, groupId)) {
+        if (!groupService.isAllowed(getUserId(), null, groupId)) {
             return new ApiResponse<>("无权限删除该用户组", false);
         }
 
         // 判断该用户组下是否有子用户组
-        if (thisService.isAlreadyUsed(groupId)) {
+        if (groupService.isAlreadyUsed(groupId)) {
             return new ApiResponse<>("该用户组下还存在子用户组", false);
         }
 
-        boolean success = thisService.delete(groupId);
+        boolean success = groupService.delete(groupId);
         return new ApiResponse<>("删除用户组成功.", success);
     }
 
     /**
      * 用户组迁移
      */
-    @PreAuthorize("@ck.hasPermit('auth:group:migrate')")
+    @PreAuthorize("@ck.hasPermit('auth:groups:migrate')")
     @PostMapping("/groups/migrate")
     public ApiResponse<Object> migrate(@Valid @RequestBody MigrateGroupRequest request) {
         if (!isSubGroup(request.getParentId()) || !isSubGroup(request.getCurrentId())) {
@@ -179,7 +168,7 @@ public class GroupController extends AuthBaseController {
         Group group = new Group();
         group.setId(request.getCurrentId());
         group.setParentId(request.getParentId());
-        boolean success = thisService.updateById(group);
+        boolean success = groupService.updateById(group);
         return new ApiResponse<>("移动用户组成功.", success);
     }
 }

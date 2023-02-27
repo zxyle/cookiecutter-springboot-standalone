@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class TestWildcardPermission {
 
     @Test
-    public void test01() {
+    void test01() {
         WildcardPermission wildcard = new WildcardPermission();
         Assert.assertTrue(wildcard.isPermit("sys:group:delete", Arrays.asList(":")));
         Assert.assertTrue(wildcard.isPermit("sys:group:delete", Arrays.asList("::")));
@@ -52,7 +52,7 @@ public class TestWildcardPermission {
 
 
     @Test
-    public void test02() {
+    void test02() {
         WildcardPermission wildcard = new WildcardPermission(4);
         Assert.assertTrue(wildcard.isPermit("manager:sys:group:delete", Arrays.asList("*")));
         Assert.assertTrue(wildcard.isPermit("manager:sys:group:delete", Arrays.asList(":")));

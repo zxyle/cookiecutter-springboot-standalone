@@ -28,13 +28,12 @@ public class LocalFileStoreServiceImpl implements FileStoreService {
     public String upload(MultipartFile file, String objectName) {
         // 将文件保存到本地
         try {
+            File target = new File(LOCAL_FILE_STORE, objectName);
             String path = LOCAL_FILE_STORE + "/" + objectName;
-            // File file1 = new File(path);
-            new File(path).getParentFile().mkdirs();
+            target.getParentFile().mkdirs();
             FileOutputStream fs = new FileOutputStream(path);
             fs.write(file.getBytes());
             fs.close();
-            // file.transferTo(new File(path));
             return PROTOCOL + path;
         } catch (Exception ignored) {
         }

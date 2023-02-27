@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.config.interceptor;
 
-import {{ cookiecutter.basePackage }}.IpUtil;
+import {{ cookiecutter.basePackage }}.common.util.CidrUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IBlacklistService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
 import {{ cookiecutter.basePackage }}.common.util.ResponseUtil;
@@ -34,8 +34,8 @@ public class IpBlackListInterceptor implements HandlerInterceptor {
         String ip = request.getRemoteAddr();
         List<String> blacklist = blacklistService.getBlacklist();
         List<String> whitelist = whitelistService.getWhitelist();
-        if ((blackEnable && IpUtil.in(ip, blacklist)) ||
-                (whiteEnable && IpUtil.notIn(ip, whitelist))) {
+        if ((blackEnable && CidrUtil.in(ip, blacklist)) ||
+                (whiteEnable && CidrUtil.notIn(ip, whitelist))) {
 
             ResponseUtil.forbidden(response);
             return false;

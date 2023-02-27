@@ -39,8 +39,6 @@ import java.util.List;
 @Slf4j
 public class PasswordController extends AuthBaseController {
 
-    IGroupService groupService;
-
     IUserService userService;
 
     PasswordProperties properties;
@@ -51,11 +49,10 @@ public class PasswordController extends AuthBaseController {
 
     ValidateService validateService;
 
-    public PasswordController(LoginService loginService, IPasswordService passwordService, PasswordProperties properties, IGroupService groupService, IUserService userService, ValidateService validateService) {
+    public PasswordController(LoginService loginService, IPasswordService passwordService, PasswordProperties properties, IUserService userService, ValidateService validateService) {
         this.loginService = loginService;
         this.passwordService = passwordService;
         this.properties = properties;
-        this.groupService = groupService;
         this.userService = userService;
         this.validateService = validateService;
     }

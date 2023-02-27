@@ -85,6 +85,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
+            return true;
         }
         return true;
     }

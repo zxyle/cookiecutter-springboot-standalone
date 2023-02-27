@@ -12,6 +12,10 @@ import org.apache.commons.lang3.StringUtils;
 @Data
 public class OrderPageRequest extends PaginationRequest {
 
+    public static final String DEFAULT_ORDER = "asc";
+
+    public static final String DEFAULT_FIELD = "id";
+
     /**
      * 排序方式 asc/desc
      */
@@ -20,14 +24,14 @@ public class OrderPageRequest extends PaginationRequest {
     /**
      * 排序字段
      */
-    private String sort;
+    private String field;
 
 
     public Boolean getOrder() {
-        return StringUtils.isBlank(order) || order.equalsIgnoreCase("asc");
+        return StringUtils.isBlank(order) || order.equalsIgnoreCase(DEFAULT_ORDER);
     }
 
-    public String getSort() {
-        return StringUtils.isNotBlank(sort) ? sort : "id";
+    public String getField() {
+        return StringUtils.isNotBlank(field) ? field : DEFAULT_FIELD;
     }
 }

@@ -42,15 +42,12 @@ public class BlacklistServiceImpl extends ServiceImpl<BlacklistMapper, Blacklist
     public boolean addBlacklist(String ip) {
         Blacklist blacklist = new Blacklist();
         blacklist.setIp(ip);
-        boolean save = save(blacklist);
-
-        return false;
+        return save(blacklist);
     }
 
     @Override
     public boolean deleteBlacklist(Long id) {
-
-        return false;
+        return removeById(id);
     }
 
     /**

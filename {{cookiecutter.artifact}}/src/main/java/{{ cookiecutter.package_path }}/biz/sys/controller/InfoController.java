@@ -41,7 +41,7 @@ public class InfoController {
         wrapper.select("param_key", "param_value");
         List<Info> params = thisService.list(wrapper);
         Map<String, String> map = new HashMap<>();
-        params.forEach((e) -> map.put(e.getParamKey(), e.getParamValue()));
+        params.forEach(info -> map.put(info.getParamKey(), info.getParamValue()));
         return new ApiResponse<>(map);
     }
 
