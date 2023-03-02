@@ -14,6 +14,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -84,6 +85,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DisabledException.class)
     ResponseEntity<ApiResponse<Object>> handleDisabledException(DisabledException e) {
         ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "该账号已被停用", false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    // 处理账号锁定
+    @ExceptionHandler(LockedException.class)
+    ResponseEntity<ApiResponse<Object>> handleLockedException(LockedException e) {
+        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "该账号已被锁定", false);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

@@ -51,7 +51,7 @@ public class User extends BaseEntity {
      * 账号是否锁定 （1-上锁 0-未锁）
      */
     @JsonIgnore
-    private Integer userLock;
+    private Integer locked;
 
     /**
      * 超级管理员

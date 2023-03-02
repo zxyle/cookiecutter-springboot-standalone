@@ -50,4 +50,9 @@ public class PasswordProperties {
      */
     private boolean enableHistory;
 
+    /**
+     * 能否和旧密码相同
+     */
+    private boolean enableSame;
+
 }

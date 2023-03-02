@@ -136,28 +136,28 @@ INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`,
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (22, '用户信息管理', 'auth:profile:*', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (23, '获取当前用户信息', 'auth:profile:get', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (24, '更新当前用户信息', 'auth:profile:update', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (25, '角色管理', 'auth:role:*', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (26, '角色列表查询', 'auth:role:list', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (27, '所有角色', 'auth:role:all', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (28, '新增角色', 'auth:role:add', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (29, '按ID查询角色', 'auth:role:get', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (30, '按ID更新角色', 'auth:role:update', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (31, '按ID删除角色', 'auth:role:delete', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (32, '用户组管理', 'auth:group:*', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (33, '用户组查询', 'auth:group:list', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (34, '获取用户组树状结构', 'auth:group:tree', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (35, '新增用户组', 'auth:group:add', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (36, '按ID查询用户组', 'auth:group:get', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (37, '按ID更新用户组', 'auth:group:update', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (38, '按ID删除用户组', 'auth:group:delete', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (39, '用户组迁移', 'auth:group:migrate', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (40, '权限管理', 'auth:permission:*', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (41, '获取权限树', 'auth:permission:tree', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (42, '查询用户拥有所有权限信息', 'auth:permission:list', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (43, '新增权限', 'auth:permission:add', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (44, '按ID查询权限', 'auth:permission:get', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (45, '按ID更新权限', 'auth:permission:update', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (46, '按ID删除权限', 'auth:permission:delete', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (25, '角色管理', 'auth:roles:*', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (26, '角色列表查询', 'auth:roles:list', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (27, '所有角色', 'auth:roles:all', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (28, '新增角色', 'auth:roles:add', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (29, '按ID查询角色', 'auth:roles:get', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (30, '按ID更新角色', 'auth:roles:update', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (31, '按ID删除角色', 'auth:roles:delete', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (32, '用户组管理', 'auth:groups:*', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (33, '用户组查询', 'auth:groups:list', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (34, '获取用户组树状结构', 'auth:groups:tree', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (35, '新增用户组', 'auth:groups:add', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (36, '按ID查询用户组', 'auth:groups:get', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (37, '按ID更新用户组', 'auth:groups:update', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (38, '按ID删除用户组', 'auth:groups:delete', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (39, '用户组迁移', 'auth:groups:migrate', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (40, '权限管理', 'auth:permissions:*', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (41, '获取权限树', 'auth:permissions:tree', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (42, '查询用户拥有所有权限信息', 'auth:permissions:list', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (43, '新增权限', 'auth:permissions:add', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (44, '按ID查询权限', 'auth:permissions:get', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (45, '按ID更新权限', 'auth:permissions:update', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (46, '按ID删除权限', 'auth:permissions:delete', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (47, 'Token管理', 'auth:token:*', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (48, '刷新/续约token', 'auth:token:renew', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (49, 'sys模块所有权限', 'sys:*', NULL, 1, 2, NULL, 1);
@@ -209,13 +209,13 @@ INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`,
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (95, '按ID查询系统设置', 'sys:setting:get', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (96, '按ID更新系统设置', 'sys:setting:update', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (97, '按ID删除系统设置', 'sys:setting:delete', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (98, 'redis管理', 'sys:key:*', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (99, '获取key列表', 'sys:key:list', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (100, '删除key', 'sys:key:delete', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (101, '获取key的值', 'sys:key:get', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (102, '设置key的值', 'sys:key:set', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (103, 'key重命名', 'sys:key:rename', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (104, '设置过期时间', 'sys:key:expire', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (98, 'redis管理', 'sys:keys:*', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (99, '获取key列表', 'sys:keys:list', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (100, '删除key', 'sys:keys:delete', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (101, '获取key的值', 'sys:keys:get', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (102, '设置key的值', 'sys:keys:set', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (103, 'key重命名', 'sys:keys:rename', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (104, '设置过期时间', 'sys:keys:expire', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (105, '验证码发送记录管理', 'sys:verification:*', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (106, '验证码发送记录分页查询', 'sys:verification:list', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (107, '新增验证码发送记录', 'sys:verification:add', NULL, 1, 2, NULL, 1);
@@ -240,14 +240,14 @@ INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`,
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (126, '按ID查询定时任务', 'sys:task:get', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (127, '按ID更新定时任务', 'sys:task:update', NULL, 1, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (128, '按ID删除定时任务', 'sys:task:delete', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (129, '意见反馈所有权限', 'sys:feedback:*', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (130, '意见反馈列表分页查询', 'sys:feedback:list', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (131, '新增意见反馈', 'sys:feedback:add', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (132, '按ID查询意见反馈', 'sys:feedback:get', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (133, '按ID更新意见反馈', 'sys:feedback:update', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (134, '按ID删除意见反馈', 'sys:feedback:delete', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (135, 'Excel数据导出意见反馈', 'sys:feedback:export', NULL, 1, 2, NULL, 1);
-INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (136, 'Excel数据导入意见反馈', 'sys:feedback:upload', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (129, '意见反馈所有权限', 'sys:feedbacks:*', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (130, '意见反馈列表分页查询', 'sys:feedbacks:list', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (131, '新增意见反馈', 'sys:feedbacks:add', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (132, '按ID查询意见反馈', 'sys:feedbacks:get', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (133, '按ID更新意见反馈', 'sys:feedbacks:update', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (134, '按ID删除意见反馈', 'sys:feedbacks:delete', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (135, 'Excel数据导出意见反馈', 'sys:feedbacks:export', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (136, 'Excel数据导入意见反馈', 'sys:feedbacks:upload', NULL, 1, 2, NULL, 1);
 COMMIT;
 
 -- ----------------------------
@@ -361,7 +361,7 @@ CREATE TABLE `auth_user` (
   `email` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '邮箱地址',
   `pwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
   `nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '昵称',
-  `user_lock` tinyint NOT NULL DEFAULT '0' COMMENT '锁1-上锁 0-解锁',
+  `locked` tinyint NOT NULL DEFAULT '0' COMMENT '账号是否锁定 （1-上锁 0-未锁）',
   `is_super` tinyint NOT NULL DEFAULT '0' COMMENT '超级管理员',
   `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
   `pwd_change_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '密码上次修改时间',

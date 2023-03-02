@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
@@ -46,7 +47,7 @@ public class RoleController extends AuthBaseController {
      * 角色列表分页查询
      */
     @GetMapping("/roles")
-    @PreAuthorize("@ck.hasPermit('auth:role:list')")
+    @PreAuthorize("@ck.hasPermit('auth:roles:list')")
     public ApiResponse<PageVO<RoleResponse>> list(@Valid ListAuthRequest request) {
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
         wrapper.select("id, name, code, description");
@@ -54,23 +55,9 @@ public class RoleController extends AuthBaseController {
         wrapper.like(StringUtils.isNotBlank(request.getKeyword()), "name", request.getKeyword());
         IPage<Role> page = PageRequestUtil.checkForMp(request);
         IPage<Role> list = thisService.page(page, wrapper);
-        List<RoleResponse> collect = list.getRecords().stream()
+        List<RoleResponse> roles = list.getRecords().stream()
                 .map(role -> thisService.attachRoleInfo(role, request.isFull())).collect(Collectors.toList());
-        return new ApiResponse<>(new PageVO<>(collect, list.getTotal()));
-    }
-
-    /**
-     * 获取所有角色
-     */
-    @GetMapping("/roles/all")
-    @PreAuthorize("@ck.hasPermit('auth:role:all')")
-    public ApiResponse<List<RoleResponse>> all() {
-        List<Role> roles = thisService.list();
-
-        // 查询角色对应权限关系
-        List<RoleResponse> list = roles.stream()
-                .map(role -> thisService.attachRoleInfo(role, true)).collect(Collectors.toList());
-        return new ApiResponse<>(list);
+        return new ApiResponse<>(new PageVO<>(roles, list.getTotal()));
     }
 
 
@@ -78,10 +65,13 @@ public class RoleController extends AuthBaseController {
      * 创建角色
      */
     @PostMapping("/roles")
-    @PreAuthorize("@ck.hasPermit('auth:role:add')")
+    @PreAuthorize("@ck.hasPermit('auth:roles:add')")
     public ApiResponse<Role> add(@Valid @RequestBody AddRoleRequest request) {
         Role role = new Role();
         BeanUtils.copyProperties(request, role);
+        if (StringUtils.isBlank(role.getCode())) {
+            role.setCode(IdUtil.simpleUUID());
+        }
         boolean success = thisService.save(role);
         if (success && CollectionUtils.isNotEmpty(request.getPermissionIds())) {
             // 保存角色权限关系
@@ -97,7 +87,7 @@ public class RoleController extends AuthBaseController {
      * @param roleId 角色ID
      */
     @GetMapping("/roles/{roleId}")
-    @PreAuthorize("@ck.hasPermit('auth:role:get')")
+    @PreAuthorize("@ck.hasPermit('auth:roles:get')")
     public ApiResponse<RoleResponse> get(@PathVariable Long roleId) {
         Role role = thisService.queryById(roleId);
         if (role == null) {
@@ -115,7 +105,7 @@ public class RoleController extends AuthBaseController {
      * @param roleId 角色ID
      */
     @PutMapping("/roles/{roleId}")
-    @PreAuthorize("@ck.hasPermit('auth:role:update')")
+    @PreAuthorize("@ck.hasPermit('auth:roles:update')")
     public ApiResponse<Object> update(@Valid @RequestBody UpdateRoleRequest request, @PathVariable Long roleId) {
         // 更新角色信息
         Role role = new Role();
@@ -141,7 +131,7 @@ public class RoleController extends AuthBaseController {
      * @param roleId 角色ID
      */
     @DeleteMapping("/roles/{roleId}")
-    @PreAuthorize("@ck.hasPermit('auth:role:delete')")
+    @PreAuthorize("@ck.hasPermit('auth:roles:delete')")
     public ApiResponse<Object> delete(@PathVariable Long roleId) {
         if (thisService.isAlreadyUsed(roleId)) {
             return new ApiResponse<>("该角色已被使用，无法删除", false);

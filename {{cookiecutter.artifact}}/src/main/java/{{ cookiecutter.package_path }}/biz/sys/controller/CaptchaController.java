@@ -106,16 +106,22 @@ public class CaptchaController {
 
     /**
      * 发送短信邮件验证码
+     *
+     * @apiNote 1. 验证码60秒有效期内不再发送 2. 需先校验图形验证码
      */
     @GetMapping("/send")
     public ApiResponse<Boolean> send(@Valid SendCodeRequest request) {
         String account = request.getAccount();
 
-        // 验证码300秒有效期内不再发送
+        // 验证码60秒有效期内不再发送
         String key = "code:" + account;
         Long expire = stringRedisTemplate.getExpire(key);
-        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key)) && (expire != null && expire > 300)) {
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key)) && (expire != null && expire > 60)) {
             return new ApiResponse<>("验证码仍在有效期内", true);
+        }
+
+        if (!codeService.verify(request.getCode(), request.getCaptchaId())) {
+            return new ApiResponse<>(HttpStatus.BAD_REQUEST.toString(), "验证码错误", false);
         }
 
         if (isLocked(account)) {

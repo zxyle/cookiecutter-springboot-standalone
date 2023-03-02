@@ -43,15 +43,15 @@ public class PasswordController extends AuthBaseController {
 
     PasswordProperties properties;
 
-    IPasswordService passwordService;
+    IPasswordService thisService;
 
     LoginService loginService;
 
     ValidateService validateService;
 
-    public PasswordController(LoginService loginService, IPasswordService passwordService, PasswordProperties properties, IUserService userService, ValidateService validateService) {
+    public PasswordController(LoginService loginService, IPasswordService thisService, PasswordProperties properties, IUserService userService, ValidateService validateService) {
         this.loginService = loginService;
-        this.passwordService = passwordService;
+        this.thisService = thisService;
         this.properties = properties;
         this.userService = userService;
         this.validateService = validateService;
@@ -65,8 +65,13 @@ public class PasswordController extends AuthBaseController {
     public ApiResponse<Object> change(@Valid @RequestBody ChangeByOldRequest request) {
         User user = getLoggedInUser();
 
-        if (null != user && passwordService.isCorrect(request.getNewPassword(), user.getPwd())) {
-            boolean succ = passwordService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.CHANGE);
+        if (thisService.isCorrect(request.getOldPassword(), user.getPwd())) {
+            // 判断新密码是否和旧密码一致
+            if (!properties.isEnableSame() && thisService.isCorrect(request.getNewPassword(), user.getPwd())) {
+                return new ApiResponse<>("修改失败，新密码不能和旧密码一致", false);
+            }
+
+            boolean succ = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.CHANGE);
             // 退出当前登录状态
             boolean isLoggedOut = loginService.logout(user.getId());
             return new ApiResponse<>(succ && isLoggedOut);
@@ -96,8 +101,8 @@ public class PasswordController extends AuthBaseController {
         }
 
         // 修改密码
-        boolean success = passwordService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.FORGET);
-        return new ApiResponse<>(success);
+        thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.FORGET);
+        return new ApiResponse<>("找回密码成功, 请重新登录");
     }
 
     /**
@@ -117,7 +122,7 @@ public class PasswordController extends AuthBaseController {
         String rawPassword = request.getPassword();
         rawPassword = StringUtils.isBlank(rawPassword) ?
                 CaptchaUtil.randCode(properties.getMinLength(), properties.getChars()) : rawPassword;
-        boolean success = passwordService.change(userId, rawPassword, ChangePasswordEnum.RESET);
+        boolean success = thisService.change(userId, rawPassword, ChangePasswordEnum.RESET);
 
         if (success) {
             // 退出当前登录状态

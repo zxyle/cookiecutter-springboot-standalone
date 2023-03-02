@@ -41,7 +41,6 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         // 关闭csrf
         http.csrf().disable()
                 // 不通过session获取securityContext
@@ -66,14 +65,8 @@ public class SecurityConfiguration {
 
         // 允许跨域
         http.cors();
-
         return http.build();
     }
-
-    // @Bean
-    // public WebSecurityCustomizer webSecurityCustomizer() {
-    //     return (web) -> web.ignoring().antMatchers("/images/**", "/js/**", "/webjars/**");
-    // }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

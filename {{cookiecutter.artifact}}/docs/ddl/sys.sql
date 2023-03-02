@@ -358,6 +358,7 @@ INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `descrip
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.chars', '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+`-={}|[]:;<>?,.', 'java.lang.String', '密码字符集', '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+`-={}|[]:;<>?,.');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.enable-history', 'false', 'java.lang.Boolean', '是否记录历史密码', 'false');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.history-count', '5', 'java.lang.Integer', '密码历史记录数量 0代表不限制', '5');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.enable-same', 'false', 'java.lang.Boolean', '能否和旧密码相同', 'false');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.max-failed-times', '5', 'java.lang.Integer', '最大登录失败次数', '5');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.lock-time', '30', 'java.lang.Integer', '锁定时间', '30');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.lock-time-unit', 'MINUTES', 'java.lang.String', '锁定时间单位', 'MINUTES');

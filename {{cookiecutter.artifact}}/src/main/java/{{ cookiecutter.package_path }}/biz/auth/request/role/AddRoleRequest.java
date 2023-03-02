@@ -20,7 +20,6 @@ public class AddRoleRequest {
     /**
      * 角色代码
      */
-    @NotBlank(message = "角色代码不能为空")
     private String code;
 
     /**

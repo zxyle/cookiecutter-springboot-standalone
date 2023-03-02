@@ -98,7 +98,7 @@ public class UserController extends AuthBaseController {
             } else {
                 roleIds.addAll(request.getRoleIds());
             }
-            // 更新用户角色、用户组关联关系, FIXME 不能赋予超级管理员权限
+            // 更新用户角色、用户组关联关系, 防止被授予过高的权限的角色
             thisService.updateRelation(user.getId(), roleIds, request.getGroupIds(), null);
             return new ApiResponse<>(user);
         }
@@ -118,7 +118,7 @@ public class UserController extends AuthBaseController {
             return new ApiResponse<>("没有权限更新用户", false);
         }
 
-        // FIXME 怎么防止赋予比操作者更高的权限
+        // 需要防止赋予比操作者更高的权限
         thisService.updateRelation(userId, request.getRoleIds(), request.getGroupIds(), request.getPermissionIds());
         return new ApiResponse<>("更新用户成功");
     }

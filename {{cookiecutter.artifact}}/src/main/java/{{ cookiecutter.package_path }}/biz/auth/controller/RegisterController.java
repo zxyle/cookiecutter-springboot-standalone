@@ -81,13 +81,13 @@ public class RegisterController {
         User user = userService.create(account, encoder.encode(request.getPassword()));
         boolean success = userService.save(user);
         if (!success) {
-            return new ApiResponse<>("注册失败", false);
+            return new ApiResponse<>("注册账号失败", false);
         }
 
         // 赋予默认角色
         List<Long> roleIds = Collections.singletonList(properties.getDefaultRole());
         userService.updateRelation(user.getId(), roleIds, null, null);
-        return new ApiResponse<>("注册成功");
+        return new ApiResponse<>("注册账号成功");
     }
 
     /**

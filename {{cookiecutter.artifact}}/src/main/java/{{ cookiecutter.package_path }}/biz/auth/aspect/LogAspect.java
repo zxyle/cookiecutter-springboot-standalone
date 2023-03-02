@@ -35,7 +35,7 @@ public class LogAspect {
     @Autowired
     ILoginLogService loginLogService;
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Pointcut("execution(* {{ cookiecutter.basePackage }}.biz.auth.controller.LoginController.login(..))")
     // 定义切入点表达式
@@ -44,7 +44,7 @@ public class LogAspect {
 
     @Before("log()")    // 引用切入点
     public void doBefore(JoinPoint joinPoint) {
-        System.out.println("进入切面");
+        logger.info("进入切面");
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
@@ -78,35 +78,35 @@ public class LogAspect {
      * @Around注解 环绕执行，就是在调用目标方法之前和调用之后，都会执行一定的逻辑
      */
     @Around("log()")
-    public ApiResponse<LoginResponse> Around(ProceedingJoinPoint pjp) throws Throwable {
+    public ApiResponse<LoginResponse> doAround(ProceedingJoinPoint pjp) throws Throwable {
         LoginLog loginLog = new LoginLog();
 
-        System.out.println("around start");
+        logger.info("around start");
         Map<String, Object> map = new HashMap<>();
         Object[] values = pjp.getArgs();
         String[] names = ((CodeSignature) pjp.getSignature()).getParameterNames();
         for (int i = 0; i < names.length; i++) {
             map.put(names[i], values[i]);
         }
-        System.out.println(map);
+        logger.info(map.toString());
         HttpServletRequest servletRequest = (HttpServletRequest) map.get("servletRequest");
         LoginRequest request = (LoginRequest) map.get("request");
         String header = servletRequest.getHeader("User-Agent");
-        System.out.println("UA: " + header);
+        logger.info("UA: " + header);
         loginLog.setUa(servletRequest.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setIp(IpUtil.getIpAddr(servletRequest));
         loginLog.setAccount(request.getAccount());
         long start = System.currentTimeMillis();
         // 调用执行目标方法(result为目标方法执行结果)，必须有此行代码才会执行目标调用的方法（等价于@befor+@after），否则只会执行一次之前的（等价于@before）
         ApiResponse<LoginResponse> result = (ApiResponse) pjp.proceed();
-        System.out.println("Around Result: " + result);
+        logger.info("Around Result: " + result);
         long end = System.currentTimeMillis();
         loginLog.setMsg(result.getMessage());
         loginLog.setIsSuccess(result.isSuccess() ? 1 : 0);
 
-        // log.debug(pjp.getTarget().getClass().getSimpleName() + "->" + pjp.getSignature().getName() + " 耗费时间:" + (end - start) + "毫秒");
-        System.out.println(" 耗费时间:" + (end - start) + "毫秒");
-        System.out.println(loginLog);
+        logger.debug(pjp.getTarget().getClass().getSimpleName() + "->" + pjp.getSignature().getName() + " 耗费时间:" + (end - start) + "毫秒");
+        logger.info(" 耗费时间:" + (end - start) + "毫秒");
+        logger.info(String.valueOf(loginLog));
         loginLogService.saveLoginLog(loginLog);
         return result;
     }
@@ -117,10 +117,11 @@ public class LogAspect {
         logger.error("Exception: {}", e.getMessage());
         // 获取RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        System.out.println(requestAttributes.getAttributeNames(0).toString());
+        logger.info(requestAttributes.getAttributeNames(0).toString());
         // 从获取RequestAttributes中获取HttpServletRequest的信息
         HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
         // System.out.println(request.);
+
 
     }
 

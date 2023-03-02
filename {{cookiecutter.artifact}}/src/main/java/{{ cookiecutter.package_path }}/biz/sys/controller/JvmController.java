@@ -3,11 +3,40 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
+import {{ cookiecutter.basePackage }}.biz.sys.response.JvmResponse;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/sys/jvm")
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+
+/**
+ * 服务管理
+ */
+@RestController
+@RequestMapping("/sys")
 public class JvmController {
 
-    // 获取jvm信息
+    /**
+     * 获取JVM信息
+     */
+    @PreAuthorize("@ck.hasPermit('sys:jvm:get')")
+    @GetMapping("/jvm")
+    public ApiResponse<JvmResponse> get() {
+        JvmResponse jvmResponse = new JvmResponse();
+        jvmResponse.setProcessId(getProcessID());
+        return new ApiResponse<>(jvmResponse);
+    }
+
+
+    // 获取进程ID
+    public static int getProcessID() {
+        RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+        return Integer.parseInt(runtimeMXBean.getName().split("@")[0]);
+    }
+
 
 }

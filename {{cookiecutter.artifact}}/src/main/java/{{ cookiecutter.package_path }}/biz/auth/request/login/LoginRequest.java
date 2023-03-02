@@ -32,11 +32,15 @@ public class LoginRequest extends BaseRequest {
 
     /**
      * 验证码ID
+     *
+     * @mock 1a38695e74b748ae7b48791f8d81531d
      */
     private String captchaId;
 
     /**
-     * 短信、邮件、图形验证码
+     * 短信、邮件、图形验证码答案
+     *
+     * @mock 123123
      */
     private String code;
 

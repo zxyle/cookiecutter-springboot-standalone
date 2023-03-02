@@ -124,11 +124,17 @@ public class GroupController extends AuthBaseController {
             return new ApiResponse<>("无权限更新该用户组", false);
         }
 
-        // FIXME 同级用户组名称不能重复
-        Group group = new Group();
-        BeanUtils.copyProperties(request, group);
-        group.setId(groupId);
-        groupService.updateById(group);
+        // 判断同级用户组下是否有名称重复
+        Group group = groupService.getById(groupId);
+        Integer count = groupService.count(group.getParentId(), request.getName());
+        if (StringUtils.isNotBlank(request.getName()) && count > 0) {
+            return new ApiResponse<>("同级用户组名称不能重复", false);
+        }
+
+        Group newGroup = new Group();
+        BeanUtils.copyProperties(request, newGroup);
+        newGroup.setId(groupId);
+        groupService.updateById(newGroup);
         groupService.updateRelation(groupId, request.getRoleIds(), request.getPermissionIds());
         return new ApiResponse<>(groupService.getById(groupId));
     }
@@ -168,6 +174,7 @@ public class GroupController extends AuthBaseController {
         Group group = new Group();
         group.setId(request.getCurrentId());
         group.setParentId(request.getParentId());
+        // 需计算新排序
         boolean success = groupService.updateById(group);
         return new ApiResponse<>("移动用户组成功.", success);
     }

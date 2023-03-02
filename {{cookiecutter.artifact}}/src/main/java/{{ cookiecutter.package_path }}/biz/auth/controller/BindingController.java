@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 /**
- * 绑定认证方式
+ * 绑定登录方式
  */
 @RequestMapping("/auth/user")
 @RestController
