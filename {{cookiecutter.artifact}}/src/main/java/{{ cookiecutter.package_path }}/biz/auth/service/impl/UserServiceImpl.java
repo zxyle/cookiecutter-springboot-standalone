@@ -59,7 +59,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         boolean s3 = userGroupService.deleteRelation(userId, 0L);
         boolean s4 = removeById(userId);
         boolean s5 = profileService.delete(userId);
-        return (s1 && s2) && (s3 && s4) && s5;
+        boolean s6 = kick(userId);
+        return (s1 && s2) && (s3 && s4) && (s5 && s6);
     }
 
 

@@ -23,11 +23,11 @@ import java.util.regex.Pattern;
 // 操作日志切面
 @Component
 @Aspect
-public class LogAspect2 {
+public class OperateAspect {
 
     IOperateLogService logService;
 
-    public LogAspect2(IOperateLogService logService) {
+    public OperateAspect(IOperateLogService logService) {
         this.logService = logService;
     }
 
