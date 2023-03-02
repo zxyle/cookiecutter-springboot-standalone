@@ -83,7 +83,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         return updateById(user);
     }
 
-    // 用户踢下线
+    // 下线用户
     @Override
     public boolean kick(Long userId) {
         String key = "permissions:" + userId;

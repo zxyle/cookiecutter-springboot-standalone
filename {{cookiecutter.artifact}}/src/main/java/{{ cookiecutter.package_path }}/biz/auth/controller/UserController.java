@@ -217,26 +217,26 @@ public class UserController extends AuthBaseController {
 
 
     /**
-     * 用户踢下线
+     * 下线用户
      *
      * @param userId 用户ID
      */
-    @LogOperation("用户踢下线")
+    @LogOperation("下线用户")
     @PreAuthorize("@ck.hasPermit('auth:user:kick')")
     @PutMapping("/users/{userId}/kick")
     public ApiResponse<Object> kick(@PathVariable Long userId) {
         if (userId.equals(getUserId())) {
-            return new ApiResponse<>("不能将自己踢下线", false);
+            return new ApiResponse<>("不能将自己下线", false);
         }
 
         if (!groupService.isAllowed(getUserId(), userId, null)) {
-            return new ApiResponse<>("没有权限踢下线", false);
+            return new ApiResponse<>("没有权限下线", false);
         }
 
         boolean success = thisService.kick(userId);
         if (success) {
-            return new ApiResponse<>("踢下线成功");
+            return new ApiResponse<>("下线成功");
         }
-        return new ApiResponse<>("踢下线失败", false);
+        return new ApiResponse<>("下线失败", false);
     }
 }

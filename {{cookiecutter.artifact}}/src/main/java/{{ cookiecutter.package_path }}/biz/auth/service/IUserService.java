@@ -24,7 +24,7 @@ public interface IUserService extends IService<User> {
     // 启用用户
     boolean enable(Long userId);
 
-    // 用户踢下线
+    // 下线用户
     boolean kick(Long userId);
 
     // 通过账号名查询用户
