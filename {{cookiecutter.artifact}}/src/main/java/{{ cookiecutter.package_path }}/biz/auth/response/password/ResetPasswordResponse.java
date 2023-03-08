@@ -3,19 +3,17 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.response.password;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor
 @Data
-public class PasswordComplexityResponse {
+@AllArgsConstructor
+public class ResetPasswordResponse {
 
     /**
-     * 密码复杂分（0-5分）
+     * 新密码
      *
-     * @mock 5
+     * @mock lHfxoPrKOaWjSqwN
      */
-    private Integer score;
-
+    private String newPassword;
 }

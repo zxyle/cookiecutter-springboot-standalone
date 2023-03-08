@@ -8,7 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.Verification;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IVerificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,7 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class EmailCodeServiceImpl implements EmailCodeService {
 
-    // 第1步: 注入邮件发送者
-    JavaMailSenderImpl javaMailSender;
+    JavaMailSender javaMailSender;
 
     @Value("${app.name}")
     private String appName;
@@ -33,7 +32,7 @@ public class EmailCodeServiceImpl implements EmailCodeService {
 
     IVerificationService verificationService;
 
-    public EmailCodeServiceImpl(JavaMailSenderImpl javaMailSender, IVerificationService verificationService) {
+    public EmailCodeServiceImpl(JavaMailSender javaMailSender, IVerificationService verificationService) {
         this.javaMailSender = javaMailSender;
         this.verificationService = verificationService;
     }

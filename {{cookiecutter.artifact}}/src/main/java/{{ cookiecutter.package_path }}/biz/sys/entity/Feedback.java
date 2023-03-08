@@ -34,4 +34,16 @@ public class Feedback extends BaseEntity {
     @ExcelProperty("详细描述")
     private String description;
 
+    /**
+     * 处理状态
+     */
+    // @ExcelProperty("处理状态")
+    // private Integer status;
+    //
+    // /**
+    //  * 处理结果
+    //  */
+    // @ExcelProperty("处理结果")
+    // private String result;
+
 }

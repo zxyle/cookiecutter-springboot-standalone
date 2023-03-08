@@ -12,7 +12,6 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -45,20 +44,19 @@ public class CaptchaController {
 
     CodeService codeService;
 
-    @Autowired
     ValidateService validateService;
 
-    @Autowired
-    HttpServletRequest servletRequest;
-
-    @Autowired
     ShortMessageService shortMessageService;
 
-    public CaptchaController(StringRedisTemplate stringRedisTemplate, CaptchaProperties captchaProperties, EmailCodeService emailService, CodeService codeService) {
+    public CaptchaController(StringRedisTemplate stringRedisTemplate, CaptchaProperties captchaProperties,
+                             EmailCodeService emailService, CodeService codeService,
+                             ValidateService validateService, ShortMessageService shortMessageService) {
         this.stringRedisTemplate = stringRedisTemplate;
         this.captchaProperties = captchaProperties;
         this.emailService = emailService;
         this.codeService = codeService;
+        this.validateService = validateService;
+        this.shortMessageService = shortMessageService;
     }
 
     /**
@@ -68,6 +66,7 @@ public class CaptchaController {
     public ApiResponse<CaptchaResponse> generate() {
         CaptchaPair captchaPair = codeService.send();
         CaptchaResponse response = new CaptchaResponse(captchaPair.getCaptchaId(), captchaPair.getB64Image());
+        log.info("已生成验证码: {}", captchaPair);
         return new ApiResponse<>(response);
     }
 
@@ -87,6 +86,7 @@ public class CaptchaController {
         response.addCookie(cookie);
         response.getOutputStream().write(captchaPair.getBytes());
         response.getOutputStream().flush();
+        log.info("已生成验证码: {}", captchaPair);
     }
 
 
@@ -110,7 +110,7 @@ public class CaptchaController {
      * @apiNote 1. 验证码60秒有效期内不再发送 2. 需先校验图形验证码
      */
     @GetMapping("/send")
-    public ApiResponse<Boolean> send(@Valid SendCodeRequest request) {
+    public ApiResponse<Boolean> send(@Valid SendCodeRequest request, HttpServletRequest servletRequest) {
         String account = request.getAccount();
 
         // 验证码60秒有效期内不再发送

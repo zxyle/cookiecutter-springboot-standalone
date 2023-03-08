@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class ProfileServiceImpl extends ServiceImpl<ProfileMapper, Profile> implements IProfileService {
 
     /**
-     * 按用户ID查询
+     * 按ID查询信息
      *
      * @param userId 用户ID
      */
@@ -56,7 +56,7 @@ public class ProfileServiceImpl extends ServiceImpl<ProfileMapper, Profile> impl
         return profile;
     }
 
-    // 删除用户资料
+    // 删除用户信息
     @CacheEvict(key = "#userId")
     @Override
     public boolean delete(Long userId) {

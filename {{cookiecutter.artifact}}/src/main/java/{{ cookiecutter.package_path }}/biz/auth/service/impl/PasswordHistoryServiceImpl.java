@@ -3,17 +3,15 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.PasswordHistory;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.PasswordHistoryMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.security.PasswordProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordHistoryService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -30,23 +28,6 @@ public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMappe
         this.passwordProperties = passwordProperties;
     }
 
-    /**
-     * 按ID查询
-     */
-    @Cacheable(cacheNames = "PasswordHistoryCache", key = "#id")
-    @Override
-    public PasswordHistory queryById(Long id) {
-        return getById(id);
-    }
-
-    /**
-     * 分页查询
-     */
-    @Cacheable(cacheNames = "PasswordHistoryCache", key = "#p.getCurrent()+#p.getSize()")
-    @Override
-    public IPage<PasswordHistory> pageQuery(IPage<PasswordHistory> p) {
-        return page(p);
-    }
 
     /**
      * 记录密码历史
@@ -58,7 +39,7 @@ public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMappe
     @Async
     @Override
     public void insert(User user, String newPwd, ChangePasswordEnum policy) {
-        Integer currentCount = getHistoryCount(user.getId()) + 1;
+        Integer currentCount = countHistory(user.getId()) + 1;
         if (passwordProperties.getHistoryCount() != 0 && currentCount > passwordProperties.getHistoryCount()) {
             removeHistory(user.getId(), currentCount - passwordProperties.getHistoryCount());
         }
@@ -77,7 +58,7 @@ public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMappe
      *
      * @param userId 用户ID
      */
-    public Integer getHistoryCount(Long userId) {
+    public Integer countHistory(Long userId) {
         QueryWrapper<PasswordHistory> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
         return count(wrapper);
@@ -92,8 +73,14 @@ public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMappe
     public boolean removeHistory(Long userId, Integer deleteCount) {
         QueryWrapper<PasswordHistory> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
-        wrapper.orderByDesc("created_time");
-        wrapper.last("limit " + deleteCount);
+        wrapper.orderByDesc("create_time");
+        wrapper.last(deleteCount != null, "limit " + deleteCount);
         return remove(wrapper);
+    }
+
+    // 清除密码历史
+    @Override
+    public boolean clear(Long userId) {
+        return removeHistory(userId, null);
     }
 }

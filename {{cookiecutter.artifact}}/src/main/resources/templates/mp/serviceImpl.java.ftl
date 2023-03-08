@@ -1,5 +1,6 @@
 package ${package.ServiceImpl};
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
@@ -28,10 +29,10 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     /**
      * 分页查询
      */
-    @Cacheable(cacheNames = "${entity}Cache", key = "#p.getCurrent()+#p.getSize()")
+    @Cacheable(cacheNames = "${entity}Cache", key = "#p.getCurrent()+#p.getSize()+#wrapper.getCustomSqlSegment()")
     @Override
-    public IPage<${entity}> pageQuery(IPage<${entity}> p) {
-        return page(p);
+    public IPage<${entity}> pageQuery(IPage<${entity}> p, QueryWrapper<${entity}> wrapper) {
+        return page(p, wrapper);
     }
 
 }

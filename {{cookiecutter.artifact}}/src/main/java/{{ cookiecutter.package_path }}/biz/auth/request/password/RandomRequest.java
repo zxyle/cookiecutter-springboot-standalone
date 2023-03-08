@@ -5,10 +5,16 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.password;
 
 import lombok.Data;
 
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.DecimalMin;
 
+/**
+ * 生成随机密码请求
+ */
 @Data
 public class RandomRequest {
+
+    public static final String LETTER = "abcdefghijklmnopqrstuvwxyz";
 
     /**
      * 密码长度
@@ -16,48 +22,49 @@ public class RandomRequest {
      * @mock 8
      */
     @DecimalMin(value = "1", message = "密码长度不能小于1")
-    private Integer length;
+    private int length;
 
     /**
      * 是否包含小写字母
      */
-    private Boolean hasLower;
+    private boolean hasLower;
 
     /**
      * 是否包含大写字母
      */
-    private Boolean hasUpper;
+    private boolean hasUpper;
 
     /**
      * 是否包含数字
      */
-    private Boolean hasDigit;
+    @AssertTrue(message = "密码必须包含数字")
+    private boolean hasDigit;
 
     /**
      * 是否包含特殊字符
      */
-    private Boolean hasSpecialChar;
+    private boolean hasSpecialChar;
 
     /**
      * 生成数量
      *
      * @mock 100
      */
-    private Integer count;
+    private int count;
 
     public String getChars() {
         StringBuilder builder = new StringBuilder();
-        if (hasLower != null && hasLower) {
-            builder.append("abcdefghijklmnopqrstuvwxyz");
+        if (hasLower) {
+            builder.append(LETTER);
         }
-        if (hasUpper != null && hasUpper) {
-            builder.append("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        if (hasUpper) {
+            builder.append(LETTER.toUpperCase());
         }
-        if (hasDigit != null && hasDigit) {
+        if (hasDigit) {
             builder.append("0123456789");
         }
 
-        if (hasSpecialChar != null && hasSpecialChar) {
+        if (hasSpecialChar) {
             builder.append("!@#$%^&*");
         }
 
@@ -65,6 +72,6 @@ public class RandomRequest {
     }
 
     public Integer getCount() {
-        return count == null ? 1 : count;
+        return count <= 0 ? 1 : count;
     }
 }

@@ -11,10 +11,13 @@ import {{ cookiecutter.basePackage }}.biz.auth.request.password.ChangeByOldReque
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.ForgetRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.RandomRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.ResetPasswordRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.response.ResetPasswordResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.response.password.PasswordComplexityResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.response.password.ResetPasswordResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.security.PasswordProperties;
-import {{ cookiecutter.basePackage }}.biz.auth.service.*;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.util.PasswordChecker;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
@@ -22,10 +25,12 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -39,6 +44,12 @@ import java.util.List;
 @Slf4j
 public class PasswordController extends AuthBaseController {
 
+    // 密码修改重试次数上限
+    public static final int MAX_CHANGE_RETRY_TIMES = 3;
+
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
+
     IUserService userService;
 
     PasswordProperties properties;
@@ -49,7 +60,8 @@ public class PasswordController extends AuthBaseController {
 
     ValidateService validateService;
 
-    public PasswordController(LoginService loginService, IPasswordService thisService, PasswordProperties properties, IUserService userService, ValidateService validateService) {
+    public PasswordController(LoginService loginService, IPasswordService thisService, PasswordProperties properties,
+                              IUserService userService, ValidateService validateService) {
         this.loginService = loginService;
         this.thisService = thisService;
         this.properties = properties;
@@ -77,11 +89,23 @@ public class PasswordController extends AuthBaseController {
             return new ApiResponse<>(succ && isLoggedOut);
         }
 
-        return new ApiResponse<>("修改失败，旧密码可能不正确", false);
+        // 如果有人通过此接口反复尝试爆破旧密码，这里会记录尝试次数，超过一定次数后锁定用户，提示用户被锁定，联系管理员解锁
+        // 并记录日志，用户可以走管理员重置密码 或找回密码
+        String key = "pwd:change:" + user.getId();
+        Long times = stringRedisTemplate.opsForValue().increment(key);
+        int retryTime = times == null ? 1 : times.intValue();
+        if (MAX_CHANGE_RETRY_TIMES > retryTime) {
+            Integer remainTime = MAX_CHANGE_RETRY_TIMES - retryTime;
+            String message = String.format("修改失败，旧密码可能不正确，还可重试%d次", remainTime);
+            return new ApiResponse<>(message, false);
+        }
+
+        userService.locked(user.getId());
+        return new ApiResponse<>("尝试次数过多，账号已被锁定，请联系管理员", false);
     }
 
     /**
-     * 忘记/找回密码（通过短信或邮件验证码）
+     * 忘记/找回密码（通过短信或邮件验证码方式）
      */
     @PostMapping("/forget")
     public ApiResponse<Object> forget(@Valid @RequestBody ForgetRequest request) {
@@ -101,7 +125,13 @@ public class PasswordController extends AuthBaseController {
         }
 
         // 修改密码
-        thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.FORGET);
+        boolean success = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.FORGET);
+        if (!success) {
+            return new ApiResponse<>("找回密码失败", false);
+        }
+        // 用户可能已经在某处登录，退出登录
+        loginService.logout(user.getId());
+        userService.unlock(user.getId());
         return new ApiResponse<>("找回密码成功, 请重新登录");
     }
 
@@ -117,7 +147,7 @@ public class PasswordController extends AuthBaseController {
             return new ApiResponse<>("重置密码失败，没有权限", false);
         }
 
-        // 考虑新密码来源 1.前端用户传入 2.后端随机生成 3.系统配置
+        // 考虑新密码来源 1.前端用户传入 2.后端随机生成 3.系统配置(需以明文保存，不安全)
         Long userId = request.getUserId();
         String rawPassword = request.getPassword();
         rawPassword = StringUtils.isBlank(rawPassword) ?
@@ -127,6 +157,7 @@ public class PasswordController extends AuthBaseController {
         if (success) {
             // 退出当前登录状态
             loginService.logout(userId);
+            userService.unlock(userId);
             return new ApiResponse<>("重置密码成功");
         }
         return new ApiResponse<>("重置密码失败", false);

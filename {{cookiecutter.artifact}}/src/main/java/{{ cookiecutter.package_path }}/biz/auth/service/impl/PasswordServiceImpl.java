@@ -27,7 +27,8 @@ public class PasswordServiceImpl implements IPasswordService {
 
     PasswordEncoder passwordEncoder;
 
-    public PasswordServiceImpl(IUserService userService, PasswordProperties passwordProperties, IPasswordHistoryService passwordHistoryService, PasswordEncoder passwordEncoder) {
+    public PasswordServiceImpl(IUserService userService, PasswordProperties passwordProperties,
+                               IPasswordHistoryService passwordHistoryService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.passwordProperties = passwordProperties;
         this.passwordHistoryService = passwordHistoryService;

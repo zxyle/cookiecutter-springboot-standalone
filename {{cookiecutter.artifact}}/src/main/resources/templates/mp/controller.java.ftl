@@ -1,18 +1,18 @@
 package ${package.Controller};
 
-import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.EasyExcelFactory;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import {{ cookiecutter.basePackage }}.common.listener.AbstractListener;
-import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
+import {{ cookiecutter.basePackage }}.common.request.OrderPageRequest;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
+import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
-import org.springframework.web.multipart.MultipartFile;
 <#if restControllerStyle>
 import org.springframework.web.bind.annotation.RestController;
 <#else>
@@ -24,13 +24,12 @@ import ${superControllerClassPackage};
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
 
 /**
- * ${table.comment!}
+ * ${table.comment!}管理
  */
 <#if restControllerStyle>
 @RestController
@@ -55,24 +54,37 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
     @GetMapping("/${table.entityPath}s")
-    public ApiResponse<PageVO<${entity}>> page(@Valid PaginationRequest request) {
+    public ApiResponse<PageVO<${entity}>> page(@Valid OrderPageRequest request, HttpServletResponse response) throws IOException {
+        QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
+        wrapper.orderBy(EntityUtil.getFields(${entity}.class).contains(request.getField()),
+                request.getOrder(), request.getField());
         IPage<${entity}> page = PageRequestUtil.checkForMp(request);
-        IPage<${entity}> list = thisService.pageQuery(page);
+        IPage<${entity}> list = thisService.pageQuery(page, wrapper);
+
+        // 数据导出Excel功能，不需要可以删除
+        if (request.isExport()) {
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            String fileName = "${table.comment!}";
+            String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
+            EasyExcelFactory.write(response.getOutputStream(), ${entity}.class)
+                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(list.getRecords());
+            return null;
+        }
         return PageRequestUtil.extractFromMp(list);
     }
 
 
-    // /**
-    //  * ${table.comment!}列表查询
-    //  */
-    // @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
-    // @GetMapping("/${table.entityPath}s")
-    // public ApiResponse<List<${entity}>> list() {
-    //     QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
-    //     // wrapper.select();
-    //     // wrapper.eq();
-    //     return new ApiResponse<>(thisService.list(wrapper));
-    // }
+    /**
+     * ${table.comment!}列表查询
+     */
+    // 当数据量不大时，需要查出全部数据，可以使用此接口，不需要可以删除
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
+    @GetMapping("/${table.entityPath}s")
+    public ApiResponse<List<${entity}>> list() {
+        QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
+        return new ApiResponse<>(thisService.list(wrapper));
+    }
 
 
     /**
@@ -127,35 +139,6 @@ public class ${table.controllerName} {
             return new ApiResponse<>("删除成功");
         }
         return new ApiResponse<>("删除失败", false);
-    }
-
-    /**
-     * Excel数据导出${table.comment!}
-     */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:export')")
-    @GetMapping("/${table.entityPath}s/export")
-    public void export(HttpServletResponse response) throws IOException {
-        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        String fileName = "${table.comment!}";
-        String baseName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
-        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
-        EasyExcel.write(response.getOutputStream(), ${entity}.class).autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(thisService.list());
-    }
-
-
-    /**
-     * Excel数据导入${table.comment!}
-     */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:upload')")
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseBody
-    public ApiResponse<Object> upload(@RequestParam("file") MultipartFile file) throws IOException {
-        File dest = new File("/tmp/" + file.getOriginalFilename());
-        file.transferTo(dest);
-        AbstractListener<${entity}> abstractListener = new AbstractListener<>();
-        abstractListener.setService(thisService);
-        EasyExcel.read(dest.getAbsolutePath(), AbstractListener.class, abstractListener).sheet().doRead();
-        return new ApiResponse<>("导入成功");
     }
 
 }

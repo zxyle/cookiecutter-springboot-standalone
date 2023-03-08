@@ -34,7 +34,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     IUserRoleService userRoleService;
 
-    public RoleServiceImpl(IUserGroupService userGroupService, IGroupRoleService groupRoleService, IRolePermissionService rolePermissionService, IUserRoleService userRoleService) {
+    public RoleServiceImpl(IUserGroupService userGroupService, IGroupRoleService groupRoleService,
+                           IRolePermissionService rolePermissionService, IUserRoleService userRoleService) {
         this.userGroupService = userGroupService;
         this.groupRoleService = groupRoleService;
         this.rolePermissionService = rolePermissionService;
@@ -46,6 +47,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
      *
      * @param groupId 用户组ID
      */
+    @Override
     public List<Long> selectRolesByGroup(Long groupId) {
         List<GroupRole> groupRoles = groupRoleService.queryRelation(groupId, 0L);
         return groupRoles.stream().map(GroupRole::getRoleId).collect(Collectors.toList());

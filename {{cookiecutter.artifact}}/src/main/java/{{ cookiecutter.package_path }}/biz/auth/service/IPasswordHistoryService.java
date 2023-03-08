@@ -3,26 +3,15 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.PasswordHistory;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * 密码历史表 服务类
  */
 public interface IPasswordHistoryService extends IService<PasswordHistory> {
-
-    /**
-     * 按ID查询
-     */
-    PasswordHistory queryById(Long id);
-
-    /**
-     * 分页查询
-     */
-    IPage<PasswordHistory> pageQuery(IPage<PasswordHistory> page);
 
     /**
      * 记录密码历史
@@ -33,5 +22,7 @@ public interface IPasswordHistoryService extends IService<PasswordHistory> {
      */
     void insert(User user, String newPwd, ChangePasswordEnum policy);
 
+    // 清除密码历史
+    boolean clear(Long userId);
 
 }

@@ -13,11 +13,15 @@ public class AreaRequest {
 
     /**
      * 根节点ID
+     *
+     * @mock 3301
      */
     private String rootId;
 
     /**
      * 查询最小级别（1-国家 2-省级 3-市级 4-区县 5-镇街 6-村社）
+     *
+     * @mock 4
      */
     private Integer level;
 

@@ -33,7 +33,7 @@ public class User extends BaseEntity {
     private String pwd;
 
     /**
-     * 昵称
+     * 昵称/名字/真实姓名（只用于展示）
      */
     private String nickname;
 
@@ -80,5 +80,17 @@ public class User extends BaseEntity {
      * 是否需要修改密码
      */
     private Integer mustChangePwd;
+
+    /**
+     * 注册时间
+     */
+    @JsonIgnore
+    private LocalDateTime registeredAt;
+
+    /**
+     * 最后登录时间
+     */
+    @JsonIgnore
+    private LocalDateTime lastLoginTime;
 
 }

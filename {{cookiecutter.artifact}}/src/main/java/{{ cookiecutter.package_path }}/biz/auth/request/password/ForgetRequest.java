@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 
 /**
- * 忘记/找回密码
+ * 忘记/找回密码请求
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -19,6 +19,8 @@ public class ForgetRequest extends BaseRequest {
 
     /**
      * 注册账号（支持输入手机号、邮箱）
+     *
+     * @mock 13512345678
      */
     @NotBlank(message = "注册账号不能为空")
     @Length(min = 5, message = "注册账号长度为5个字符以上")
@@ -27,7 +29,7 @@ public class ForgetRequest extends BaseRequest {
     /**
      * 短信或邮件验证码
      *
-     * @mock 123456
+     * @mock 123123
      */
     @NotBlank(message = "验证码不能为空")
     private String code;

@@ -1,5 +1,13 @@
 # 变更日志
 
+## v1.4.0
+- 用户注册增加自动登录功能 [#38](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/38)
+- 完善前端对接文档
+- 分页接口和Excel导出接口二合一
+- 优化登录接口
+- 增加用户修改密码重试次数过多后锁定功能
+- 增加注册时间和最后登录时间功能
+
 ## v1.3.0
 - 清理无关mapper
 - user_group 增加管理员功能支持

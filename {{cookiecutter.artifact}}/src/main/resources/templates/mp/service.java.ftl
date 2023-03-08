@@ -1,5 +1,6 @@
 package ${package.Service};
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import ${package.Entity}.${entity};
 import ${superServiceClassPackage};
@@ -17,6 +18,6 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     /**
      * 分页查询
      */
-    IPage<${entity}> pageQuery(IPage<${entity}> page);
+    IPage<${entity}> pageQuery(IPage<${entity}> page, QueryWrapper<${entity}> wrapper);
 
 }

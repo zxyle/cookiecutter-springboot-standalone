@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.*;
@@ -11,9 +12,11 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
+import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +45,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     IProfileService profileService;
 
-    public UserServiceImpl(IUserGroupService userGroupService, IUserRoleService userRoleService, IUserPermissionService userPermissionService, IGroupService groupService, IProfileService profileService) {
+    public UserServiceImpl(IUserGroupService userGroupService, IUserRoleService userRoleService,
+                           IUserPermissionService userPermissionService, IGroupService groupService,
+                           IProfileService profileService) {
         this.userGroupService = userGroupService;
         this.userRoleService = userRoleService;
         this.userPermissionService = userPermissionService;
@@ -139,6 +144,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
      * @param userId    用户ID
      * @param expiredAt 过期时间，如果为null，则标记为当前时间
      */
+    @Async
     @Override
     public void markExpired(Long userId, LocalDateTime expiredAt) {
         User user = new User();
@@ -153,6 +159,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public User create(String account, String encodedPassword) {
         User user = new User();
         user.setPwd(encodedPassword);
+        user.setNickname("用户_" + CaptchaUtil.randAlphabeta(6));
         if (AccountUtil.isMobile(account)) {
             user.setMobile(account);
         } else if (AccountUtil.isEmail(account)) {
@@ -187,5 +194,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         userGroupQueryWrapper.in("group_id", groupIds);
         List<UserGroup> userGroupList = userGroupService.list(userGroupQueryWrapper);
         return userGroupList.stream().map(UserGroup::getUserId).collect(Collectors.toList());
+    }
+
+    // 锁定用户并退出当前登录状态
+    @Override
+    public boolean locked(Long userId) {
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", userId);
+        wrapper.set("locked", AuthConst.LOCKED);
+        boolean update = update(wrapper);
+        boolean kick = kick(userId);
+        return update && kick;
+    }
+
+    // 解锁用户
+    @Override
+    public boolean unlock(Long userId) {
+        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", userId);
+        wrapper.set("locked", AuthConst.UNLOCKED);
+        boolean update = update(wrapper);
+
+        String key = "pwd:change:" + userId;
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key)))
+            stringRedisTemplate.delete(key);
+        return update;
     }
 }

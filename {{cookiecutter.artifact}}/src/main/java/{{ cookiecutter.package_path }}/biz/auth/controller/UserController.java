@@ -230,13 +230,13 @@ public class UserController extends AuthBaseController {
         }
 
         if (!groupService.isAllowed(getUserId(), userId, null)) {
-            return new ApiResponse<>("没有权限下线", false);
+            return new ApiResponse<>("没有权限下线用户", false);
         }
 
         boolean success = thisService.kick(userId);
         if (success) {
-            return new ApiResponse<>("下线成功");
+            return new ApiResponse<>("下线用户成功");
         }
-        return new ApiResponse<>("下线失败", false);
+        return new ApiResponse<>("下线用户失败", false);
     }
 }

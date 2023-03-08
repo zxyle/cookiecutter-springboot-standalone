@@ -36,8 +36,6 @@ import java.util.stream.Collectors;
 @Service
 public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService {
 
-    IGroupRoleService groupRoleService;
-
     IUserPermissionService userPermissionService;
 
     IUserRoleService userRoleService;
@@ -53,8 +51,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
-    public PermissionServiceImpl(IGroupRoleService groupRoleService, IUserPermissionService userPermissionService, IUserRoleService userRoleService, IUserGroupService userGroupService, IGroupPermissionService groupPermissionService, IRolePermissionService rolePermissionService, IRoleService roleService) {
-        this.groupRoleService = groupRoleService;
+    public PermissionServiceImpl(IRoleService roleService, IUserPermissionService userPermissionService,
+                                 IUserRoleService userRoleService, IUserGroupService userGroupService,
+                                 IGroupPermissionService groupPermissionService, IRolePermissionService rolePermissionService) {
         this.userPermissionService = userPermissionService;
         this.userRoleService = userRoleService;
         this.userGroupService = userGroupService;
@@ -80,7 +79,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     // 查询用户-用户组-角色-权限
     public List<Permission> selectPermissionByGroupRole(List<UserGroup> groups) {
         List<Permission> permissions = new ArrayList<>();
-        groups.forEach(group -> permissions.addAll(selectRolesPermission(groupRoleService.selectRoleByGroup(group.getGroupId()))));
+        groups.forEach(group -> permissions.addAll(selectRolesPermission(roleService.selectRolesByGroup(group.getGroupId()))));
         return permissions;
     }
 
@@ -104,6 +103,20 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         // 所在用户组拥有的角色 所拥有的权限
         permissions.addAll(selectPermissionByGroupRole(groups));
         return permissions.stream().distinct().collect(Collectors.toList());
+    }
+
+    /**
+     * 新增权限
+     *
+     * @param permission 权限信息
+     */
+    @Override
+    public boolean create(Permission permission) {
+        if (permission.getParentId() != null) {
+            Integer sort = baseMapper.selectMaxSort(permission.getParentId());
+            permission.setSort(sort == null ? 1 : sort + 1);
+        }
+        return save(permission);
     }
 
     /**
@@ -133,9 +146,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         List<Permission> permissions = new ArrayList<>(getAllPermissions(userId));
 
         // 获取子权限
-        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        wrapper.select("id,name,code,description,parent_id,kind,path,sort");
-        List<Permission> permissionList = list(wrapper);
+        List<Permission> permissionList = listAll();
         for (Permission permission : permissions) {
             allPermissions.addAll(getAllChildren(permissionList, permission.getId()));
         }
@@ -253,5 +264,12 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
             }
         }
         return children;
+    }
+
+    @Cacheable(value = "permissionsCache")
+    public List<Permission> listAll() {
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        wrapper.select("id,name,code,description,parent_id,kind,path,sort");
+        return list(wrapper);
     }
 }

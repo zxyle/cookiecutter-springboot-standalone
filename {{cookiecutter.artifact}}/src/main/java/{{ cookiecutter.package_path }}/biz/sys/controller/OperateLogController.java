@@ -37,8 +37,8 @@ public class OperateLogController {
     public ApiResponse<PageVO<OperateLog>> page(@Valid OperateLogRequest request) {
         QueryWrapper<OperateLog> wrapper = new QueryWrapper<>();
         wrapper.eq(request.getUserId() != null, "user_id", request.getUserId());
-        wrapper.between(request.getStartDate() != null && request.getEndDate() != null,
-                "operate_time", request.getStartDate(), request.getEndDate());
+        wrapper.between(request.getStartTime() != null && request.getEndTime() != null,
+                "operate_time", request.getStartTime(), request.getEndTime());
         IPage<OperateLog> page = PageRequestUtil.checkForMp(request);
         IPage<OperateLog> list = thisService.page(page, wrapper);
         return PageRequestUtil.extractFromMp(list);

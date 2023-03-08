@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
@@ -30,19 +31,20 @@ public class LoginServiceImpl implements LoginService {
      *
      * @param account  用户名/邮箱/手机号
      * @param password 密码
-     * @return 用户信息
+     * @return 登录响应
      */
     @Override
-    public User login(String account, String password) {
+    public LoginResponse login(String account, String password) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(account, password);
-        // AuthenticationManager authenticate进行用户认证
+        // 进行用户认证
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         // 认证成功后，将认证信息存入SecurityContextHolder中
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-        return loginUser.getUser();
+        User user = loginUser.getUser();
+        return new LoginResponse(user);
     }
 
     /**

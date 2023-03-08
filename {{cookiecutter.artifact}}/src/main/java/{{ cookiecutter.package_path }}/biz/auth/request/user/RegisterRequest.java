@@ -8,18 +8,25 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * 用户注册请求
+ */
 @Data
 public class RegisterRequest {
 
     /**
-     * 注册账号（支持输入用户名、手机号、邮箱）
+     * 注册账号（支持输入用户名/手机号/邮箱）
+     *
+     * @mock 13512345678
      */
     @NotBlank(message = "注册账号不能为空")
     @Length(min = 5, message = "注册账号长度为5个字符以上")
     private String account;
 
     /**
-     * 邮件、短信、图形验证码
+     * 邮件/短信/图形验证码
+     *
+     * @mock 123123
      */
     @NotBlank(message = "验证码不能为空")
     private String code;
@@ -34,7 +41,9 @@ public class RegisterRequest {
     private String password;
 
     /**
-     * 验证码ID（使用用户名注册，此属性必填）
+     * 验证码ID（使用用户名注册时，此属性为必填）
+     *
+     * @mock 1a38695e74b748ae7b48791f8d81531d
      */
     private String captchaId;
 

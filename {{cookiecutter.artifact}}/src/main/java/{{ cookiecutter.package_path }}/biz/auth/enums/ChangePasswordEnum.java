@@ -19,7 +19,7 @@ public enum ChangePasswordEnum {
     RESET("reset", "admin"),
 
     /**
-     * 找回密码
+     * 忘记/找回密码
      */
     FORGET("forget", "user"),
 

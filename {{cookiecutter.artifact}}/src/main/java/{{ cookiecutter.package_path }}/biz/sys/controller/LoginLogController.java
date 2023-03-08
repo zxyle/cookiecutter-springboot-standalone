@@ -6,14 +6,16 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
-import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
+import {{ cookiecutter.basePackage }}.biz.sys.mapper.LoginLogMapper;
+import {{ cookiecutter.basePackage }}.biz.sys.request.LoginLogRequest;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import {{ cookiecutter.basePackage }}.biz.sys.mapper.LoginLogMapper;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -39,8 +41,9 @@ public class LoginLogController {
      */
     @PreAuthorize("@ck.hasPermit('sys:login:list')")
     @GetMapping("/logs")
-    public ApiResponse<PageVO<LoginLog>> list(@Valid PaginationRequest request) {
+    public ApiResponse<PageVO<LoginLog>> list(@Valid LoginLogRequest request) {
         QueryWrapper<LoginLog> wrapper = new QueryWrapper<>();
+        wrapper.like(StringUtils.isNotBlank(request.getAccount()), "account", request.getAccount());
         IPage<LoginLog> page = PageRequestUtil.checkForMp(request);
         IPage<LoginLog> list = thisService.page(page, wrapper);
         return PageRequestUtil.extractFromMp(list);

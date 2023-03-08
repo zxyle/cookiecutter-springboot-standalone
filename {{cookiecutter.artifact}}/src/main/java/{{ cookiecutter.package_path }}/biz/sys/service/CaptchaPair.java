@@ -9,6 +9,9 @@ import lombok.Data;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 
+/**
+ * 验证码对象
+ */
 @Data
 @AllArgsConstructor
 public class CaptchaPair {
@@ -40,5 +43,13 @@ public class CaptchaPair {
      */
     public byte[] getBytes() {
         return byteArrayOutputStream.toByteArray();
+    }
+
+    @Override
+    public String toString() {
+        return "Captcha{" +
+                "code='" + code + '\'' +
+                ", captchaId='" + captchaId + '\'' +
+                '}';
     }
 }

@@ -11,14 +11,16 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 
 /**
- * 使用注册账号(用户名、手机号、邮箱)其一 + 密码方式登录
+ * 使用注册账号(用户名/邮箱/手机号) + 密码方式登录
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class LoginRequest extends BaseRequest {
 
     /**
-     * 注册账号（用户名/邮箱/手机号）
+     * 注册账号（支持用户名/邮箱/手机号）
+     *
+     * @mock 13512345678
      */
     @NotBlank(message = "注册账号不能为空")
     @Length(min = 5, message = "注册账号长度为5个字符以上")
@@ -26,6 +28,8 @@ public class LoginRequest extends BaseRequest {
 
     /**
      * 密码
+     *
+     * @mock 12345678
      */
     @NotBlank(message = "密码不能为空")
     private String password;
@@ -35,10 +39,11 @@ public class LoginRequest extends BaseRequest {
      *
      * @mock 1a38695e74b748ae7b48791f8d81531d
      */
+    @Length(min = 32, max = 32, message = "验证码ID长度为32个字符")
     private String captchaId;
 
     /**
-     * 短信、邮件、图形验证码答案
+     * 短信/邮件/图形验证码结果
      *
      * @mock 123123
      */

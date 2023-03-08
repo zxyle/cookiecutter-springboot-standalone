@@ -16,6 +16,8 @@ public class ChangeByCodeRequest {
 
     /**
      * 短信或邮件验证码
+     *
+     * @mock 123123
      */
     @NotBlank(message = "验证码不能为空")
     private String code;

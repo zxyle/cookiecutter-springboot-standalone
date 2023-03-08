@@ -7,20 +7,10 @@ import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import lombok.Data;
 
 @Data
-public class OperateLogRequest extends PaginationRequest {
+public class LoginLogRequest extends PaginationRequest {
 
     /**
-     * 操作用户ID
+     * 登录账号
      */
-    private Long userId;
-
-    /**
-     * 操作开始时间
-     */
-    private String startTime;
-
-    /**
-     * 操作结束时间
-     */
-    private String endTime;
+    private String account;
 }

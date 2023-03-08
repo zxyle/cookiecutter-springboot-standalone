@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import cn.hutool.core.util.IdUtil;
-import {{ cookiecutter.basePackage }}.biz.auth.response.SecretKeyResponse;
+import {{ cookiecutter.basePackage }}.biz.sys.response.SecretKeyResponse;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import dev.zhengxiang.tool.crypto.PlainKeyPair;
 import dev.zhengxiang.tool.crypto.RSAEncrypt;

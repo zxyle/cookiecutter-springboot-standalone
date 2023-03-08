@@ -4,6 +4,8 @@
 package {{ cookiecutter.basePackage }}.biz.auth.response;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Profile;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import lombok.Data;
 
 @Data
@@ -11,6 +13,8 @@ public class LoginResponse {
 
     /**
      * 用户ID
+     *
+     * @mock 10
      */
     private Long userId;
 
@@ -20,11 +24,11 @@ public class LoginResponse {
     private Profile profile;
 
     /**
-     * 用户名
+     * 昵称/名字/真实姓名（只用于展示）
      *
-     * @mock admin
+     * @mock 用户_ISDZsk
      */
-    private String username;
+    private String nickname;
 
     /**
      * JWT令牌
@@ -33,11 +37,23 @@ public class LoginResponse {
 
     /**
      * 是否管理员
+     *
+     * @mock false
      */
     private boolean admin;
 
     /**
      * 是否需要修改密码, 返回true后, 跳转到修改密码页面
+     *
+     * @mock false
      */
     private boolean mustChangePwd;
+
+    public LoginResponse(User user) {
+        this.userId = user.getId();
+        this.nickname = user.getNickname();
+        this.admin = user.getIsSuper() == 1;
+        this.mustChangePwd = user.getMustChangePwd() == 1;
+        this.token = JwtUtil.createJWT(userId.toString());
+    }
 }

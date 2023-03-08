@@ -22,6 +22,13 @@ public interface IPermissionService extends IService<Permission> {
     List<Permission> getAllPermissions(Long userId);
 
     /**
+     * 新增权限
+     *
+     * @param permission 权限信息
+     */
+    boolean create(Permission permission);
+
+    /**
      * 删除权限
      *
      * @param permissionId 权限ID

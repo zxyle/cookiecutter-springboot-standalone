@@ -16,13 +16,6 @@ import java.util.List;
 public interface IGroupRoleService extends IService<GroupRole> {
 
     /**
-     * 查询用户组角色
-     *
-     * @param groupId 用户组ID
-     */
-    List<Long> selectRoleByGroup(Long groupId);
-
-    /**
      * 删除映射关系
      *
      * @param groupId 用户组ID

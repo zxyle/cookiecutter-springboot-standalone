@@ -6,22 +6,28 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.permission;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
- * 创建权限请求
+ * 新增权限请求
  */
 @Data
 public class AddPermissionRequest {
 
     /**
      * 权限名称
+     *
+     * @mock 新增新闻
      */
     @NotBlank(message = "权限名称不能为空")
     private String name;
 
     /**
      * 权限代码
+     *
+     * @mock main:news:add
      */
+    @NotBlank(message = "权限代码不能为空")
     private String code;
 
     /**
@@ -36,7 +42,10 @@ public class AddPermissionRequest {
 
     /**
      * 权限类型（1：页面/路由，2：接口/功能 3：按钮/组件）
+     *
+     * @mock 2
      */
+    @NotNull(message = "权限类型不能为空")
     private Integer kind;
 
     /**

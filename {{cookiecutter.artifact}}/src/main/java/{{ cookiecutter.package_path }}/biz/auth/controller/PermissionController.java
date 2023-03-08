@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import cn.hutool.core.lang.tree.Tree;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
-import {{ cookiecutter.basePackage }}.biz.auth.mapper.PermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.request.permission.AddPermissionRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.permission.TreePermissionRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
@@ -27,12 +26,9 @@ import java.util.List;
 @RequestMapping("/auth")
 public class PermissionController extends AuthBaseController {
 
-    PermissionMapper permissionMapper;
-
     IPermissionService thisService;
 
-    public PermissionController(PermissionMapper permissionMapper, IPermissionService thisService) {
-        this.permissionMapper = permissionMapper;
+    public PermissionController(IPermissionService thisService) {
         this.thisService = thisService;
     }
 
@@ -72,17 +68,11 @@ public class PermissionController extends AuthBaseController {
         Permission entity = new Permission();
         BeanUtils.copyProperties(request, entity);
 
-        // 计算排序
-        if (request.getParentId() != null) {
-            Integer sort = permissionMapper.selectMaxSort(request.getParentId());
-            entity.setSort(sort == null ? 1 : sort + 1);
-        }
-
-        boolean success = thisService.save(entity);
+        boolean success = thisService.create(entity);
         if (success) {
             return new ApiResponse<>(entity);
         }
-        return new ApiResponse<>("新增失败", false);
+        return new ApiResponse<>("新增权限失败", false);
     }
 
 

@@ -5,5 +5,10 @@ package {{ cookiecutter.basePackage }}.biz.sys.service;
 
 public interface CaptchaService {
 
+    /**
+     * 创建验证码
+     *
+     * @return 返回由验证码图片字节数组、验证码结果、验证码ID组成的对象
+     */
     CaptchaPair generate();
 }

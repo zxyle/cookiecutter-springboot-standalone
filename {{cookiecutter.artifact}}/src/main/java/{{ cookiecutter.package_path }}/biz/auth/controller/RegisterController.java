@@ -5,10 +5,12 @@ package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.config.AuthUserProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.request.user.RandomUsernameRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.RegisterRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.response.RegisterResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
@@ -31,6 +33,8 @@ import java.util.List;
 @RequestMapping("/auth/user")
 public class RegisterController {
 
+    LoginService loginService;
+
     AuthUserProperties properties;
 
     ValidateService validateService;
@@ -41,7 +45,9 @@ public class RegisterController {
 
     PasswordEncoder encoder;
 
-    public RegisterController(IUserService userService, AuthUserProperties properties, ValidateService validateService, CodeService codeService, PasswordEncoder encoder) {
+    public RegisterController(LoginService loginService, IUserService userService, AuthUserProperties properties,
+                              ValidateService validateService, CodeService codeService, PasswordEncoder encoder) {
+        this.loginService = loginService;
         this.userService = userService;
         this.properties = properties;
         this.validateService = validateService;
@@ -53,7 +59,7 @@ public class RegisterController {
      * 用户注册
      */
     @PostMapping("/register")
-    public ApiResponse<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public ApiResponse<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
         String account = request.getAccount();
         // 检查是否开放注册
         if (!properties.isOpenRegistration()) {
@@ -87,6 +93,11 @@ public class RegisterController {
         // 赋予默认角色
         List<Long> roleIds = Collections.singletonList(properties.getDefaultRole());
         userService.updateRelation(user.getId(), roleIds, null, null);
+
+        if (properties.isAutoLogin()) {
+            LoginResponse loginResponse = loginService.login(account, request.getPassword());
+            return new ApiResponse<>(loginResponse);
+        }
         return new ApiResponse<>("注册账号成功");
     }
 
@@ -106,14 +117,13 @@ public class RegisterController {
 
     /**
      * 随机生成用户名
-     *
-     * @param prefix 前缀
      */
     @GetMapping("/random")
     @PreAuthorize("@ck.hasPermit('auth:user:random')")
-    public ApiResponse<List<String>> random(String prefix) {
+    public ApiResponse<List<String>> random(@Valid RandomUsernameRequest request) {
         List<String> list = new ArrayList<>();
-        list.add(prefix + "_001");
+        // TODO: 有待进一步增强该接口
+        list.add(request.getPrefix() + "_001");
         return new ApiResponse<>(list);
     }
 }

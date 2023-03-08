@@ -49,4 +49,10 @@ public interface IUserService extends IService<User> {
 
     // 获取所有有管理权限用户组成员
     List<Long> getAllChildren(Long userId);
+
+    // 锁定用户并退出当前登录状态
+    boolean locked(Long userId);
+
+    // 解锁用户
+    boolean unlock(Long userId);
 }

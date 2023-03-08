@@ -114,4 +114,20 @@ public class FeedbackController {
         return new ApiResponse<>("删除失败", false);
     }
 
+    /**
+     * 回复意见反馈
+     */
+    @PreAuthorize("@ck.hasPermit('sys:feedback:reply')")
+    @PutMapping("/feedbacks/{id}/reply")
+    public ApiResponse<Object> reply(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
+        entity.setId(id);
+        // TODO 使用邮件发送回复内容
+        // boolean success = thisService.reply(entity);
+        boolean success = true;
+        if (success) {
+            return new ApiResponse<>("回复成功");
+        }
+        return new ApiResponse<>("回复失败", false);
+    }
+
 }

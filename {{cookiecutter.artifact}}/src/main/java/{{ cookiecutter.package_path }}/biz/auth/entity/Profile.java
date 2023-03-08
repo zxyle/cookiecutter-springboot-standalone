@@ -4,11 +4,16 @@
 package {{ cookiecutter.basePackage }}.biz.auth.entity;
 
 import cn.hutool.core.date.DateUtil;
-import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
+import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.URL;
 
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -31,51 +36,63 @@ public class Profile extends BaseEntity {
     /**
      * 出生日期 yyyy-MM-dd
      */
+    @PastOrPresent(message = "出生日期必须是过去或现在的日期")
     private LocalDate birthday;
 
     /**
      * 年龄
      */
+    @Range(min = 0, max = 150, message = "年龄必须在0-150之间")
     private Integer age;
 
     /**
-     * 性别 male-男性 female-女性
+     * 性别 男/女
+     *
+     * @mock 男
      */
+    @Pattern(regexp = "[男|女]", message = "性别只能是男或女")
     private String gender;
 
     /**
      * 头像url
      */
+    @URL(message = "头像url格式不正确")
     private String avatar;
 
     /**
-     * 昵称
+     * 昵称/名字/真实姓名（只用于展示）
      */
+    @Length(max = 32, message = "昵称长度不能超过32个中英文字符")
     private String nickname;
 
     /**
      * QQ
      */
+    @Length(max = 12, message = "QQ长度不能超过12位数字")
     private String qq;
 
     /**
      * 微信
      */
+    @Length(min = 6, max = 20, message = "微信长度必须在6-20个中英文字符之间")
     private String wechat;
 
     /**
      * 微博
      */
+    @Length(min = 4, max = 30, message = "微博长度必须在4-30个中英文字符之间")
     private String weibo;
 
     /**
      * 简介
      */
+    @Length(max = 255, message = "简介长度不能超过255个中英文字符")
     private String intro;
 
     /**
      * 地址
      */
+    @Length(max = 255, message = "地址长度不能超过255个中英文字符")
     private String address;
 
     /**

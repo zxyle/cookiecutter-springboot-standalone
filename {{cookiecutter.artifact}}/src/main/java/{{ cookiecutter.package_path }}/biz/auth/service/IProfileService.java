@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IProfileService extends IService<Profile> {
 
     /**
-     * 按用户ID查询
+     * 按ID查询信息
      *
      * @param userId 用户ID
      */

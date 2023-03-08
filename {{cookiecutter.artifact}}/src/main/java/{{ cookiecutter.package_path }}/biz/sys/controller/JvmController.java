@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
+import cn.hutool.system.SystemUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.response.JvmResponse;
 import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +29,23 @@ public class JvmController {
     public ApiResponse<JvmResponse> get() {
         JvmResponse jvmResponse = new JvmResponse();
         jvmResponse.setProcessId(getProcessID());
+        System.out.println(SystemUtil.getJvmSpecInfo());
+        System.out.println("------------------");
+        System.out.println(SystemUtil.getJvmInfo());
+        System.out.println("------------------");
+        System.out.println(SystemUtil.getJavaSpecInfo());
+        System.out.println("------------------");
+        System.out.println(SystemUtil.getJavaInfo());
+        System.out.println("------------------");
+        System.out.println(SystemUtil.getJavaRuntimeInfo());
+        System.out.println("------------------");
+        System.out.println(SystemUtil.getOsInfo());
+        System.out.println("------------------");
+        System.out.println(SystemUtil.getUserInfo());
+        System.out.println("------------------");
+        System.out.println(SystemUtil.getHostInfo());
+        System.out.println("------------------");
+        System.out.println(SystemUtil.getRuntimeInfo());
         return new ApiResponse<>(jvmResponse);
     }
 

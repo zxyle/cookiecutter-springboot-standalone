@@ -16,6 +16,8 @@ public class ResetPasswordRequest {
 
     /**
      * 用户ID
+     *
+     * @mock 10
      */
     @Positive(message = "用户ID必须为正整数")
     @NotNull(message = "用户ID不能为空")
@@ -23,6 +25,8 @@ public class ResetPasswordRequest {
 
     /**
      * 新密码（不输入则系统随机生成密码）
+     *
+     * @mock lHfxoPrKOaWjSqwN
      */
     private String password;
 

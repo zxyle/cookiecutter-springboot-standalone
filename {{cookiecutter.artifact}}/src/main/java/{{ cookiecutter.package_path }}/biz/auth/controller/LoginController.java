@@ -3,19 +3,19 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.LoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IProfileService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
-import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
+import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 /**
  * 登录管理
  */
+@Slf4j
 @RestController
 @RequestMapping("/auth/user")
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
@@ -40,8 +41,6 @@ public class LoginController extends AuthBaseController {
 
     final CodeService codeService;
 
-    final IProfileService profileService;
-
 
     /**
      * 用户登录
@@ -51,24 +50,21 @@ public class LoginController extends AuthBaseController {
      */
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest servletRequest) {
+        log.debug("用户登录：{}", servletRequest.getRequestURI());
         ApiResponse<LoginResponse> beforeLoginResponse = beforeLogin(request);
         if (beforeLoginResponse != null) {
             return beforeLoginResponse;
         }
 
-        User user = loginService.login(request.getAccount(), request.getPassword());
-        Long userId = user.getId();
-        LoginResponse response = new LoginResponse();
-        response.setToken(JwtUtil.createJWT(userId.toString()));
-        response.setUsername(user.getUsername());
-        response.setAdmin(isSuper());
-        response.setProfile(profileService.queryByUserId(userId));
+        LoginResponse response = loginService.login(request.getAccount(), request.getPassword());
 
         // 用户初次登录后，需要在24小时内修改密码，否则到期后无法登录
-        if (user.getMustChangePwd() == 1) {
+        if (response.isMustChangePwd()) {
             response.setMustChangePwd(true);
-            userService.markExpired(userId, LocalDateTime.now().plusHours(24));
+            userService.markExpired(response.getUserId(), LocalDateTime.now().plusHours(24));
         }
+
+        afterLogin(response.getUserId());
         return new ApiResponse<>(response);
     }
 
@@ -93,6 +89,18 @@ public class LoginController extends AuthBaseController {
             return new ApiResponse<>("验证码可能错误或过期", false);
         }
         return null;
+    }
+
+    /**
+     * 登录后操作
+     */
+    @Async
+    public void afterLogin(Long userId) {
+        // 更新用户最后登录时间
+        User user = new User();
+        user.setId(userId);
+        user.setLastLoginTime(LocalDateTime.now());
+        userService.updateById(user);
     }
 
 }

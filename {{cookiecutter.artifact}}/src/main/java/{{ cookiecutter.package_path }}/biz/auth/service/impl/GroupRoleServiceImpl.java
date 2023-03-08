@@ -15,24 +15,12 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 组角色关联 服务实现类
  */
 @Service
 public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole> implements IGroupRoleService {
-
-    /**
-     * 查询用户组角色
-     *
-     * @param groupId 用户组ID
-     */
-    @Override
-    public List<Long> selectRoleByGroup(Long groupId) {
-        List<GroupRole> groupRoles = queryRelation(groupId, 0L);
-        return groupRoles.stream().map(GroupRole::getRoleId).collect(Collectors.toList());
-    }
 
     /**
      * 删除映射关系
