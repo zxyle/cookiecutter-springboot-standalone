@@ -4,7 +4,7 @@ import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.common.request.OrderPageRequest;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
@@ -54,7 +54,7 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
     @GetMapping("/${table.entityPath}s")
-    public ApiResponse<PageVO<${entity}>> page(@Valid OrderPageRequest request, HttpServletResponse response) throws IOException {
+    public R<PageVO<${entity}>> page(@Valid OrderPageRequest request, HttpServletResponse response) throws IOException {
         QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
         wrapper.orderBy(EntityUtil.getFields(${entity}.class).contains(request.getField()),
                 request.getOrder(), request.getField());
@@ -81,9 +81,9 @@ public class ${table.controllerName} {
     // 当数据量不大时，需要查出全部数据，可以使用此接口，不需要可以删除
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
     @GetMapping("/${table.entityPath}s")
-    public ApiResponse<List<${entity}>> list() {
+    public R<List<${entity}>> list() {
         QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
-        return new ApiResponse<>(thisService.list(wrapper));
+        return R.ok(thisService.list(wrapper));
     }
 
 
@@ -92,12 +92,9 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:add')")
     @PostMapping("/${table.entityPath}s")
-    public ApiResponse<${entity}> add(@Valid @RequestBody ${entity} entity) {
+    public R<${entity}> add(@Valid @RequestBody ${entity} entity) {
         boolean success = thisService.save(entity);
-        if (success) {
-            return new ApiResponse<>(entity);
-        }
-        return new ApiResponse<>("新增失败", false);
+        return success ? R.ok(entity) : R.fail("新增失败");
     }
 
 
@@ -106,12 +103,9 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:get')")
     @GetMapping("/${table.entityPath}s/{id}")
-    public ApiResponse<${entity}> get(@PathVariable Long id) {
+    public R<${entity}> get(@PathVariable Long id) {
         ${entity} entity = thisService.queryById(id);
-        if (entity == null) {
-            return new ApiResponse<>("数据不存在", false);
-        }
-        return new ApiResponse<>(entity);
+        return entity == null ? R.fail("数据不存在") : R.ok(entity);
     }
 
     /**
@@ -119,13 +113,10 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:update')")
     @PutMapping("/${table.entityPath}s/{id}")
-    public ApiResponse<Object> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
+    public R<Object> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        if (success) {
-            return new ApiResponse<>("更新成功");
-        }
-        return new ApiResponse<>("更新失败", false);
+        return success ? R.ok("更新成功") : R.fail("更新失败");
     }
 
     /**
@@ -133,12 +124,9 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:delete')")
     @DeleteMapping("/${table.entityPath}s/{id}")
-    public ApiResponse<Object> delete(@PathVariable Long id) {
+    public R<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        if (success) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败", false);
+        return success ? R.ok("删除成功") : R.fail("删除失败");
     }
 
 }

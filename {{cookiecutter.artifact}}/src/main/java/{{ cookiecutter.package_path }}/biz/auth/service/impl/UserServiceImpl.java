@@ -15,6 +15,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -219,5 +220,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key)))
             stringRedisTemplate.delete(key);
         return update;
+    }
+
+    // 带缓存的ID查询
+    @Cacheable(cacheNames = "UserCache", key = "#userId")
+    @Override
+    public User queryById(Long userId) {
+        return getById(userId);
     }
 }

@@ -3,8 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.common.exception;
 
-import {{ cookiecutter.basePackage }}.common.constant.Constant;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,21 +29,29 @@ public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    // 使用GET PUT DELETE操作不存在的数据
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<R<Object>> handleDataNotFoundException(DataNotFoundException ex) {
+        // Return error response with HTTP status 404
+        // TODO 对一个不存在的数据进行操作，认定是一次违规操作
+        return new ResponseEntity<>(R.fail(ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiResponse<Object>> handleAuthException(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        return new ResponseEntity<>(new ApiResponse<>("用户名或密码错误", false), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<R<Object>> handleAuthException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+        return new ResponseEntity<>(R.fail("用户名或密码错误"), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiResponse<Object>> handleAccessDeniedException(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        return new ResponseEntity<>(new ApiResponse<>("403", "权限不足", false), HttpStatus.FORBIDDEN);
+    public ResponseEntity<R<Object>> handleAccessDeniedException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+        return new ResponseEntity<>(R.fail("权限不足"), HttpStatus.FORBIDDEN);
     }
 
 
     // AnonymousAuthenticationToken  -> UsernamePasswordAuthenticationToken
     @ExceptionHandler(ClassCastException.class)
-    public ResponseEntity<ApiResponse<Object>> handleClassCastException(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        return new ResponseEntity<>(new ApiResponse<>("200", "登录失效", false), HttpStatus.FORBIDDEN);
+    public ResponseEntity<R<Object>> handleClassCastException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+        return new ResponseEntity<>(R.fail("登录失效，请重新登录"), HttpStatus.FORBIDDEN);
     }
 
 
@@ -57,15 +64,14 @@ public class GlobalExceptionHandler {
 
     // 处理JSON方式 数据校验失败
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<ApiResponse<Object>> handleValidationExceptions(BindException ex) {
+    public ResponseEntity<R<Object>> handleValidationExceptions(BindException ex) {
         StringBuilder builder = new StringBuilder();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             builder.append(fieldName).append(":").append(errorMessage).append(";");
         });
-        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, builder.toString(), false);
-        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(R.fail(builder.toString()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // 处理表单方式 数据校验失败
@@ -76,28 +82,24 @@ public class GlobalExceptionHandler {
 
     // 处理密码过期
     @ExceptionHandler(AccountExpiredException.class)
-    ResponseEntity<ApiResponse<Object>> handleAccountExpiredException(AccountExpiredException e) {
-        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "该账号密码已过期，请联系管理员", false);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    ResponseEntity<R<Object>> handleAccountExpiredException(AccountExpiredException e) {
+        return new ResponseEntity<>(R.fail("该账号密码已过期，请联系管理员"), HttpStatus.OK);
     }
 
     // 处理账号禁用
     @ExceptionHandler(DisabledException.class)
-    ResponseEntity<ApiResponse<Object>> handleDisabledException(DisabledException e) {
-        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "该账号已被停用", false);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    ResponseEntity<R<Object>> handleDisabledException(DisabledException e) {
+        return new ResponseEntity<>(R.fail("该账号已被停用"), HttpStatus.OK);
     }
 
     // 处理账号锁定
     @ExceptionHandler(LockedException.class)
-    ResponseEntity<ApiResponse<Object>> handleLockedException(LockedException e) {
-        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "该账号已被锁定", false);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    ResponseEntity<R<Object>> handleLockedException(LockedException e) {
+        return new ResponseEntity<>(R.fail("该账号已被锁定"), HttpStatus.OK);
     }
 
     @ExceptionHandler(value = {Exception.class, NullPointerException.class, HttpMessageNotReadableException.class})
-    public ResponseEntity<ApiResponse<Object>> exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        ApiResponse<Object> apiResponse = new ApiResponse<>(Constant.Response.ERROR_CODE, "操作失败", false);
-        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<R<Object>> exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
+        return new ResponseEntity<>(R.fail("操作失败"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

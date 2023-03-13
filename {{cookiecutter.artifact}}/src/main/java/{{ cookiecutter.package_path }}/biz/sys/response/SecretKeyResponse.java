@@ -6,14 +6,17 @@ package {{ cookiecutter.basePackage }}.biz.sys.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * 公钥响应
+ */
 @Data
 @AllArgsConstructor
 public class SecretKeyResponse {
 
     /**
-     * 回话ID
+     * 公钥ID
      */
-    private String sessionId;
+    private String keyId;
 
     /**
      * 公钥

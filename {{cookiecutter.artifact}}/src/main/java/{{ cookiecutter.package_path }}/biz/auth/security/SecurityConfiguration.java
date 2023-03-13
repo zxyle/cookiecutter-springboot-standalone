@@ -3,6 +3,10 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.security;
 
+import {{ cookiecutter.basePackage }}.biz.auth.security.filter.AntiSpiderFilter;
+import {{ cookiecutter.basePackage }}.biz.auth.security.filter.IpFilter;
+import {{ cookiecutter.basePackage }}.biz.auth.security.filter.SqlInjectionFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +25,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class SecurityConfiguration {
+
+    @Autowired
+    AntiSpiderFilter antiSpiderFilter;
+
+    @Autowired
+    IpFilter ipFilter;
+
+    @Autowired
+    SqlInjectionFilter sqlInjectionFilter;
 
     JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
@@ -53,8 +66,12 @@ public class SecurityConfiguration {
                 // 除上述请求 全部需要鉴权认证
                 .anyRequest().authenticated();
 
+
         // 添加过滤器
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(ipFilter, JwtAuthenticationTokenFilter.class);
+        http.addFilterBefore(antiSpiderFilter, IpFilter.class);
+        http.addFilterAfter(sqlInjectionFilter, AntiSpiderFilter.class);
 
         // 配置异常处理器
         http.exceptionHandling()

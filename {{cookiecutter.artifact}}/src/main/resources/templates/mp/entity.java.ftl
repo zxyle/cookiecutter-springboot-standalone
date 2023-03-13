@@ -11,6 +11,9 @@ import io.swagger.annotations.ApiModelProperty;
 <#if entityLombokModel>
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
     <#if chainModel>
 import lombok.experimental.Accessors;
     </#if>
@@ -82,6 +85,16 @@ public class ${entity} implements Serializable {
         </#if>
     <#elseif field.convert>
     @TableField("${field.annotationColumnName}")
+    </#if>
+    <#if field.length gt 0>
+    @Length(max = ${field.length}, message = "${field.comment}长度不能超过${field.length}个字符")
+    </#if>
+    <#if field.nullable>
+        <#if field.propertyType == "String">
+    @NotBlank(message = "${field.comment}不能为空")
+        <#else>
+    @NotNull(message = "${field.comment}不能为空")
+        </#if>
     </#if>
     private ${field.propertyType} ${field.propertyName};
 </#list>

@@ -9,7 +9,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.LoginLogMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.request.LoginLogRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -41,7 +41,7 @@ public class LoginLogController {
      */
     @PreAuthorize("@ck.hasPermit('sys:login:list')")
     @GetMapping("/logs")
-    public ApiResponse<PageVO<LoginLog>> list(@Valid LoginLogRequest request) {
+    public R<PageVO<LoginLog>> list(@Valid LoginLogRequest request) {
         QueryWrapper<LoginLog> wrapper = new QueryWrapper<>();
         wrapper.like(StringUtils.isNotBlank(request.getAccount()), "account", request.getAccount());
         IPage<LoginLog> page = PageRequestUtil.checkForMp(request);

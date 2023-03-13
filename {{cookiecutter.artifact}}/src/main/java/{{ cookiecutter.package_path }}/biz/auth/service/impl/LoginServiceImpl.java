@@ -14,6 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+/**
+ * 登录服务实现
+ */
 @Service
 public class LoginServiceImpl implements LoginService {
 
@@ -51,6 +54,7 @@ public class LoginServiceImpl implements LoginService {
      * 退出登录
      *
      * @param userId 用户id
+     * @return 是否成功
      */
     @Override
     public boolean logout(Long userId) {

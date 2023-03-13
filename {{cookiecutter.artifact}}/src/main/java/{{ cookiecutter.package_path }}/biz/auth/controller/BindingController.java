@@ -10,7 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,7 +40,7 @@ public class BindingController extends AuthBaseController {
      * @apiNote 该接口需先请求发送验证码接口
      */
     @PostMapping("/binding")
-    public ApiResponse<Object> binding(@Valid @RequestBody BindingRequest request) {
+    public R<Object> binding(@Valid @RequestBody BindingRequest request) {
         User user = getLoggedInUser();
 
         // 校验是否已解绑
@@ -48,19 +48,19 @@ public class BindingController extends AuthBaseController {
                 (AccountUtil.isMobile(request.getAccount()) && StringUtils.isNotBlank(user.getMobile()))) {
             String key = "code:" + request.getOldAccount();
             if (!validateService.validate(key, request.getOldCode())) {
-                return new ApiResponse<>("解绑失败", false);
+                return R.fail("解绑失败");
             }
         }
 
         String account = request.getAccount();
         if (userService.queryByAccount(account) != null) {
-            return new ApiResponse<>("该账号已绑定其他用户", false);
+            return R.fail("该账号已绑定其他用户");
         }
 
         // 获取redis中验证码, 校验是否正确
         String key = "code:" + account;
         if (!validateService.validate(key, request.getCode())) {
-            return new ApiResponse<>("验证码错误", false);
+            return R.fail("验证码错误");
         }
 
         // 更新用户信息
@@ -69,9 +69,6 @@ public class BindingController extends AuthBaseController {
         wrapper.set(AccountUtil.isEmail(account), "email", account);
         wrapper.eq("id", getUserId());
         boolean success = userService.update(wrapper);
-        if (success) {
-            return new ApiResponse<>("绑定成功");
-        }
-        return new ApiResponse<>("绑定失败", false);
+        return success ? R.ok("绑定成功") : R.fail("绑定失败");
     }
 }

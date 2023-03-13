@@ -18,7 +18,7 @@ import javax.validation.constraints.NotBlank;
 public class ForgetRequest extends BaseRequest {
 
     /**
-     * 注册账号（支持输入手机号、邮箱）
+     * 注册账号（支持输入手机号/邮箱）
      *
      * @mock 13512345678
      */

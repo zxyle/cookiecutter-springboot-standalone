@@ -6,6 +6,9 @@ package {{ cookiecutter.basePackage }}.biz.sys.request;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import lombok.Data;
 
+/**
+ * 带查询关键字分页查询请求
+ */
 @Data
 public class KeyWordPaginationRequest extends PaginationRequest {
 

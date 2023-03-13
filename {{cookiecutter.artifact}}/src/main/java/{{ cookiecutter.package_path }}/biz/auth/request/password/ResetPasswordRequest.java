@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request.password;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -28,6 +29,7 @@ public class ResetPasswordRequest {
      *
      * @mock lHfxoPrKOaWjSqwN
      */
+    @Length(min = 8, max = 32, message = "新密码长度需要8~32位")
     private String password;
 
 }

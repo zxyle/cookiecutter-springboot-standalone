@@ -8,14 +8,12 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,18 +22,23 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-// JWT 过滤器
+/**
+ * JWT 过滤器
+ */
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private IUserService userService;
+    IUserService userService;
 
-    @Autowired
-    private PasswordProperties passwordProperties;
+    PasswordProperties passwordProperties;
 
-    @Resource
     StringRedisTemplate stringRedisTemplate;
+
+    public JwtAuthenticationTokenFilter(IUserService userService, PasswordProperties passwordProperties, StringRedisTemplate stringRedisTemplate) {
+        this.userService = userService;
+        this.passwordProperties = passwordProperties;
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -68,7 +71,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         // 获取权限信息封装到Authentication中
         permissions = Arrays.asList(value.split(AuthConst.DELIMITER));
-        LoginUser loginUser = new LoginUser(permissions, userService.getById(Long.valueOf(userId)), passwordProperties);
+        LoginUser loginUser = new LoginUser(permissions, userService.queryById(Long.valueOf(userId)), passwordProperties);
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);

@@ -5,13 +5,18 @@ package {{ cookiecutter.basePackage }}.biz.auth.service;
 
 import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
 
+/**
+ * 密码服务
+ */
 public interface IPasswordService {
 
     /**
      * 修改密码
      *
      * @param userId 用户ID
-     * @param newPwd 加密后的新密码
+     * @param newPwd 加密过后的新密码
+     * @param policy 密码修改策略
+     * @return true: 修改成功; false: 修改失败
      */
     boolean change(Long userId, String newPwd, ChangePasswordEnum policy);
 
@@ -23,5 +28,5 @@ public interface IPasswordService {
      * @param encoded 加密后的密码
      * @return true: 正确; false: 错误
      */
-    boolean isCorrect(String raw, String encoded);
+    boolean isRight(String raw, String encoded);
 }

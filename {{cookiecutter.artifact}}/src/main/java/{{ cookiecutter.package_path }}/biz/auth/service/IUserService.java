@@ -55,4 +55,7 @@ public interface IUserService extends IService<User> {
 
     // 解锁用户
     boolean unlock(Long userId);
+
+    // 带缓存的ID查询
+    User queryById(Long userId);
 }

@@ -7,7 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.request.login.LoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -78,7 +78,7 @@ public class LogAspect {
      * @Around注解 环绕执行，就是在调用目标方法之前和调用之后，都会执行一定的逻辑
      */
     @Around("log()")
-    public ApiResponse<LoginResponse> doAround(ProceedingJoinPoint pjp) throws Throwable {
+    public R<LoginResponse> doAround(ProceedingJoinPoint pjp) throws Throwable {
         LoginLog loginLog = new LoginLog();
 
         logger.info("around start");
@@ -98,7 +98,7 @@ public class LogAspect {
         loginLog.setAccount(request.getAccount());
         long start = System.currentTimeMillis();
         // 调用执行目标方法(result为目标方法执行结果)，必须有此行代码才会执行目标调用的方法（等价于@befor+@after），否则只会执行一次之前的（等价于@before）
-        ApiResponse<LoginResponse> result = (ApiResponse) pjp.proceed();
+        R<LoginResponse> result = (R) pjp.proceed();
         logger.info("Around Result: " + result);
         long end = System.currentTimeMillis();
         loginLog.setMsg(result.getMessage());

@@ -60,4 +60,13 @@ public interface IRoleService extends IService<Role> {
 
     // 更新角色权限关系
     void updateRelation(Long roleId, List<Long> permissionIds);
+
+    /**
+     * 判断角色名称或者编码是否重复
+     *
+     * @param name 角色名称
+     * @param code 角色编码
+     * @return true 重复 false 不重复
+     */
+    boolean isDuplicate(String name, String code);
 }

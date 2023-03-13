@@ -4,27 +4,34 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request.role;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
+/**
+ * 创建角色请求
+ */
 @Data
 public class AddRoleRequest {
 
     /**
      * 角色名称
      */
+    @Length(max = 16, message = "角色名称长度不能超过16个字符")
     @NotBlank(message = "角色名称不能为空")
     private String name;
 
     /**
      * 角色代码
      */
+    @Length(max = 32, message = "角色代码长度不能超过32个字符")
     private String code;
 
     /**
      * 描述信息
      */
+    @Length(max = 64, message = "描述信息长度不能超过64个字符")
     private String description;
 
     /**

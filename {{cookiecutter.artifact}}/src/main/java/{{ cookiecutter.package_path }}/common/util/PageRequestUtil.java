@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.common.util;
 
 import {{ cookiecutter.basePackage }}.common.constant.PageConst;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -37,9 +37,9 @@ public class PageRequestUtil {
      * @param <T> 类型
      * @return 标准响应对象
      */
-    public static <T> ApiResponse<PageVO<T>> extractFromMp(IPage<T> p) {
+    public static <T> R<PageVO<T>> extractFromMp(IPage<T> p) {
         PageVO<T> vo = new PageVO<>(p.getRecords(), p.getTotal());
-        return new ApiResponse<>(vo);
+        return R.ok(vo);
     }
 
     /**

@@ -4,13 +4,13 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import cn.hutool.core.lang.tree.Tree;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.request.permission.AddPermissionRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.permission.TreePermissionRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,12 +40,12 @@ public class PermissionController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:permission:tree')")
     @Secured("ROLE_admin")
     @GetMapping("/permissions/tree")
-    public ApiResponse<List<Tree<Integer>>> tree(TreePermissionRequest request) {
+    public R<List<Tree<Integer>>> tree(TreePermissionRequest request) {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
         wrapper.eq(request.getKind() != null, "kind", request.getKind());
         List<Permission> list = thisService.list(wrapper);
         List<Tree<Integer>> tree = thisService.getTree(list, request.getRootPermissionId());
-        return new ApiResponse<>(tree);
+        return R.ok(tree);
     }
 
     /**
@@ -53,9 +53,9 @@ public class PermissionController extends AuthBaseController {
      */
     @GetMapping("/permissions")
     @PreAuthorize("@ck.hasPermit('auth:permission:list')")
-    public ApiResponse<List<Permission>> list() {
+    public R<List<Permission>> list() {
         List<Permission> permissions = thisService.getAllPermissions(getUserId());
-        return new ApiResponse<>(permissions);
+        return R.ok(permissions);
     }
 
 
@@ -64,15 +64,12 @@ public class PermissionController extends AuthBaseController {
      */
     @PostMapping("/permissions")
     @PreAuthorize("@ck.hasPermit('auth:permission:add')")
-    public ApiResponse<Permission> add(@Valid @RequestBody AddPermissionRequest request) {
+    public R<Permission> add(@Valid @RequestBody AddPermissionRequest request) {
         Permission entity = new Permission();
         BeanUtils.copyProperties(request, entity);
 
         boolean success = thisService.create(entity);
-        if (success) {
-            return new ApiResponse<>(entity);
-        }
-        return new ApiResponse<>("新增权限失败", false);
+        return success ? R.ok(entity) : R.fail("新增权限失败");
     }
 
 
@@ -83,12 +80,9 @@ public class PermissionController extends AuthBaseController {
      */
     @GetMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permission:get')")
-    public ApiResponse<Permission> get(@PathVariable Long permissionId) {
+    public R<Permission> get(@PathVariable Long permissionId) {
         Permission entity = thisService.getById(permissionId);
-        if (entity == null) {
-            return new ApiResponse<>("权限不存在", false);
-        }
-        return new ApiResponse<>(entity);
+        return entity == null ? R.fail("权限不存在") : R.ok(entity);
     }
 
     /**
@@ -98,16 +92,16 @@ public class PermissionController extends AuthBaseController {
      */
     @PutMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permission:update')")
-    public ApiResponse<Object> update(@Valid @RequestBody Permission entity, @PathVariable Long permissionId) {
+    public R<Object> update(@Valid @RequestBody Permission entity, @PathVariable Long permissionId) {
         Permission permission = thisService.getById(permissionId);
         entity.setId(permissionId);
         boolean success = thisService.updateById(entity);
         if (success) {
             List<Long> users = thisService.holdPermission(permission.getCode());
             users.forEach(userId -> thisService.refreshPermissions(userId));
-            return new ApiResponse<>("更新成功");
+            return R.ok("更新成功");
         }
-        return new ApiResponse<>("更新失败", false);
+        return R.fail("更新失败");
     }
 
     /**
@@ -117,9 +111,9 @@ public class PermissionController extends AuthBaseController {
      */
     @DeleteMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permission:delete')")
-    public ApiResponse<Object> delete(@PathVariable Long permissionId) {
+    public R<Object> delete(@PathVariable Long permissionId) {
         if (thisService.isAlreadyUsed(permissionId)) {
-            return new ApiResponse<>("删除失败，该权限正在使用", false);
+            return R.fail("删除失败，该权限正在使用");
         }
 
         Permission permission = thisService.getById(permissionId);
@@ -128,8 +122,8 @@ public class PermissionController extends AuthBaseController {
             // 所有持有该权限的用户，都刷新权限
             List<Long> users = thisService.holdPermission(permission.getCode());
             users.forEach(userId -> thisService.refreshPermissions(userId));
-            return new ApiResponse<>("删除成功");
+            return R.ok("删除成功");
         }
-        return new ApiResponse<>("删除失败", false);
+        return R.fail("删除失败");
     }
 }

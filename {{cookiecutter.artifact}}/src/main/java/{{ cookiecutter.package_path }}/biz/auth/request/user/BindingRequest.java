@@ -7,6 +7,9 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * 绑定账号请求
+ */
 @Data
 public class BindingRequest {
 

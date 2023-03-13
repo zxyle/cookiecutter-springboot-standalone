@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+/**
+ * 密码服务实现类
+ */
 @Service
 public class PasswordServiceImpl implements IPasswordService {
 
@@ -39,17 +42,18 @@ public class PasswordServiceImpl implements IPasswordService {
      * 修改密码
      *
      * @param userId 用户ID
-     * @param newPwd 加密后的新密码
+     * @param newPwd 加密过后的新密码
      * @param policy 密码修改策略
+     * @return true: 修改成功; false: 修改失败
      */
     @Override
     public boolean change(Long userId, String newPwd, ChangePasswordEnum policy) {
-        User user = userService.getById(userId);
+        User user = userService.queryById(userId);
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("pwd", passwordEncoder.encode(newPwd.trim()));
         updateWrapper.set("pwd_change_time", LocalDateTime.now());
-        // 只有用户主动修改密码，页面才不会提示修改初始密码
+        // 只有用户主动修改密码，页面才不会提示修改初始密码, 才会解除密码过期限制
         if (user.getMustChangePwd() == 1 && policy.getEditedBy().equals("user")) {
             updateWrapper.set("must_change_pwd", 0);
             updateWrapper.set("expire_time", null);
@@ -72,8 +76,8 @@ public class PasswordServiceImpl implements IPasswordService {
      * @return true: 正确; false: 错误
      */
     @Override
-    public boolean isCorrect(String raw, String encoded) {
-        if (StringUtils.isNotBlank(raw) || StringUtils.isBlank(encoded))
+    public boolean isRight(String raw, String encoded) {
+        if (StringUtils.isBlank(raw) || StringUtils.isBlank(encoded))
             return false;
 
         return passwordEncoder.matches(raw, encoded);

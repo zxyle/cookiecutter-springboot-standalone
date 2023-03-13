@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.FriendlyUrl;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFriendlyUrlService;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +34,13 @@ public class FriendlyUrlController {
      */
     @GetMapping("/urls")
     @Cacheable(cacheNames = "urlCache")
-    public ApiResponse<List<FriendlyUrl>> list() {
+    public R<List<FriendlyUrl>> list() {
         QueryWrapper<FriendlyUrl> wrapper = new QueryWrapper<>();
         wrapper.select("content", "url");
         wrapper.eq("status", ENABLE);
         wrapper.orderByAsc("sort");
         List<FriendlyUrl> urls = thisService.list(wrapper);
-        return new ApiResponse<>(urls);
+        return R.ok(urls);
     }
 
     /**
@@ -48,9 +48,9 @@ public class FriendlyUrlController {
      */
     @PreAuthorize("@ck.hasPermit('sys:friendly:add')")
     @PostMapping("/urls")
-    public ApiResponse<FriendlyUrl> add(@Valid @RequestBody FriendlyUrl entity) {
+    public R<FriendlyUrl> add(@Valid @RequestBody FriendlyUrl entity) {
         thisService.save(entity);
-        return new ApiResponse<>(entity);
+        return R.ok(entity);
     }
 
     /**
@@ -60,13 +60,13 @@ public class FriendlyUrlController {
      */
     @PreAuthorize("@ck.hasPermit('sys:friendly:delete')")
     @DeleteMapping("/urls/{id}")
-    public ApiResponse<FriendlyUrl> delete(@PathVariable("id") Long id) {
+    public R<FriendlyUrl> delete(@PathVariable("id") Long id) {
         FriendlyUrl entity = thisService.getById(id);
         if (entity == null) {
-            return new ApiResponse<>("友链不存在", false);
+            return R.fail("友链不存在");
         }
         thisService.removeById(id);
-        return new ApiResponse<>("删除成功", true);
+        return R.ok("删除成功");
     }
 
     /**
@@ -78,14 +78,14 @@ public class FriendlyUrlController {
      */
     @PreAuthorize("@ck.hasPermit('sys:friendly:update')")
     @PutMapping("/urls/{id}")
-    public ApiResponse<FriendlyUrl> update(@PathVariable Long id, @Valid @RequestBody FriendlyUrl entity) {
+    public R<FriendlyUrl> update(@PathVariable Long id, @Valid @RequestBody FriendlyUrl entity) {
         entity.setId(id);
         FriendlyUrl oldEntity = thisService.getById(id);
         if (oldEntity == null) {
-            return new ApiResponse<>("友链不存在", false);
+            return R.fail("友链不存在");
         }
         thisService.updateById(entity);
-        return new ApiResponse<>(entity);
+        return R.ok(entity);
     }
 
 }

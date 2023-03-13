@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import cn.hutool.core.util.IdUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.response.SecretKeyResponse;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import dev.zhengxiang.tool.crypto.PlainKeyPair;
 import dev.zhengxiang.tool.crypto.RSAEncrypt;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +31,9 @@ public class SecretKeyController {
      * 获取RSA公钥
      */
     @RequestMapping("/getPublicKey")
-    public ApiResponse<SecretKeyResponse> getPublicKey() {
-        String sessionId = IdUtil.simpleUUID();
-        String key = "privateKey:".concat(sessionId);
+    public R<SecretKeyResponse> getPublicKey() {
+        String keyId = IdUtil.simpleUUID();
+        String key = "privateKey:".concat(keyId);
 
         try {
             // 生成一对公钥和私钥
@@ -41,8 +41,8 @@ public class SecretKeyController {
             String privateKey = plainKeyPair.getPrivateKey();
             stringRedisTemplate.opsForValue().set(key, privateKey, 60, TimeUnit.SECONDS);
             // 将公钥传递给前端
-            SecretKeyResponse data = new SecretKeyResponse(sessionId, plainKeyPair.getPublicKey());
-            return new ApiResponse<>(data);
+            SecretKeyResponse data = new SecretKeyResponse(keyId, plainKeyPair.getPublicKey());
+            return R.ok(data);
         } catch (NoSuchAlgorithmException e) {
             log.error("error: ", e);
         }
@@ -50,6 +50,6 @@ public class SecretKeyController {
         // 前端使用公钥将关键信息加密，传递给后端
 
         // 后端使用私钥进行解密
-        return new ApiResponse<>("获取公钥失败", false);
+        return R.fail("获取公钥失败");
     }
 }

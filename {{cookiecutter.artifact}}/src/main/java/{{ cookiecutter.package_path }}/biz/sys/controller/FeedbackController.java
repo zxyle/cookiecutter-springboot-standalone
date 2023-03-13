@@ -6,12 +6,13 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
-import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Feedback;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFeedbackService;
+import {{ cookiecutter.basePackage }}.common.exception.DataNotFoundException;
 import {{ cookiecutter.basePackage }}.common.request.OrderPageRequest;
+import {{ cookiecutter.basePackage }}.common.response.PageVO;
+import {{ cookiecutter.basePackage }}.common.response.R;
+import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +41,7 @@ public class FeedbackController {
      */
     @PreAuthorize("@ck.hasPermit('sys:feedback:list')")
     @GetMapping("/feedbacks")
-    public ApiResponse<PageVO<Feedback>> list(@Valid OrderPageRequest request, HttpServletResponse response) throws IOException {
+    public R<PageVO<Feedback>> list(@Valid OrderPageRequest request, HttpServletResponse response) throws IOException {
         QueryWrapper<Feedback> wrapper = new QueryWrapper<>();
         wrapper.orderBy(EntityUtil.getFields(Feedback.class).contains(request.getField()),
                 request.getOrder(), request.getField());
@@ -65,12 +66,9 @@ public class FeedbackController {
      * 新增意见反馈
      */
     @PostMapping("/feedbacks")
-    public ApiResponse<Feedback> add(@Valid @RequestBody Feedback entity) {
+    public R<Feedback> add(@Valid @RequestBody Feedback entity) {
         boolean success = thisService.save(entity);
-        if (success) {
-            return new ApiResponse<>(entity);
-        }
-        return new ApiResponse<>("新增失败", false);
+        return success ? R.ok(entity) : R.fail("新增失败");
     }
 
 
@@ -79,12 +77,9 @@ public class FeedbackController {
      */
     @PreAuthorize("@ck.hasPermit('sys:feedback:get')")
     @GetMapping("/feedbacks/{id}")
-    public ApiResponse<Feedback> get(@PathVariable Long id) {
+    public R<Feedback> get(@PathVariable Long id) {
         Feedback entity = thisService.queryById(id);
-        if (entity == null) {
-            return new ApiResponse<>("数据不存在", false);
-        }
-        return new ApiResponse<>(entity);
+        return entity == null ? R.fail("数据不存在") : R.ok(entity);
     }
 
     /**
@@ -92,13 +87,11 @@ public class FeedbackController {
      */
     @PreAuthorize("@ck.hasPermit('sys:feedback:update')")
     @PutMapping("/feedbacks/{id}")
-    public ApiResponse<Object> update(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
+    public R<Object> update(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
         entity.setId(id);
+        checkId(id);
         boolean success = thisService.updateById(entity);
-        if (success) {
-            return new ApiResponse<>("更新成功");
-        }
-        return new ApiResponse<>("更新失败", false);
+        return success ? R.ok("更新成功") : R.fail("更新失败");
     }
 
     /**
@@ -106,12 +99,9 @@ public class FeedbackController {
      */
     @PreAuthorize("@ck.hasPermit('sys:feedback:delete')")
     @DeleteMapping("/feedbacks/{id}")
-    public ApiResponse<Object> delete(@PathVariable Long id) {
+    public R<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        if (success) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败", false);
+        return success ? R.ok("删除成功") : R.fail("删除失败");
     }
 
     /**
@@ -119,15 +109,22 @@ public class FeedbackController {
      */
     @PreAuthorize("@ck.hasPermit('sys:feedback:reply')")
     @PutMapping("/feedbacks/{id}/reply")
-    public ApiResponse<Object> reply(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
+    public R<Object> reply(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
         entity.setId(id);
         // TODO 使用邮件发送回复内容
         // boolean success = thisService.reply(entity);
         boolean success = true;
         if (success) {
-            return new ApiResponse<>("回复成功");
+            return R.ok("回复成功");
         }
-        return new ApiResponse<>("回复失败", false);
+        return R.fail("回复失败");
+    }
+
+    public void checkId(Long id) {
+        Feedback entity = thisService.getById(id);
+        if (entity == null) {
+            throw new DataNotFoundException("数据不存在: " + id);
+        }
     }
 
 }

@@ -8,7 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.Area;
 import {{ cookiecutter.basePackage }}.biz.sys.request.AreaRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IAreaService;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.AreaNode;
 import {{ cookiecutter.basePackage }}.common.util.TreeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class AreaController {
      */
     @GetMapping("/tree")
     @Cacheable(cacheNames = "areaCache", key = "#request.rootId+#request.level")
-    public ApiResponse<AntdTree2> tree(AreaRequest request) {
+    public R<AntdTree2> tree(AreaRequest request) {
         String rootId = request.getRootId();
         Integer level = request.getLevel();
         QueryWrapper<Area> wrapper = new QueryWrapper<>();
@@ -58,7 +58,7 @@ public class AreaController {
         }
 
         if ((level - rootLevel) > 3) {
-            return new ApiResponse<>("查询超过层级限制", false);
+            return R.fail("查询超过层级限制");
         }
 
         List<Area> areas = thisService.list(wrapper);
@@ -68,6 +68,6 @@ public class AreaController {
 
         List<AntdTree2> listTree = TreeUtil.createTree(nodes, rootId);
         AntdTree2 tree = new AntdTree2(rootName, rootCode, listTree);
-        return new ApiResponse<>(tree);
+        return R.ok(tree);
     }
 }

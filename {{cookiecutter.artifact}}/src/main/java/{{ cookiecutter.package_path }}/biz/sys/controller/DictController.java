@@ -8,7 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
 import {{ cookiecutter.basePackage }}.biz.sys.request.dict.MultiDictTypeRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.cache.annotation.Cacheable;
@@ -38,7 +38,7 @@ public class DictController {
      */
     @Cacheable(cacheNames = "dictCache")
     @GetMapping("/dicts")
-    public ApiResponse<PageVO<Dict>> list(@Valid PaginationRequest request) {
+    public R<PageVO<Dict>> list(@Valid PaginationRequest request) {
         IPage<Dict> page = PageRequestUtil.checkForMp(request);
         IPage<Dict> list = thisService.page(page);
         return PageRequestUtil.extractFromMp(list);
@@ -51,12 +51,9 @@ public class DictController {
     @PreAuthorize("@ck.hasPermit('sys:dict:add')")
     @Cacheable(cacheNames = "dictCache")
     @PostMapping("/dicts")
-    public ApiResponse<Dict> add(@Valid @RequestBody Dict entity) {
+    public R<Dict> add(@Valid @RequestBody Dict entity) {
         boolean success = thisService.save(entity);
-        if (success) {
-            return new ApiResponse<>(entity);
-        }
-        return new ApiResponse<>("新增失败", false);
+        return success ? R.ok(entity) : R.fail("新增失败");
     }
 
 
@@ -66,21 +63,21 @@ public class DictController {
     @PreAuthorize("@ck.hasPermit('sys:dict:get')")
     @Cacheable(cacheNames = "dictCache", key = "#id")
     @GetMapping("/dicts/{id}")
-    public ApiResponse<Dict> get(@PathVariable Long id) {
-        return new ApiResponse<>(thisService.getById(id));
+    public R<Dict> get(@PathVariable Long id) {
+        return R.ok(thisService.getById(id));
     }
 
     /**
      * 按类型查询字典
      */
     @GetMapping("/dicts/dictType")
-    public ApiResponse<Map<String, List<Dict>>> getByDictType(MultiDictTypeRequest request) {
+    public R<Map<String, List<Dict>>> getByDictType(MultiDictTypeRequest request) {
         Map<String, List<Dict>> map = new HashMap<>();
         for (String type : request.getTypes()) {
             List<Dict> dicts = thisService.listAllDicts(type);
             map.put(type, dicts);
         }
-        return new ApiResponse<>(map);
+        return R.ok(map);
     }
 
 
@@ -89,13 +86,10 @@ public class DictController {
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:update')")
     @PutMapping("/dicts/{id}")
-    public ApiResponse<Object> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
+    public R<Object> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        if (success) {
-            return new ApiResponse<>("更新成功");
-        }
-        return new ApiResponse<>("更新失败", false);
+        return success ? R.ok("更新成功") : R.fail("更新失败");
     }
 
     /**
@@ -103,12 +97,9 @@ public class DictController {
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
     @DeleteMapping("/dicts/{id}")
-    public ApiResponse<Object> delete(@PathVariable Long id) {
+    public R<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        if (success) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败", false);
+        return success ? R.ok("删除成功") : R.fail("删除失败");
     }
 
 }

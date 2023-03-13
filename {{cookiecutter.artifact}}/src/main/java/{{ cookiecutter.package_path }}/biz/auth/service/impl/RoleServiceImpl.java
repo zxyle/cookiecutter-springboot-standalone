@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
@@ -12,6 +13,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.RoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.RoleResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -143,5 +145,20 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public void updateRelation(Long roleId, List<Long> permissionIds) {
         rolePermissionService.updateRelation(roleId, permissionIds);
+    }
+
+    /**
+     * 判断角色名称或者编码是否重复
+     *
+     * @param name 角色名称
+     * @param code 角色编码
+     * @return true 重复 false 不重复
+     */
+    @Override
+    public boolean isDuplicate(String name, String code) {
+        QueryWrapper<Role> wrapper = new QueryWrapper<>();
+        wrapper.eq(StringUtils.isNotBlank(name), "name", name)
+                .or().eq(StringUtils.isNotBlank(code), "code", code);
+        return count(wrapper) > 0;
     }
 }

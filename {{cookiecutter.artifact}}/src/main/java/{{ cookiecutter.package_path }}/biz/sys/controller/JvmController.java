@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import cn.hutool.system.SystemUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.response.JvmResponse;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ public class JvmController {
      */
     @PreAuthorize("@ck.hasPermit('sys:jvm:get')")
     @GetMapping("/jvm")
-    public ApiResponse<JvmResponse> get() {
+    public R<JvmResponse> get() {
         JvmResponse jvmResponse = new JvmResponse();
         jvmResponse.setProcessId(getProcessID());
         System.out.println(SystemUtil.getJvmSpecInfo());
@@ -46,7 +46,7 @@ public class JvmController {
         System.out.println(SystemUtil.getHostInfo());
         System.out.println("------------------");
         System.out.println(SystemUtil.getRuntimeInfo());
-        return new ApiResponse<>(jvmResponse);
+        return R.ok(jvmResponse);
     }
 
 

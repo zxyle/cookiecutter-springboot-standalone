@@ -9,11 +9,10 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.response.CaptchaResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +27,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 图形数字验证码
+ * 数字验证码管理
  */
 @RestController
 @RequestMapping("/sys/captcha")
@@ -63,11 +62,11 @@ public class CaptchaController {
      * 生成base64编码图形验证码
      */
     @GetMapping("/generate")
-    public ApiResponse<CaptchaResponse> generate() {
+    public R<CaptchaResponse> generate() {
         CaptchaPair captchaPair = codeService.send();
         CaptchaResponse response = new CaptchaResponse(captchaPair.getCaptchaId(), captchaPair.getB64Image());
         log.info("已生成验证码: {}", captchaPair);
-        return new ApiResponse<>(response);
+        return R.ok(response);
     }
 
 
@@ -97,12 +96,12 @@ public class CaptchaController {
      * @param captchaId 图形验证码id
      */
     @GetMapping("/verify")
-    public ApiResponse<Boolean> verify(@NotBlank String code, @NotBlank String captchaId) {
+    public R<Boolean> verify(@NotBlank String code, @NotBlank String captchaId) {
         boolean verify = codeService.verify(code, captchaId);
-        return new ApiResponse<>(verify);
+        return R.result(verify);
     }
 
-    // TODO 安全隐患， 如果一个人频繁使用别人邮箱或手机号
+    // TODO 安全隐患， 如果一个人频繁使用别人邮箱或手机号, 限定一个ip地址一天只能发送10次验证码
 
     /**
      * 发送短信邮件验证码
@@ -110,22 +109,22 @@ public class CaptchaController {
      * @apiNote 1. 验证码60秒有效期内不再发送 2. 需先校验图形验证码
      */
     @GetMapping("/send")
-    public ApiResponse<Boolean> send(@Valid SendCodeRequest request, HttpServletRequest servletRequest) {
+    public R<Boolean> send(@Valid SendCodeRequest request, HttpServletRequest servletRequest) {
         String account = request.getAccount();
 
         // 验证码60秒有效期内不再发送
         String key = "code:" + account;
         Long expire = stringRedisTemplate.getExpire(key);
         if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key)) && (expire != null && expire > 60)) {
-            return new ApiResponse<>("验证码仍在有效期内", true);
+            return R.ok("验证码仍在有效期内");
         }
 
         if (!codeService.verify(request.getCode(), request.getCaptchaId())) {
-            return new ApiResponse<>(HttpStatus.BAD_REQUEST.toString(), "验证码错误", false);
+            return R.fail("验证码错误");
         }
 
         if (isLocked(account)) {
-            return new ApiResponse<>(HttpStatus.BAD_REQUEST.toString(), "请求验证码频繁", false);
+            return R.fail("请求验证码频繁");
         }
 
         String code = validateService.send(account);
@@ -141,7 +140,7 @@ public class CaptchaController {
 
         String ipAddr = IpUtil.getIpAddr(servletRequest);
         locked(account, captchaProperties.getBetween(), ipAddr);
-        return new ApiResponse<>("验证码发送成功", true);
+        return R.ok("验证码发送成功");
     }
 
     // 防止验证码被滥用

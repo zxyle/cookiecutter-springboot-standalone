@@ -5,16 +5,16 @@ package {{ cookiecutter.basePackage }}.common.util;
 
 import org.springframework.http.HttpStatus;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class ResponseUtil {
 
     public static void forbidden(HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
-        PrintWriter writer = response.getWriter();
-        writer.println("{\"message\": \"禁止访问\", \"success\": false, \"code\": \"403\"}");
+        ServletOutputStream outputStream = response.getOutputStream();
+        outputStream.write("{\"message\": \"禁止访问\", \"success\": false, \"code\": \"403\"}".getBytes());
         response.setStatus(HttpStatus.FORBIDDEN.value());
     }
 }

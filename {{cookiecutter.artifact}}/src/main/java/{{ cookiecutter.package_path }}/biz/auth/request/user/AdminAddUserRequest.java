@@ -21,7 +21,7 @@ public class AdminAddUserRequest {
      * 注册账号（只支持输入用户名）
      */
     @NotBlank(message = "注册账号不能为空")
-    @Length(min = 5, message = "注册账号长度为5个字符以上")
+    @Length(min = 5, max = 18, message = "注册账号长度为5-18个字符")
     @Pattern(regexp = RegexConst.REGEX_USERNAME, message = "由5-18位字母、数字、下划线组成，必须以字母开头")
     private String account;
 
@@ -29,7 +29,7 @@ public class AdminAddUserRequest {
      * 用户密码
      */
     @NotBlank(message = "用户密码不能为空")
-    @Length(min = 8, message = "用户密码长度为8个字符以上")
+    @Length(min = 8, max = 32, message = "用户密码长度为8-32个字符")
     private String password;
 
     /**

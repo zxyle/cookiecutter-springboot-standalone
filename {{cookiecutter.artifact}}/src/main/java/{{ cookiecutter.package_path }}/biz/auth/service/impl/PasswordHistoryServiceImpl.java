@@ -78,7 +78,12 @@ public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMappe
         return remove(wrapper);
     }
 
-    // 清除密码历史
+    /**
+     * 清除密码历史
+     *
+     * @param userId 用户ID
+     * @return true: 清除成功; false: 清除失败
+     */
     @Override
     public boolean clear(Long userId) {
         return removeHistory(userId, null);

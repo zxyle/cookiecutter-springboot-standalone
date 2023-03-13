@@ -10,6 +10,8 @@ import {{ cookiecutter.basePackage }}.biz.sys.mapper.FeedbackMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFeedbackService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,19 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
     @Override
     public Feedback queryById(Long id) {
         return getById(id);
+    }
+
+    @CachePut(cacheNames = "FeedbackCache", key = "#feedback.id")
+    @Override
+    public Feedback putById(Feedback feedback) {
+        updateById(feedback);
+        return getById(feedback.getId());
+    }
+
+    @CacheEvict(cacheNames = "FeedbackCache", key = "#id")
+    @Override
+    public void deleteById(Long id) {
+        removeById(id);
     }
 
     /**

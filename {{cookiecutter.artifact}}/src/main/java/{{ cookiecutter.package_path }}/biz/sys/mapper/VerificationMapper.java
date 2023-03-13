@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.sys.mapper;
 
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Verification;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
@@ -18,13 +17,5 @@ public interface VerificationMapper extends BaseMapper<Verification> {
     // 截断表
     @Update("TRUNCATE TABLE sys_verification")
     void truncate();
-
-    // 创建分区表
-    @Select("CREATE TABlE IF NOT EXISTS sys_verification_${suffix} LIKE sys_verification;")
-    void cloneTable(String suffix);
-
-    // 删除分区表
-    @Select("DROP TABlE IF EXISTS sys_verification_${suffix} ;")
-    void dropTable(String suffix);
 
 }

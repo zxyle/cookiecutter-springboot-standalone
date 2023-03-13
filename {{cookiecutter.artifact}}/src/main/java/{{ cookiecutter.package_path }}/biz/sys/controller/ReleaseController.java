@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Release;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IReleaseService;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,12 +31,12 @@ public class ReleaseController {
      */
     @PreAuthorize("@ck.hasPermit('sys:release:list')")
     @GetMapping("/releases")
-    public ApiResponse<List<Release>> list() {
+    public R<List<Release>> list() {
         QueryWrapper<Release> wrapper = new QueryWrapper<>();
         wrapper.select("version", "description");
         wrapper.orderByDesc("create_time");
         List<Release> releases = thisService.list(wrapper);
-        return new ApiResponse<>(releases);
+        return R.ok(releases);
     }
 
     /**
@@ -44,12 +44,9 @@ public class ReleaseController {
      */
     @PreAuthorize("@ck.hasPermit('sys:release:add')")
     @PostMapping("/releases")
-    public ApiResponse<Release> add(@Valid @RequestBody Release entity) {
+    public R<Release> add(@Valid @RequestBody Release entity) {
         boolean success = thisService.save(entity);
-        if (success) {
-            return new ApiResponse<>(entity);
-        }
-        return new ApiResponse<>("新增失败", false);
+        return success ? R.ok(entity) : R.fail("新增失败");
     }
 
 
@@ -58,12 +55,9 @@ public class ReleaseController {
      */
     @PreAuthorize("@ck.hasPermit('sys:release:get')")
     @GetMapping("/releases/{id}")
-    public ApiResponse<Release> get(@PathVariable Long id) {
+    public R<Release> get(@PathVariable Long id) {
         Release entity = thisService.getById(id);
-        if (entity == null) {
-            return new ApiResponse<>("数据不存在", false);
-        }
-        return new ApiResponse<>(entity);
+        return entity == null ? R.fail("数据不存在") : R.ok(entity);
     }
 
     /**
@@ -71,13 +65,10 @@ public class ReleaseController {
      */
     @PreAuthorize("@ck.hasPermit('sys:release:update')")
     @PutMapping("/releases/{id}")
-    public ApiResponse<Object> update(@Valid @RequestBody Release entity, @PathVariable Long id) {
+    public R<Object> update(@Valid @RequestBody Release entity, @PathVariable Long id) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        if (success) {
-            return new ApiResponse<>("更新成功");
-        }
-        return new ApiResponse<>("更新失败", false);
+        return success ? R.ok("更新成功") : R.fail("更新失败");
     }
 
     /**
@@ -85,12 +76,9 @@ public class ReleaseController {
      */
     @PreAuthorize("@ck.hasPermit('sys:release:delete')")
     @DeleteMapping("/releases/{id}")
-    public ApiResponse<Object> delete(@PathVariable Long id) {
+    public R<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        if (success) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败", false);
+        return success ? R.ok("删除成功") : R.fail("删除失败");
     }
 
 }

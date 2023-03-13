@@ -6,6 +6,9 @@ package {{ cookiecutter.basePackage }}.biz.sys.request;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import lombok.Data;
 
+/**
+ * 操作日志分页查询请求
+ */
 @Data
 public class OperateLogRequest extends PaginationRequest {
 

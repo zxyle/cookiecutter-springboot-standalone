@@ -4,11 +4,12 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request.role;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
 /**
- * 修改角色请求
+ * 更新角色请求
  */
 @Data
 public class UpdateRoleRequest {
@@ -16,11 +17,13 @@ public class UpdateRoleRequest {
     /**
      * 角色名称
      */
+    @Length(max = 16, message = "角色名称长度不能超过16个字符")
     private String name;
 
     /**
      * 描述信息
      */
+    @Length(max = 16, message = "描述信息长度不能超过16个字符")
     private String description;
 
     /**

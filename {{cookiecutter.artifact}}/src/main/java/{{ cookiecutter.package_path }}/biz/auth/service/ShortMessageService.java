@@ -3,7 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
-
+/**
+ * 短信发送服务
+ */
 public interface ShortMessageService {
 
     /**

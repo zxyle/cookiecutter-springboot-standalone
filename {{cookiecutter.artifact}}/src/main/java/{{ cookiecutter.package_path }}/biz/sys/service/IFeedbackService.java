@@ -18,6 +18,10 @@ public interface IFeedbackService extends IService<Feedback> {
      */
     Feedback queryById(Long id);
 
+    Feedback putById(Feedback feedback);
+
+    void deleteById(Long id);
+
     /**
      * 分页查询
      */

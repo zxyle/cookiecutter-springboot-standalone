@@ -13,7 +13,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,35 +59,35 @@ public class RegisterController {
      * 用户注册
      */
     @PostMapping("/register")
-    public ApiResponse<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public R<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
         String account = request.getAccount();
         // 检查是否开放注册
         if (!properties.isOpenRegistration()) {
-            return new ApiResponse<>("系统未开放注册", false);
+            return R.fail("系统未开放注册");
         }
 
         // 校验验证码是否正确
         if (AccountUtil.isUsername(account)) {
             if (!codeService.verify(request.getCode(), request.getCaptchaId())) {
-                return new ApiResponse<>("验证码可能错误或过期", false);
+                return R.fail("验证码可能错误或过期");
             }
         } else {
             String key = "code:" + account;
             if (!validateService.validate(key, request.getCode())) {
-                return new ApiResponse<>("验证码可能错误或过期", false);
+                return R.fail("验证码可能错误或过期");
             }
         }
 
-        // 检查是否已被占用
+        // 检查账号是否已被占用
         if (userService.queryByAccount(account) != null) {
-            return new ApiResponse<>("账号已被占用", false);
+            return R.fail("账号已被占用");
         }
 
         // 创建用户
         User user = userService.create(account, encoder.encode(request.getPassword()));
         boolean success = userService.save(user);
         if (!success) {
-            return new ApiResponse<>("注册账号失败", false);
+            return R.fail("注册账号失败");
         }
 
         // 赋予默认角色
@@ -96,9 +96,9 @@ public class RegisterController {
 
         if (properties.isAutoLogin()) {
             LoginResponse loginResponse = loginService.login(account, request.getPassword());
-            return new ApiResponse<>(loginResponse);
+            return R.ok(loginResponse);
         }
-        return new ApiResponse<>("注册账号成功");
+        return R.ok("注册账号成功");
     }
 
     /**
@@ -108,11 +108,11 @@ public class RegisterController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:check')")
     @GetMapping("/check")
-    public ApiResponse<Boolean> check(@NotBlank String account) {
+    public R<Boolean> check(@NotBlank String account) {
         if (userService.queryByAccount(account) == null) {
-            return new ApiResponse<>("可以注册");
+            return R.ok("可以注册");
         }
-        return new ApiResponse<>("账号名已经被占用，请更换账号名重试", false);
+        return R.fail("账号名已经被占用，请更换账号名重试");
     }
 
     /**
@@ -120,10 +120,10 @@ public class RegisterController {
      */
     @GetMapping("/random")
     @PreAuthorize("@ck.hasPermit('auth:user:random')")
-    public ApiResponse<List<String>> random(@Valid RandomUsernameRequest request) {
+    public R<List<String>> random(@Valid RandomUsernameRequest request) {
         List<String> list = new ArrayList<>();
         // TODO: 有待进一步增强该接口
         list.add(request.getPrefix() + "_001");
-        return new ApiResponse<>(list);
+        return R.ok(list);
     }
 }

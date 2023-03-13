@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.aspect;
 import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IOperateLogService;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -55,7 +55,7 @@ public class OperateAspect {
         // 调用目标方法
         Object result = joinPoint.proceed();
 
-        ApiResponse<Object> response = (ApiResponse) result;
+        R<Object> response = (R) result;
         log.setResult(String.valueOf(response.isSuccess()));
         logService.saveLog(log);
         return result;

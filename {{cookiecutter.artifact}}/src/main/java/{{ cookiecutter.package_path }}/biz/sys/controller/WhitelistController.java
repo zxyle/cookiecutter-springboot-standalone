@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
 import {{ cookiecutter.basePackage }}.biz.sys.request.KeyWordPaginationRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
@@ -40,7 +40,7 @@ public class WhitelistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:list')")
     @GetMapping("/whitelists")
-    public ApiResponse<PageVO<Whitelist>> list(@Valid KeyWordPaginationRequest request) throws IOException {
+    public R<PageVO<Whitelist>> list(@Valid KeyWordPaginationRequest request) throws IOException {
         QueryWrapper<Whitelist> wrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(request.getKeyword())) {
             wrapper.and(w -> w.like("ip", request.getKeyword())
@@ -57,12 +57,9 @@ public class WhitelistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:add')")
     @PostMapping("/whitelists")
-    public ApiResponse<Whitelist> add(@Valid @RequestBody Whitelist entity) {
+    public R<Whitelist> add(@Valid @RequestBody Whitelist entity) {
         boolean success = thisService.save(entity);
-        if (success) {
-            return new ApiResponse<>(entity);
-        }
-        return new ApiResponse<>("新增失败", false);
+        return success ? R.ok(entity) : R.fail("新增失败");
     }
 
 
@@ -71,8 +68,8 @@ public class WhitelistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:get')")
     @GetMapping("/whitelists/{id}")
-    public ApiResponse<Whitelist> get(@PathVariable Long id) {
-        return new ApiResponse<>(thisService.queryById(id));
+    public R<Whitelist> get(@PathVariable Long id) {
+        return R.ok(thisService.queryById(id));
     }
 
     /**
@@ -80,13 +77,10 @@ public class WhitelistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:update')")
     @PutMapping("/whitelists/{id}")
-    public ApiResponse<Object> update(@PathVariable Long id, @Valid @RequestBody Whitelist entity) {
+    public R<Object> update(@PathVariable Long id, @Valid @RequestBody Whitelist entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        if (success) {
-            return new ApiResponse<>("更新成功");
-        }
-        return new ApiResponse<>("更新失败", false);
+        return success ? R.ok("更新成功") : R.fail("更新失败");
     }
 
     /**
@@ -94,12 +88,9 @@ public class WhitelistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:delete')")
     @DeleteMapping("/whitelists/{id}")
-    public ApiResponse<Object> delete(@PathVariable Long id) {
+    public R<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        if (success) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败", false);
+        return success ? R.ok("删除成功") : R.fail("删除失败");
     }
 
     /**

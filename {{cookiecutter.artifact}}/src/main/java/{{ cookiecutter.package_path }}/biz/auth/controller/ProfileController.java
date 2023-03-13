@@ -9,7 +9,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IProfileService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +39,9 @@ public class ProfileController extends AuthBaseController {
     @LogOperation("获取当前用户信息")
     @PreAuthorize("@ck.hasPermit('auth:profile:get')")
     @GetMapping("/profile")
-    public ApiResponse<Profile> get() {
+    public R<Profile> get() {
         Long userId = getUserId();
-        return new ApiResponse<>(thisService.queryByUserId(userId));
+        return R.ok(thisService.queryByUserId(userId));
     }
 
     /**
@@ -50,7 +50,7 @@ public class ProfileController extends AuthBaseController {
     @LogOperation("更新当前用户信息")
     @PreAuthorize("@ck.hasPermit('auth:profile:update')")
     @PutMapping("/profile")
-    public ApiResponse<Profile> update(@Valid @RequestBody Profile entity) {
+    public R<Profile> update(@Valid @RequestBody Profile entity) {
         Long userId = getUserId();
         entity.setUserId(userId);
         Profile profile = thisService.updateProfile(entity);
@@ -62,6 +62,6 @@ public class ProfileController extends AuthBaseController {
             user.setNickname(entity.getNickname());
             userService.updateById(user);
         }
-        return new ApiResponse<>(profile);
+        return R.ok(profile);
     }
 }

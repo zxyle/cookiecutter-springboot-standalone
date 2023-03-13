@@ -20,7 +20,7 @@ public class RegisterRequest {
      * @mock 13512345678
      */
     @NotBlank(message = "注册账号不能为空")
-    @Length(min = 5, message = "注册账号长度为5个字符以上")
+    @Length(min = 5, max = 64, message = "注册账号长度需要5~64位")
     private String account;
 
     /**

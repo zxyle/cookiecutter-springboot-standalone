@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import {{ cookiecutter.basePackage }}.biz.sys.request.redis.KeySetRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.response.RedisKeyResponse;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +32,9 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:key:list')")
     @GetMapping("/keys")
-    public ApiResponse<Set<String>> list(@RequestParam(defaultValue = "*") String pattern) {
+    public R<Set<String>> list(@RequestParam(defaultValue = "*") String pattern) {
         Set<String> keys = stringRedisTemplate.keys(pattern);
-        return new ApiResponse<>(keys);
+        return R.ok(keys);
     }
 
     /**
@@ -44,16 +44,13 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:key:delete')")
     @DeleteMapping("/keys/{key}")
-    public ApiResponse<String> delete(@PathVariable String key) {
+    public R<String> delete(@PathVariable String key) {
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         if (Boolean.FALSE.equals(hasKey)) {
-            return new ApiResponse<>("删除失败，key不存在", false);
+            return R.fail("删除失败，key不存在");
         }
         Boolean delete = stringRedisTemplate.delete(key);
-        if (Boolean.TRUE.equals(delete)) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败", false);
+        return Boolean.TRUE.equals(delete) ? R.ok("删除成功") : R.fail("删除失败");
     }
 
     /**
@@ -63,10 +60,10 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:key:get')")
     @GetMapping("/keys/{key}")
-    public ApiResponse<RedisKeyResponse> get(@PathVariable String key) {
+    public R<RedisKeyResponse> get(@PathVariable String key) {
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         if (Boolean.FALSE.equals(hasKey)) {
-            return new ApiResponse<>("获取失败，key不存在", false);
+            return R.fail("获取失败，key不存在");
         }
 
         // 获取key基本信息
@@ -77,7 +74,7 @@ public class RedisController {
                 stringRedisTemplate.type(key)
         );
 
-        return new ApiResponse<>(keyResponse);
+        return R.ok(keyResponse);
     }
 
     /**
@@ -85,14 +82,16 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:key:set')")
     @PostMapping("/keys")
-    public ApiResponse<Object> set(@Valid @RequestBody KeySetRequest request) {
-        // TODO 目前只支持STRING类型，后续增加其他类型支持
+    public R<Object> set(@Valid @RequestBody KeySetRequest request) {
+        if (!"string".equalsIgnoreCase(request.getType())) {
+            return R.fail("设置失败，目前只支持string类型");
+        }
         stringRedisTemplate.opsForValue().set(request.getName(), request.getValue());
 
         if (request.getExpire() != null) {
             stringRedisTemplate.expire(request.getName(), request.getExpire(), TimeUnit.SECONDS);
         }
-        return new ApiResponse<>("设置成功");
+        return R.ok("设置成功");
     }
 
     /**
@@ -103,14 +102,14 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:key:rename')")
     @PutMapping("/keys/{oldKey}/rename/{newKey}")
-    public ApiResponse<Object> rename(@PathVariable String oldKey, @PathVariable String newKey) {
+    public R<Object> rename(@PathVariable String oldKey, @PathVariable String newKey) {
         Boolean hasKey = stringRedisTemplate.hasKey(oldKey);
         if (Boolean.FALSE.equals(hasKey)) {
-            return new ApiResponse<>("重命名失败，key不存在", false);
+            return R.fail("重命名失败，key不存在");
         }
 
         stringRedisTemplate.rename(oldKey, newKey);
-        return new ApiResponse<>("重命名成功");
+        return R.ok("重命名成功");
     }
 
     /**
@@ -121,17 +120,17 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:key:expire')")
     @PutMapping("/keys/{key}/expire/{seconds}")
-    public ApiResponse<Object> expire(@PathVariable String key, @PathVariable Integer seconds) {
+    public R<Object> expire(@PathVariable String key, @PathVariable Integer seconds) {
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         if (Boolean.FALSE.equals(hasKey)) {
-            return new ApiResponse<>("设置过期时间，key不存在", false);
+            return R.fail("设置过期时间，key不存在");
         }
 
         Boolean expire = stringRedisTemplate.expire(key, seconds, TimeUnit.SECONDS);
         if (Boolean.FALSE.equals(expire))
-            return new ApiResponse<>("设置过期时间失败", false);
+            return R.fail("设置过期时间失败");
 
-        return new ApiResponse<>("设置过期时间成功");
+        return R.ok("设置过期时间成功");
     }
 
 }

@@ -11,7 +11,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +49,9 @@ public class LoginController extends AuthBaseController {
      * @apiNote 通过用户名/邮箱/手机号和密码进行用户登录
      */
     @PostMapping("/login")
-    public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest servletRequest) {
+    public R<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest servletRequest) {
         log.debug("用户登录：{}", servletRequest.getRequestURI());
-        ApiResponse<LoginResponse> beforeLoginResponse = beforeLogin(request);
+        R<LoginResponse> beforeLoginResponse = beforeLogin(request);
         if (beforeLoginResponse != null) {
             return beforeLoginResponse;
         }
@@ -65,7 +65,7 @@ public class LoginController extends AuthBaseController {
         }
 
         afterLogin(response.getUserId());
-        return new ApiResponse<>(response);
+        return R.ok(response);
     }
 
     /**
@@ -74,19 +74,19 @@ public class LoginController extends AuthBaseController {
     @LogOperation("退出登录")
     @PreAuthorize("@ck.hasPermit('auth:user:logout')")
     @PostMapping("/logout")
-    public ApiResponse<Object> logout() {
+    public R<Object> logout() {
         boolean success = loginService.logout(getUserId());
-        return new ApiResponse<>(success);
+        return R.result(success);
     }
 
     /**
      * 登录前条件判断
      */
-    public ApiResponse<LoginResponse> beforeLogin(LoginRequest request) {
+    public R<LoginResponse> beforeLogin(LoginRequest request) {
         // 验证码校验
         boolean verify = codeService.verify(request.getCode(), request.getCaptchaId());
         if (!verify) {
-            return new ApiResponse<>("验证码可能错误或过期", false);
+            return R.fail("验证码可能错误或过期");
         }
         return null;
     }

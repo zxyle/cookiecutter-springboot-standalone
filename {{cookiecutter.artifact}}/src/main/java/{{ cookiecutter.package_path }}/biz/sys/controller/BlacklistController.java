@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Blacklist;
 import {{ cookiecutter.basePackage }}.biz.sys.request.KeyWordPaginationRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IBlacklistService;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +35,7 @@ public class BlacklistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:blacklist:list')")
     @GetMapping("/blacklists")
-    public ApiResponse<PageVO<Blacklist>> list(@Valid KeyWordPaginationRequest request) {
+    public R<PageVO<Blacklist>> list(@Valid KeyWordPaginationRequest request) {
         QueryWrapper<Blacklist> wrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(request.getKeyword())) {
             wrapper.and(w -> w.like("ip", request.getKeyword())
@@ -52,12 +52,9 @@ public class BlacklistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:blacklist:add')")
     @PostMapping("/blacklists")
-    public ApiResponse<Blacklist> add(@Valid @RequestBody Blacklist entity) {
+    public R<Blacklist> add(@Valid @RequestBody Blacklist entity) {
         boolean success = thisService.save(entity);
-        if (success) {
-            return new ApiResponse<>(entity);
-        }
-        return new ApiResponse<>("新增失败", false);
+        return success ? R.ok(entity) : R.fail("新增失败");
     }
 
     /**
@@ -65,12 +62,9 @@ public class BlacklistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:blacklist:delete')")
     @DeleteMapping("/blacklists/{id}")
-    public ApiResponse<Object> delete(@PathVariable Long id) {
+    public R<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        if (success) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败", false);
+        return success ? R.ok("删除成功") : R.fail("删除失败");
     }
 
 }

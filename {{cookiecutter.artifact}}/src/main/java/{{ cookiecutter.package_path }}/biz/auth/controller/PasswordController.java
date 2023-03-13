@@ -22,7 +22,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.util.PasswordChecker;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -44,7 +44,7 @@ import java.util.List;
 @Slf4j
 public class PasswordController extends AuthBaseController {
 
-    // 密码修改重试次数上限
+    // 使用旧密码修改密码重试次数上限
     public static final int MAX_CHANGE_RETRY_TIMES = 3;
 
     @Resource
@@ -74,45 +74,45 @@ public class PasswordController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:password:change')")
     @PostMapping("/change")
-    public ApiResponse<Object> change(@Valid @RequestBody ChangeByOldRequest request) {
+    public R<Object> change(@Valid @RequestBody ChangeByOldRequest request) {
         User user = getLoggedInUser();
 
-        if (thisService.isCorrect(request.getOldPassword(), user.getPwd())) {
+        if (thisService.isRight(request.getOldPassword(), user.getPwd())) {
             // 判断新密码是否和旧密码一致
-            if (!properties.isEnableSame() && thisService.isCorrect(request.getNewPassword(), user.getPwd())) {
-                return new ApiResponse<>("修改失败，新密码不能和旧密码一致", false);
+            if (!properties.isEnableSame() && thisService.isRight(request.getNewPassword(), user.getPwd())) {
+                return R.fail("修改失败，新密码不能和旧密码一致");
             }
 
-            boolean succ = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.CHANGE);
+            boolean success = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.CHANGE);
             // 退出当前登录状态
             boolean isLoggedOut = loginService.logout(user.getId());
-            return new ApiResponse<>(succ && isLoggedOut);
+            return R.result(success && isLoggedOut);
         }
 
-        // 如果有人通过此接口反复尝试爆破旧密码，这里会记录尝试次数，超过一定次数后锁定用户，提示用户被锁定，联系管理员解锁
-        // 并记录日志，用户可以走管理员重置密码 或找回密码
+        // 如果有人通过此接口反复尝试爆破旧密码，这里会记录尝试次数，超过一定次数后会锁定用户，提示用户被锁定，联系管理员解锁
+        // 并记录日志，用户通过管理员重置密码或自行找回密码
         String key = "pwd:change:" + user.getId();
         Long times = stringRedisTemplate.opsForValue().increment(key);
         int retryTime = times == null ? 1 : times.intValue();
         if (MAX_CHANGE_RETRY_TIMES > retryTime) {
             Integer remainTime = MAX_CHANGE_RETRY_TIMES - retryTime;
             String message = String.format("修改失败，旧密码可能不正确，还可重试%d次", remainTime);
-            return new ApiResponse<>(message, false);
+            return R.fail(message);
         }
 
         userService.locked(user.getId());
-        return new ApiResponse<>("尝试次数过多，账号已被锁定，请联系管理员", false);
+        return R.fail("尝试次数过多，账号已被锁定，请联系管理员");
     }
 
     /**
      * 忘记/找回密码（通过短信或邮件验证码方式）
      */
     @PostMapping("/forget")
-    public ApiResponse<Object> forget(@Valid @RequestBody ForgetRequest request) {
+    public R<Object> forget(@Valid @RequestBody ForgetRequest request) {
         String account = request.getAccount();
         String key = "code:" + account;
         if (!validateService.validate(key, request.getCode())) {
-            return new ApiResponse<>("找回密码失败，验证码可能已过期或错误", false);
+            return R.fail("找回密码失败，验证码可能已过期或错误");
         }
 
         // 获取用户ID
@@ -121,30 +121,30 @@ public class PasswordController extends AuthBaseController {
         wrapper.eq(AccountUtil.isMobile(account), "mobile", account);
         User user = userService.getOne(wrapper);
         if (null == user) {
-            return new ApiResponse<>("找回密码失败，用户不存在", false);
+            return R.fail("找回密码失败，用户不存在");
         }
 
         // 修改密码
         boolean success = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.FORGET);
         if (!success) {
-            return new ApiResponse<>("找回密码失败", false);
+            return R.fail("找回密码失败");
         }
         // 用户可能已经在某处登录，退出登录
         loginService.logout(user.getId());
         userService.unlock(user.getId());
-        return new ApiResponse<>("找回密码成功, 请重新登录");
+        return R.ok("找回密码成功, 请重新登录");
     }
 
     /**
-     * 重置密码（支持系统管理员、组管理员重置密码）
+     * 重置密码（支持系统管理员、用户组管理员重置密码）
      */
     @LogOperation("重置密码")
     @PreAuthorize("@ck.hasPermit('auth:password:reset')")
     @Secured({"ROLE_admin", "ROLE_group-admin"})
     @PostMapping("/reset")
-    public ApiResponse<ResetPasswordResponse> reset(@Valid @RequestBody ResetPasswordRequest request) {
+    public R<ResetPasswordResponse> reset(@Valid @RequestBody ResetPasswordRequest request) {
         if (!groupService.isAllowed(getUserId(), request.getUserId(), null)) {
-            return new ApiResponse<>("重置密码失败，没有权限", false);
+            return R.fail("重置密码失败，没有权限");
         }
 
         // 考虑新密码来源 1.前端用户传入 2.后端随机生成 3.系统配置(需以明文保存，不安全)
@@ -158,9 +158,9 @@ public class PasswordController extends AuthBaseController {
             // 退出当前登录状态
             loginService.logout(userId);
             userService.unlock(userId);
-            return new ApiResponse<>("重置密码成功");
+            return R.ok("重置密码成功，新密码为：" + rawPassword);
         }
-        return new ApiResponse<>("重置密码失败", false);
+        return R.fail("重置密码失败");
     }
 
 
@@ -171,9 +171,9 @@ public class PasswordController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:password:complexity')")
     @GetMapping("/complexity")
-    public ApiResponse<PasswordComplexityResponse> complexity(@NotBlank String password) {
+    public R<PasswordComplexityResponse> complexity(@NotBlank String password) {
         int score = PasswordChecker.checkPasswordComplexity(password);
-        return new ApiResponse<>(new PasswordComplexityResponse(score));
+        return R.ok(new PasswordComplexityResponse(score));
     }
 
 
@@ -182,13 +182,13 @@ public class PasswordController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:password:random')")
     @GetMapping("/random")
-    public ApiResponse<List<String>> random(@Valid RandomRequest request) {
+    public R<List<String>> random(@Valid RandomRequest request) {
         List<String> list = new ArrayList<>(request.getCount());
         for (int i = 0; i < request.getCount(); i++) {
             String pwd = CaptchaUtil.randCode(request.getLength(), request.getChars());
             list.add(pwd);
         }
-        return new ApiResponse<>(list);
+        return R.ok(list);
     }
 
 }

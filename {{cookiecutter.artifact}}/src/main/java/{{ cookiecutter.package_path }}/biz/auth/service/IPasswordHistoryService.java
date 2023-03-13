@@ -22,7 +22,12 @@ public interface IPasswordHistoryService extends IService<PasswordHistory> {
      */
     void insert(User user, String newPwd, ChangePasswordEnum policy);
 
-    // 清除密码历史
+    /**
+     * 清除密码历史
+     *
+     * @param userId 用户ID
+     * @return true: 清除成功; false: 清除失败
+     */
     boolean clear(Long userId);
 
 }

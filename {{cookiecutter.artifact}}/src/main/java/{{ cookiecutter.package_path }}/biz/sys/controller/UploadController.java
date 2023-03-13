@@ -10,7 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.response.UploadResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFileService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.FileStoreService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -66,13 +66,13 @@ public class UploadController {
      */
     // @Secured(value = "ROLE_admin")
     @GetMapping("/download")
-    public ApiResponse<File> download(String filename) {
+    public R<File> download(String filename) {
         QueryWrapper<File> wrapper = new QueryWrapper<>();
         wrapper.eq("filename", filename);
         File one = fileService.getOne(wrapper);
         String key = String.format("%s:%s", "download", one.getId());
         stringRedisTemplate.opsForValue().increment(key);
-        return new ApiResponse<>(one);
+        return R.ok(one);
     }
 
     /**
@@ -82,9 +82,9 @@ public class UploadController {
      */
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/delete")
-    public ApiResponse<Object> delete(@NotBlank String objectName) {
+    public R<Object> delete(@NotBlank String objectName) {
         boolean success = fileStoreService.delete(objectName);
-        return new ApiResponse<>(success);
+        return R.result(success);
     }
 
     /**

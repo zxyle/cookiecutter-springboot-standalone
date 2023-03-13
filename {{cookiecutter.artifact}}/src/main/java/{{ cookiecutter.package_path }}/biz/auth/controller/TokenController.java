@@ -7,7 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.response.RegisterResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,14 +39,10 @@ public class TokenController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:token:renew')")
     @RequestMapping("/renew")
-    public ApiResponse<RegisterResponse> renew() {
+    public R<RegisterResponse> renew() {
         User user = getLoggedInUser();
         RegisterResponse response = refreshToken(user.getId().toString());
-        if (response == null) {
-            return new ApiResponse<>("令牌刷新次数过多", false);
-        }
-
-        return new ApiResponse<>(response);
+        return response == null ? R.fail("令牌刷新次数过多") : R.ok(response);
     }
 
 

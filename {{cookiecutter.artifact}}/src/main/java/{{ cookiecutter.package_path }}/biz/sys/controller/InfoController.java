@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Info;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IInfoService;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,13 +36,13 @@ public class InfoController {
      */
     @Cacheable
     @GetMapping("/infos")
-    public ApiResponse<Map<String, String>> list() {
+    public R<Map<String, String>> list() {
         QueryWrapper<Info> wrapper = new QueryWrapper<>();
         wrapper.select("param_key", "param_value");
         List<Info> params = thisService.list(wrapper);
         Map<String, String> map = new HashMap<>();
         params.forEach(info -> map.put(info.getParamKey(), info.getParamValue()));
-        return new ApiResponse<>(map);
+        return R.ok(map);
     }
 
     /**
@@ -50,12 +50,9 @@ public class InfoController {
      */
     @PreAuthorize("@ck.hasPermit('sys:info:add')")
     @PostMapping("/infos")
-    public ApiResponse<Info> add(@Valid @RequestBody Info entity) {
+    public R<Info> add(@Valid @RequestBody Info entity) {
         boolean success = thisService.save(entity);
-        if (success) {
-            return new ApiResponse<>(entity);
-        }
-        return new ApiResponse<>("新增失败", false);
+        return success ? R.ok(entity) : R.fail("新增失败");
     }
 
     /**
@@ -63,13 +60,10 @@ public class InfoController {
      */
     @PreAuthorize("@ck.hasPermit('sys:info:update')")
     @PutMapping("/infos/{id}")
-    public ApiResponse<Object> update(@PathVariable Long id, @Valid @RequestBody Info entity) {
+    public R<Object> update(@PathVariable Long id, @Valid @RequestBody Info entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        if (success) {
-            return new ApiResponse<>("更新成功");
-        }
-        return new ApiResponse<>("更新失败", false);
+        return success ? R.ok("更新成功") : R.fail("更新失败");
     }
 
 
@@ -78,12 +72,9 @@ public class InfoController {
      */
     @PreAuthorize("@ck.hasPermit('sys:info:delete')")
     @DeleteMapping("/infos/{id}")
-    public ApiResponse<Object> delete(@PathVariable Long id) {
+    public R<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        if (success) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败", false);
+        return success ? R.ok("删除成功") : R.fail("删除失败");
     }
 
 }

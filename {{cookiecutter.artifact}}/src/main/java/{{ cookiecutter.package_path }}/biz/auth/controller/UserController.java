@@ -14,8 +14,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.request.user.UpdateUserRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,22 +48,23 @@ public class UserController extends AuthBaseController {
     }
 
     /**
-     * 分页查询用户
+     * 分页查询用户列表
      */
     @PreAuthorize("@ck.hasPermit('auth:user:list')")
     @GetMapping("/users")
-    public ApiResponse<PageVO<UserResponse>> list(@Valid ListAuthRequest request) {
+    public R<PageVO<UserResponse>> list(@Valid ListAuthRequest request) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.select("id, username, email, mobile, enabled");
         if (StringUtils.isNotBlank(request.getKeyword())) {
             wrapper.and(i -> i.like("username", request.getKeyword())
                     .or().like("email", request.getKeyword())
-                    .or().like("mobile", request.getKeyword()));
+                    .or().like("mobile", request.getKeyword())
+                    .or().like("nickname", request.getKeyword()));
         }
 
         // 不能将没有权限的用户信息返回
-        List<Long> children = thisService.getAllChildren(getUserId());
-        wrapper.in("id", children);
+        List<Long> members = thisService.getAllChildren(getUserId());
+        wrapper.in("id", members);
 
         wrapper.eq(request.getEnabled() != null, "enabled", request.getEnabled());
         IPage<User> page = PageRequestUtil.checkForMp(request);
@@ -72,7 +73,7 @@ public class UserController extends AuthBaseController {
         // 增加角色和组信息
         List<UserResponse> userResponses = list.getRecords().stream()
                 .map(user -> thisService.attachUserInfo(user, request.isFull())).collect(Collectors.toList());
-        return new ApiResponse<>(new PageVO<>(userResponses, list.getTotal()));
+        return R.ok(new PageVO<>(userResponses, list.getTotal()));
     }
 
 
@@ -81,9 +82,9 @@ public class UserController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:add')")
     @PostMapping("/users")
-    public ApiResponse<User> add(@Valid @RequestBody AdminAddUserRequest request) {
+    public R<User> add(@Valid @RequestBody AdminAddUserRequest request) {
         if (thisService.queryByAccount(request.getAccount()) != null) {
-            return new ApiResponse<>("创建失败，账号已存在", false);
+            return R.fail("创建失败，账号已存在");
         }
 
         // 构建用户
@@ -100,10 +101,10 @@ public class UserController extends AuthBaseController {
             }
             // 更新用户角色、用户组关联关系, 防止被授予过高的权限的角色
             thisService.updateRelation(user.getId(), roleIds, request.getGroupIds(), null);
-            return new ApiResponse<>(user);
+            return R.ok(user);
         }
 
-        return new ApiResponse<>("创建用户失败", false);
+        return R.fail("创建用户失败");
     }
 
     /**
@@ -113,14 +114,14 @@ public class UserController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PutMapping("/users/{userId}")
-    public ApiResponse<Object> update(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
+    public R<Object> update(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
         if (!groupService.isAllowed(getUserId(), userId, null)) {
-            return new ApiResponse<>("没有权限更新用户", false);
+            return R.fail("没有权限更新用户");
         }
 
         // 需要防止赋予比操作者更高的权限
         thisService.updateRelation(userId, request.getRoleIds(), request.getGroupIds(), request.getPermissionIds());
-        return new ApiResponse<>("更新用户成功");
+        return R.ok("更新用户成功");
     }
 
 
@@ -132,16 +133,16 @@ public class UserController extends AuthBaseController {
     @LogOperation("按ID查询用户")
     @PreAuthorize("@ck.hasPermit('auth:user:get')")
     @GetMapping("/users/{userId}")
-    public ApiResponse<UserResponse> get(@PathVariable Long userId) {
+    public R<UserResponse> get(@PathVariable Long userId) {
         if (!groupService.isAllowed(getUserId(), userId, null)) {
-            return new ApiResponse<>("没有权限查询该用户", false);
+            return R.fail("没有权限查询该用户");
         }
 
-        User user = thisService.getById(userId);
+        User user = thisService.queryById(userId);
         if (user != null) {
-            return new ApiResponse<>(thisService.attachUserInfo(user, true));
+            return R.ok(thisService.attachUserInfo(user, true));
         }
-        return new ApiResponse<>("用户不存在", false);
+        return R.fail("用户不存在");
     }
 
     /**
@@ -152,21 +153,21 @@ public class UserController extends AuthBaseController {
     @LogOperation("按ID删除用户")
     @PreAuthorize("@ck.hasPermit('auth:user:delete')")
     @DeleteMapping("/users/{userId}")
-    public ApiResponse<Object> delete(@PathVariable Long userId) {
+    public R<Object> delete(@PathVariable Long userId) {
         if (userId.equals(getUserId())) {
-            return new ApiResponse<>("不能删除自己", false);
+            return R.fail("不能删除自己");
         }
 
         // 不能删除其他组的用户
         if (!groupService.isAllowed(getUserId(), userId, null)) {
-            return new ApiResponse<>("没有权限删除该用户", false);
+            return R.fail("没有权限删除该用户");
         }
 
         boolean success = thisService.delete(userId);
         if (success) {
-            return new ApiResponse<>("已成功删除该用户");
+            return R.ok("已成功删除该用户");
         }
-        return new ApiResponse<>("删除用户失败", false);
+        return R.fail("删除用户失败");
     }
 
     /**
@@ -177,22 +178,22 @@ public class UserController extends AuthBaseController {
     @LogOperation("禁用用户")
     @PreAuthorize("@ck.hasPermit('auth:user:disable')")
     @PutMapping("/users/{userId}/disable")
-    public ApiResponse<Object> disable(@PathVariable Long userId) {
+    public R<Object> disable(@PathVariable Long userId) {
         if (userId.equals(getUserId())) {
-            return new ApiResponse<>("不能禁用自己", false);
+            return R.fail("不能禁用自己");
         }
 
         // 不能禁用其他组的用户
         if (!groupService.isAllowed(getUserId(), userId, null)) {
-            return new ApiResponse<>("没有权限禁用该用户", false);
+            return R.fail("没有权限禁用该用户");
         }
 
         boolean success = thisService.disable(userId);
         if (success) {
-            return new ApiResponse<>("已成功禁用该用户");
+            return R.ok("已成功禁用该用户");
         }
 
-        return new ApiResponse<>("禁用用户失败", false);
+        return R.fail("禁用用户失败");
     }
 
     /**
@@ -203,16 +204,16 @@ public class UserController extends AuthBaseController {
     @LogOperation("启用用户")
     @PreAuthorize("@ck.hasPermit('auth:user:enable')")
     @PutMapping("/users/{userId}/enable")
-    public ApiResponse<Object> enable(@PathVariable Long userId) {
+    public R<Object> enable(@PathVariable Long userId) {
         if (!groupService.isAllowed(getUserId(), userId, null)) {
-            return new ApiResponse<>("没有权限启用用户", false);
+            return R.fail("没有权限启用用户");
         }
 
         boolean success = thisService.enable(userId);
         if (success) {
-            return new ApiResponse<>("已成功启用该用户");
+            return R.ok("已成功启用该用户");
         }
-        return new ApiResponse<>("启用用户失败", false);
+        return R.fail("启用用户失败");
     }
 
 
@@ -224,19 +225,16 @@ public class UserController extends AuthBaseController {
     @LogOperation("下线用户")
     @PreAuthorize("@ck.hasPermit('auth:user:kick')")
     @PutMapping("/users/{userId}/kick")
-    public ApiResponse<Object> kick(@PathVariable Long userId) {
+    public R<Object> kick(@PathVariable Long userId) {
         if (userId.equals(getUserId())) {
-            return new ApiResponse<>("不能将自己下线", false);
+            return R.fail("不能将自己下线");
         }
 
         if (!groupService.isAllowed(getUserId(), userId, null)) {
-            return new ApiResponse<>("没有权限下线用户", false);
+            return R.fail("没有权限下线用户");
         }
 
         boolean success = thisService.kick(userId);
-        if (success) {
-            return new ApiResponse<>("下线用户成功");
-        }
-        return new ApiResponse<>("下线用户失败", false);
+        return success ? R.ok("下线用户成功") : R.fail("下线用户失败");
     }
 }

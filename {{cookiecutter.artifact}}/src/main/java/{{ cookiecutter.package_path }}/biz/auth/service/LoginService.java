@@ -5,6 +5,9 @@ package {{ cookiecutter.basePackage }}.biz.auth.service;
 
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 
+/**
+ * 登录服务
+ */
 public interface LoginService {
 
     /**
@@ -20,6 +23,7 @@ public interface LoginService {
      * 退出登录
      *
      * @param userId 用户id
+     * @return 是否成功
      */
     boolean logout(Long userId);
 }

@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sample.controller;
 
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -24,14 +24,14 @@ public class PageController {
      * 分页请求
      */
     @PostMapping("/page")
-    public ApiResponse<PageVO<String>> page1(PaginationRequest request) {
+    public R<PageVO<String>> page1(PaginationRequest request) {
         IPage<Object> page = PageRequestUtil.checkForMp(request);
 
         List<String> list = new ArrayList<>();
         list.add("hello");
         list.add("world");
         PageVO<String> vo = new PageVO<>(list, 100L);
-        ApiResponse<PageVO<String>> response = new ApiResponse<>();
+        R<PageVO<String>> response = new R<>();
         response.setData(vo);
         return response;
     }

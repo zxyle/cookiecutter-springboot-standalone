@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
 import {{ cookiecutter.basePackage }}.biz.sys.request.OperateLogRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IOperateLogService;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,7 +34,7 @@ public class OperateLogController {
      */
     @PreAuthorize("@ck.hasPermit('sys:operate:list')")
     @GetMapping("/operates")
-    public ApiResponse<PageVO<OperateLog>> page(@Valid OperateLogRequest request) {
+    public R<PageVO<OperateLog>> page(@Valid OperateLogRequest request) {
         QueryWrapper<OperateLog> wrapper = new QueryWrapper<>();
         wrapper.eq(request.getUserId() != null, "user_id", request.getUserId());
         wrapper.between(request.getStartTime() != null && request.getEndTime() != null,

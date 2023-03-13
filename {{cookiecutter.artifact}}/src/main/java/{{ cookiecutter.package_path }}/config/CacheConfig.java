@@ -25,11 +25,12 @@ public class CacheConfig {
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(Caffeine.newBuilder()
+                // .removalListener((key, value, cause) -> System.out.println("remove key:" + key + " value:" + value + " cause:" + cause))
                 // 设置最后一次写入或访问后经过固定时间过期
-                .expireAfterAccess(60, TimeUnit.SECONDS)
+                .expireAfterAccess(5, TimeUnit.MINUTES)
                 // 初始的缓存空间大小
                 .initialCapacity(100)
-                // 缓存的最大条数
+                // 缓存的最大条数，超过100之后就会按照LRU最近虽少使用算法来移除缓存项
                 .maximumSize(1000));
         return cacheManager;
     }

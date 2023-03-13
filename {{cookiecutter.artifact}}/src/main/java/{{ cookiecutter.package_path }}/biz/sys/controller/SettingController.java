@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.ApiResponse;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +34,7 @@ public class SettingController {
      */
     @PreAuthorize("@ck.hasPermit('sys:setting:list')")
     @GetMapping("/settings")
-    public ApiResponse<PageVO<Setting>> page(@Valid PaginationRequest request) {
+    public R<PageVO<Setting>> page(@Valid PaginationRequest request) {
         IPage<Setting> page = PageRequestUtil.checkForMp(request);
         IPage<Setting> list = thisService.pageQuery(page);
         return PageRequestUtil.extractFromMp(list);
@@ -46,12 +46,9 @@ public class SettingController {
      */
     @PreAuthorize("@ck.hasPermit('sys:setting:add')")
     @PostMapping("/settings")
-    public ApiResponse<Setting> add(@Valid @RequestBody Setting entity) {
+    public R<Setting> add(@Valid @RequestBody Setting entity) {
         boolean success = thisService.save(entity);
-        if (success) {
-            return new ApiResponse<>(entity);
-        }
-        return new ApiResponse<>("新增失败", false);
+        return success ? R.ok(entity) : R.fail("新增失败");
     }
 
 
@@ -60,12 +57,9 @@ public class SettingController {
      */
     @PreAuthorize("@ck.hasPermit('sys:setting:get')")
     @GetMapping("/settings/{id}")
-    public ApiResponse<Setting> get(@PathVariable Long id) {
+    public R<Setting> get(@PathVariable Long id) {
         Setting entity = thisService.queryById(id);
-        if (entity == null) {
-            return new ApiResponse<>("数据不存在", false);
-        }
-        return new ApiResponse<>(entity);
+        return entity == null ? R.fail("数据不存在") : R.ok(entity);
     }
 
     /**
@@ -73,13 +67,10 @@ public class SettingController {
      */
     @PreAuthorize("@ck.hasPermit('sys:setting:update')")
     @PutMapping("/settings/{id}")
-    public ApiResponse<Object> update(@Valid @RequestBody Setting entity, @PathVariable Long id) {
+    public R<Object> update(@Valid @RequestBody Setting entity, @PathVariable Long id) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        if (success) {
-            return new ApiResponse<>("更新成功");
-        }
-        return new ApiResponse<>("更新失败", false);
+        return success ? R.ok("更新成功") : R.fail("更新失败");
     }
 
     /**
@@ -87,12 +78,9 @@ public class SettingController {
      */
     @PreAuthorize("@ck.hasPermit('sys:setting:delete')")
     @DeleteMapping("/settings/{id}")
-    public ApiResponse<Object> delete(@PathVariable Long id) {
+    public R<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        if (success) {
-            return new ApiResponse<>("删除成功");
-        }
-        return new ApiResponse<>("删除失败", false);
+        return success ? R.ok("删除成功") : R.fail("删除失败");
     }
 
 }

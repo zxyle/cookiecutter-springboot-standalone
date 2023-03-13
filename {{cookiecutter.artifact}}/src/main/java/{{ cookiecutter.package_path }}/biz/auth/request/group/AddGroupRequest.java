@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.request.group;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,6 +22,7 @@ public class AddGroupRequest {
      *
      * @mock 技术部
      */
+    @Length(max = 255, message = "用户组名称长度不能超过255个字符")
     @NotBlank(message = "用户组名称不能为空")
     private String name;
 
@@ -44,6 +46,7 @@ public class AddGroupRequest {
     /**
      * 描述信息
      */
+    @Length(max = 255, message = "描述信息长度不能超过255个字符")
     private String description;
 
     /**
