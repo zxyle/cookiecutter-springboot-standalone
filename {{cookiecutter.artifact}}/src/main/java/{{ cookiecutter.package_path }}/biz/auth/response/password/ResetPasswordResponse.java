@@ -6,6 +6,9 @@ package {{ cookiecutter.basePackage }}.biz.auth.response.password;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * 重置密码响应
+ */
 @Data
 @AllArgsConstructor
 public class ResetPasswordResponse {

@@ -4,8 +4,9 @@
 package {{ cookiecutter.basePackage }}.biz.sys.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import {{ cookiecutter.basePackage }}.biz.sys.entity.Setting;
 import com.baomidou.mybatisplus.extension.service.IService;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.Setting;
+import {{ cookiecutter.basePackage }}.biz.sys.response.Item;
 
 /**
  * 系统设置 服务类
@@ -22,4 +23,18 @@ public interface ISettingService extends IService<Setting> {
      */
     IPage<Setting> pageQuery(IPage<Setting> page);
 
+    /**
+     * 按名称查询设置项
+     *
+     * @param label 选项名称
+     */
+    Item get(String label);
+
+    /**
+     * 更新设置项
+     *
+     * @param label 选项名称
+     * @param value 选项值
+     */
+    Item update(String label, String value);
 }

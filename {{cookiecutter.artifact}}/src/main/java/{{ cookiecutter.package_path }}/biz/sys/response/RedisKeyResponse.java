@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.redis.connection.DataType;
 
+/**
+ * Redis key响应
+ */
 @AllArgsConstructor
 @Data
 public class RedisKeyResponse {

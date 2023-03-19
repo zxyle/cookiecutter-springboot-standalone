@@ -18,6 +18,7 @@ import com.baomidou.mybatisplus.generator.config.TemplateConfig;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.sql.PreparedStatement;
@@ -30,6 +31,7 @@ import java.util.Scanner;
 /**
  * MybatisPlus代码生成
  */
+@Slf4j
 public class CodeGenerator {
     private static final String DB_HOST = "127.0.0.1:3306";
 
@@ -55,7 +57,7 @@ public class CodeGenerator {
         throw new MybatisPlusException("请输入正确的" + tip + "！");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 
@@ -178,7 +180,7 @@ public class CodeGenerator {
         genPermission(tables, tablePrefix, pc.getModuleName());
     }
 
-    public static String getComment(String tb) {
+    public static String getComment(String tb) throws SQLException {
         String comment = "";
         JdbcUtil jdbcUtil = new JdbcUtil();
         jdbcUtil.setUrl(JDBC_URL);
@@ -198,6 +200,7 @@ public class CodeGenerator {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+            ps.close();
             jdbcUtil.close();
 
         }
@@ -205,19 +208,19 @@ public class CodeGenerator {
     }
 
     // 生成权限码写入SQL
-    public static void genPermission(String[] tables, String tablePrefix, String moduleName) {
-        System.out.println("执行以下SQL：");
+    public static void genPermission(String[] tables, String tablePrefix, String moduleName) throws SQLException {
+        log.info("执行以下SQL：");
         for (String table : tables) {
             String comment = CodeGenerator.getComment(table);
             String permission = table.replace(tablePrefix, "");
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:*', '%s所有权限', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:list', '%s列表分页查询', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:add', '新增%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:get', '按ID查询%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:update', '按ID更新%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:delete', '按ID删除%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:export', 'Excel数据导出%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
-            System.out.printf("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('%s:%s:upload', 'Excel数据导入%s', NULL, 1, 2, NULL, 1);%n", moduleName, permission, comment);
+            log.info("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('{}:{}:*', '{}所有权限', NULL, 1, 2, NULL, 1);", moduleName, permission, comment);
+            log.info("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('{}:{}:list', '{}列表分页查询', NULL, 1, 2, NULL, 1);", moduleName, permission, comment);
+            log.info("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('{}:{}:add', '新增{}', NULL, 1, 2, NULL, 1);", moduleName, permission, comment);
+            log.info("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('{}:{}:get', '按ID查询{}', NULL, 1, 2, NULL, 1);", moduleName, permission, comment);
+            log.info("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('{}:{}:update', '按ID更新{}', NULL, 1, 2, NULL, 1);", moduleName, permission, comment);
+            log.info("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('{}:{}:delete', '按ID删除{}', NULL, 1, 2, NULL, 1);", moduleName, permission, comment);
+            log.info("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('{}:{}:export', 'Excel数据导出{}', NULL, 1, 2, NULL, 1);", moduleName, permission, comment);
+            log.info("INSERT INTO `auth_permission` (`name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES ('{}:{}:upload', 'Excel数据导入{}', NULL, 1, 2, NULL, 1);", moduleName, permission, comment);
         }
     }
 }

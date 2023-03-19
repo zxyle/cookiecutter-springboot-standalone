@@ -11,10 +11,14 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ * 基础实体类
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class LiteEntity implements Serializable {
+
     /**
      * 主键ID
      */

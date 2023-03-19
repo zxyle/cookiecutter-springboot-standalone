@@ -16,12 +16,16 @@ public class UpdateRoleRequest {
 
     /**
      * 角色名称
+     *
+     * @mock 管理员
      */
     @Length(max = 16, message = "角色名称长度不能超过16个字符")
     private String name;
 
     /**
      * 描述信息
+     *
+     * @mock 管理员
      */
     @Length(max = 16, message = "描述信息长度不能超过16个字符")
     private String description;

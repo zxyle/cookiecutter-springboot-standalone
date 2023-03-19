@@ -5,6 +5,9 @@ package {{ cookiecutter.basePackage }}.biz.sys.response;
 
 import lombok.Data;
 
+/**
+ * 系统信息响应
+ */
 @Data
 public class SystemInfo {
 

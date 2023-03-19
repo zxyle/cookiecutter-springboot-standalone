@@ -635,12 +635,13 @@ CREATE TABLE `sys_setting` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `option_label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项',
-  `option_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项值',
-  `data_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'string' COMMENT 'Java数据类型',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项描述',
-  `default_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '默认值',
-PRIMARY KEY (`id`) USING BTREE
+  `option_label` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项',
+  `option_value` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项值',
+  `data_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'string' COMMENT 'Java数据类型',
+  `description` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项描述',
+  `default_value` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '默认值',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `uk_label` (`option_label`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统设置';
 
 -- ----------------------------
@@ -652,7 +653,7 @@ INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `descrip
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.digits', '6', 'java.lang.Integer', '验证码位数/长度', '6');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.between', '60', 'java.lang.Integer', '两次验证码请求间隔时间（单位：秒）', '60');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.retry-times', '3', 'java.lang.Integer', '重试登录次数', '3');
-INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.characters', '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ', 'java.lang.String', '验证码字符集(一般去掉1 l L 0 o O 易混淆字符)', '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.chars', '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ', 'java.lang.String', '验证码字符集(一般去掉1 l L 0 o O 易混淆字符)', '23456789abcdefghijkmnpqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.height', '70', 'java.lang.Integer', '高度像素', '70');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.width', '160', 'java.lang.Integer', '宽度像素', '160');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.font-size', '45', 'java.lang.Integer', '字体大小', '45');
@@ -668,6 +669,7 @@ INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `descrip
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.enable-history', 'false', 'java.lang.Boolean', '是否记录历史密码', 'false');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.history-count', '5', 'java.lang.Integer', '密码历史记录数量 0代表不限制', '5');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.enable-same', 'false', 'java.lang.Boolean', '能否和旧密码相同', 'false');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('pwd.change-max-retry-times', '3', 'java.lang.Integer', '使用旧密码修改密码重试次数上限', '3');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.max-failed-times', '5', 'java.lang.Integer', '最大登录失败次数', '5');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.lock-time', '30', 'java.lang.Integer', '锁定时间', '30');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.lock-time-unit', 'MINUTES', 'java.lang.String', '锁定时间单位', 'MINUTES');
@@ -698,6 +700,10 @@ INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `descrip
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.tel', '400-111-2222', 'java.lang.String', '联系电话', '400-111-2222');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.address', '浙江省杭州市余杭区文一西路10000号', 'java.lang.String', '联系地址', '浙江省杭州市余杭区文一西路10000号');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.about', 'XX公司是一家什么公司', 'java.lang.String', '关于我们', 'XX公司是一家什么公司');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('sms.verification-template', '【%s】验证码：%s，5分钟内有效，为了保障您的账户安全，请勿向他人泄漏验证码信息', 'java.lang.String', '短信验证码模板', '【%s】验证码：%s，5分钟内有效，为了保障您的账户安全，请勿向他人泄漏验证码信息');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('email.verification-template', '邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!', 'java.lang.String', '邮件验证码模板', '邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('blacklist.enable', 'true', 'java.lang.Boolean', 'IP黑名单是否开启', 'true');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('whitelist.enable', 'true', 'java.lang.Boolean', 'IP白名单是否开启', 'true');
 COMMIT;
 
 -- ----------------------------

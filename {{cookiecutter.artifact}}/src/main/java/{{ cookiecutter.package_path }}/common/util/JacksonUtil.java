@@ -16,6 +16,9 @@ import java.util.List;
 @Slf4j
 public class JacksonUtil {
 
+    private JacksonUtil() {
+    }
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**

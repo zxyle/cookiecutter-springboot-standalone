@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> implements IFeedbackService {
 
     /**
-     * 按ID查询
+     * 按ID查询（带缓存）
      */
     @Cacheable(cacheNames = "FeedbackCache", key = "#id")
     @Override
@@ -31,6 +31,9 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
         return getById(id);
     }
 
+    /**
+     * 按ID更新（带缓存）
+     */
     @CachePut(cacheNames = "FeedbackCache", key = "#feedback.id")
     @Override
     public Feedback putById(Feedback feedback) {
@@ -38,6 +41,9 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
         return getById(feedback.getId());
     }
 
+    /**
+     * 按ID删除（带缓存）
+     */
     @CacheEvict(cacheNames = "FeedbackCache", key = "#id")
     @Override
     public void deleteById(Long id) {
@@ -45,9 +51,8 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
     }
 
     /**
-     * 分页查询
+     * 分页查询（带缓存）
      */
-    @Cacheable(cacheNames = "FeedbackCache", key = "#p.getCurrent()+#p.getSize()+#wrapper.getCustomSqlSegment()")
     @Override
     public IPage<Feedback> pageQuery(IPage<Feedback> p, QueryWrapper<Feedback> wrapper) {
         return page(p, wrapper);

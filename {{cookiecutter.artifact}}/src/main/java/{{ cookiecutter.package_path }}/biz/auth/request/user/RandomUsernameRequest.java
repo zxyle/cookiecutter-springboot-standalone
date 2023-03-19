@@ -9,11 +9,16 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+/**
+ * 随机用户名请求
+ */
 @Data
 public class RandomUsernameRequest {
 
     /**
      * 用户名前缀
+     *
+     * @mock jack
      */
     @NotBlank(message = "用户名前缀不能为空")
     @Pattern(regexp = RegexConst.REGEX_USERNAME, message = "用户名前缀格式不正确")

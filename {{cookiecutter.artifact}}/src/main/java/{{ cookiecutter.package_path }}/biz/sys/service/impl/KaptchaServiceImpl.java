@@ -4,31 +4,27 @@
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import com.google.code.kaptcha.Producer;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-@Service
 @Slf4j
-@ConditionalOnProperty(prefix = "captcha", name = "kind", havingValue = "kaptcha")
 public class KaptchaServiceImpl implements CaptchaService {
 
-    CaptchaProperties captchaProperties;
+    ISettingService setting;
 
     private final Producer captchaProducer;
 
-    public KaptchaServiceImpl(Producer captchaProducer, CaptchaProperties captchaProperties) {
+    public KaptchaServiceImpl(Producer captchaProducer, ISettingService setting) {
         this.captchaProducer = captchaProducer;
-        this.captchaProperties = captchaProperties;
+        this.setting = setting;
     }
 
     @Override
@@ -38,7 +34,7 @@ public class KaptchaServiceImpl implements CaptchaService {
         BufferedImage bi = captchaProducer.createImage(capText);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
-            ImageIO.write(bi, captchaProperties.getFormat(), byteArrayOutputStream);
+            ImageIO.write(bi, setting.get("captcha.format").getStr(), byteArrayOutputStream);
         } catch (IOException e) {
             log.error("kaptcha error: ", e);
         }

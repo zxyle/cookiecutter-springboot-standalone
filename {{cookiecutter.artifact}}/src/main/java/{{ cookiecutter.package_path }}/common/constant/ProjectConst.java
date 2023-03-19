@@ -9,7 +9,6 @@ package {{ cookiecutter.basePackage }}.common.constant;
 public final class ProjectConst {
 
     private ProjectConst() {
-
     }
 
     /**

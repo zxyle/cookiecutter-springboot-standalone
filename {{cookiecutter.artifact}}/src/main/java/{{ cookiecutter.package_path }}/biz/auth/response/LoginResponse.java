@@ -8,6 +8,9 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import lombok.Data;
 
+/**
+ * 用户登录响应
+ */
 @Data
 public class LoginResponse {
 
@@ -32,6 +35,8 @@ public class LoginResponse {
 
     /**
      * JWT令牌
+     *
+     * @mock eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMCIsImlhdCI6MTU4MzY5NjQwMCwiZXhwIj
      */
     private String token;
 

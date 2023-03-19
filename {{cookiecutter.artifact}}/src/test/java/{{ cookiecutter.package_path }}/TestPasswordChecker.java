@@ -7,7 +7,7 @@ import cn.hutool.core.lang.Assert;
 import {{ cookiecutter.basePackage }}.biz.auth.util.PasswordChecker;
 import org.junit.jupiter.api.Test;
 
-public class TestPasswordChecker {
+class TestPasswordChecker {
 
     @Test
     void testPwd() {

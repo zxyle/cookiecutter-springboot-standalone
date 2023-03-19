@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.task;
 
 import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,13 @@ public class LoadDataTask {
     @Autowired
     IDictService dictService;
 
+    @Autowired
+    ISettingService settingService;
+
     @PostConstruct
     public void load() {
-        System.out.println("load data success");
+        // 加载系统所有设置项
+        log.info("load data success");
     }
 
 }

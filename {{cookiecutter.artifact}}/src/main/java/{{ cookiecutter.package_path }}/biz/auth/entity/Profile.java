@@ -19,7 +19,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 /**
- * 用户信息
+ * 用户资料
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -46,7 +46,7 @@ public class Profile extends BaseEntity {
      *
      * @mock 30
      */
-    @Range(min = 0, max = 150, message = "年龄必须在0-150之间")
+    @Range(min = 0, max = 120, message = "年龄必须在0-120之间")
     private Integer age;
 
     /**
@@ -68,7 +68,7 @@ public class Profile extends BaseEntity {
      *
      * @mock 会飞的猪
      */
-    @Length(max = 32, message = "昵称长度不能超过32个中英文字符")
+    @Length(max = 16, message = "昵称长度不能超过16个中英文字符")
     private String nickname;
 
     /**
@@ -77,6 +77,7 @@ public class Profile extends BaseEntity {
      * @mock 10001
      */
     @Length(max = 12, message = "QQ长度不能超过12位数字")
+    @Pattern(regexp = "\\d*", message = "QQ只能是数字")
     private String qq;
 
     /**
@@ -98,7 +99,7 @@ public class Profile extends BaseEntity {
     /**
      * 简介
      *
-     * @mock 这是一个简介
+     * @mock 一只会飞的猪
      */
     @Length(max = 255, message = "简介长度不能超过255个中英文字符")
     private String intro;
@@ -112,11 +113,12 @@ public class Profile extends BaseEntity {
     private String address;
 
     /**
-     * 地区
+     * 地区编码（参照area接口）
      *
      * @mock 330100
      */
     @Length(max = 6, message = "地区长度不能超过6个中英文字符")
+    @Pattern(regexp = "\\d*", message = "地区只能是数字")
     private String region;
 
     /**

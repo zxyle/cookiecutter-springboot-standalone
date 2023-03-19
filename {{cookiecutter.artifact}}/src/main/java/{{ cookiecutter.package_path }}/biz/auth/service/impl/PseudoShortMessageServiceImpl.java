@@ -5,9 +5,9 @@ package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import {{ cookiecutter.basePackage }}.biz.auth.service.ShortMessageService;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Verification;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IVerificationService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +18,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class PseudoShortMessageServiceImpl implements ShortMessageService {
 
-    @Value("${app.name}")
-    private String appName;
-
     IVerificationService verificationService;
 
-    public PseudoShortMessageServiceImpl(IVerificationService verificationService) {
+    ISettingService setting;
+
+    public PseudoShortMessageServiceImpl(IVerificationService verificationService, ISettingService setting) {
         this.verificationService = verificationService;
+        this.setting = setting;
     }
 
     /**
@@ -36,7 +36,8 @@ public class PseudoShortMessageServiceImpl implements ShortMessageService {
     @Async
     @Override
     public void send(String recipient, String code) {
-        String template = "【%s】验证码：%s，5分钟内有效，为了保障您的账户安全，请勿向他人泄漏验证码信息";
+        String appName = setting.get("app.name").getStr();
+        String template = setting.get("sms.verification-template").getStr();
         String content = String.format(template, appName, code);
         log.info(content);
 

@@ -26,7 +26,7 @@ public class JdbcUtil {
     private String url;
     private String username = "root";
     private String password = "123456";
-    private static final String Driver = "com.mysql.cj.jdbc.Driver";
+    private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
     private Connection con = null;          // 类文件属性, 可以在类文件中所有的方法中使用
     private PreparedStatement ps = null;    // 类文件属性, 可以在类文件中所有的方法中使用
@@ -37,7 +37,7 @@ public class JdbcUtil {
         // 1.注册数据库服务器提供的Driver接口实现类
 
         try {
-            Class.forName(Driver);
+            Class.forName(DRIVER);
         } catch (ClassNotFoundException ignored) {
         }
     }

@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
-import {{ cookiecutter.basePackage }}.biz.auth.config.AuthUserProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.RandomUsernameRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.RegisterRequest;
@@ -13,6 +12,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,7 +35,7 @@ public class RegisterController {
 
     LoginService loginService;
 
-    AuthUserProperties properties;
+    ISettingService setting;
 
     ValidateService validateService;
 
@@ -45,11 +45,11 @@ public class RegisterController {
 
     PasswordEncoder encoder;
 
-    public RegisterController(LoginService loginService, IUserService userService, AuthUserProperties properties,
+    public RegisterController(LoginService loginService, IUserService userService, ISettingService setting,
                               ValidateService validateService, CodeService codeService, PasswordEncoder encoder) {
         this.loginService = loginService;
         this.userService = userService;
-        this.properties = properties;
+        this.setting = setting;
         this.validateService = validateService;
         this.codeService = codeService;
         this.encoder = encoder;
@@ -62,7 +62,7 @@ public class RegisterController {
     public R<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
         String account = request.getAccount();
         // 检查是否开放注册
-        if (!properties.isOpenRegistration()) {
+        if (!setting.get("auth.user.open-registration").getBool()) {
             return R.fail("系统未开放注册");
         }
 
@@ -91,10 +91,10 @@ public class RegisterController {
         }
 
         // 赋予默认角色
-        List<Long> roleIds = Collections.singletonList(properties.getDefaultRole());
-        userService.updateRelation(user.getId(), roleIds, null, null);
+        Long defaultRole = setting.get("auth.user.default-role").getLongValue();
+        userService.updateRelation(user.getId(),  Collections.singletonList(defaultRole), null, null);
 
-        if (properties.isAutoLogin()) {
+        if (setting.get("auth.user.auto-login").getBool()) {
             LoginResponse loginResponse = loginService.login(account, request.getPassword());
             return R.ok(loginResponse);
         }
@@ -104,7 +104,7 @@ public class RegisterController {
     /**
      * 检查账号名占用
      *
-     * @param account 注册账号
+     * @param account 注册账号|jack
      */
     @PreAuthorize("@ck.hasPermit('auth:user:check')")
     @GetMapping("/check")
@@ -122,7 +122,7 @@ public class RegisterController {
     @PreAuthorize("@ck.hasPermit('auth:user:random')")
     public R<List<String>> random(@Valid RandomUsernameRequest request) {
         List<String> list = new ArrayList<>();
-        // TODO: 有待进一步增强该接口
+        // 有待进一步增强该接口
         list.add(request.getPrefix() + "_001");
         return R.ok(list);
     }

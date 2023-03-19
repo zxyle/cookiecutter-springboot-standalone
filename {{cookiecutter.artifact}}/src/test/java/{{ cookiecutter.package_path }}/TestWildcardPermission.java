@@ -9,7 +9,7 @@ import org.wildfly.common.Assert;
 
 import java.util.Arrays;
 
-public class TestWildcardPermission {
+class TestWildcardPermission {
 
     @Test
     void test01() {

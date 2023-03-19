@@ -7,6 +7,8 @@ import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
 
     /**
-     * 按ID查询
+     * 按ID查询（带缓存）
      */
     @Cacheable(cacheNames = "${entity}Cache", key = "#id")
     @Override
@@ -27,9 +29,27 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     }
 
     /**
-     * 分页查询
+     * 按ID更新（带缓存）
      */
-    @Cacheable(cacheNames = "${entity}Cache", key = "#p.getCurrent()+#p.getSize()+#wrapper.getCustomSqlSegment()")
+    @CachePut(cacheNames = "${entity}Cache", key = "#entity.id")
+    @Override
+    public ${entity} putById(${entity} entity) {
+        updateById(entity);
+        return getById(entity.getId());
+    }
+
+    /**
+     * 按ID删除（带缓存）
+     */
+     @CacheEvict(cacheNames = "${entity}Cache", key = "#id")
+     @Override
+     public void deleteById(Long id) {
+         removeById(id);
+     }
+
+    /**
+     * 分页查询（带缓存）
+     */
     @Override
     public IPage<${entity}> pageQuery(IPage<${entity}> p, QueryWrapper<${entity}> wrapper) {
         return page(p, wrapper);

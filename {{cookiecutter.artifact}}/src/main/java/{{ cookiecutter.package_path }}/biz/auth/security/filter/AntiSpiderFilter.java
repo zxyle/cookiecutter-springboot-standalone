@@ -74,7 +74,9 @@ public class AntiSpiderFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
         if (isDev()) {
             filterChain.doFilter(request, response);
             return;
@@ -84,7 +86,7 @@ public class AntiSpiderFilter extends OncePerRequestFilter {
         if (StringUtils.isBlank(userAgent) || KEYWORDS.stream().anyMatch(userAgent::contains)) {
             ResponseUtil.forbidden(response);
             log.info("拦截爬虫请求: {}", userAgent);
-            // TODO 是否将爬虫的IP记录到数据库中
+            // 是否将爬虫的IP记录到数据库中
             return;
         }
         filterChain.doFilter(request, response);

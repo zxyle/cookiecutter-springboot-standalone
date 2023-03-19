@@ -38,12 +38,12 @@ public class User extends BaseEntity {
     private String nickname;
 
     /**
-     * 手机号码
+     * 登录手机号码
      */
     private String mobile;
 
     /**
-     * 邮箱地址
+     * 登录邮箱
      */
     private String email;
 
@@ -54,7 +54,7 @@ public class User extends BaseEntity {
     private Integer locked;
 
     /**
-     * 超级管理员
+     * 是否超级管理员 (1-是 0-否)
      */
     @JsonIgnore
     private Integer isSuper;
@@ -72,7 +72,7 @@ public class User extends BaseEntity {
     private LocalDateTime pwdChangeTime;
 
     /**
-     * 账号可用 1-启用 0-禁用
+     * 账号可用 （1-可用 0-禁用）
      */
     private Integer enabled;
 

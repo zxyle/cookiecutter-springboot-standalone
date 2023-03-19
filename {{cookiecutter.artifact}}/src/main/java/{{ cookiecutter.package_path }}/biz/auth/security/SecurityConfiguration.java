@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.biz.auth.security;
 
 import {{ cookiecutter.basePackage }}.biz.auth.security.filter.AntiSpiderFilter;
 import {{ cookiecutter.basePackage }}.biz.auth.security.filter.IpFilter;
+import {{ cookiecutter.basePackage }}.biz.auth.security.filter.JwtAuthenticationTokenFilter;
 import {{ cookiecutter.basePackage }}.biz.auth.security.filter.SqlInjectionFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,30 +21,35 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Spring Security配置
+ */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    @Autowired
     AntiSpiderFilter antiSpiderFilter;
 
-    @Autowired
     IpFilter ipFilter;
 
-    @Autowired
     SqlInjectionFilter sqlInjectionFilter;
 
-    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    JwtAuthenticationTokenFilter tokenFilter;
 
     AuthenticationEntryPoint authenticationEntryPoint;
 
     AccessDeniedHandler accessDeniedHandler;
 
-    public SecurityConfiguration(JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter, AuthenticationEntryPoint authenticationEntryPoint, AccessDeniedHandler accessDeniedHandler) {
-        this.jwtAuthenticationTokenFilter = jwtAuthenticationTokenFilter;
+    public SecurityConfiguration(JwtAuthenticationTokenFilter tokenFilter, AuthenticationEntryPoint authenticationEntryPoint,
+                                 AccessDeniedHandler accessDeniedHandler, AntiSpiderFilter antiSpiderFilter, IpFilter ipFilter,
+                                 SqlInjectionFilter sqlInjectionFilter) {
+        this.tokenFilter = tokenFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
+        this.antiSpiderFilter = antiSpiderFilter;
+        this.ipFilter = ipFilter;
+        this.sqlInjectionFilter = sqlInjectionFilter;
     }
 
     @Bean
@@ -62,13 +67,16 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
                 .antMatchers("/auth/user/login", "/sys/friendly/urls").anonymous()
-                .antMatchers("/sys/dicts/**", "/sys/area/**", "/file/**", "/sys/infos", "/auth/user/register", "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers", "/getPublicKey").permitAll()
+                .antMatchers("/sys/dicts/**", "/sys/area/**", "/file/**", "/sys/infos", "/auth/user/register",
+                        "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers",
+                        "/getPublicKey").permitAll()
+
                 // 除上述请求 全部需要鉴权认证
                 .anyRequest().authenticated();
 
 
         // 添加过滤器
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(ipFilter, JwtAuthenticationTokenFilter.class);
         http.addFilterBefore(antiSpiderFilter, IpFilter.class);
         http.addFilterAfter(sqlInjectionFilter, AntiSpiderFilter.class);

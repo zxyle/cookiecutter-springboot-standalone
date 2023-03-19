@@ -47,6 +47,9 @@ public class LogAspect {
         logger.info("进入切面");
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            return;
+        }
         HttpServletRequest request = attributes.getRequest();
 
         String url = request.getRequestURL().toString();
@@ -88,25 +91,26 @@ public class LogAspect {
         for (int i = 0; i < names.length; i++) {
             map.put(names[i], values[i]);
         }
-        logger.info(map.toString());
+        logger.info("params map: {}", map);
         HttpServletRequest servletRequest = (HttpServletRequest) map.get("servletRequest");
         LoginRequest request = (LoginRequest) map.get("request");
         String header = servletRequest.getHeader("User-Agent");
-        logger.info("UA: " + header);
+        logger.info("UA: {}", header);
         loginLog.setUa(servletRequest.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setIp(IpUtil.getIpAddr(servletRequest));
         loginLog.setAccount(request.getAccount());
         long start = System.currentTimeMillis();
         // 调用执行目标方法(result为目标方法执行结果)，必须有此行代码才会执行目标调用的方法（等价于@befor+@after），否则只会执行一次之前的（等价于@before）
         R<LoginResponse> result = (R) pjp.proceed();
-        logger.info("Around Result: " + result);
+        logger.info("Around Result: {}", result);
         long end = System.currentTimeMillis();
         loginLog.setMsg(result.getMessage());
         loginLog.setIsSuccess(result.isSuccess() ? 1 : 0);
 
-        logger.debug(pjp.getTarget().getClass().getSimpleName() + "->" + pjp.getSignature().getName() + " 耗费时间:" + (end - start) + "毫秒");
-        logger.info(" 耗费时间:" + (end - start) + "毫秒");
-        logger.info(String.valueOf(loginLog));
+
+        logger.debug("{} -> {}, 耗费时间: {}毫秒.", pjp.getTarget().getClass().getSimpleName(), pjp.getSignature().getName(), (end - start));
+        logger.info("耗费时间: {}毫秒", (end - start));
+        logger.info("log: {}", loginLog);
         loginLogService.saveLoginLog(loginLog);
         return result;
     }
@@ -117,12 +121,12 @@ public class LogAspect {
         logger.error("Exception: {}", e.getMessage());
         // 获取RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        logger.info(requestAttributes.getAttributeNames(0).toString());
+        if (requestAttributes == null) {
+            return;
+        }
         // 从获取RequestAttributes中获取HttpServletRequest的信息
         HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
-        // System.out.println(request.);
-
-
+        logger.error("request: {}", request);
     }
 
     @Data

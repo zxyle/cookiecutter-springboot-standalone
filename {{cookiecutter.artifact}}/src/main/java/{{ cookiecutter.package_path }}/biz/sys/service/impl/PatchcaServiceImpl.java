@@ -4,9 +4,9 @@
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
 import cn.hutool.core.util.IdUtil;
-import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import lombok.extern.slf4j.Slf4j;
 import org.patchca.color.GradientColorFactory;
 import org.patchca.color.RandomColorFactory;
@@ -15,36 +15,33 @@ import org.patchca.filter.predefined.*;
 import org.patchca.service.ConfigurableCaptchaService;
 import org.patchca.utils.encoder.EncoderHelper;
 import org.patchca.word.RandomWordFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
-@Service
 @Slf4j
-@ConditionalOnProperty(prefix = "captcha", name = "kind", havingValue = "patchca")
 public class PatchcaServiceImpl implements CaptchaService {
 
-    CaptchaProperties captchaProperties;
+    ISettingService setting;
 
-    public PatchcaServiceImpl(CaptchaProperties captchaProperties) {
-        this.captchaProperties = captchaProperties;
+    public PatchcaServiceImpl(ISettingService setting) {
+        this.setting = setting;
     }
 
     public ConfigurableCaptchaService randomCs() {
         ConfigurableCaptchaService cs = new ConfigurableCaptchaService();
         RandomWordFactory wordFactory = new RandomWordFactory();
-        wordFactory.setMaxLength(captchaProperties.getDigits());
-        wordFactory.setMinLength(captchaProperties.getDigits());
-        wordFactory.setCharacters(captchaProperties.getCharacters());
+        wordFactory.setMaxLength(setting.get("captcha.digits").getIntValue());
+        wordFactory.setMinLength(setting.get("captcha.digits").getIntValue());
+        wordFactory.setCharacters(setting.get("captcha.chars").getStr());
         cs.setWordFactory(wordFactory);
-        cs.setHeight(captchaProperties.getHeight());
-        cs.setWidth(captchaProperties.getWidth());
+        cs.setHeight(setting.get("captcha.height").getIntValue());
+        cs.setWidth(setting.get("captcha.width").getIntValue());
 
         switch ((int) (System.currentTimeMillis() % 3)) {
+            default:
             case 0:
                 cs.setColorFactory(new SingleColorFactory(new Color(55, 246, 77)));
                 break;
@@ -57,6 +54,7 @@ public class PatchcaServiceImpl implements CaptchaService {
         }
 
         switch ((int) (System.currentTimeMillis() % 5)) {
+            default:
             case 0:
                 cs.setFilterFactory(new CurvesRippleFilterFactory(cs.getColorFactory()));
                 break;
@@ -82,7 +80,7 @@ public class PatchcaServiceImpl implements CaptchaService {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         String token = null;
         try {
-            token = EncoderHelper.getChallangeAndWriteImage(randomCs(), captchaProperties.getFormat(), byteArrayOutputStream);
+            token = EncoderHelper.getChallangeAndWriteImage(randomCs(), setting.get("captcha.format").getStr(), byteArrayOutputStream);
         } catch (IOException e) {
             log.error("patchca error: ", e);
         }

@@ -9,6 +9,10 @@ import java.time.format.DateTimeFormatter;
  * 日期 format格式
  */
 public class DateFormatConst {
+
+    private DateFormatConst() {
+    }
+
     public static final String YYYYMMDD = "yyyyMMdd";
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
     public static final DateTimeFormatter YYYY_MM_DD_DTF = DateTimeFormatter.ofPattern(YYYY_MM_DD);

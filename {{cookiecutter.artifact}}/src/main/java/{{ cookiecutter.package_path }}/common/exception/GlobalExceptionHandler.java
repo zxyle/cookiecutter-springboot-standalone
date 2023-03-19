@@ -4,8 +4,6 @@
 package {{ cookiecutter.basePackage }}.common.exception;
 
 import {{ cookiecutter.basePackage }}.common.response.R;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -24,16 +22,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
 
+/**
+ * 全局异常处理
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     // 使用GET PUT DELETE操作不存在的数据
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<R<Object>> handleDataNotFoundException(DataNotFoundException ex) {
-        // Return error response with HTTP status 404
-        // TODO 对一个不存在的数据进行操作，认定是一次违规操作
+        // 对一个不存在的数据进行操作，认定是一次违规操作
         return new ResponseEntity<>(R.fail(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
@@ -54,19 +52,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(R.fail("登录失效，请重新登录"), HttpStatus.FORBIDDEN);
     }
 
-
-    @ExceptionHandler(value = {CustomerException.class})
-    public ResponseEntity<String> customerExceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        logger.error(request.getServletPath(), response.getStatus(), e.getMessage());
-        int status = response.getStatus();
-        return ResponseEntity.status(status).body(e.getMessage());
-    }
-
     // 处理JSON方式 数据校验失败
     @ExceptionHandler(BindException.class)
     public ResponseEntity<R<Object>> handleValidationExceptions(BindException ex) {
         StringBuilder builder = new StringBuilder();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
+        ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             builder.append(fieldName).append(":").append(errorMessage).append(";");

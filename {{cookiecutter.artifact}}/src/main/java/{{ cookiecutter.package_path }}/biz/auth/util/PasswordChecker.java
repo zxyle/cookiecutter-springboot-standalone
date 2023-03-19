@@ -6,8 +6,20 @@ package {{ cookiecutter.basePackage }}.biz.auth.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 密码复杂度检查工具类
+ */
 public class PasswordChecker {
 
+    private PasswordChecker() {
+    }
+
+    /**
+     * 检查密码复杂度
+     *
+     * @param password 密码
+     * @return 0-5 分别代表弱、中、强
+     */
     public static int checkPasswordComplexity(String password) {
         int score = 0;
 

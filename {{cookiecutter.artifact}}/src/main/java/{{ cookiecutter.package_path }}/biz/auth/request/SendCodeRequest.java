@@ -8,11 +8,16 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 
+/**
+ * 发送短信邮件验证码
+ */
 @Data
 public class SendCodeRequest {
 
     /**
      * 注册账号（支持输入手机号、邮箱）
+     *
+     * @mock 13512345678
      */
     @NotBlank(message = "注册账号不能为空")
     @Length(min = 5, message = "注册账号长度为5个字符以上")

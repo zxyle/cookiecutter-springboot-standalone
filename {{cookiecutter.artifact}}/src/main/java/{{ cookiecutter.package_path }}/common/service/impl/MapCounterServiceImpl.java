@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class MapCounterServiceImpl implements CounterService {
 
+    private static final String FORMAT = "%s:%s";
+
     private static final Map<String, Long> counterMap = new ConcurrentHashMap<>();
 
     /**
@@ -25,7 +27,7 @@ public class MapCounterServiceImpl implements CounterService {
      */
     @Override
     public Long incr(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         counterMap.put(key, counterMap.getOrDefault(key, 0L) + 1);
         return counterMap.get(key);
     }
@@ -38,7 +40,7 @@ public class MapCounterServiceImpl implements CounterService {
      */
     @Override
     public Long get(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         return counterMap.getOrDefault(key, 0L);
     }
 
@@ -50,7 +52,7 @@ public class MapCounterServiceImpl implements CounterService {
      */
     @Override
     public boolean clear(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         counterMap.remove(key);
         return true;
     }

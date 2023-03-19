@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.security.filter;
 
 import {{ cookiecutter.basePackage }}.common.util.ResponseUtil;
 import com.google.common.util.concurrent.RateLimiter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * IP 请求限流过滤器
  */
+@Slf4j
 @Component
 public class IpRequestLimitFilter extends OncePerRequestFilter {
 
@@ -27,21 +29,23 @@ public class IpRequestLimitFilter extends OncePerRequestFilter {
     private Map<String, RateLimiter> limiterMap = new ConcurrentHashMap<>();
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         String ipAddress = request.getRemoteAddr(); // 获取请求 IP 地址
 
-        // 获取对该 IP 地址的限流器
-        RateLimiter limiter = limiterMap.computeIfAbsent(ipAddress, k -> RateLimiter.create(10)); // 限制每秒最多处理 10 个请求
+        // 获取对该 IP 地址的限流器, 限制每秒最多处理 10 个请求
+        RateLimiter limiter = limiterMap.computeIfAbsent(ipAddress, k -> RateLimiter.create(10));
 
         // 尝试获取令牌，如果获取失败则拒绝请求
         if (!limiter.tryAcquire()) {
-            System.out.println("请求被限流");
+            log.warn("请求被限流");
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
             ResponseUtil.forbidden(response);
             return;
         }
 
-        filterChain.doFilter(request, response); // 继续执行后续的过滤器或处理器
+        // 继续执行后续的过滤器或处理器
+        filterChain.doFilter(request, response);
     }
 }

@@ -17,18 +17,20 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class AtomicCounterService implements CounterService {
 
+    private static final String FORMAT = "%s:%s";
+
     private static final Map<String, AtomicLong> counterMap = new ConcurrentHashMap<>();
 
     @Override
     public Long incr(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         counterMap.putIfAbsent(key, new AtomicLong(0));
         return counterMap.get(key).incrementAndGet();
     }
 
     @Override
     public Long get(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         if (counterMap.containsKey(key)) {
             return counterMap.get(key).get();
         }
@@ -37,7 +39,7 @@ public class AtomicCounterService implements CounterService {
 
     @Override
     public boolean clear(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         counterMap.remove(key);
         return true;
     }

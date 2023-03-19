@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.config;
 
-import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
@@ -15,10 +15,10 @@ import java.util.Properties;
 @Component
 public class KaptchaConfig {
 
-    CaptchaProperties captchaProperties;
+    ISettingService setting;
 
-    public KaptchaConfig(CaptchaProperties captchaProperties) {
-        this.captchaProperties = captchaProperties;
+    public KaptchaConfig(ISettingService setting) {
+        this.setting = setting;
     }
 
     @Bean
@@ -33,13 +33,13 @@ public class KaptchaConfig {
         properties.setProperty("kaptcha.border", "yes");
         properties.setProperty("kaptcha.border.color", "105,179,90");
         properties.setProperty("kaptcha.textproducer.font.color", "blue");
-        properties.setProperty("kaptcha.image.width", String.valueOf(captchaProperties.getWidth()));
-        properties.setProperty("kaptcha.image.height", String.valueOf(captchaProperties.getHeight()));
-        properties.setProperty("kaptcha.textproducer.font.size", String.valueOf(captchaProperties.getFontSize()));
+        properties.setProperty("kaptcha.image.width", String.valueOf(setting.get("captcha.width").getIntValue()));
+        properties.setProperty("kaptcha.image.height", String.valueOf(setting.get("captcha.height").getIntValue()));
+        properties.setProperty("kaptcha.textproducer.font.size", String.valueOf(setting.get("captcha.font-size").getIntValue()));
         properties.setProperty("kaptcha.session.key", "code");
-        properties.setProperty("kaptcha.textproducer.char.length", String.valueOf(captchaProperties.getDigits()));
-        properties.setProperty("kaptcha.textproducer.char.string", captchaProperties.getCharacters());
-        properties.setProperty("kaptcha.textproducer.font.names", captchaProperties.getFontFamily());
+        properties.setProperty("kaptcha.textproducer.char.length", String.valueOf(setting.get("captcha.digits").getIntValue()));
+        properties.setProperty("kaptcha.textproducer.char.string", setting.get("captcha.chars").getStr());
+        properties.setProperty("kaptcha.textproducer.font.names", setting.get("captcha.font-family").getStr());
         return new Config(properties);
     }
 }

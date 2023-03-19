@@ -17,15 +17,17 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
- * 用户信息 服务实现类
+ * 用户资料 服务实现类
  */
 @Slf4j
 @Service
 @CacheConfig(cacheNames = "ProfileCache")
 public class ProfileServiceImpl extends ServiceImpl<ProfileMapper, Profile> implements IProfileService {
 
+    private static final String USER_ID = "user_id";
+
     /**
-     * 按ID查询信息
+     * 按ID查询资料
      *
      * @param userId 用户ID
      */
@@ -33,20 +35,20 @@ public class ProfileServiceImpl extends ServiceImpl<ProfileMapper, Profile> impl
     @Override
     public Profile queryByUserId(Long userId) {
         QueryWrapper<Profile> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
+        wrapper.eq(USER_ID, userId);
         return getOne(wrapper);
     }
 
     /**
-     * 更新用户信息
+     * 更新用户资料
      *
-     * @param profile 用户信息
+     * @param profile 用户资料
      */
     @CachePut(key = "#profile.userId")
     @Override
     public Profile updateProfile(Profile profile) {
         UpdateWrapper<Profile> wrapper = new UpdateWrapper<>();
-        wrapper.eq("user_id", profile.getUserId());
+        wrapper.eq(USER_ID, profile.getUserId());
         // 如果没有数据，则新增
         boolean success = saveOrUpdate(profile, wrapper);
         if (success) {
@@ -56,12 +58,16 @@ public class ProfileServiceImpl extends ServiceImpl<ProfileMapper, Profile> impl
         return profile;
     }
 
-    // 删除用户信息
+    /**
+     * 删除用户资料
+     *
+     * @param userId 用户ID
+     */
     @CacheEvict(key = "#userId")
     @Override
     public boolean delete(Long userId) {
         QueryWrapper<Profile> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
+        wrapper.eq(USER_ID, userId);
         if (count(wrapper) == 0)
             return true;
 

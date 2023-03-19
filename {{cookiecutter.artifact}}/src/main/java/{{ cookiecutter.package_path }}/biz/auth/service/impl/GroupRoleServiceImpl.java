@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupRoleService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * 组角色关联 服务实现类
  */
+@Slf4j
 @Service
 public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole> implements IGroupRoleService {
 
@@ -73,7 +75,8 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
-            return true;
+            log.warn("重复的GroupRole映射关系");
+            return false;
         }
         return true;
     }

@@ -3,8 +3,13 @@
 
 package {{ cookiecutter.basePackage }}.common.util;
 
-
+/**
+ * 数据类型转换工具类
+ */
 public class DataTypeConverter {
+
+    private DataTypeConverter() {
+    }
 
     public static <T> T convert(Object input, String outputTypeName) throws IllegalArgumentException {
         if (input == null) {
@@ -43,15 +48,6 @@ public class DataTypeConverter {
         } else {
             throw new IllegalArgumentException("Unsupported output type: " + outputType.getName());
         }
-    }
-
-    public static void main(String[] args) {
-        String intValue = DataTypeConverter.convert("aaa", "java.lang.String");
-        int intValue2 = DataTypeConverter.convert("111", "java.lang.Integer");
-        System.out.println(intValue);
-        System.out.println(intValue2);
-        System.out.println(intValue2+100);
-
     }
 
 }

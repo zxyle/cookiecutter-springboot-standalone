@@ -13,13 +13,13 @@ import {{ cookiecutter.basePackage }}.biz.auth.request.password.RandomRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.ResetPasswordRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.password.PasswordComplexityResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.response.password.ResetPasswordResponse;
-import {{ cookiecutter.basePackage }}.biz.auth.security.PasswordProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.util.PasswordChecker;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -44,15 +44,12 @@ import java.util.List;
 @Slf4j
 public class PasswordController extends AuthBaseController {
 
-    // 使用旧密码修改密码重试次数上限
-    public static final int MAX_CHANGE_RETRY_TIMES = 3;
-
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
     IUserService userService;
 
-    PasswordProperties properties;
+    ISettingService setting;
 
     IPasswordService thisService;
 
@@ -60,11 +57,11 @@ public class PasswordController extends AuthBaseController {
 
     ValidateService validateService;
 
-    public PasswordController(LoginService loginService, IPasswordService thisService, PasswordProperties properties,
+    public PasswordController(LoginService loginService, IPasswordService thisService, ISettingService setting,
                               IUserService userService, ValidateService validateService) {
         this.loginService = loginService;
         this.thisService = thisService;
-        this.properties = properties;
+        this.setting = setting;
         this.userService = userService;
         this.validateService = validateService;
     }
@@ -79,7 +76,7 @@ public class PasswordController extends AuthBaseController {
 
         if (thisService.isRight(request.getOldPassword(), user.getPwd())) {
             // 判断新密码是否和旧密码一致
-            if (!properties.isEnableSame() && thisService.isRight(request.getNewPassword(), user.getPwd())) {
+            if (!setting.get("pwd.enable-same").getBool() && thisService.isRight(request.getNewPassword(), user.getPwd())) {
                 return R.fail("修改失败，新密码不能和旧密码一致");
             }
 
@@ -94,8 +91,9 @@ public class PasswordController extends AuthBaseController {
         String key = "pwd:change:" + user.getId();
         Long times = stringRedisTemplate.opsForValue().increment(key);
         int retryTime = times == null ? 1 : times.intValue();
-        if (MAX_CHANGE_RETRY_TIMES > retryTime) {
-            Integer remainTime = MAX_CHANGE_RETRY_TIMES - retryTime;
+        Integer maxRetry = setting.get("pwd.change-max-retry-times").getIntValue();
+        if (maxRetry > retryTime) {
+            Integer remainTime = maxRetry - retryTime;
             String message = String.format("修改失败，旧密码可能不正确，还可重试%d次", remainTime);
             return R.fail(message);
         }
@@ -151,14 +149,14 @@ public class PasswordController extends AuthBaseController {
         Long userId = request.getUserId();
         String rawPassword = request.getPassword();
         rawPassword = StringUtils.isBlank(rawPassword) ?
-                CaptchaUtil.randCode(properties.getMinLength(), properties.getChars()) : rawPassword;
+                CaptchaUtil.randCode(setting.get("pwd.min-length").getIntValue(), setting.get("pwd.chars").getStr()) : rawPassword;
         boolean success = thisService.change(userId, rawPassword, ChangePasswordEnum.RESET);
 
         if (success) {
             // 退出当前登录状态
             loginService.logout(userId);
             userService.unlock(userId);
-            return R.ok("重置密码成功，新密码为：" + rawPassword);
+            return R.ok(new ResetPasswordResponse(rawPassword));
         }
         return R.fail("重置密码失败");
     }
@@ -167,7 +165,7 @@ public class PasswordController extends AuthBaseController {
     /**
      * 密码复杂度计算（0-5分）
      *
-     * @param password 待检测密码
+     * @param password 待检测密码|lHfxoPrKOaWjSqwN
      */
     @PreAuthorize("@ck.hasPermit('auth:password:complexity')")
     @GetMapping("/complexity")

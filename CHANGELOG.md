@@ -1,5 +1,11 @@
 # 变更日志
 
+## v1.4.1
+- 完善类注释、接口文档、对接文档等
+- 系统里配置信息由数据库设置驱动
+- 删除sample模块
+- 解决一些code smell
+
 ## v1.4.0
 - 用户注册增加自动登录功能 [#38](https://github.com/zxyle/cookiecutter-springboot-standalone/issues/38)
 - 完善前端对接文档

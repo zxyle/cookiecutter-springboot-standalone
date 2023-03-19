@@ -15,6 +15,9 @@ import java.util.List;
  */
 public class TreeUtil {
 
+    private TreeUtil() {
+    }
+
     /**
      * 创建树
      *

@@ -18,6 +18,8 @@ import javax.annotation.Resource;
 @Service
 public class RedisCounterServiceImpl implements CounterService {
 
+    private static final String FORMAT = "%s:%s";
+
     @Resource
     StringRedisTemplate stringRedisTemplate;
 
@@ -29,7 +31,7 @@ public class RedisCounterServiceImpl implements CounterService {
      */
     @Override
     public Long incr(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         Long count = stringRedisTemplate.opsForValue().increment(key);
         return count != null ? count : 0;
     }
@@ -42,7 +44,7 @@ public class RedisCounterServiceImpl implements CounterService {
      */
     @Override
     public Long get(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         String count = stringRedisTemplate.opsForValue().get(key);
         return StringUtils.isNumeric(count) ? Long.parseLong(count) : 0L;
     }
@@ -55,7 +57,7 @@ public class RedisCounterServiceImpl implements CounterService {
      */
     @Override
     public boolean clear(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         if (Boolean.FALSE.equals(hasKey)) {
             return true;

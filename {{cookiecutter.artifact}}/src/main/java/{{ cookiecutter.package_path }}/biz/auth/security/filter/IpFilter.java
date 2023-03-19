@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.security.filter;
 
 import {{ cookiecutter.basePackage }}.biz.sys.service.IBlacklistService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
 import {{ cookiecutter.basePackage }}.common.util.CidrUtil;
 import {{ cookiecutter.basePackage }}.common.util.ResponseUtil;
@@ -26,27 +27,33 @@ import java.util.List;
 @Component
 public class IpFilter extends OncePerRequestFilter {
 
-    public static final boolean blackEnable = true;
-    public static final boolean whiteEnable = true;
-
     IBlacklistService blacklistService;
 
     IWhitelistService whitelistService;
 
     Environment environment;
 
-    public IpFilter(IBlacklistService blacklistService, IWhitelistService whitelistService, Environment environment) {
+    ISettingService setting;
+
+    public IpFilter(IBlacklistService blacklistService, IWhitelistService whitelistService,
+                    Environment environment, ISettingService setting) {
         this.blacklistService = blacklistService;
         this.whitelistService = whitelistService;
         this.environment = environment;
+        this.setting = setting;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
         if (isDev()) {
             filterChain.doFilter(request, response);
             return;
         }
+
+        boolean blackEnable = setting.get("blacklist.enable").getBool();
+        boolean whiteEnable = setting.get("whitelist.enable").getBool();
 
         String ip = request.getRemoteAddr();
         List<String> blacklist = blacklistService.getBlacklist();

@@ -16,6 +16,8 @@ public class MigrateGroupRequest {
 
     /**
      * 新用户组ID
+     *
+     * @mock 1
      */
     @Positive(message = "新用户组ID必须为正整数")
     @NotNull(message = "新用户组ID不能为空")
@@ -23,6 +25,8 @@ public class MigrateGroupRequest {
 
     /**
      * 当前用户组ID
+     *
+     * @mock 2
      */
     @Positive(message = "当前用户组ID必须为正整数")
     @NotNull(message = "当前用户组ID不能为空")

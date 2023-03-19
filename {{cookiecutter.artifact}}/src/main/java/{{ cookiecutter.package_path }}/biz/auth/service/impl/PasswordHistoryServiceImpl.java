@@ -9,8 +9,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.PasswordHistory;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.PasswordHistoryMapper;
-import {{ cookiecutter.basePackage }}.biz.auth.security.PasswordProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordHistoryService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -22,10 +22,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMapper, PasswordHistory> implements IPasswordHistoryService {
 
-    PasswordProperties passwordProperties;
+    ISettingService setting;
 
-    public PasswordHistoryServiceImpl(PasswordProperties passwordProperties) {
-        this.passwordProperties = passwordProperties;
+    public PasswordHistoryServiceImpl(ISettingService setting) {
+        this.setting = setting;
     }
 
 
@@ -40,8 +40,9 @@ public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMappe
     @Override
     public void insert(User user, String newPwd, ChangePasswordEnum policy) {
         Integer currentCount = countHistory(user.getId()) + 1;
-        if (passwordProperties.getHistoryCount() != 0 && currentCount > passwordProperties.getHistoryCount()) {
-            removeHistory(user.getId(), currentCount - passwordProperties.getHistoryCount());
+        Integer count = setting.get("pwd.history-count").getIntValue();
+        if (count != 0 && currentCount > count) {
+            removeHistory(user.getId(), currentCount - count);
         }
 
         PasswordHistory history = new PasswordHistory();

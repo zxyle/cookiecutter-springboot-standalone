@@ -5,9 +5,9 @@ package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import {{ cookiecutter.basePackage }}.biz.auth.service.EmailCodeService;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Verification;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IVerificationService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -21,20 +21,14 @@ public class EmailCodeServiceImpl implements EmailCodeService {
 
     JavaMailSender javaMailSender;
 
-    @Value("${app.name}")
-    private String appName;
-
-    @Value("${spring.mail.username}")
-    private String sender;
-
-    @Value("${captcha.alive-time}")
-    private Integer aliveTime;
+    ISettingService setting;
 
     IVerificationService verificationService;
 
-    public EmailCodeServiceImpl(JavaMailSender javaMailSender, IVerificationService verificationService) {
+    public EmailCodeServiceImpl(JavaMailSender javaMailSender, IVerificationService verificationService, ISettingService setting) {
         this.javaMailSender = javaMailSender;
         this.verificationService = verificationService;
+        this.setting = setting;
     }
 
     /**
@@ -46,7 +40,11 @@ public class EmailCodeServiceImpl implements EmailCodeService {
     @Async
     @Override
     public void sendVerificationCode(String recipient, String code) {
-        String content = String.format("邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!", code, aliveTime);
+        String appName = setting.get("app.name").getStr();
+        String sender = setting.get("spring.mail.username").getStr();
+        Integer aliveTime = setting.get("captcha.alive-time").getIntValue();
+        String template = setting.get("email.verification-template").getStr();
+        String content = String.format(template, code, aliveTime);
         log.info(content);
         String subject = String.format("【%s】邮箱验证码", appName);
 

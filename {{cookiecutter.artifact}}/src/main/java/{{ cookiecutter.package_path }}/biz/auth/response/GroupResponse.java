@@ -8,6 +8,9 @@ import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+/**
+ * 用户组信息响应
+ */
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class GroupResponse extends Group {

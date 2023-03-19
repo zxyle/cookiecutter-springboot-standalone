@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.List;
 /**
  * 用户和角色关联表 服务实现类
  */
+@Slf4j
 @Service
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> implements IUserRoleService {
 
@@ -73,6 +75,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
+            log.warn("重复的UserRole映射关系: {}", entity);
         }
         return true;
     }

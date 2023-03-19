@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DbCounterServiceImpl implements CounterService {
 
+    private static final String FORMAT = "%s:%s";
+
     ICounterService counterService;
 
     public DbCounterServiceImpl(ICounterService counterService) {
@@ -23,7 +25,7 @@ public class DbCounterServiceImpl implements CounterService {
 
     @Override
     public synchronized Long incr(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         QueryWrapper<Counter> wrapper = new QueryWrapper<>();
         wrapper.eq("biz", key);
         Counter one = counterService.getOne(wrapper);
@@ -42,7 +44,7 @@ public class DbCounterServiceImpl implements CounterService {
 
     @Override
     public Long get(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         QueryWrapper<Counter> wrapper = new QueryWrapper<>();
         wrapper.eq("biz", key);
         Counter one = counterService.getOne(wrapper);
@@ -51,7 +53,7 @@ public class DbCounterServiceImpl implements CounterService {
 
     @Override
     public synchronized boolean clear(String biz, String id) {
-        String key = String.format("%s:%s", biz, id);
+        String key = String.format(FORMAT, biz, id);
         QueryWrapper<Counter> wrapper = new QueryWrapper<>();
         wrapper.eq("biz", key);
         return counterService.remove(wrapper);

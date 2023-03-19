@@ -11,6 +11,9 @@ import java.io.IOException;
 
 public class ResponseUtil {
 
+    private ResponseUtil() {
+    }
+
     public static void forbidden(HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         ServletOutputStream outputStream = response.getOutputStream();

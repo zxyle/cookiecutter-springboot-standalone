@@ -3,24 +3,28 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
-import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.time.Duration;
 
+/**
+ * 短信邮件验证码服务
+ */
 @Service
 public class ValidateService {
 
-    @Autowired
-    CaptchaProperties captchaProperties;
-
-    @Resource
     StringRedisTemplate stringRedisTemplate;
+
+    ISettingService settingService;
+
+    public ValidateService(StringRedisTemplate stringRedisTemplate, ISettingService settingService) {
+        this.stringRedisTemplate = stringRedisTemplate;
+        this.settingService = settingService;
+    }
 
     /**
      * 校验验证码
@@ -52,10 +56,11 @@ public class ValidateService {
     public String send(String account) {
         String key = "code:" + account;
         // 生成随机数字
-        String code = CaptchaUtil.randNumber(captchaProperties.getDigits());
+        String code = CaptchaUtil.randNumber(settingService.get("captcha.digits").getIntValue());
         stringRedisTemplate.opsForHash().put(key, "account", account);
         stringRedisTemplate.opsForHash().put(key, "code", code);
-        stringRedisTemplate.expire(key, Duration.ofMinutes(captchaProperties.getAliveTime()));
+        Integer aliveTime = settingService.get("captcha.alive-time").getIntValue();
+        stringRedisTemplate.expire(key, Duration.ofMinutes(aliveTime));
         return code;
     }
 }

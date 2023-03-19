@@ -5,6 +5,9 @@ package {{ cookiecutter.basePackage }}.biz.sys.response;
 
 import lombok.Data;
 
+/**
+ * 钉钉响应
+ */
 @Data
 public class DingTalkResponse {
 

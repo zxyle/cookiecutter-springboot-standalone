@@ -4,11 +4,11 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.request.SendCodeRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.response.CaptchaResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class CaptchaController {
 
     StringRedisTemplate stringRedisTemplate;
 
-    CaptchaProperties captchaProperties;
+    ISettingService setting;
 
     EmailCodeService emailService;
 
@@ -47,11 +47,11 @@ public class CaptchaController {
 
     ShortMessageService shortMessageService;
 
-    public CaptchaController(StringRedisTemplate stringRedisTemplate, CaptchaProperties captchaProperties,
+    public CaptchaController(StringRedisTemplate stringRedisTemplate, ISettingService setting,
                              EmailCodeService emailService, CodeService codeService,
                              ValidateService validateService, ShortMessageService shortMessageService) {
         this.stringRedisTemplate = stringRedisTemplate;
-        this.captchaProperties = captchaProperties;
+        this.setting = setting;
         this.emailService = emailService;
         this.codeService = codeService;
         this.validateService = validateService;
@@ -101,7 +101,7 @@ public class CaptchaController {
         return R.result(verify);
     }
 
-    // TODO 安全隐患， 如果一个人频繁使用别人邮箱或手机号, 限定一个ip地址一天只能发送10次验证码
+    // 安全隐患: 如果一个人频繁使用别人邮箱或手机号, 限定一个ip地址一天只能发送10次验证码
 
     /**
      * 发送短信邮件验证码
@@ -139,14 +139,14 @@ public class CaptchaController {
         }
 
         String ipAddr = IpUtil.getIpAddr(servletRequest);
-        locked(account, captchaProperties.getBetween(), ipAddr);
+        locked(account, setting.get("captcha.between").getIntValue(), ipAddr);
         return R.ok("验证码发送成功");
     }
 
     // 防止验证码被滥用
     public void locked(String account, Integer between, String ipAddr) {
         String key = String.format("locked:%s:%s", ipAddr, account);
-        stringRedisTemplate.opsForValue().set(key, "lock", captchaProperties.getBetween(), TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set(key, "lock", setting.get("captcha.between").getIntValue(), TimeUnit.SECONDS);
     }
 
     public boolean isLocked(String account) {

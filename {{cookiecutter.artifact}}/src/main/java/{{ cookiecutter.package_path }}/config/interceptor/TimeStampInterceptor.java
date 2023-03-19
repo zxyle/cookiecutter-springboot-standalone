@@ -3,20 +3,24 @@
 
 package {{ cookiecutter.basePackage }}.config.interceptor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 时间戳拦截器
+ */
+@Slf4j
 @Component
 public class TimeStampInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String timestamp = request.getParameter("timestamp");
-        System.out.println(timestamp);
-
+        log.info("当前请求时间戳: {}", timestamp);
         return false;
     }
 }

@@ -6,10 +6,10 @@ package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
-import {{ cookiecutter.basePackage }}.biz.auth.security.PasswordProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordHistoryService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,16 +24,16 @@ public class PasswordServiceImpl implements IPasswordService {
 
     IUserService userService;
 
-    PasswordProperties passwordProperties;
+    ISettingService setting;
 
     IPasswordHistoryService passwordHistoryService;
 
     PasswordEncoder passwordEncoder;
 
-    public PasswordServiceImpl(IUserService userService, PasswordProperties passwordProperties,
+    public PasswordServiceImpl(IUserService userService, ISettingService setting,
                                IPasswordHistoryService passwordHistoryService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.passwordProperties = passwordProperties;
+        this.setting = setting;
         this.passwordHistoryService = passwordHistoryService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -61,7 +61,7 @@ public class PasswordServiceImpl implements IPasswordService {
         updateWrapper.eq("id", userId);
 
         boolean success = userService.update(updateWrapper);
-        if (success && passwordProperties.isEnableHistory()) {
+        if (success && setting.get("pwd.enable-history").getBool()) {
             // 记录密码修改日志
             passwordHistoryService.insert(user, newPwd, policy);
         }

@@ -11,6 +11,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.List;
 /**
  * 用户-用户组关联 服务实现类
  */
+@Slf4j
 @Service
 public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup> implements IUserGroupService {
 
@@ -74,6 +76,7 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
+            log.warn("用户组关联已存在，userId={}, groupId={}", userId, groupId);
             return true;
         }
         return true;

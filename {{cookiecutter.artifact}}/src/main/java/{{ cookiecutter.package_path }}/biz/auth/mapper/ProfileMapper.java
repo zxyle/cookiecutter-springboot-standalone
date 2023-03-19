@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 
 /**
- * 用户信息 Mapper 接口
+ * 用户资料 Mapper 接口
  */
 @Repository
 public interface ProfileMapper extends BaseMapper<Profile> {

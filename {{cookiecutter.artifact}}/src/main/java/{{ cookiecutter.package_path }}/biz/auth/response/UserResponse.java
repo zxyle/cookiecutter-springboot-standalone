@@ -15,6 +15,9 @@ import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
+/**
+ * 用户信息响应
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserResponse extends User {
@@ -43,6 +46,7 @@ public class UserResponse extends User {
         BeanUtils.copyProperties(user, this);
     }
 
+    // 重写父类的get方法，对敏感信息进行脱敏
     @Override
     public String getEmail() {
         if (StringUtils.isNotBlank(super.getEmail()))

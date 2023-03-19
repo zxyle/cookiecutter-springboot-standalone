@@ -49,7 +49,8 @@ public class GroupController extends AuthBaseController {
         IPage<Group> page = PageRequestUtil.checkForMp(request);
         IPage<Group> list = groupService.page(page, wrapper);
         List<GroupResponse> collect = list.getRecords().stream()
-                .map(group -> groupService.attachGroupInfo(group, request.isFull())).collect(Collectors.toList());
+                .map(group -> groupService.attachGroupInfo(group, request.isFull()))
+                .collect(Collectors.toList());
         return R.ok(new PageVO<>(collect, list.getTotal()));
     }
 

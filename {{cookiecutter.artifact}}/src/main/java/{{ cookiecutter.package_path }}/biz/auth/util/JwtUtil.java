@@ -19,11 +19,14 @@ import java.util.UUID;
  */
 public class JwtUtil {
 
+    private JwtUtil() {
+    }
+
     // 有效期（单位: 毫秒）
     public static final Long JWT_TTL = 24 * 60 * 60 * 1000L;  // 一天
 
     // 设置秘钥明文
-    public static final String JWT_KEY = "{{ random_ascii_string(32) }}";
+    public static final String JWT_KEY = "bBOuzpIPIHVggIyljKUtRzTIsRviSEyf";
 
     public static String getUUID() {
         return UUID.randomUUID().toString().replace("-", "");

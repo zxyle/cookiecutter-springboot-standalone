@@ -6,13 +6,13 @@ package {{ cookiecutter.basePackage }}.biz.auth.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
-import {{ cookiecutter.basePackage }}.biz.auth.config.AuthUserProperties;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.AdminAddUserRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.UpdateUserRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -35,16 +35,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/auth")
 public class UserController extends AuthBaseController {
 
-    AuthUserProperties properties;
+    ISettingService setting;
 
     PasswordEncoder encoder;
 
     IUserService thisService;
 
-    public UserController(AuthUserProperties properties, PasswordEncoder encoder, IUserService thisService) {
+    public UserController(ISettingService setting, PasswordEncoder encoder, IUserService thisService) {
         this.encoder = encoder;
         this.thisService = thisService;
-        this.properties = properties;
+        this.setting = setting;
     }
 
     /**
@@ -89,22 +89,23 @@ public class UserController extends AuthBaseController {
 
         // 构建用户
         User user = thisService.create(request.getAccount(), encoder.encode(request.getPassword()));
-        user.setMustChangePwd((request.isMustChangePwd() && properties.isReset()) ? 1 : 0);
+        Boolean isReset = setting.get("auth.user.reset").getBool();
+        user.setMustChangePwd((request.isMustChangePwd() && isReset) ? 1 : 0);
         boolean success = thisService.save(user);
-
-        if (success) {
-            List<Long> roleIds = new ArrayList<>();
-            if (CollectionUtils.isEmpty(request.getRoleIds())) {
-                roleIds.add(properties.getDefaultRole());
-            } else {
-                roleIds.addAll(request.getRoleIds());
-            }
-            // 更新用户角色、用户组关联关系, 防止被授予过高的权限的角色
-            thisService.updateRelation(user.getId(), roleIds, request.getGroupIds(), null);
-            return R.ok(user);
+        if (!success) {
+            return R.fail("创建用户失败");
         }
 
-        return R.fail("创建用户失败");
+        List<Long> roleIds = new ArrayList<>();
+        if (CollectionUtils.isEmpty(request.getRoleIds())) {
+            Long defaultRole = setting.get("auth.user.default-role").getLongValue();
+            roleIds.add(defaultRole);
+        } else {
+            roleIds.addAll(request.getRoleIds());
+        }
+        // 更新用户角色、用户组关联关系, 防止被授予过高的权限的角色
+        thisService.updateRelation(user.getId(), roleIds, request.getGroupIds(), null);
+        return R.ok(user);
     }
 
     /**
@@ -164,10 +165,7 @@ public class UserController extends AuthBaseController {
         }
 
         boolean success = thisService.delete(userId);
-        if (success) {
-            return R.ok("已成功删除该用户");
-        }
-        return R.fail("删除用户失败");
+        return success ? R.ok("已成功删除该用户") : R.fail("删除用户失败");
     }
 
     /**
@@ -189,11 +187,7 @@ public class UserController extends AuthBaseController {
         }
 
         boolean success = thisService.disable(userId);
-        if (success) {
-            return R.ok("已成功禁用该用户");
-        }
-
-        return R.fail("禁用用户失败");
+        return success ? R.ok("已成功禁用该用户") : R.fail("禁用用户失败");
     }
 
     /**
@@ -210,10 +204,7 @@ public class UserController extends AuthBaseController {
         }
 
         boolean success = thisService.enable(userId);
-        if (success) {
-            return R.ok("已成功启用该用户");
-        }
-        return R.fail("启用用户失败");
+        return success ? R.ok("已成功启用该用户") : R.fail("启用用户失败");
     }
 
 

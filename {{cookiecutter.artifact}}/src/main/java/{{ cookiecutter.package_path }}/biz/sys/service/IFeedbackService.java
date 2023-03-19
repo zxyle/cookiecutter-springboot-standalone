@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.biz.sys.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import {{ cookiecutter.basePackage }}.biz.sys.entity.Feedback;
 import com.baomidou.mybatisplus.extension.service.IService;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.Feedback;
 
 /**
  * 意见反馈 服务类
@@ -14,16 +14,22 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IFeedbackService extends IService<Feedback> {
 
     /**
-     * 按ID查询
+     * 按ID查询（带缓存）
      */
     Feedback queryById(Long id);
 
+    /**
+     * 按ID更新（带缓存）
+     */
     Feedback putById(Feedback feedback);
 
+    /**
+     * 按ID删除（带缓存）
+     */
     void deleteById(Long id);
 
     /**
-     * 分页查询
+     * 分页查询（带缓存）
      */
     IPage<Feedback> pageQuery(IPage<Feedback> page, QueryWrapper<Feedback> wrapper);
 

@@ -15,6 +15,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
  */
 public class PageRequestUtil {
 
+    private PageRequestUtil() {
+    }
+
     /**
      * 检查Mybatis Plus分页
      *

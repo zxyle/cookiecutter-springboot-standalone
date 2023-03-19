@@ -3,7 +3,7 @@ package ${package.Controller};
 import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import {{ cookiecutter.basePackage }}.common.request.OrderPageRequest;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
@@ -54,7 +54,7 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
     @GetMapping("/${table.entityPath}s")
-    public R<PageVO<${entity}>> page(@Valid OrderPageRequest request, HttpServletResponse response) throws IOException {
+    public R<PageVO<${entity}>> page(@Valid PaginationRequest request, HttpServletResponse response) throws IOException {
         QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
         wrapper.orderBy(EntityUtil.getFields(${entity}.class).contains(request.getField()),
                 request.getOrder(), request.getField());

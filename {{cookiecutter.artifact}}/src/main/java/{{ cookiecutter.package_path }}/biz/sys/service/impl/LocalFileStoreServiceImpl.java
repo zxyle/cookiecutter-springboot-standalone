@@ -9,11 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 
+/**
+ * 本地文件存储
+ */
 @Service
 public class LocalFileStoreServiceImpl implements FileStoreService {
-
-    public static final String PROTOCOL = "file://";
 
     public static final String LOCAL_FILE_STORE = "/tmp";
 
@@ -27,17 +30,14 @@ public class LocalFileStoreServiceImpl implements FileStoreService {
     @Override
     public String upload(MultipartFile file, String objectName) {
         // 将文件保存到本地
-        try {
-            File target = new File(LOCAL_FILE_STORE, objectName);
-            String path = LOCAL_FILE_STORE + "/" + objectName;
-            target.getParentFile().mkdirs();
-            FileOutputStream fs = new FileOutputStream(path);
+        File target = new File(LOCAL_FILE_STORE, objectName);
+        target.getParentFile().mkdirs();
+        try (FileOutputStream fs = new FileOutputStream(target)) {
             fs.write(file.getBytes());
-            fs.close();
-            return PROTOCOL + path;
+            return target.getPath();
         } catch (Exception ignored) {
+            return null;
         }
-        return null;
     }
 
     /**
@@ -48,6 +48,11 @@ public class LocalFileStoreServiceImpl implements FileStoreService {
     @Override
     public boolean delete(String objectName) {
         File file = new File(LOCAL_FILE_STORE, objectName);
-        return file.delete();
+        try {
+            Files.delete(file.toPath());
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
 }

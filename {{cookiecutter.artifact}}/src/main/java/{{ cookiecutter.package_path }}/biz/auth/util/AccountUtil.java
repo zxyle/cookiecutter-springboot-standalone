@@ -9,7 +9,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Pattern;
 
+/**
+ * 账号工具类
+ */
 public class AccountUtil {
+
+    private AccountUtil() {
+    }
 
     /**
      * 判断账号类型

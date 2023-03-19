@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.config;
 
-import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import org.patchca.color.ColorFactory;
 import org.patchca.color.GradientColorFactory;
 import org.patchca.color.RandomColorFactory;
@@ -20,33 +20,34 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
-import java.util.Random;
+import java.security.SecureRandom;
 
 @Component
 public class PatchcaConfig {
 
-    CaptchaProperties captchaProperties;
+    ISettingService setting;
 
-    public PatchcaConfig(CaptchaProperties captchaProperties) {
-        this.captchaProperties = captchaProperties;
+    public PatchcaConfig(ISettingService setting) {
+        this.setting = setting;
     }
 
     @Bean
     public ConfigurableCaptchaService configurableCaptchaService() {
         ConfigurableCaptchaService cs = new ConfigurableCaptchaService();
         cs.setWordFactory(randomWordFactory());
-        cs.setColorFactory(getColorFactories()[new Random().nextInt(getColorFactories().length)]);
-        cs.setFilterFactory(getFilterFactories()[new Random().nextInt(getFilterFactories().length)]);
-        cs.setHeight(captchaProperties.getHeight());
-        cs.setWidth(captchaProperties.getWidth());
+        SecureRandom random = new SecureRandom();
+        cs.setColorFactory(getColorFactories()[random.nextInt(getColorFactories().length)]);
+        cs.setFilterFactory(getFilterFactories()[random.nextInt(getFilterFactories().length)]);
+        cs.setHeight(setting.get("captcha.height").getIntValue());
+        cs.setWidth(setting.get("captcha.width").getIntValue());
         return cs;
     }
 
     public RandomWordFactory randomWordFactory() {
         RandomWordFactory wf = new RandomWordFactory();
-        wf.setCharacters(captchaProperties.getCharacters());
-        wf.setMaxLength(captchaProperties.getDigits());
-        wf.setMinLength(captchaProperties.getDigits());
+        wf.setCharacters(setting.get("captcha.chars").getStr());
+        wf.setMaxLength(setting.get("captcha.digits").getIntValue());
+        wf.setMinLength(setting.get("captcha.digits").getIntValue());
         return wf;
     }
 
@@ -83,7 +84,7 @@ public class PatchcaConfig {
     // 自定义颜色工厂
     public ColorFactory getColorFactory() {
         return x -> {
-            Random random = new Random();
+            SecureRandom random = new SecureRandom();
             int[] c = {25, 60, 170};
             int i = random.nextInt(c.length);
             for (int fi = 0; fi < c.length; fi++) {

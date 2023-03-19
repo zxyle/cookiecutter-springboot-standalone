@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserPermission;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserPermissionService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * 用户-权限关联 服务实现类
  */
+@Slf4j
 @Service
 public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper, UserPermission> implements IUserPermissionService {
 
@@ -72,6 +74,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
+            log.warn("重复的映射关系: {}", entity);
             return true;
         }
         return true;

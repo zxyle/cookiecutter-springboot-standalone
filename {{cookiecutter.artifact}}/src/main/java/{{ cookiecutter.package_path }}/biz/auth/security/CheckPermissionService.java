@@ -34,7 +34,9 @@ public class CheckPermissionService {
             return false;
         }
 
-        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UsernamePasswordAuthenticationToken authentication =
+                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         Long userId = loginUser.getUser().getId();
         String key = "permissions:" + userId;

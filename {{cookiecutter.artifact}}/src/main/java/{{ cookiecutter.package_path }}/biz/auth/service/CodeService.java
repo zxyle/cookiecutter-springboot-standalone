@@ -3,9 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
-import {{ cookiecutter.basePackage }}.biz.auth.security.CaptchaProperties;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.impl.KaptchaServiceImpl;
+import {{ cookiecutter.basePackage }}.biz.sys.service.impl.PatchcaServiceImpl;
+import com.google.code.kaptcha.Producer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -21,20 +24,33 @@ public class CodeService {
     StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    CaptchaProperties captchaProperties;
+    ISettingService settingService;
 
     @Autowired
-    CaptchaService captchaService;
+    Producer captchaProducer;
 
 
     /**
      * 生成验证码
      */
     public CaptchaPair send() {
+        CaptchaService captchaService;
+        String kind = settingService.get("captcha.kind").getStr();
+        switch (kind) {
+            case "patchca":
+                captchaService = new PatchcaServiceImpl(settingService);
+                break;
+            case "kaptcha":
+            default:
+                captchaService = new KaptchaServiceImpl(captchaProducer, settingService);
+                break;
+        }
+
         CaptchaPair captchaPair = captchaService.generate();
-        String redisKey = captchaProperties.getKeyPrefix() + captchaPair.getCaptchaId();
+        String redisKey = settingService.get("captcha.key-prefix").getStr() + captchaPair.getCaptchaId();
         String code = captchaPair.getCode();
-        stringRedisTemplate.opsForValue().set(redisKey, code, captchaProperties.getAliveTime(), TimeUnit.MINUTES);
+        Integer aliveTime = settingService.get("captcha.alive-time").getIntValue();
+        stringRedisTemplate.opsForValue().set(redisKey, code, aliveTime, TimeUnit.MINUTES);
         return captchaPair;
     }
 
@@ -46,7 +62,7 @@ public class CodeService {
      * @return 校验结果 true-通过、 false-不通过
      */
     public boolean verify(String code, String captchaId) {
-        if (!captchaProperties.isOn()) {
+        if (!settingService.get("captcha.on").getBool()) {
             return true;
         }
 
@@ -54,7 +70,7 @@ public class CodeService {
             return false;
         }
 
-        String redisKey = captchaProperties.getKeyPrefix() + captchaId;
+        String redisKey = settingService.get("captcha.key-prefix").getStr() + captchaId;
         Boolean hasKey = stringRedisTemplate.hasKey(redisKey);
         if (Boolean.FALSE.equals(hasKey)) {
             return false;

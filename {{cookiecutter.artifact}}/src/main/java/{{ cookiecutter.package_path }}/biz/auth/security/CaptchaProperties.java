@@ -45,7 +45,7 @@ public class CaptchaProperties {
     /**
      * 验证码字符集(一般去掉1 l L 0 o O 易混淆字符)
      */
-    private String characters;
+    private String chars;
 
     /**
      * 高度像素

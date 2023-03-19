@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +33,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    private PasswordProperties passwordProperties;
+    ISettingService setting;
 
     @Override
     public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
@@ -51,7 +52,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         // 将权限码和角色码存入redis
         String key = "permissions:" + userId;
-        stringRedisTemplate.opsForValue().set(key, String.join(AuthConst.DELIMITER, permissions), 24, TimeUnit.HOURS);
-        return new LoginUser(permissions, user, passwordProperties);
+        String join = String.join(AuthConst.DELIMITER, permissions);
+        stringRedisTemplate.opsForValue().set(key, join, 24, TimeUnit.HOURS);
+        Integer expireDays = setting.get("pwd.expire-days").getIntValue();
+        return new LoginUser(permissions, user, expireDays);
     }
 }

@@ -3,20 +3,36 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.StringUtils;
+
 /**
- * 分页请求对象
+ * 带分页/排序/时间范围/搜索/导出请求对象
  */
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class PaginationRequest extends BaseRequest {
 
+    private static final String DEFAULT_ORDER = "asc";
+
+    private static final String DEFAULT_FIELD = "id";
+
+    private static final Integer DEFAULT_PAGE_NUM = 1;
+
+    private static final Integer DEFAULT_PAGE_SIZE = 10;
+
+    private static final Integer MAX_PAGE_SIZE = 100;
+
     /**
-     * 当前分页的编号
+     * 分页页码
      *
      * @mock 1
      */
     private Integer pageNum;
 
     /**
-     * 当前分页的编号(兼容pageNum)
+     * 分页页码，兼容pageNum
      *
      * @mock 1
      */
@@ -31,38 +47,72 @@ public class PaginationRequest extends BaseRequest {
 
     /**
      * 是否导出当前页
+     *
+     * @mock false
      */
     private boolean export;
 
+    /**
+     * 排序方式 asc/desc
+     *
+     * @mock asc
+     */
+    private String order;
+
+    /**
+     * 排序字段
+     *
+     * @mock id
+     */
+    private String field;
+
+    /**
+     * 开始时间
+     *
+     * @mock 2021-01-01 00:00:00
+     */
+    private String startTime;
+
+    /**
+     * 结束时间
+     *
+     * @mock 2021-02-01 00:00:00
+     */
+    private String endTime;
+
+    /**
+     * 搜索关键字(支持模糊查询)
+     *
+     * @mock 123
+     */
+    private String keyword;
+
+
+    /**
+     * 是否asc排序
+     */
+    public boolean isAsc() {
+        return StringUtils.isBlank(order) || order.equalsIgnoreCase(DEFAULT_ORDER);
+    }
+
+    public String getField() {
+        return StringUtils.isNotBlank(field) ? field : DEFAULT_FIELD;
+    }
+
+    /**
+     * 获取合法页码
+     */
     public Integer getPageNum() {
-        return pageNum;
+        Integer num = (current == null) ? pageNum : current;
+        return (num == null || num < 1 || num >= Integer.MAX_VALUE) ? DEFAULT_PAGE_NUM : num;
     }
 
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public Integer getCurrent() {
-        return current;
-    }
-
-    public void setCurrent(Integer current) {
-        this.current = current;
-    }
-
+    /**
+     * 获取合法分页大小
+     */
     public Integer getPageSize() {
-        return pageSize;
+        return (pageSize == null || pageSize < 1 || pageSize > MAX_PAGE_SIZE) ?
+                DEFAULT_PAGE_SIZE : pageSize;
     }
 
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public boolean isExport() {
-        return export;
-    }
-
-    public void setExport(boolean export) {
-        this.export = export;
-    }
 }

@@ -3,10 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.response.password;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * 密码复杂度响应
+ */
 @AllArgsConstructor
 @Data
 public class PasswordComplexityResponse {

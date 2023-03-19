@@ -19,6 +19,8 @@ public class AdminAddUserRequest {
 
     /**
      * 注册账号（只支持输入用户名）
+     *
+     * @mock jack
      */
     @NotBlank(message = "注册账号不能为空")
     @Length(min = 5, max = 18, message = "注册账号长度为5-18个字符")
@@ -27,6 +29,8 @@ public class AdminAddUserRequest {
 
     /**
      * 用户密码
+     *
+     * @mock lHfxoPrKOaWjSqwN
      */
     @NotBlank(message = "用户密码不能为空")
     @Length(min = 8, max = 32, message = "用户密码长度为8-32个字符")
@@ -44,6 +48,8 @@ public class AdminAddUserRequest {
 
     /**
      * 是否需要修改密码
+     *
+     * @mock false
      */
     private boolean mustChangePwd;
 

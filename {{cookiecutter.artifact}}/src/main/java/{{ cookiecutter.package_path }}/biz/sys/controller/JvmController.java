@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import cn.hutool.system.SystemUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.response.JvmResponse;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import java.lang.management.RuntimeMXBean;
 /**
  * 服务管理
  */
+@Slf4j
 @RestController
 @RequestMapping("/sys")
 public class JvmController {
@@ -29,23 +31,15 @@ public class JvmController {
     public R<JvmResponse> get() {
         JvmResponse jvmResponse = new JvmResponse();
         jvmResponse.setProcessId(getProcessID());
-        System.out.println(SystemUtil.getJvmSpecInfo());
-        System.out.println("------------------");
-        System.out.println(SystemUtil.getJvmInfo());
-        System.out.println("------------------");
-        System.out.println(SystemUtil.getJavaSpecInfo());
-        System.out.println("------------------");
-        System.out.println(SystemUtil.getJavaInfo());
-        System.out.println("------------------");
-        System.out.println(SystemUtil.getJavaRuntimeInfo());
-        System.out.println("------------------");
-        System.out.println(SystemUtil.getOsInfo());
-        System.out.println("------------------");
-        System.out.println(SystemUtil.getUserInfo());
-        System.out.println("------------------");
-        System.out.println(SystemUtil.getHostInfo());
-        System.out.println("------------------");
-        System.out.println(SystemUtil.getRuntimeInfo());
+        log.info("{}", SystemUtil.getJvmSpecInfo());
+        log.info("{}", SystemUtil.getJvmInfo());
+        log.info("{}", SystemUtil.getJavaSpecInfo());
+        log.info("{}", SystemUtil.getJavaInfo());
+        log.info("{}", SystemUtil.getJavaRuntimeInfo());
+        log.info("{}", SystemUtil.getOsInfo());
+        log.info("{}", SystemUtil.getUserInfo());
+        log.info("{}", SystemUtil.getHostInfo());
+        log.info("{}", SystemUtil.getRuntimeInfo());
         return R.ok(jvmResponse);
     }
 

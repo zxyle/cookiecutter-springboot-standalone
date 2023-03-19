@@ -12,6 +12,9 @@ import java.util.List;
  */
 public class CidrUtil {
 
+    private CidrUtil() {
+    }
+
     /**
      * 获取网段内的所有IP
      *
@@ -36,6 +39,7 @@ public class CidrUtil {
                 ipList.add(address.getHostAddress());
             }
         } catch (Exception ignored) {
+            return ipList;
         }
         return ipList;
     }
@@ -103,8 +107,8 @@ public class CidrUtil {
             long endAddress = startAddress | ((1L << (32 - prefixLength)) - 1);
             return new Long[]{startAddress, endAddress};
         } catch (Exception ignored) {
+            return new Long[]{};
         }
-        return new Long[]{};
     }
 
     /**
@@ -123,7 +127,7 @@ public class CidrUtil {
             long ipLong = iptoLong(ip);
             return ipLong >= startAddress && ipLong <= endAddress;
         } catch (Exception ignored) {
+            return false;
         }
-        return false;
     }
 }

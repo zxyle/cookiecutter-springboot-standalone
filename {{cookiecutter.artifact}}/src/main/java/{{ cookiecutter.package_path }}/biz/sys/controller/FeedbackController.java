@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Feedback;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFeedbackService;
 import {{ cookiecutter.basePackage }}.common.exception.DataNotFoundException;
-import {{ cookiecutter.basePackage }}.common.request.OrderPageRequest;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
@@ -41,10 +41,12 @@ public class FeedbackController {
      */
     @PreAuthorize("@ck.hasPermit('sys:feedback:list')")
     @GetMapping("/feedbacks")
-    public R<PageVO<Feedback>> list(@Valid OrderPageRequest request, HttpServletResponse response) throws IOException {
+    public R<PageVO<Feedback>> list(@Valid PaginationRequest request, HttpServletResponse response) throws IOException {
         QueryWrapper<Feedback> wrapper = new QueryWrapper<>();
         wrapper.orderBy(EntityUtil.getFields(Feedback.class).contains(request.getField()),
-                request.getOrder(), request.getField());
+                request.isAsc(), request.getField());
+        wrapper.ge(request.getStartTime() != null, "create_time", request.getStartTime());
+        wrapper.le(request.getEndTime() != null, "create_time", request.getEndTime());
         IPage<Feedback> page = PageRequestUtil.checkForMp(request);
         IPage<Feedback> list = thisService.pageQuery(page, wrapper);
 
@@ -104,27 +106,10 @@ public class FeedbackController {
         return success ? R.ok("删除成功") : R.fail("删除失败");
     }
 
-    /**
-     * 回复意见反馈
-     */
-    @PreAuthorize("@ck.hasPermit('sys:feedback:reply')")
-    @PutMapping("/feedbacks/{id}/reply")
-    public R<Object> reply(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
-        entity.setId(id);
-        // TODO 使用邮件发送回复内容
-        // boolean success = thisService.reply(entity);
-        boolean success = true;
-        if (success) {
-            return R.ok("回复成功");
-        }
-        return R.fail("回复失败");
-    }
-
     public void checkId(Long id) {
         Feedback entity = thisService.getById(id);
         if (entity == null) {
             throw new DataNotFoundException("数据不存在: " + id);
         }
     }
-
 }

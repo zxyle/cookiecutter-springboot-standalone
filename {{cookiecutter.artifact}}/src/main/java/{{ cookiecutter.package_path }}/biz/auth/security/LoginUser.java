@@ -32,7 +32,7 @@ public class LoginUser implements UserDetails {
     /**
      * 密码配置信息
      */
-    private PasswordProperties passwordProperties;
+    private Integer expireDays;
 
     public void setUser(User user) {
         this.user = user;
@@ -88,12 +88,12 @@ public class LoginUser implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         // 判断该时间与当前时间的差距，是否大于阈值，-1代表不限制
-        if (passwordProperties.getExpireDays() == -1) {
+        if (expireDays == -1) {
             return true;
         }
 
         Duration duration = Duration.between(user.getPwdChangeTime(), LocalDateTime.now());
-        return duration.toDays() < passwordProperties.getExpireDays();
+        return duration.toDays() < expireDays;
     }
 
     /**

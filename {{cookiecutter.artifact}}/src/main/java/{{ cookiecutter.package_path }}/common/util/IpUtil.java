@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.common.util;
 
-import cn.hutool.core.util.StrUtil;
 import {{ cookiecutter.basePackage }}.common.constant.ProjectConst;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 public class IpUtil {
 
     private IpUtil() {
-
     }
 
     private static final Logger logger = LoggerFactory.getLogger(IpUtil.class);
@@ -43,15 +42,15 @@ public class IpUtil {
         String ip = LOCAL_IP;
         if (request != null) {
             ip = request.getHeader("x-forwarded-for");
-            if (StrUtil.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+            if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
                 ip = request.getHeader("Proxy-Client-IP");
             }
 
-            if (StrUtil.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+            if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
                 ip = request.getHeader("WL-Proxy-Client-IP");
             }
 
-            if (StrUtil.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+            if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
                 ip = request.getRemoteAddr();
             }
         }

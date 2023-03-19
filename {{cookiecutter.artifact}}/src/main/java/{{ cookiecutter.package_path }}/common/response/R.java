@@ -7,19 +7,23 @@ import lombok.Data;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
+
 /**
  * 通用响应结果
  */
 @Data
-public class R<T> {
+public class R<T> implements Serializable {
 
-    public static final String SUCCESS_MSG = "操作成功";
+    private static final long serialVersionUID = 1L;
 
-    public static final String FAILURE_MSG = "操作失败";
+    private static final String SUCCESS_MSG = "操作成功";
+
+    private static final String FAILURE_MSG = "操作失败";
 
 
     /**
-     * 状态码
+     * 业务状态码
      *
      * @mock 200
      */
@@ -42,7 +46,7 @@ public class R<T> {
     /**
      * 数据体
      */
-    private Object data;
+    private T data;
 
     /**
      * 请求追踪ID

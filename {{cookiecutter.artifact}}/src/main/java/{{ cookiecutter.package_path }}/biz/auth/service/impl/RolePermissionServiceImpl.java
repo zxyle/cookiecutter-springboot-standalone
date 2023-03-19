@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.RolePermission;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.RolePermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IRolePermissionService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * 角色权限信息 服务实现类
  */
+@Slf4j
 @Service
 public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper, RolePermission> implements IRolePermissionService {
 
@@ -72,6 +74,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
         try {
             save(entity);
         } catch (DuplicateKeyException ignored) {
+            log.warn("重复的RolePermission映射关系");
             return true;
         }
         return true;

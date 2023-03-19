@@ -4,20 +4,20 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.R;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.prepost.PreAuthorize;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Setting;
+import {{ cookiecutter.basePackage }}.biz.sys.response.Item;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
-import org.springframework.web.bind.annotation.RestController;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
+import {{ cookiecutter.basePackage }}.common.response.PageVO;
+import {{ cookiecutter.basePackage }}.common.response.R;
+import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 /**
- * 系统设置
+ * 系统设置管理
  */
 @RestController
 @RequestMapping("/sys")
@@ -69,8 +69,10 @@ public class SettingController {
     @PutMapping("/settings/{id}")
     public R<Object> update(@Valid @RequestBody Setting entity, @PathVariable Long id) {
         entity.setId(id);
-        boolean success = thisService.updateById(entity);
-        return success ? R.ok("更新成功") : R.fail("更新失败");
+        Setting setting = thisService.getById(id);
+        String optionValue = entity.getOptionValue();
+        Item item = thisService.update(setting.getOptionLabel(), optionValue);
+        return item != null ? R.ok("更新成功") : R.fail("更新失败");
     }
 
     /**

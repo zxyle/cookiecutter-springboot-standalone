@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+/**
+ * 角色信息响应
+ */
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class RoleResponse extends Role {

@@ -23,7 +23,9 @@ import java.util.Map;
 public class ProxyFilter  extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
         // 识别请求使用了IP代理
         Map<String, String> map = new HashMap<>();
         map.put("Proxy-Client-IP", request.getHeader("Proxy-Client-IP"));

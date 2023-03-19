@@ -5,9 +5,9 @@ package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
 import cn.hutool.http.HttpRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.response.DingTalkResponse;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.MonitoringAlarmService;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
@@ -18,11 +18,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class DingTalkAlarmServiceImpl implements MonitoringAlarmService {
 
-    @Value("${dingtalk.access-token}")
-    private String accessToken;
+    ISettingService setting;
+
+    public DingTalkAlarmServiceImpl(ISettingService setting) {
+        this.setting = setting;
+    }
 
     @Override
     public boolean sendAlarm(String msg) {
+        String accessToken = setting.get("dingtalk.access-token").getStr();
         String content = "{\"msgtype\": \"text\",\"text\": {\"content\":" + "\"" + msg + "\"}}";
         String result = HttpRequest.post("https://oapi.dingtalk.com/robot/send?access_token=" + accessToken)
                 .body(content)

@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.security;
 
-import cn.hutool.core.util.StrUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -83,8 +83,8 @@ public class WildcardPermission {
      * @return 完整权限通配符
      */
     private String padding(String wildcard) {
-        int countDelimiter = StrUtil.count(wildcard, DELIMITER);
-        return wildcard + StrUtil.repeat(DELIMITER, (level - countDelimiter - 1));
+        int countDelimiter = StringUtils.countMatches(wildcard, DELIMITER);
+        return wildcard + StringUtils.repeat(DELIMITER, (level - countDelimiter - 1));
     }
 
     /**
@@ -96,7 +96,7 @@ public class WildcardPermission {
         WildcardPermission wp = new WildcardPermission();
         String[] strings = padding(wildcard).split(DELIMITER, -1);
         wp.setParts(Arrays.stream(strings)
-                .map(part -> StrUtil.isEmpty(part) ? ASTERISK : part).toArray(String[]::new));
+                .map(part -> StringUtils.isEmpty(part) ? ASTERISK : part).toArray(String[]::new));
         return wp;
     }
 
@@ -108,11 +108,11 @@ public class WildcardPermission {
      * @return true-有权限 false-无权限
      */
     public boolean isPermit(String permission, List<String> permissionPatterns) {
-        if (CollectionUtils.isEmpty(permissionPatterns) || StrUtil.isEmpty(permission))
+        if (CollectionUtils.isEmpty(permissionPatterns) || StringUtils.isEmpty(permission))
             return false;
 
         for (String p : permissionPatterns) {
-            if (StrUtil.isBlank(p)) continue;
+            if (StringUtils.isBlank(p)) continue;
 
             if (format(p).isAllowed(permission)) {
                 return true;

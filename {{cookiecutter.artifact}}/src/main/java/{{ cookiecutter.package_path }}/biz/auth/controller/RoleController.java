@@ -60,7 +60,8 @@ public class RoleController extends AuthBaseController {
         IPage<Role> page = PageRequestUtil.checkForMp(request);
         IPage<Role> list = thisService.page(page, wrapper);
         List<RoleResponse> roles = list.getRecords().stream()
-                .map(role -> thisService.attachRoleInfo(role, request.isFull())).collect(Collectors.toList());
+                .map(role -> thisService.attachRoleInfo(role, request.isFull()))
+                .collect(Collectors.toList());
         return R.ok(new PageVO<>(roles, list.getTotal()));
     }
 

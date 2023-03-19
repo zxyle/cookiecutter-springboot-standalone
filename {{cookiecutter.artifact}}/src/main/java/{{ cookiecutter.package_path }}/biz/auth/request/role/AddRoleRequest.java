@@ -17,6 +17,8 @@ public class AddRoleRequest {
 
     /**
      * 角色名称
+     *
+     * @mock 管理员
      */
     @Length(max = 16, message = "角色名称长度不能超过16个字符")
     @NotBlank(message = "角色名称不能为空")
@@ -24,12 +26,16 @@ public class AddRoleRequest {
 
     /**
      * 角色代码
+     *
+     * @mock admin
      */
     @Length(max = 32, message = "角色代码长度不能超过32个字符")
     private String code;
 
     /**
      * 描述信息
+     *
+     * @mock 管理员
      */
     @Length(max = 64, message = "描述信息长度不能超过64个字符")
     private String description;

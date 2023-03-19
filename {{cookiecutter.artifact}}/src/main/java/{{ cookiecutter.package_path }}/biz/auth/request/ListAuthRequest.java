@@ -12,11 +12,6 @@ import lombok.EqualsAndHashCode;
 public class ListAuthRequest extends PaginationRequest {
 
     /**
-     * 查询关键词(支持模糊查询)
-     */
-    private String keyword;
-
-    /**
      * 账号可用 1-启用 0-禁用
      */
     private Integer enabled;

@@ -4,22 +4,21 @@
 package {{ cookiecutter.basePackage }}.common.util;
 
 import cn.hutool.core.util.StrUtil;
-import {{ cookiecutter.basePackage }}.biz.sys.entity.Feedback;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * 实体类工具类
+ */
 public class EntityUtil {
 
-    public static final List<String> DEFAULT_COLUMNS = Arrays.asList("id", "create_time", "update_time");
-
-    public static void main(String[] args) {
-        List<String> fields = getFields(Feedback.class);
-        System.out.println(fields);
+    private EntityUtil() {
     }
+
+    private static final List<String> DEFAULT_COLUMNS = Arrays.asList("id", "create_time", "update_time");
 
     /**
      * 获取实体类的所有属性

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 用户信息管理
+ * 用户资料管理
  */
 @RestController
 @RequestMapping("/auth")
@@ -34,7 +34,7 @@ public class ProfileController extends AuthBaseController {
 
 
     /**
-     * 获取当前用户信息
+     * 获取当前用户资料
      */
     @LogOperation("获取当前用户信息")
     @PreAuthorize("@ck.hasPermit('auth:profile:get')")
@@ -45,7 +45,7 @@ public class ProfileController extends AuthBaseController {
     }
 
     /**
-     * 更新当前用户信息
+     * 更新当前用户资料
      */
     @LogOperation("更新当前用户信息")
     @PreAuthorize("@ck.hasPermit('auth:profile:update')")

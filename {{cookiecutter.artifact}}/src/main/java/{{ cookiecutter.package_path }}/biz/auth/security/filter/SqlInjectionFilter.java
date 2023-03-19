@@ -23,17 +23,17 @@ import java.util.List;
 public class SqlInjectionFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
         String[] sqlInj = {"select", "insert", "update", "delete", "drop", "truncate", "alter", "create", "exec",
-                "execute", "declare", "call", "count", "master", "truncate", "char", "declare", "sitename",
-                "net user", "xp_cmdshell", "exec master", "netlocalgroup administrators", "or",
-                "and", "exec", "insert", "select", "delete", "update", "count", "chr", "mid",
-                "master", "truncate", "char", "declare", "or", "and"};
+                "execute", "declare", "call", "count", "master", "char", "sitename", "and", "chr", "mid",
+                "net user", "xp_cmdshell", "exec master", "netlocalgroup administrators"};
         List<String> sqlInjList = Arrays.asList(sqlInj);
         String url = request.getRequestURI();
         String method = request.getMethod();
         String queryString = request.getQueryString();
-        // TODO 无法读取到请求体中的数据, 读取完之后，就无法再读取了，导致controller 报错 request body missing
+        // 无法读取到请求体中的数据, 读取完之后，就无法再读取了，导致controller 报错 request body missing
 
         if (sqlInjList.stream().anyMatch(url::contains) ||
                 (StringUtils.isNotBlank(queryString) && sqlInjList.stream().anyMatch(queryString::contains))

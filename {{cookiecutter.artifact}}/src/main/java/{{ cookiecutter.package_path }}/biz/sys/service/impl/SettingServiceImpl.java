@@ -3,12 +3,16 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Setting;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.SettingMapper;
+import {{ cookiecutter.basePackage }}.biz.sys.response.Item;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +22,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> implements ISettingService {
+
+    private static final String LABEL = "option_label";
+
+    private static final String VALUE = "option_value";
 
     /**
      * 按ID查询
@@ -37,4 +45,38 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
         return page(p);
     }
 
+    /**
+     * 按名称查询
+     *
+     * @param label 选项名称
+     */
+    @Cacheable(cacheNames = "SettingCache", key = "#label", cacheManager = "neverExpireCacheManager")
+    @Override
+    public Item get(String label) {
+        QueryWrapper<Setting> wrapper = new QueryWrapper<>();
+        wrapper.select(LABEL, VALUE, "data_type");
+        wrapper.eq(LABEL, label);
+        Setting one = getOne(wrapper);
+        if (one != null) {
+            return new Item(one);
+        }
+        return null;
+    }
+
+    @CachePut(cacheNames = "SettingCache", key = "#label", cacheManager = "neverExpireCacheManager")
+    @Override
+    public Item update(String label, String value) {
+        UpdateWrapper<Setting> wrapper = new UpdateWrapper<>();
+        wrapper.eq(LABEL, label);
+        wrapper.set(VALUE, value);
+        boolean update = update(wrapper);
+        if (update) {
+            QueryWrapper<Setting> wrapper2 = new QueryWrapper<>();
+            wrapper2.select(LABEL, VALUE, "data_type");
+            wrapper2.eq(LABEL, label);
+            Setting one = getOne(wrapper2);
+            return new Item(one);
+        }
+        return null;
+    }
 }

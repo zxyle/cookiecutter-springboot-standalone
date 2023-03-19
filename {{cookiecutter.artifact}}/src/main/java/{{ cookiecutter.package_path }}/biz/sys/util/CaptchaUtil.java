@@ -3,9 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.util;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 public class CaptchaUtil {
+
+    private CaptchaUtil() {
+    }
 
     public static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
     public static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -48,7 +51,7 @@ public class CaptchaUtil {
     public static String randCode(int len, String chars) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < len; i++) {
-            Random random = new Random();
+            SecureRandom random = new SecureRandom();
             int no = random.nextInt(chars.length());
             builder.append(chars.charAt(no));
 

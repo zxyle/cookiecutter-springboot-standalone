@@ -8,13 +8,17 @@ package {{ cookiecutter.basePackage }}.common.constant;
  */
 public class RegexConst {
 
+    private RegexConst() {
+    }
+
     public static final String REGEX_MOBILE = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$";
 
     public static final String REGEX_EMAIL = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
 
     public static final String REGEX_TEL = "^(\\d{3,4}-)?\\d{7,8}$";
 
-    public static final String REGEX_QQ = "^[1-9]\\d{4,10}$";
+    // QQ号从10000开始，最长不超过10位
+    public static final String REGEX_QQ = "^[1-9]\\d{4,9}$";
 
     public static final String REGEX_IDCARD = "^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$";
 

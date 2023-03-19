@@ -3,16 +3,16 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
-import {{ cookiecutter.basePackage }}.biz.auth.entity.Profile;
 import com.baomidou.mybatisplus.extension.service.IService;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Profile;
 
 /**
- * 用户信息 服务类
+ * 用户资料 服务类
  */
 public interface IProfileService extends IService<Profile> {
 
     /**
-     * 按ID查询信息
+     * 按ID查询资料
      *
      * @param userId 用户ID
      */
@@ -20,13 +20,17 @@ public interface IProfileService extends IService<Profile> {
 
 
     /**
-     * 更新用户信息
+     * 更新用户资料
      *
-     * @param profile 用户信息
+     * @param profile 用户资料
      */
     Profile updateProfile(Profile profile);
 
-    // 删除用户资料
+    /**
+     * 删除用户资料
+     *
+     * @param userId 用户ID
+     */
     boolean delete(Long userId);
 
 }
