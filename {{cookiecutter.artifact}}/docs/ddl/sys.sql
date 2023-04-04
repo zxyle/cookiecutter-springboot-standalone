@@ -679,11 +679,12 @@ INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `descrip
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.auto-login', 'true', 'java.lang.Boolean', '注册后是否自动登录', 'true');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.default-role', '3', 'java.lang.Long', '注册后默认角色ID', '3');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('auth.user.reset', 'false', 'java.lang.Boolean', '初次登录后是否需修改密码', 'false');
-INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.host', 'smtp.163.com', 'java.lang.String', NULL, 'smtp.163.com');
-INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.port', '465', 'java.lang.Integer', NULL, '465');
-INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.username', 'xxx@163.com', 'java.lang.String', NULL, 'xxx@163.com');
-INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.password', 'xxx', 'java.lang.String', NULL, 'xxx');
-INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.properties.mail.smtp.ssl.enable', 'true', 'java.lang.Boolean', NULL, 'true');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.protocol', 'smtp', 'java.lang.String', '发送邮件所使用的协议smtp或smtps', 'smtp');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.host', 'smtp.163.com', 'java.lang.String', '邮件服务器地址', 'smtp.163.com');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.port', '465', 'java.lang.Integer', '邮件服务器端口', '465');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.username', 'xxx@163.com', 'java.lang.String', '邮件发送账户', 'xxx@163.com');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.password', 'xxx', 'java.lang.String', '邮件发送账户密码或授权码', 'xxx');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('spring.mail.properties.mail.smtp.ssl.enable', 'true', 'java.lang.Boolean', '是否启用 SMTP SSL', 'true');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('dingtalk.access-token', 'PLEASE-REPLACE-ACCESS-TOKEN', 'java.lang.String', '钉钉告警token', 'PLEASE-REPLACE-ACCESS-TOKEN');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.name', 'XXX管理系统', 'java.lang.String', '系统名称', 'XXX管理系统');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.icp', '浙ICP备0000号', 'java.lang.String', '备案号', '浙ICP备0000号');

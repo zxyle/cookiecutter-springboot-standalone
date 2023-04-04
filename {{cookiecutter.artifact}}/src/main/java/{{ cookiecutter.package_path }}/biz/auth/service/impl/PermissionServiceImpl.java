@@ -168,7 +168,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Async
     @Override
     public void refreshPermissions(Long userId) {
-        String key = "permissions:" + userId;
+        String key = AuthConst.KEY_PREFIX + userId;
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         // 只对已登录用户进行权限刷新
         if (Boolean.TRUE.equals(hasKey)) {
@@ -188,7 +188,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public List<Long> holdPermission(String code) {
         List<Long> users = new ArrayList<>();
 
-        Set<String> keys = stringRedisTemplate.keys("permissions:");
+        Set<String> keys = stringRedisTemplate.keys(AuthConst.KEY_PREFIX);
         if (null == keys)
             return users;
 

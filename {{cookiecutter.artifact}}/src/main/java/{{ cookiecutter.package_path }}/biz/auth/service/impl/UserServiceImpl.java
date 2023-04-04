@@ -92,7 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     // 下线用户
     @Override
     public boolean kick(Long userId) {
-        String key = "permissions:" + userId;
+        String key = AuthConst.KEY_PREFIX + userId;
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         if (hasKey == null || !hasKey) {
             // 用户可能没有登录或登录已过期

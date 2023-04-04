@@ -39,7 +39,7 @@ public class CheckPermissionService {
 
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         Long userId = loginUser.getUser().getId();
-        String key = "permissions:" + userId;
+        String key = AuthConst.KEY_PREFIX + userId;
         String value = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isBlank(value))
             return false;

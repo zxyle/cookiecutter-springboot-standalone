@@ -15,12 +15,12 @@ import javax.validation.constraints.Positive;
 public class MigrateGroupRequest {
 
     /**
-     * 新用户组ID
+     * 目标用户组ID
      *
      * @mock 1
      */
-    @Positive(message = "新用户组ID必须为正整数")
-    @NotNull(message = "新用户组ID不能为空")
+    @Positive(message = "目标用户组ID必须为正整数")
+    @NotNull(message = "目标用户组ID不能为空")
     private Long parentId;
 
     /**

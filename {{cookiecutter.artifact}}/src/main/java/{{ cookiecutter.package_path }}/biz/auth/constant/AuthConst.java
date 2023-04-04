@@ -20,6 +20,9 @@ public class AuthConst {
 
     public static final String DELIMITER = ",";
 
+    // 权限缓存key前缀
+    public static final String KEY_PREFIX = "permissions:";
+
     // 不可用
     public static final int DISABLED = 0;
 

@@ -163,13 +163,13 @@ public class GroupController extends AuthBaseController {
     }
 
     /**
-     * 用户组迁移
+     * 移动用户组
      */
     @PreAuthorize("@ck.hasPermit('auth:groups:migrate')")
     @PostMapping("/groups/migrate")
     public R<Object> migrate(@Valid @RequestBody MigrateGroupRequest request) {
         if (!isSubGroup(request.getParentId()) || !isSubGroup(request.getCurrentId())) {
-            return R.fail("无权限移动到该用户组");
+            return R.fail("无权限移动到该用户组下");
         }
 
         Group group = new Group();

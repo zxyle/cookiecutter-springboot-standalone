@@ -57,7 +57,7 @@ public class ${table.controllerName} {
     public R<PageVO<${entity}>> page(@Valid PaginationRequest request, HttpServletResponse response) throws IOException {
         QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
         wrapper.orderBy(EntityUtil.getFields(${entity}.class).contains(request.getField()),
-                request.getOrder(), request.getField());
+                request.isAsc(), request.getField());
         IPage<${entity}> page = PageRequestUtil.checkForMp(request);
         IPage<${entity}> list = thisService.pageQuery(page, wrapper);
 
@@ -79,12 +79,12 @@ public class ${table.controllerName} {
      * ${table.comment!}列表查询
      */
     // 当数据量不大时，需要查出全部数据，可以使用此接口，不需要可以删除
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
-    @GetMapping("/${table.entityPath}s")
-    public R<List<${entity}>> list() {
-        QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
-        return R.ok(thisService.list(wrapper));
-    }
+    // @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
+    // @GetMapping("/${table.entityPath}s")
+    // public R<List<${entity}>> list() {
+        // QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
+        // return R.ok(thisService.list(wrapper));
+    // }
 
 
     /**

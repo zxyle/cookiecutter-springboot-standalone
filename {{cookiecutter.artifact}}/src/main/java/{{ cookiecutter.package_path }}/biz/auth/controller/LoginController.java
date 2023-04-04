@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
+import {{ cookiecutter.basePackage }}.biz.auth.request.login.CodeLoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.LoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
@@ -43,10 +44,7 @@ public class LoginController extends AuthBaseController {
 
 
     /**
-     * 用户登录
-     *
-     * @param request 用户信息
-     * @apiNote 通过用户名/邮箱/手机号和密码进行用户登录
+     * 用户名/邮箱/手机号 + 密码登录
      */
     @PostMapping("/login")
     public R<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest servletRequest) {
@@ -66,6 +64,17 @@ public class LoginController extends AuthBaseController {
 
         afterLogin(response.getUserId());
         return R.ok(response);
+    }
+
+
+    /**
+     * 邮箱/手机号 + 验证码登录
+     */
+    @PostMapping("/loginByCode")
+    public R<LoginResponse> loginByCode(@Valid @RequestBody CodeLoginRequest request) {
+        // 登录逻辑直接走Filter即可，无需在这里实现
+        log.debug("account: {}, code: {}", request.getAccount(), request.getCode());
+        return R.ok(null);
     }
 
     /**

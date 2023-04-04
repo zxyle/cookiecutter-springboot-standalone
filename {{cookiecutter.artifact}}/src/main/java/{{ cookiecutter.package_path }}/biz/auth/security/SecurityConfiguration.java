@@ -6,7 +6,8 @@ package {{ cookiecutter.basePackage }}.biz.auth.security;
 import {{ cookiecutter.basePackage }}.biz.auth.security.filter.AntiSpiderFilter;
 import {{ cookiecutter.basePackage }}.biz.auth.security.filter.IpFilter;
 import {{ cookiecutter.basePackage }}.biz.auth.security.filter.JwtAuthenticationTokenFilter;
-import {{ cookiecutter.basePackage }}.biz.auth.security.filter.SqlInjectionFilter;
+import {{ cookiecutter.basePackage }}.biz.auth.security.mobile.SmsSecurityConfigurerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,23 +34,22 @@ public class SecurityConfiguration {
 
     IpFilter ipFilter;
 
-    SqlInjectionFilter sqlInjectionFilter;
-
     JwtAuthenticationTokenFilter tokenFilter;
 
     AuthenticationEntryPoint authenticationEntryPoint;
 
     AccessDeniedHandler accessDeniedHandler;
 
+    @Autowired
+    SmsSecurityConfigurerAdapter smsSecurityConfigurerAdapter;
+
     public SecurityConfiguration(JwtAuthenticationTokenFilter tokenFilter, AuthenticationEntryPoint authenticationEntryPoint,
-                                 AccessDeniedHandler accessDeniedHandler, AntiSpiderFilter antiSpiderFilter, IpFilter ipFilter,
-                                 SqlInjectionFilter sqlInjectionFilter) {
+                                 AccessDeniedHandler accessDeniedHandler, AntiSpiderFilter antiSpiderFilter, IpFilter ipFilter) {
         this.tokenFilter = tokenFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
         this.antiSpiderFilter = antiSpiderFilter;
         this.ipFilter = ipFilter;
-        this.sqlInjectionFilter = sqlInjectionFilter;
     }
 
     @Bean
@@ -67,19 +67,19 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
                 .antMatchers("/auth/user/login", "/sys/friendly/urls").anonymous()
-                .antMatchers("/sys/dicts/**", "/sys/area/**", "/file/**", "/sys/infos", "/auth/user/register",
+                .antMatchers("/auth/sdk/**", "/sys/dicts/**", "/sys/area/**", "/file/**", "/sys/infos", "/auth/user/register",
                         "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers",
                         "/getPublicKey").permitAll()
 
                 // 除上述请求 全部需要鉴权认证
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and().apply(smsSecurityConfigurerAdapter);
 
 
         // 添加过滤器
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(ipFilter, JwtAuthenticationTokenFilter.class);
         http.addFilterBefore(antiSpiderFilter, IpFilter.class);
-        http.addFilterAfter(sqlInjectionFilter, AntiSpiderFilter.class);
 
         // 配置异常处理器
         http.exceptionHandling()

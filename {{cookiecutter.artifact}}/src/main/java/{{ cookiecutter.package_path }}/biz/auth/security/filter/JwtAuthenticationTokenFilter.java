@@ -47,23 +47,20 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 从Authorization头部中获取JWT令牌
-        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.isBlank(authorizationHeader) || !authorizationHeader.startsWith("Bearer ")) {
-            return;
-        }
-
-        String jwt = authorizationHeader.substring(7);
-        if (StringUtils.isBlank(jwt) || request.getServletPath().equals("/auth/user/login")) {
+        // 获取token, 不存在则放行
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.isBlank(token) || request.getServletPath().equals("/auth/user/login")) {
             SecurityContextHolder.clearContext();
             filterChain.doFilter(request, response);
             return;
         }
 
+        token = token.substring(7);
+
         // 解析jwt, 解析失败则放行
         String userId;
         try {
-            Claims claims = JwtUtil.parseJWT(jwt);
+            Claims claims = JwtUtil.parseJWT(token);
             userId = claims.getSubject();
         } catch (Exception ignored) {
             filterChain.doFilter(request, response);
@@ -71,7 +68,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
 
         // 从redis中获取用户权限信息(根据放在jwt的用户id)
-        String key = "permissions:" + userId;
+        String key = AuthConst.KEY_PREFIX + userId;
         List<String> permissions;
         String value = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isBlank(value)) {

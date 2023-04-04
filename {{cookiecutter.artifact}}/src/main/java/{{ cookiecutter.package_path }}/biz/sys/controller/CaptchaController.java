@@ -120,7 +120,7 @@ public class CaptchaController {
         }
 
         if (!codeService.verify(request.getCode(), request.getCaptchaId())) {
-            return R.fail("验证码错误");
+            return R.fail("图形验证码错误");
         }
 
         if (isLocked(account)) {
