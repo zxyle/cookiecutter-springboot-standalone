@@ -5,21 +5,21 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.7</version>
+        <version>{{ cookiecutter.bootVersion }}</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>freeway-api</artifactId>
-    <version>1.0.0</version>
-    <name>freeway-api</name>
-    <description>An awesome project.</description>
+    <groupId>{{ cookiecutter.group }}</groupId>
+    <artifactId>{{ cookiecutter.artifact }}</artifactId>
+    <version>{{ cookiecutter.version }}</version>
+    <name>{{ cookiecutter.artifact }}</name>
+    <description>{{ cookiecutter.project_short_description }}</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <argLine>-Dfile.encoding=UTF-8</argLine>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <maven.compiler.compilerVersion>8</maven.compiler.compilerVersion>
-        <java.version>8</java.version>
+        <maven.compiler.source>{{ cookiecutter.javaVersion }}</maven.compiler.source>
+        <maven.compiler.target>{{ cookiecutter.javaVersion }}</maven.compiler.target>
+        <maven.compiler.compilerVersion>{{ cookiecutter.javaVersion }}</maven.compiler.compilerVersion>
+        <java.version>{{ cookiecutter.javaVersion }}</java.version>
     </properties>
 
     <dependencies>
@@ -190,7 +190,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <!--项目的启动类-->
-                    <mainClass>{{ cookiecutter.basePackage }}.FreewayApiApplication</mainClass>
+                    <mainClass>{{ cookiecutter.basePackage }}.{{ cookiecutter.app_name }}Application</mainClass>
                     <!--解决windows命令行窗口中文乱码-->
                     <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
                     <layout>ZIP</layout>
