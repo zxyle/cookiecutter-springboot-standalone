@@ -35,8 +35,8 @@ CREATE TABLE `auth_group_permission` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
   `permission_id` bigint unsigned NOT NULL COMMENT '权限ID',
- `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '注释',
- PRIMARY KEY (`id`) USING BTREE,
+  `remark` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '注释',
+  PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_group_id_permission_id` (`group_id`,`permission_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户组权限';
 
@@ -363,8 +363,8 @@ CREATE TABLE `auth_user` (
   `email` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '邮箱地址',
   `pwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
   `nickname` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '昵称/名字/真实姓名（只用于展示）',
-  `locked` tinyint NOT NULL DEFAULT '0' COMMENT '账号是否锁定 （1-上锁 0-未锁）',
-  `is_super` tinyint NOT NULL DEFAULT '0' COMMENT '超级管理员',
+  `locked` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '账号是否锁定 （1-上锁 0-未锁）',
+  `is_super` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否为超级管理员',
   `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
   `pwd_change_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '密码上次修改时间',
   `enabled` tinyint unsigned NOT NULL DEFAULT '1' COMMENT '账号可用 1-启用 0-禁用',
