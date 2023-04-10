@@ -50,9 +50,7 @@ public class LoginController extends AuthBaseController {
     public R<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest servletRequest) {
         log.debug("用户登录：{}", servletRequest.getRequestURI());
         R<LoginResponse> beforeLoginResponse = beforeLogin(request);
-        if (beforeLoginResponse != null) {
-            return beforeLoginResponse;
-        }
+        if (beforeLoginResponse != null) return beforeLoginResponse;
 
         LoginResponse response = loginService.login(request.getAccount(), request.getPassword());
 
