@@ -16,10 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -84,9 +81,8 @@ public class SdkController {
      */
     @PostMapping("/allowed")
     public boolean allowed(@Valid @RequestBody SdkRequest request) {
-        if (!before(request)) {
-            return false;
-        }
+        // TODO 记录日志
+        if (!before(request)) return false;
 
         String permission = request.getPermission();
         String userId = parseUserId(request.getToken());
@@ -99,6 +95,22 @@ public class SdkController {
         boolean result = wildcardPermission.isPermit(permission, patterns);
         log.info("permission: " + permission + ", result: " + result);
         return result;
+    }
+
+    /**
+     * 获取权限列表
+     */
+    @GetMapping("/permissions")
+    public List<String> permissions(@Valid @RequestBody SdkRequest request) {
+        if (!before(request)) return null;
+
+        String userId = parseUserId(request.getToken());
+        String key = AuthConst.KEY_PREFIX + userId;
+        String value = stringRedisTemplate.opsForValue().get(key);
+        if (StringUtils.isBlank(value))
+            return null;
+
+        return Arrays.asList(value.split(AuthConst.DELIMITER));
     }
 
     public String parseUserId(String token) {

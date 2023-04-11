@@ -72,7 +72,8 @@ public class UserController extends AuthBaseController {
 
         // 增加角色和组信息
         List<UserResponse> userResponses = list.getRecords().stream()
-                .map(user -> thisService.attachUserInfo(user, request.isFull())).collect(Collectors.toList());
+                .map(user -> thisService.attachUserInfo(user, request.isFull()))
+                .collect(Collectors.toList());
         return R.ok(new PageVO<>(userResponses, list.getTotal()));
     }
 
