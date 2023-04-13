@@ -15,13 +15,8 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -33,7 +28,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestController
 @RequestMapping("/auth/user")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class LoginController extends AuthBaseController {
 
     final IUserService userService;
@@ -54,13 +49,7 @@ public class LoginController extends AuthBaseController {
 
         LoginResponse response = loginService.login(request.getAccount(), request.getPassword());
 
-        // 用户初次登录后，需要在24小时内修改密码，否则到期后无法登录
-        if (response.isMustChangePwd()) {
-            response.setMustChangePwd(true);
-            userService.markExpired(response.getUserId(), LocalDateTime.now().plusHours(24));
-        }
-
-        afterLogin(response.getUserId());
+        afterLogin(response);
         return R.ok(response);
     }
 
@@ -79,7 +68,6 @@ public class LoginController extends AuthBaseController {
      * 退出登录
      */
     @LogOperation("退出登录")
-    @PreAuthorize("@ck.hasPermit('auth:user:logout')")
     @PostMapping("/logout")
     public R<Object> logout() {
         boolean success = loginService.logout(getUserId());
@@ -102,10 +90,16 @@ public class LoginController extends AuthBaseController {
      * 登录后操作
      */
     @Async
-    public void afterLogin(Long userId) {
+    public void afterLogin(LoginResponse response) {
+        // 用户初次登录后，需要在24小时内修改密码，否则到期后无法登录
+        if (response.isMustChangePwd()) {
+            response.setMustChangePwd(true);
+            userService.markExpired(response.getUserId(), LocalDateTime.now().plusHours(24));
+        }
+
         // 更新用户最后登录时间
         User user = new User();
-        user.setId(userId);
+        user.setId(response.getUserId());
         user.setLastLoginTime(LocalDateTime.now());
         userService.updateById(user);
     }

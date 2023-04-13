@@ -7,10 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
-import {{ cookiecutter.basePackage }}.biz.auth.request.password.ChangeByOldRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.request.password.ForgetRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.request.password.RandomRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.request.password.ResetPasswordRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.password.*;
 import {{ cookiecutter.basePackage }}.biz.auth.response.password.PasswordComplexityResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.response.password.ResetPasswordResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordService;
@@ -23,6 +20,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -30,9 +28,10 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,29 +41,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/auth/password")
 @Slf4j
+@RequiredArgsConstructor
 public class PasswordController extends AuthBaseController {
 
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
+    final StringRedisTemplate stringRedisTemplate;
 
-    IUserService userService;
+    final IUserService userService;
 
-    ISettingService setting;
+    final ISettingService setting;
 
-    IPasswordService thisService;
+    final IPasswordService thisService;
 
-    LoginService loginService;
+    final LoginService loginService;
 
-    ValidateService validateService;
-
-    public PasswordController(LoginService loginService, IPasswordService thisService, ISettingService setting,
-                              IUserService userService, ValidateService validateService) {
-        this.loginService = loginService;
-        this.thisService = thisService;
-        this.setting = setting;
-        this.userService = userService;
-        this.validateService = validateService;
-    }
+    final ValidateService validateService;
 
     /**
      * 使用旧密码方式修改密码
@@ -77,7 +67,7 @@ public class PasswordController extends AuthBaseController {
         if (thisService.isRight(request.getOldPassword(), user.getPwd())) {
             // 判断新密码是否和旧密码一致
             if (!setting.get("pwd.enable-same").getBool() && thisService.isRight(request.getNewPassword(), user.getPwd())) {
-                return R.fail("修改失败，新密码不能和旧密码一致");
+                return R.fail("修改失败，密码不符合规则");
             }
 
             boolean success = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.CHANGE);
@@ -159,6 +149,24 @@ public class PasswordController extends AuthBaseController {
             return R.ok(new ResetPasswordResponse(rawPassword));
         }
         return R.fail("重置密码失败");
+    }
+
+
+    /**
+     * 初次登录后修改密码
+     */
+    @PostMapping("/init")
+    public R<Object> init(@RequestBody InitPasswordRequest request) {
+        User user = getLoggedInUser();
+
+        // 初次登录，最后登录时间在1分钟内，不需要校验旧密码, 直接修改密码
+        Duration duration = Duration.between(user.getLastLoginTime(), LocalDateTime.now());
+        if (duration.toMinutes() < 1) {
+            boolean success = thisService.change(user.getId(), request.getPassword(), ChangePasswordEnum.CHANGE);
+            return R.result(success);
+        }
+
+        return R.fail("密码修改失败");
     }
 
 

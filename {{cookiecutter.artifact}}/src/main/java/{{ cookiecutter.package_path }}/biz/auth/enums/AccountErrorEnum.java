@@ -3,20 +3,16 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.enums;
 
+/**
+ * 账号错误枚举
+ */
 public enum AccountErrorEnum {
-    // 账号不存在
     ACCOUNT_NOT_EXIST("账号不存在"),
-    // 账号被禁用
     ACCOUNT_DISABLED("账号被禁用"),
-    // 账号被锁定
     ACCOUNT_LOCKED("账号被锁定"),
-    // 密码错误
     PASSWORD_ERROR("密码错误"),
-    // 密码过期
     PASSWORD_EXPIRED("密码过期"),
-    // 账号过期
     ACCOUNT_EXPIRED("账号过期"),
-    // 账号未激活
     ACCOUNT_NOT_ACTIVATED("账号未激活");
 
     private final String message;

@@ -31,6 +31,7 @@ public class Item {
             case "String":
             case "java.lang.String":
             case "varchar":
+            case "char":
                 this.str = setting.getOptionValue();
                 break;
             case "int":
@@ -41,6 +42,7 @@ public class Item {
             case "mediumint":
                 this.intValue = Integer.valueOf(setting.getOptionValue());
                 break;
+            case "boolean":
             case "bool":
             case "Boolean":
             case "java.lang.Boolean":

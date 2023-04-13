@@ -87,6 +87,6 @@ public class R<T> implements Serializable {
     }
 
     public static <T> R<T> result(boolean success) {
-        return success ? ok(null) : fail(FAILURE_MSG);
+        return success ? ok(SUCCESS_MSG) : fail(FAILURE_MSG);
     }
 }

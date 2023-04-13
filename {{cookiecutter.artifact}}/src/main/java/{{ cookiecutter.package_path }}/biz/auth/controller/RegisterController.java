@@ -94,11 +94,20 @@ public class RegisterController {
         Long defaultRole = setting.get("auth.user.default-role").getLongValue();
         userService.updateRelation(user.getId(),  Collections.singletonList(defaultRole), null, null);
 
+        // 自动登录
         if (setting.get("auth.user.auto-login").getBool()) {
             LoginResponse loginResponse = loginService.login(account, request.getPassword());
             return R.ok(loginResponse);
         }
         return R.ok("注册账号成功");
+    }
+
+    /**
+     * 邀请注册
+     */
+    @PostMapping("/invite")
+    public void invite() {
+
     }
 
     /**

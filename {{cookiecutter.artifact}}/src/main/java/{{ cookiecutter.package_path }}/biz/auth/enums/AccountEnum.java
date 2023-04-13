@@ -11,7 +11,10 @@ public enum AccountEnum {
     USERNAME("username"),
     MOBILE("mobile"),
     EMAIL("email"),
-    // 非法字符串
+
+    /**
+     * 非法字符串
+     */
     ILLEGAL("illegal");
 
     private final String kind;

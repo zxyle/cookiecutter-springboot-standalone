@@ -128,7 +128,7 @@ public class RoleController extends AuthBaseController {
 
             // 刷新持有该角色的用户权限缓存
             List<Long> users = getUsersByRole(roleId);
-            users.forEach(userId -> permissionService.refreshPermissions(userId));
+            users.forEach(permissionService::refreshPermissions);
         }
         return R.ok("更新角色成功");
     }
@@ -149,7 +149,7 @@ public class RoleController extends AuthBaseController {
         if (success) {
             // 刷新持有该角色的用户权限缓存
             List<Long> users = getUsersByRole(roleId);
-            users.forEach(userId -> permissionService.refreshPermissions(userId));
+            users.forEach(permissionService::refreshPermissions);
             return R.ok("删除角色成功");
         }
 

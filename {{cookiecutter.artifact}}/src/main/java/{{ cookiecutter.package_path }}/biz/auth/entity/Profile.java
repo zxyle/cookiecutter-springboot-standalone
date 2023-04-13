@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.entity;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
+import {{ cookiecutter.basePackage }}.common.constant.RegexConst;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -76,8 +77,8 @@ public class Profile extends BaseEntity {
      *
      * @mock 10001
      */
-    @Length(max = 12, message = "QQ长度不能超过12位数字")
-    @Pattern(regexp = "\\d*", message = "QQ只能是数字")
+    @Length(min = 5, max = 10, message = "QQ长度不能超过10位数字")
+    @Pattern(regexp = RegexConst.REGEX_QQ, message = "QQ由5-10位数字组成")
     private String qq;
 
     /**
