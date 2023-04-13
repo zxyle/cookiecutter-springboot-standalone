@@ -14,7 +14,7 @@ function package() {
 
 # 重启服务
 function restart() {
-    ssh $server "systemctl restart security-api"
+    ssh $server "systemctl restart {{ cookiecutter.artifact }}"
     exit 0
 }
 
