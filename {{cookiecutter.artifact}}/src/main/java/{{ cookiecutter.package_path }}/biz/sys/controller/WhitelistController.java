@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
 import {{ cookiecutter.basePackage }}.biz.sys.request.KeyWordPaginationRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
-import {{ cookiecutter.basePackage }}.common.annotation.ProcessorExecutor;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
@@ -29,8 +28,6 @@ import java.net.URLEncoder;
 @RestController
 @RequestMapping("/sys")
 public class WhitelistController {
-
-    private final ProcessorExecutor processorExecutor = new ProcessorExecutor();
 
     IWhitelistService thisService;
 
@@ -61,7 +58,6 @@ public class WhitelistController {
     @PreAuthorize("@ck.hasPermit('sys:whitelist:add')")
     @PostMapping("/whitelists")
     public R<Whitelist> add(@Valid @RequestBody Whitelist entity) {
-        processorExecutor.execute(entity);
         boolean success = thisService.save(entity);
         return success ? R.ok(entity) : R.fail("新增失败");
     }
