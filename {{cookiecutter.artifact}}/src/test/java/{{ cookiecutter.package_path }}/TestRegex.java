@@ -38,4 +38,29 @@ class TestRegex {
         Assert.assertFalse(chinese.matches(RegexConst.REGEX_CHINESE));
     }
 
+    @Test
+    void testDate() {
+        Assert.assertTrue("2021-01-01".matches(RegexConst.REGEX_DATE));
+        Assert.assertFalse("2021-13-01".matches(RegexConst.REGEX_DATE));
+        Assert.assertFalse("2021-12-32".matches(RegexConst.REGEX_DATE));
+    }
+
+    @Test
+    void testTime() {
+        Assert.assertTrue("12:00:00".matches(RegexConst.REGEX_TIME));
+        Assert.assertFalse("25:00:00".matches(RegexConst.REGEX_TIME));
+        Assert.assertFalse("12:60:00".matches(RegexConst.REGEX_TIME));
+        Assert.assertFalse("12:00:60".matches(RegexConst.REGEX_TIME));
+    }
+
+    @Test
+    void testDateTime() {
+        Assert.assertTrue("2021-01-01 12:00:00".matches(RegexConst.REGEX_DATETIME));
+        Assert.assertFalse("2021-13-01 12:00:00".matches(RegexConst.REGEX_DATETIME));
+        Assert.assertFalse("2021-12-32 12:00:00".matches(RegexConst.REGEX_DATETIME));
+        Assert.assertFalse("2021-01-01 25:00:00".matches(RegexConst.REGEX_DATETIME));
+        Assert.assertFalse("2021-01-01 12:60:00".matches(RegexConst.REGEX_DATETIME));
+        Assert.assertFalse("2021-01-01 12:00:60".matches(RegexConst.REGEX_DATETIME));
+    }
+
 }
