@@ -15,7 +15,8 @@ function package() {
 # 重启服务
 function restart() {
     ssh $server "systemctl restart {{ cookiecutter.artifact }}"
-    exit 0
+    # 显示日志
+    ssh $server "tail -200f $dir/logs/log_info.log"
 }
 
 # 备份jar包到backup目录

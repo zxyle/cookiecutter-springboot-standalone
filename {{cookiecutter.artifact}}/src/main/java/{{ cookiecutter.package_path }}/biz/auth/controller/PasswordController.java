@@ -45,15 +45,10 @@ import java.util.List;
 public class PasswordController extends AuthBaseController {
 
     final StringRedisTemplate stringRedisTemplate;
-
     final IUserService userService;
-
     final ISettingService setting;
-
     final IPasswordService thisService;
-
     final LoginService loginService;
-
     final ValidateService validateService;
 
     /**

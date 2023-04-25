@@ -32,11 +32,8 @@ import java.time.LocalDateTime;
 public class LoginController extends AuthBaseController {
 
     final IUserService userService;
-
     final LoginService loginService;
-
     final CodeService codeService;
-
 
     /**
      * 用户名/邮箱/手机号 + 密码登录
