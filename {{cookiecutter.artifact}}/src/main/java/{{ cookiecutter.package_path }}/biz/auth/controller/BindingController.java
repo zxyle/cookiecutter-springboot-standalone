@@ -11,6 +11,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
 import {{ cookiecutter.basePackage }}.common.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,15 +25,11 @@ import javax.validation.Valid;
  */
 @RequestMapping("/auth/user")
 @RestController
+@RequiredArgsConstructor
 public class BindingController extends AuthBaseController {
-    IUserService userService;
 
-    ValidateService validateService;
-
-    public BindingController(IUserService userService, ValidateService validateService) {
-        this.userService = userService;
-        this.validateService = validateService;
-    }
+    final IUserService userService;
+    final ValidateService validateService;
 
     /**
      * 绑定手机号或邮箱

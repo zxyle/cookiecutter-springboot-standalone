@@ -16,6 +16,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,19 +34,12 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class UserController extends AuthBaseController {
 
-    ISettingService setting;
-
-    PasswordEncoder encoder;
-
-    IUserService thisService;
-
-    public UserController(ISettingService setting, PasswordEncoder encoder, IUserService thisService) {
-        this.encoder = encoder;
-        this.thisService = thisService;
-        this.setting = setting;
-    }
+    final ISettingService setting;
+    final PasswordEncoder encoder;
+    final IUserService thisService;
 
     /**
      * 分页查询用户列表

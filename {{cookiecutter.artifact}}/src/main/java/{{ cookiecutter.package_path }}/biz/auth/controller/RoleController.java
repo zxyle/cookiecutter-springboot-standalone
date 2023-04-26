@@ -15,6 +15,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IRoleService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -32,16 +33,11 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class RoleController extends AuthBaseController {
 
-    IRoleService thisService;
-
-    IPermissionService permissionService;
-
-    public RoleController(IRoleService thisService, IPermissionService permissionService) {
-        this.thisService = thisService;
-        this.permissionService = permissionService;
-    }
+    final IRoleService thisService;
+    final IPermissionService permissionService;
 
     /**
      * 角色列表分页查询

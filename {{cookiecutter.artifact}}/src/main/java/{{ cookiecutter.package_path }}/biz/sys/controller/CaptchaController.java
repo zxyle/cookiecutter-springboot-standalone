@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.response.CaptchaResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -33,30 +34,15 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/sys/captcha")
 @Validated
 @Slf4j
+@RequiredArgsConstructor
 public class CaptchaController {
 
-    StringRedisTemplate stringRedisTemplate;
-
-    ISettingService setting;
-
-    EmailCodeService emailService;
-
-    CodeService codeService;
-
-    ValidateService validateService;
-
-    ShortMessageService shortMessageService;
-
-    public CaptchaController(StringRedisTemplate stringRedisTemplate, ISettingService setting,
-                             EmailCodeService emailService, CodeService codeService,
-                             ValidateService validateService, ShortMessageService shortMessageService) {
-        this.stringRedisTemplate = stringRedisTemplate;
-        this.setting = setting;
-        this.emailService = emailService;
-        this.codeService = codeService;
-        this.validateService = validateService;
-        this.shortMessageService = shortMessageService;
-    }
+    final StringRedisTemplate stringRedisTemplate;
+    final ISettingService setting;
+    final EmailCodeService emailService;
+    final CodeService codeService;
+    final ValidateService validateService;
+    final ShortMessageService shortMessageService;
 
     /**
      * 生成base64编码图形验证码

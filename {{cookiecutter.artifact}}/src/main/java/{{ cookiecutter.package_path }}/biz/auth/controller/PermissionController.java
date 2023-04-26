@@ -11,6 +11,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.request.permission.TreePermission
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,13 +25,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class PermissionController extends AuthBaseController {
 
-    IPermissionService thisService;
-
-    public PermissionController(IPermissionService thisService) {
-        this.thisService = thisService;
-    }
+    final IPermissionService thisService;
 
     /**
      * 获取权限树

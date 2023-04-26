@@ -14,6 +14,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
 import {{ cookiecutter.basePackage }}.common.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,29 +32,15 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/auth/user")
+@RequiredArgsConstructor
 public class RegisterController {
 
-    LoginService loginService;
-
-    ISettingService setting;
-
-    ValidateService validateService;
-
-    CodeService codeService;
-
-    IUserService userService;
-
-    PasswordEncoder encoder;
-
-    public RegisterController(LoginService loginService, IUserService userService, ISettingService setting,
-                              ValidateService validateService, CodeService codeService, PasswordEncoder encoder) {
-        this.loginService = loginService;
-        this.userService = userService;
-        this.setting = setting;
-        this.validateService = validateService;
-        this.codeService = codeService;
-        this.encoder = encoder;
-    }
+    final LoginService loginService;
+    final ISettingService setting;
+    final ValidateService validateService;
+    final CodeService codeService;
+    final IUserService userService;
+    final PasswordEncoder encoder;
 
     /**
      * 用户注册

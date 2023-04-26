@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IProfileService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,17 +22,11 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class ProfileController extends AuthBaseController {
 
-    IProfileService thisService;
-
-    IUserService userService;
-
-    public ProfileController(IProfileService thisService, IUserService userService) {
-        this.thisService = thisService;
-        this.userService = userService;
-    }
-
+    final IProfileService thisService;
+    final IUserService userService;
 
     /**
      * 获取当前用户资料
