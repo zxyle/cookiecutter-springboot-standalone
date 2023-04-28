@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.*;
+import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
