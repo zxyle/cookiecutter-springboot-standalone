@@ -20,14 +20,15 @@ class TestRegex {
 
     @Test
     void testMobile() {
-        String mobile = "18688888888";
-        Assert.assertTrue(mobile.matches(RegexConst.REGEX_MOBILE));
+        Assert.assertTrue("18688888888".matches(RegexConst.REGEX_MOBILE));
+        Assert.assertTrue("17176673457".matches(RegexConst.REGEX_MOBILE));
+        Assert.assertTrue("16257198265".matches(RegexConst.REGEX_MOBILE));
     }
 
     @Test
-    void testIdCard() {
+    void testIdNum() {
         String idCard = "420102199010101111";
-        Assert.assertTrue(idCard.matches(RegexConst.REGEX_IDCARD));
+        Assert.assertTrue(idCard.matches(RegexConst.REGEX_ID_NUM));
     }
 
     @Test

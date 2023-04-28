@@ -11,7 +11,7 @@ public final class RegexConst {
     private RegexConst() {
     }
 
-    public static final String REGEX_MOBILE = "^((13\\d)|(14[5,7])|(15[0-3,5-9])|(17[0,35-8])|(18\\d)|166|198|199)\\d{8}$";
+    public static final String REGEX_MOBILE = "^((13\\d)|(14[5,7])|(15[0-3,5-9])|(17[0,1,35-8])|(18\\d)|16[267]|19[23589])\\d{8}$";
 
     public static final String REGEX_EMAIL = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 
@@ -20,7 +20,7 @@ public final class RegexConst {
     // QQ号从10000开始，最长不超过10位
     public static final String REGEX_QQ = "^[1-9]\\d{4,9}$";
 
-    public static final String REGEX_IDCARD = "^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$";
+    public static final String REGEX_ID_NUM = "^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$";
 
     public static final String REGEX_IP = "^(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])\\.(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])\\.(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])\\.(\\d{1,2}|1\\d\\d|2[0-4]\\d|25[0-5])$";
 
