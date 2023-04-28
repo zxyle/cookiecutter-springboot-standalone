@@ -168,7 +168,7 @@ public class CodeGenerator {
         // 公共父类
         // strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
         // 写于父类中的公共字段
-        strategy.setSuperEntityColumns("id");
+        strategy.setSuperEntityColumns("id", "create_time", "update_time");
         String[] tables = scanner("表名，多个英文逗号分割").split(",");
         strategy.setInclude(tables);
         strategy.setControllerMappingHyphenStyle(true);

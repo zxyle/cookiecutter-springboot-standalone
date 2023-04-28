@@ -43,6 +43,8 @@ class TestRegex {
         Assert.assertTrue("2021-01-01".matches(RegexConst.REGEX_DATE));
         Assert.assertFalse("2021-13-01".matches(RegexConst.REGEX_DATE));
         Assert.assertFalse("2021-12-32".matches(RegexConst.REGEX_DATE));
+        Assert.assertFalse("0000-12-31".matches(RegexConst.REGEX_DATE));
+        Assert.assertFalse("3333-12-31".matches(RegexConst.REGEX_DATE));
     }
 
     @Test

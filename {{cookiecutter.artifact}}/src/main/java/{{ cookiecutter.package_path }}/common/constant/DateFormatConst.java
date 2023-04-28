@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * 日期 format格式
  */
-public class DateFormatConst {
+public final class DateFormatConst {
 
     private DateFormatConst() {
     }

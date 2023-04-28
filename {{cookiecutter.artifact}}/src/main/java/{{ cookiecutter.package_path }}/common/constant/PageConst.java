@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.common.constant;
 /**
  * 分页常量
  */
-public class PageConst {
+public final class PageConst {
 
     private PageConst() {
     }
