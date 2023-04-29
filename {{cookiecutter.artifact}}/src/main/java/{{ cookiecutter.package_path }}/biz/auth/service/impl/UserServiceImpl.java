@@ -39,6 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     final IUserRoleService userRoleService;
     final IUserPermissionService userPermissionService;
     final IGroupService groupService;
+    final IProfileService profileService;
 
     // 删除用户及其关联角色、用户组、权限
     @Transactional
