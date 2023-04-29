@@ -8,6 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import com.google.code.kaptcha.Producer;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
@@ -16,16 +17,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 @Slf4j
+@RequiredArgsConstructor
 public class KaptchaServiceImpl implements CaptchaService {
 
-    ISettingService setting;
-
-    private final Producer captchaProducer;
-
-    public KaptchaServiceImpl(Producer captchaProducer, ISettingService setting) {
-        this.captchaProducer = captchaProducer;
-        this.setting = setting;
-    }
+    final ISettingService setting;
+    final Producer captchaProducer;
 
     @Override
     public CaptchaPair generate() {

@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.service;
 
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -15,16 +16,11 @@ import java.time.Duration;
  * 短信邮件验证码服务
  */
 @Service
+@RequiredArgsConstructor
 public class ValidateService {
 
-    StringRedisTemplate stringRedisTemplate;
-
-    ISettingService settingService;
-
-    public ValidateService(StringRedisTemplate stringRedisTemplate, ISettingService settingService) {
-        this.stringRedisTemplate = stringRedisTemplate;
-        this.settingService = settingService;
-    }
+    final StringRedisTemplate stringRedisTemplate;
+    final ISettingService settingService;
 
     /**
      * 校验验证码

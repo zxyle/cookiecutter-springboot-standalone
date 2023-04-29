@@ -8,6 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.response.DingTalkResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.MonitoringAlarmService;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
@@ -16,13 +17,10 @@ import org.springframework.stereotype.Service;
  * <a href="https://open.dingtalk.com/document/robots/custom-robot-access">接口文档</a>
  */
 @Service
+@RequiredArgsConstructor
 public class DingTalkAlarmServiceImpl implements MonitoringAlarmService {
 
-    ISettingService setting;
-
-    public DingTalkAlarmServiceImpl(ISettingService setting) {
-        this.setting = setting;
-    }
+    final ISettingService setting;
 
     @Override
     public boolean sendAlarm(String msg) {

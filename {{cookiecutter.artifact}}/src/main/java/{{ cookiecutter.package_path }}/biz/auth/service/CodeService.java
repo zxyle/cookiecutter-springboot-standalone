@@ -9,26 +9,20 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.impl.KaptchaServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.sys.service.impl.PatchcaServiceImpl;
 import com.google.code.kaptcha.Producer;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@RequiredArgsConstructor
 public class CodeService {
 
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    ISettingService settingService;
-
-    @Autowired
-    Producer captchaProducer;
-
+    final StringRedisTemplate stringRedisTemplate;
+    final ISettingService settingService;
+    final Producer captchaProducer;
 
     /**
      * 生成验证码
@@ -42,7 +36,7 @@ public class CodeService {
                 break;
             case "kaptcha":
             default:
-                captchaService = new KaptchaServiceImpl(captchaProducer, settingService);
+                captchaService = new KaptchaServiceImpl(settingService, captchaProducer);
                 break;
         }
 

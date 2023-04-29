@@ -11,6 +11,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.PasswordHistoryMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordHistoryService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -20,14 +21,10 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMapper, PasswordHistory> implements IPasswordHistoryService {
 
-    ISettingService setting;
-
-    public PasswordHistoryServiceImpl(ISettingService setting) {
-        this.setting = setting;
-    }
-
+    final ISettingService setting;
 
     /**
      * 记录密码历史

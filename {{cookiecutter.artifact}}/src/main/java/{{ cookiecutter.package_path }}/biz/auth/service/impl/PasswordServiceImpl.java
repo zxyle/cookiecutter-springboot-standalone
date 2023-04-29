@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordHistoryService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,23 +21,13 @@ import java.time.LocalDateTime;
  * 密码服务实现类
  */
 @Service
+@RequiredArgsConstructor
 public class PasswordServiceImpl implements IPasswordService {
 
-    IUserService userService;
-
-    ISettingService setting;
-
-    IPasswordHistoryService passwordHistoryService;
-
-    PasswordEncoder passwordEncoder;
-
-    public PasswordServiceImpl(IUserService userService, ISettingService setting,
-                               IPasswordHistoryService passwordHistoryService, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.setting = setting;
-        this.passwordHistoryService = passwordHistoryService;
-        this.passwordEncoder = passwordEncoder;
-    }
+    final IUserService userService;
+    final ISettingService setting;
+    final IPasswordHistoryService passwordHistoryService;
+    final PasswordEncoder passwordEncoder;
 
     /**
      * 修改密码

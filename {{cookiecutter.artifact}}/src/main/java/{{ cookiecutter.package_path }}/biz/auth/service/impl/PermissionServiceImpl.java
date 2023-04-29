@@ -14,6 +14,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.PermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,7 +23,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,33 +34,16 @@ import java.util.stream.Collectors;
  * 权限信息 服务实现类
  */
 @Service
+@RequiredArgsConstructor
 public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService {
 
-    IUserPermissionService userPermissionService;
-
-    IUserRoleService userRoleService;
-
-    IUserGroupService userGroupService;
-
-    IGroupPermissionService groupPermissionService;
-
-    IRolePermissionService rolePermissionService;
-
-    IRoleService roleService;
-
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
-
-    public PermissionServiceImpl(IRoleService roleService, IUserPermissionService userPermissionService,
-                                 IUserRoleService userRoleService, IUserGroupService userGroupService,
-                                 IGroupPermissionService groupPermissionService, IRolePermissionService rolePermissionService) {
-        this.userPermissionService = userPermissionService;
-        this.userRoleService = userRoleService;
-        this.userGroupService = userGroupService;
-        this.groupPermissionService = groupPermissionService;
-        this.rolePermissionService = rolePermissionService;
-        this.roleService = roleService;
-    }
+    final IUserPermissionService userPermissionService;
+    final IUserRoleService userRoleService;
+    final IUserGroupService userGroupService;
+    final IGroupPermissionService groupPermissionService;
+    final IRolePermissionService rolePermissionService;
+    final IRoleService roleService;
+    final StringRedisTemplate stringRedisTemplate;
 
     // 查询角色对应的权限
     public List<Permission> selectRolesPermission(List<Long> roleIds) {

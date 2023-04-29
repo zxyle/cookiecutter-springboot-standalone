@@ -12,6 +12,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.GroupResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,19 +30,12 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements IGroupService {
 
-    IGroupPermissionService groupPermissionService;
-
-    IGroupRoleService groupRoleService;
-
-    IUserGroupService userGroupService;
-
-    public GroupServiceImpl(IGroupPermissionService groupPermissionService, IGroupRoleService groupRoleService, IUserGroupService userGroupService) {
-        this.groupPermissionService = groupPermissionService;
-        this.groupRoleService = groupRoleService;
-        this.userGroupService = userGroupService;
-    }
+    final IGroupPermissionService groupPermissionService;
+    final IGroupRoleService groupRoleService;
+    final IUserGroupService userGroupService;
 
     /**
      * 创建用户组

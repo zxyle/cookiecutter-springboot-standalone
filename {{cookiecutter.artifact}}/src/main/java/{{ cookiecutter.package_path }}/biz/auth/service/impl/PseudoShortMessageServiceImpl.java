@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.ShortMessageService;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Verification;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IVerificationService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -16,16 +17,11 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class PseudoShortMessageServiceImpl implements ShortMessageService {
 
-    IVerificationService verificationService;
-
-    ISettingService setting;
-
-    public PseudoShortMessageServiceImpl(IVerificationService verificationService, ISettingService setting) {
-        this.verificationService = verificationService;
-        this.setting = setting;
-    }
+    final IVerificationService verificationService;
+    final ISettingService setting;
 
     /**
      * 发送验证码短信

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@EnableTransactionManagement
+@EnableTransactionManagement   // 开启事务
 @Configuration
 @MapperScan("{{ cookiecutter.basePackage }}.biz.*.mapper")
 public class MybatisPlusConfig {

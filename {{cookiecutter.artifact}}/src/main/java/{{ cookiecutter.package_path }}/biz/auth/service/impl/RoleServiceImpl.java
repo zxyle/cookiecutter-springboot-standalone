@@ -12,6 +12,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.RoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.RoleResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -26,23 +27,13 @@ import java.util.stream.Collectors;
  * 角色信息 服务实现类
  */
 @Service
+@RequiredArgsConstructor
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
-    IUserGroupService userGroupService;
-
-    IGroupRoleService groupRoleService;
-
-    IRolePermissionService rolePermissionService;
-
-    IUserRoleService userRoleService;
-
-    public RoleServiceImpl(IUserGroupService userGroupService, IGroupRoleService groupRoleService,
-                           IRolePermissionService rolePermissionService, IUserRoleService userRoleService) {
-        this.userGroupService = userGroupService;
-        this.groupRoleService = groupRoleService;
-        this.rolePermissionService = rolePermissionService;
-        this.userRoleService = userRoleService;
-    }
+    final IUserGroupService userGroupService;
+    final IGroupRoleService groupRoleService;
+    final IRolePermissionService rolePermissionService;
+    final IUserRoleService userRoleService;
 
     /**
      * 查询用户组对应角色ID

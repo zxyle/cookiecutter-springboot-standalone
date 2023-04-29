@@ -8,6 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,16 +19,11 @@ import org.springframework.stereotype.Service;
  * 登录服务实现
  */
 @Service
+@RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
 
-    AuthenticationManager authenticationManager;
-
-    IUserService userService;
-
-    public LoginServiceImpl(IUserService userService, AuthenticationManager authenticationManager) {
-        this.userService = userService;
-        this.authenticationManager = authenticationManager;
-    }
+    final AuthenticationManager authenticationManager;
+    final IUserService userService;
 
     /**
      * 用户登录

@@ -13,6 +13,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import {{ cookiecutter.basePackage }}.common.util.AccountUtil;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,7 +22,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,30 +31,14 @@ import java.util.stream.Collectors;
  * 用户 服务实现类
  */
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
-
-    IUserGroupService userGroupService;
-
-    IUserRoleService userRoleService;
-
-    IUserPermissionService userPermissionService;
-
-    IGroupService groupService;
-
-    IProfileService profileService;
-
-    public UserServiceImpl(IUserGroupService userGroupService, IUserRoleService userRoleService,
-                           IUserPermissionService userPermissionService, IGroupService groupService,
-                           IProfileService profileService) {
-        this.userGroupService = userGroupService;
-        this.userRoleService = userRoleService;
-        this.userPermissionService = userPermissionService;
-        this.groupService = groupService;
-        this.profileService = profileService;
-    }
+    final StringRedisTemplate stringRedisTemplate;
+    final IUserGroupService userGroupService;
+    final IUserRoleService userRoleService;
+    final IUserPermissionService userPermissionService;
+    final IGroupService groupService;
 
     // 删除用户及其关联角色、用户组、权限
     @Transactional

@@ -7,6 +7,7 @@ import cn.hutool.core.util.IdUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.patchca.color.GradientColorFactory;
 import org.patchca.color.RandomColorFactory;
@@ -22,13 +23,10 @@ import java.io.IOException;
 
 
 @Slf4j
+@RequiredArgsConstructor
 public class PatchcaServiceImpl implements CaptchaService {
 
-    ISettingService setting;
-
-    public PatchcaServiceImpl(ISettingService setting) {
-        this.setting = setting;
-    }
+    final ISettingService setting;
 
     public ConfigurableCaptchaService randomCs() {
         ConfigurableCaptchaService cs = new ConfigurableCaptchaService();

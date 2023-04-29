@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.EmailCodeService;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Verification;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IVerificationService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,19 +18,12 @@ import javax.mail.internet.MimeMessage;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class EmailCodeServiceImpl implements EmailCodeService {
 
-    JavaMailSender javaMailSender;
-
-    ISettingService setting;
-
-    IVerificationService verificationService;
-
-    public EmailCodeServiceImpl(JavaMailSender javaMailSender, IVerificationService verificationService, ISettingService setting) {
-        this.javaMailSender = javaMailSender;
-        this.verificationService = verificationService;
-        this.setting = setting;
-    }
+    final JavaMailSender javaMailSender;
+    final ISettingService setting;
+    final IVerificationService verificationService;
 
     /**
      * 发送邮件验证码

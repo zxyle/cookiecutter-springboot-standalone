@@ -12,6 +12,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DuplicateKeyException;
@@ -25,13 +26,10 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMapper, GroupPermission> implements IGroupPermissionService {
 
-    IUserGroupService userGroupService;
-
-    public GroupPermissionServiceImpl(IUserGroupService userGroupService) {
-        this.userGroupService = userGroupService;
-    }
+    final IUserGroupService userGroupService;
 
     /**
      * 查询用户组拥有的权限列表
