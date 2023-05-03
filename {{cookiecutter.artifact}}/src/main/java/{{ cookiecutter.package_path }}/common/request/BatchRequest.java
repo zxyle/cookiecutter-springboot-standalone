@@ -5,8 +5,9 @@ package {{ cookiecutter.basePackage }}.common.request;
 
 import lombok.Data;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 /**
@@ -19,7 +20,8 @@ public class BatchRequest {
      * 主键ID
      */
     @NotEmpty(message = "ID不能为空")
-    private List<@Valid PrimaryKeyRequest> ids;
+    private List<@NotNull @Positive Long> ids;
 
 
 }
+

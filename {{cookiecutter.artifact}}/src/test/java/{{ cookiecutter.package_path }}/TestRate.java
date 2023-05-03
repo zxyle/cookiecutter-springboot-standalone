@@ -14,7 +14,7 @@ class TestRate {
 
     @Test
     void test01() {
-        Assertions.assertEquals(RateUtil.cal(1, 1), "100%");
-        Assertions.assertEquals(RateUtil.cal(4, 20), "20%");
+        Assertions.assertEquals("100%", RateUtil.cal(1, 1));
+        Assertions.assertEquals("20%", RateUtil.cal(4, 20));
     }
 }

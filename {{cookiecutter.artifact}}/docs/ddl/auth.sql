@@ -304,11 +304,11 @@ CREATE TABLE `auth_role` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (1, '上帝角色', 'god', '拥有系统所有权限');
-INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (2, '管理员', 'admin', '管理员权限');
+INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (2, '超级管理员', 'admin', '超级管理员权限');
 INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (3, '注册用户', 'user', '已注册用户');
 INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (4, '来宾', 'guest', '注册');
-INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (5, '组管理员', 'group-admin', '管理所在用户组');
-INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (6, '普通组员', 'group-member', '用户组成员');
+INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (5, '用户组管理员', 'group-admin', '管理所在用户组成员及子用户组');
+INSERT INTO `auth_role` (`id`, `name`, `code`, `description`) VALUES (6, '普通用户组员', 'group-member', '用户组成员');
 COMMIT;
 
 -- ----------------------------

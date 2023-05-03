@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.constant;
 
-public class AuthConst {
+public final class AuthConst {
 
     private AuthConst() {
     }

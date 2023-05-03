@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
+import ${package.Mapper}.${table.mapperName};
 <#if restControllerStyle>
 import org.springframework.web.bind.annotation.RestController;
 <#else>
@@ -31,6 +33,7 @@ import java.util.List;
 /**
  * ${table.comment!}管理
  */
+@RequiredArgsConstructor
 <#if restControllerStyle>
 @RestController
 <#else>
@@ -43,11 +46,8 @@ public class ${table.controllerName} extends ${superControllerClass} {
 public class ${table.controllerName} {
 </#if>
 
-    ${table.serviceName} thisService;
-
-    public ${table.controllerName}(${table.serviceName} thisService) {
-        this.thisService = thisService;
-    }
+    final ${table.serviceName} thisService;
+    final ${table.mapperName} thisMapper;
 
     /**
      * ${table.comment!}分页查询
