@@ -8,10 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AccountExpiredException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
+import org.springframework.security.authentication.*;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -43,6 +40,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<R<Object>> handleAccessDeniedException(HttpServletRequest request, Exception e, HttpServletResponse response) {
         return new ResponseEntity<>(R.fail("权限不足"), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(CredentialsExpiredException.class)
+    public ResponseEntity<R<Object>> handleCredentialsExpiredException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+        return new ResponseEntity<>(R.fail("密码已过期"), HttpStatus.FORBIDDEN);
     }
 
 

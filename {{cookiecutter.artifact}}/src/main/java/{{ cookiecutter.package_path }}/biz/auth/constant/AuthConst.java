@@ -29,4 +29,7 @@ public final class AuthConst {
     // 可用
     public static final int ENABLED = 1;
 
+    // AES加密key 需要16位
+    public static final String AES_KEY = "{{ random_ascii_string(16) }}";
+
 }
