@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
 import {{ cookiecutter.basePackage }}.biz.sys.request.dict.MultiDictTypeRequest;
@@ -11,6 +12,7 @@ import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +27,10 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sys")
+@RequiredArgsConstructor
 public class DictController {
 
-    IDictService thisService;
-
-    public DictController(IDictService thisService) {
-        this.thisService = thisService;
-    }
+    final IDictService thisService;
 
     /**
      * 分页查询
@@ -80,6 +79,17 @@ public class DictController {
         return R.ok(map);
     }
 
+    /**
+     * 查询所有字典类型
+     */
+    @GetMapping("/dicts/dictTypes")
+    public R<List<Dict>> all() {
+        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
+        wrapper.select("name, dict_type");
+        wrapper.groupBy("name","dict_type");
+        List<Dict> dicts = thisService.list(wrapper);
+        return R.ok(dicts);
+    }
 
     /**
      * 按ID更新字典

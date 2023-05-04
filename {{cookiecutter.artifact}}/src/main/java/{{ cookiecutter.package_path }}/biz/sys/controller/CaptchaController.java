@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -66,9 +65,7 @@ public class CaptchaController {
         response.setDateHeader("Expires", 0);  // 在代理服务器端防止缓冲
         response.setContentType("image/jpeg");
         CaptchaPair captchaPair = codeService.send();
-        Cookie cookie = new Cookie("captchaId", captchaPair.getCaptchaId());
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        response.setHeader("captchaId", captchaPair.getCaptchaId());
         response.getOutputStream().write(captchaPair.getBytes());
         response.getOutputStream().flush();
         log.info("已生成验证码: {}", captchaPair);

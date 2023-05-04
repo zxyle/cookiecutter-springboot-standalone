@@ -72,7 +72,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
         } catch (IOException e) {
             // 处理异常
         }
-        // 处理异常
+
         String requestBody = stringBuilder.toString();
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(requestBody, CodeLoginRequest.class);
