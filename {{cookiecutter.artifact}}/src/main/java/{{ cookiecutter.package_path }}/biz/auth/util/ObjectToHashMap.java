@@ -6,8 +6,21 @@ package {{ cookiecutter.basePackage }}.biz.auth.util;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class ObjectToHashMap {
-    public static Map<String, String> convertObjectToHashMap(Object object)  {
+/**
+ * 对象转换为HashMap
+ */
+public final class ObjectToHashMap {
+
+    private ObjectToHashMap() {
+    }
+
+    /**
+     * 将对象转换为HashMap
+     *
+     * @param object 对象
+     * @return HashMap
+     */
+    public static Map<String, String> convertObjectToHashMap(Object object) {
         Map<String, String> hashMap = new HashMap<>();
         Field[] fields = getAllFields(object);
         for (Field field : fields) {
@@ -24,10 +37,16 @@ public class ObjectToHashMap {
         return hashMap;
     }
 
-    public static Field[] getAllFields(Object object){
+    /**
+     * 获取对象的所有属性
+     *
+     * @param object 对象
+     * @return 属性数组
+     */
+    public static Field[] getAllFields(Object object) {
         Class clazz = object.getClass();
         List<Field> fieldList = new ArrayList<>();
-        while (clazz != null){
+        while (clazz != null) {
             fieldList.addAll(new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())));
             clazz = clazz.getSuperclass();
         }
@@ -35,6 +54,5 @@ public class ObjectToHashMap {
         fieldList.toArray(fields);
         return fields;
     }
-
 
 }

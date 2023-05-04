@@ -61,28 +61,18 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
 
     protected CodeLoginRequest obtainCodeLoginRequest(HttpServletRequest request) throws JsonProcessingException {
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try {
-            InputStream inputStream = request.getInputStream();
-            if (inputStream != null) {
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                char[] charBuffer = new char[128];
-                int bytesRead;
-                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-                    stringBuilder.append(charBuffer, 0, bytesRead);
-                }
+        try (InputStream inputStream = request.getInputStream();
+             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+            char[] charBuffer = new char[128];
+            int bytesRead;
+            while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+                stringBuilder.append(charBuffer, 0, bytesRead);
             }
+
         } catch (IOException e) {
             // 处理异常
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    // 处理异常
-                }
-            }
         }
+        // 处理异常
         String requestBody = stringBuilder.toString();
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(requestBody, CodeLoginRequest.class);
