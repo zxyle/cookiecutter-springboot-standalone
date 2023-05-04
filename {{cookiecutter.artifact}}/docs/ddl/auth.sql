@@ -371,8 +371,8 @@ CREATE TABLE `auth_user` (
 -- Records of auth_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `is_super`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', 'admin', '13111111111', 'admin@example.com', 0, 1, '2099-12-31 23:59:59', '2023-01-30 10:30:56', 1);
-INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `is_super`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (2, 'zheng', '$2a$10$veHMsJJZtiFt0jyLOK9hAuKS1yejN1dsD7mGuAJ8rQfK7KUkXslYC', 'zheng', '15068931037', 'zheng@example.com', 0, 0, NULL, '2023-02-14 20:34:45', 1);
+INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `is_super`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', 'admin', '13111111111', 'admin@example.com', 0, 1, '2099-12-31 23:59:59', NOW(), 1);
+INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `is_super`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (2, 'zheng', '$2a$10$veHMsJJZtiFt0jyLOK9hAuKS1yejN1dsD7mGuAJ8rQfK7KUkXslYC', 'zheng', '15012345678', 'zheng@example.com', 0, 0, NULL, NOW(), 1);
 COMMIT;
 
 -- ----------------------------
