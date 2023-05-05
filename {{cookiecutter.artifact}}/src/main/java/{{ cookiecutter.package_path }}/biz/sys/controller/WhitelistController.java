@@ -11,6 +11,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.request.KeyWordPaginationRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
@@ -27,13 +28,10 @@ import java.net.URLEncoder;
  */
 @RestController
 @RequestMapping("/sys")
+@RequiredArgsConstructor
 public class WhitelistController {
 
-    IWhitelistService thisService;
-
-    public WhitelistController(IWhitelistService thisService) {
-        this.thisService = thisService;
-    }
+    final IWhitelistService thisService;
 
     /**
      * 白名单列表分页查询

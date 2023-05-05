@@ -9,6 +9,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
 import {{ cookiecutter.basePackage }}.biz.sys.request.OperateLogRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IOperateLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,13 +22,10 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/sys")
+@RequiredArgsConstructor
 public class OperateLogController {
 
-    IOperateLogService thisService;
-
-    public OperateLogController(IOperateLogService thisService) {
-        this.thisService = thisService;
-    }
+    final IOperateLogService thisService;
 
     /**
      * 操作日志分页查询

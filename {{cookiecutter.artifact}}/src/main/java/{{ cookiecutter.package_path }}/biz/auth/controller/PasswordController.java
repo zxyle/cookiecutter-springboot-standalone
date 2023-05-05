@@ -38,10 +38,10 @@ import java.util.List;
 /**
  * 密码管理
  */
-@RestController
-@RequestMapping("/auth/password")
 @Slf4j
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/auth/password")
 public class PasswordController extends AuthBaseController {
 
     final StringRedisTemplate stringRedisTemplate;

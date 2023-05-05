@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Info;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IInfoService;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,14 +23,11 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sys")
+@RequiredArgsConstructor
 @CacheConfig(cacheNames = "infoCache")
 public class InfoController {
 
-    IInfoService thisService;
-
-    public InfoController(IInfoService thisService) {
-        this.thisService = thisService;
-    }
+    final IInfoService thisService;
 
     /**
      * 获取系统信息列表

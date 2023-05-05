@@ -31,8 +31,8 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/auth/user")
 @RequiredArgsConstructor
+@RequestMapping("/auth/user")
 public class RegisterController {
 
     final LoginService loginService;

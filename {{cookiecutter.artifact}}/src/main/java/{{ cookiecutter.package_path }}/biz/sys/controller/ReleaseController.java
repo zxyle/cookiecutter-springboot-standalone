@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Release;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IReleaseService;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +19,10 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys")
+@RequiredArgsConstructor
 public class ReleaseController {
 
-    IReleaseService thisService;
-
-    public ReleaseController(IReleaseService thisService) {
-        this.thisService = thisService;
-    }
+    final IReleaseService thisService;
 
     /**
      * 获取版本列表

@@ -11,15 +11,14 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.IFileService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.FileStoreService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -30,16 +29,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/file")
+@RequiredArgsConstructor
 public class UploadController {
 
-    @Autowired
-    IFileService fileService;
-
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    FileStoreService fileStoreService;
+    final IFileService fileService;
+    final StringRedisTemplate stringRedisTemplate;
+    final FileStoreService fileStoreService;
 
     /**
      * 文件上传

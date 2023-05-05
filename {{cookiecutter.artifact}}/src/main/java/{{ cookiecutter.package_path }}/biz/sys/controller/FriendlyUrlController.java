@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.FriendlyUrl;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFriendlyUrlService;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,16 +19,13 @@ import java.util.List;
  * 友链管理
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/sys/friendly")
 public class FriendlyUrlController {
 
     public static final int ENABLE = 1;
 
-    IFriendlyUrlService thisService;
-
-    public FriendlyUrlController(IFriendlyUrlService thisService) {
-        this.thisService = thisService;
-    }
+    final IFriendlyUrlService thisService;
 
     /**
      * 获取友链列表

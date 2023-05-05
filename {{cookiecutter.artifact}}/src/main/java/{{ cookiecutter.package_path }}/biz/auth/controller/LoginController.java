@@ -27,8 +27,8 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 @RestController
-@RequestMapping("/auth/user")
 @RequiredArgsConstructor
+@RequestMapping("/auth/user")
 public class LoginController extends AuthBaseController {
 
     final IUserService userService;

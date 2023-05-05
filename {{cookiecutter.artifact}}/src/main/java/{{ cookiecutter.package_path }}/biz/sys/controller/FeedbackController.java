@@ -12,6 +12,7 @@ import {{ cookiecutter.basePackage }}.common.exception.DataNotFoundException;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.http.MediaType;
@@ -28,13 +29,10 @@ import java.net.URLEncoder;
  */
 @RestController
 @RequestMapping("/sys")
+@RequiredArgsConstructor
 public class FeedbackController {
 
-    IFeedbackService thisService;
-
-    public FeedbackController(IFeedbackService thisService) {
-        this.thisService = thisService;
-    }
+    final IFeedbackService thisService;
 
     /**
      * 意见反馈列表分页查询

@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,10 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/sys")
+@RequiredArgsConstructor
 public class SettingController {
 
-    ISettingService thisService;
-
-    public SettingController(ISettingService thisService) {
-        this.thisService = thisService;
-    }
+    final ISettingService thisService;
 
     /**
      * 系统设置分页查询

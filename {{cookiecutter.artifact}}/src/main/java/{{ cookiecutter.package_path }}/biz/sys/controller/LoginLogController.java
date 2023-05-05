@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.mapper.LoginLogMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.request.LoginLogRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -24,17 +25,12 @@ import javax.validation.Valid;
  * 登录日志
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/sys/login")
 public class LoginLogController {
 
-    LoginLogMapper thisMapper;
-
-    ILoginLogService thisService;
-
-    public LoginLogController(LoginLogMapper thisMapper, ILoginLogService thisService) {
-        this.thisMapper = thisMapper;
-        this.thisService = thisService;
-    }
+    final LoginLogMapper thisMapper;
+    final ILoginLogService thisService;
 
     /**
      * 登录日志列表分页查询

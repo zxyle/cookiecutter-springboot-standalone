@@ -9,6 +9,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.request.AreaRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IAreaService;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.AreaNode;
 import {{ cookiecutter.basePackage }}.common.util.TreeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -24,16 +25,13 @@ import java.util.stream.Collectors;
 /**
  * 行政区划接口
  */
-@RestController
-@RequestMapping("/sys/area")
 @Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/sys/area")
 public class AreaController {
 
-    IAreaService thisService;
-
-    public AreaController(IAreaService thisService) {
-        this.thisService = thisService;
-    }
+    final IAreaService thisService;
 
     /**
      * 获取中国行政区划树状结构

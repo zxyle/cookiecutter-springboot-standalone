@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * 密钥管理
  */
-@RestController
 @Slf4j
+@RestController
 public class SecretKeyController {
 
     @Resource

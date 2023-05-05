@@ -29,11 +29,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * 数字验证码管理
  */
-@RestController
-@RequestMapping("/sys/captcha")
-@Validated
 @Slf4j
+@Validated
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/sys/captcha")
 public class CaptchaController {
 
     final StringRedisTemplate stringRedisTemplate;

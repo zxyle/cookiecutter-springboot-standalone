@@ -23,9 +23,9 @@ import javax.validation.Valid;
 /**
  * 登录方式管理
  */
-@RequestMapping("/auth/user")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/auth/user")
 public class BindingController extends AuthBaseController {
 
     final IUserService userService;

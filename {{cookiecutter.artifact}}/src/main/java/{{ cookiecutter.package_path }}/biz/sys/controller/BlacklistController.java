@@ -9,6 +9,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.Blacklist;
 import {{ cookiecutter.basePackage }}.biz.sys.request.KeyWordPaginationRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IBlacklistService;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -22,13 +23,10 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/sys")
+@RequiredArgsConstructor
 public class BlacklistController {
 
-    IBlacklistService thisService;
-
-    public BlacklistController(IBlacklistService thisService) {
-        this.thisService = thisService;
-    }
+    final IBlacklistService thisService;
 
     /**
      * 黑名单列表分页查询
