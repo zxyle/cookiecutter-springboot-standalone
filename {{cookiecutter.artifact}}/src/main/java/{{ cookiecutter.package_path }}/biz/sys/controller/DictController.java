@@ -18,9 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 字典管理
@@ -67,13 +65,14 @@ public class DictController {
     }
 
     /**
-     * 按类型查询字典
+     * 按多个字典类型查询
      */
     @GetMapping("/dicts/dictType")
-    public R<Map<String, List<Dict>>> getByDictType(MultiDictTypeRequest request) {
+    public R<Map<String, List<Dict>>> getByDictType(@Valid MultiDictTypeRequest request) {
         Map<String, List<Dict>> map = new HashMap<>();
-        for (String type : request.getTypes()) {
-            List<Dict> dicts = thisService.listAllDicts(type);
+        String[] types = request.getTypes().split(",");
+        for (String type : types) {
+            List<Dict> dicts = thisService.listAllDicts(type.trim());
             map.put(type, dicts);
         }
         return R.ok(map);
@@ -86,7 +85,7 @@ public class DictController {
     public R<List<Dict>> all() {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         wrapper.select("name, dict_type");
-        wrapper.groupBy("name","dict_type");
+        wrapper.groupBy("name", "dict_type");
         List<Dict> dicts = thisService.list(wrapper);
         return R.ok(dicts);
     }
