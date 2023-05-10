@@ -15,8 +15,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,14 +109,9 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      */
     @Override
     public boolean createRelation(Long groupId, Long permissionId) {
-        GroupPermission entity = new GroupPermission(groupId, permissionId);
-        try {
-            save(entity);
-        } catch (DuplicateKeyException ignored) {
-            log.warn("重复的GroupPermission映射关系");
-            return false;
-        }
-        return true;
+        if (countRelation(groupId, permissionId) > 0) return true;
+
+        return save(new GroupPermission(groupId, permissionId));
     }
 
     /**
@@ -125,6 +120,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      * @param groupId       用户组ID
      * @param permissionIds 权限ID列表
      */
+    @Transactional
     @Override
     public void updateRelation(Long groupId, List<Long> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || groupId == null || groupId == 0L) {

@@ -12,8 +12,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -71,14 +71,9 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      */
     @Override
     public boolean createRelation(Long groupId, Long roleId) {
-        GroupRole entity = new GroupRole(groupId, roleId);
-        try {
-            save(entity);
-        } catch (DuplicateKeyException ignored) {
-            log.warn("重复的GroupRole映射关系");
-            return false;
-        }
-        return true;
+        if (countRelation(groupId, roleId) > 0) return true;
+
+        return save(new GroupRole(groupId, roleId));
     }
 
     /**
@@ -100,6 +95,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      * @param groupId 用户组ID
      * @param roleIds 角色ID列表
      */
+    @Transactional
     @Override
     public void updateRelation(Long groupId, List<Long> roleIds) {
         if (CollectionUtils.isEmpty(roleIds) || groupId == null || groupId == 0L) {

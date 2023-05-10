@@ -12,8 +12,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserPermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -70,14 +70,9 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      */
     @Override
     public boolean createRelation(Long userId, Long permissionId) {
-        UserPermission entity = new UserPermission(userId, permissionId);
-        try {
-            save(entity);
-        } catch (DuplicateKeyException ignored) {
-            log.warn("重复的映射关系: {}", entity);
-            return true;
-        }
-        return true;
+        if (countRelation(userId, permissionId) > 0) return true;
+
+        return save(new UserPermission(userId, permissionId));
     }
 
     /**
@@ -99,6 +94,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      * @param userId        用户ID
      * @param permissionIds 权限ID列表
      */
+    @Transactional
     @Override
     public void updateRelation(Long userId, List<Long> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || userId == null || userId == 0L) {

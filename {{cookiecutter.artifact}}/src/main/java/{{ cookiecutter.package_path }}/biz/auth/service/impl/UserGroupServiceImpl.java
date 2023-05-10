@@ -13,8 +13,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -72,14 +72,9 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      */
     @Override
     public boolean createRelation(Long userId, Long groupId) {
-        UserGroup entity = new UserGroup(userId, groupId);
-        try {
-            save(entity);
-        } catch (DuplicateKeyException ignored) {
-            log.warn("用户组关联已存在，userId={}, groupId={}", userId, groupId);
-            return true;
-        }
-        return true;
+        if (countRelation(userId, groupId) > 0) return true;
+
+        return save(new UserGroup(userId, groupId));
     }
 
     /**
@@ -101,16 +96,12 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      * @param userId   用户ID
      * @param groupIds 用户组ID列表
      */
+    @Transactional
     @Override
     public void updateRelation(Long userId, List<Long> groupIds) {
-        if (CollectionUtils.isEmpty(groupIds) || userId == null || userId == 0L) {
-            return;
-        }
+        if (countRelation(userId, groupId) > 0) return true;
 
-        remove(buildWrapper(userId, null));
-        for (Long groupId : groupIds) {
-            createRelation(userId, groupId);
-        }
+        return save(new UserGroup(userId, groupId));
     }
 
     // 构建wrapper

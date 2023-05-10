@@ -12,7 +12,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,13 +70,9 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      */
     @Override
     public boolean createRelation(Long userId, Long roleId) {
-        UserRole entity = new UserRole(userId, roleId);
-        try {
-            save(entity);
-        } catch (DuplicateKeyException ignored) {
-            log.warn("重复的UserRole映射关系: {}", entity);
-        }
-        return true;
+        if (countRelation(userId, roleId) > 0) return true;
+
+        return save(new UserRole(userId, roleId));
     }
 
     /**
