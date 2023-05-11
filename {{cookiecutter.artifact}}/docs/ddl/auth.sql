@@ -9,9 +9,9 @@ CREATE TABLE `auth_group` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户组名称',
+  `name` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户组名称',
   `parent_id` bigint unsigned NOT NULL COMMENT '上级用户组ID',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '描述信息',
+  `description` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '描述信息',
   `sort` smallint unsigned NOT NULL DEFAULT '1' COMMENT '显示顺序',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_name_parent_id` (`name`,`parent_id`) USING BTREE COMMENT '同级不允许同名用户组'
@@ -35,7 +35,7 @@ CREATE TABLE `auth_group_permission` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
   `permission_id` bigint unsigned NOT NULL COMMENT '权限ID',
-  `remark` varchar(255) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '注释',
+  `remark` varchar(32) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_group_id_permission_id` (`group_id`,`permission_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户组权限';
@@ -56,7 +56,7 @@ CREATE TABLE `auth_group_role` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
   `role_id` bigint unsigned NOT NULL COMMENT '角色ID',
-  `remark` varchar(255) DEFAULT NULL COMMENT '注释',
+  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_group_id_role_id` (`group_id`,`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户组角色关联';
@@ -98,12 +98,12 @@ CREATE TABLE `auth_permission` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限名称',
-  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限代码',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '描述信息',
+  `name` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限名称',
+  `code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限代码',
+  `description` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '描述信息',
   `parent_id` bigint unsigned NOT NULL DEFAULT '1' COMMENT '父级权限ID',
   `kind` tinyint unsigned NOT NULL COMMENT '权限类型（1：页面/路由，2：接口/功能 3：按钮/组件）',
-  `path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '页面路由（用于前端控制）',
+  `path` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '页面路由（用于前端控制）',
   `sort` smallint unsigned NOT NULL DEFAULT '1' COMMENT '显示顺序',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_code` (`code`) USING BTREE
@@ -261,7 +261,7 @@ CREATE TABLE `auth_profile` (
   `wechat` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '微信',
   `weibo` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '微博',
   `intro` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '简介',
-  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '地址',
+  `address` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '地址',
   `region` char(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '地区',
   `school` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '学校',
   `education` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '学历',
@@ -321,7 +321,7 @@ CREATE TABLE `auth_role_permission` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `role_id` bigint unsigned NOT NULL COMMENT '角色id',
   `permission_id` bigint unsigned NOT NULL COMMENT '权限id',
-  `remark` varchar(255) DEFAULT NULL COMMENT '注释',
+  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_role_id_permission_id` (`role_id`,`permission_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色权限';
@@ -385,7 +385,7 @@ CREATE TABLE `auth_user_group` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
-  `remark` varchar(255) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '注释',
+  `remark` varchar(32) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '注释',
   `admin` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否是该组管理员',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE
@@ -408,7 +408,7 @@ CREATE TABLE `auth_user_permission` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
   `permission_id` bigint unsigned NOT NULL COMMENT '权限ID',
-  `remark` varchar(255) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '注释',
+  `remark` varchar(32) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_permission_id` (`user_id`,`permission_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户-权限关联';
@@ -430,7 +430,7 @@ CREATE TABLE `auth_user_role` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint NOT NULL COMMENT '用户ID',
   `role_id` bigint NOT NULL COMMENT '角色ID',
-  `remark` varchar(255) DEFAULT NULL COMMENT '注释',
+  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_role_id` (`user_id`,`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户和角色关联表';

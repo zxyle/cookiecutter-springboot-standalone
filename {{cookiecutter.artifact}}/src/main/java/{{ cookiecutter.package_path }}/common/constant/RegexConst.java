@@ -11,7 +11,7 @@ public final class RegexConst {
     private RegexConst() {
     }
 
-    public static final String REGEX_MOBILE = "^((13\\d)|(14[5,7])|(15[0-3,5-9])|(17[0,1,35-8])|(18\\d)|16[267]|19[23589])\\d{8}$";
+    public static final String REGEX_MOBILE = "^((13\\d)|(14[5,7])|(15[0-3,5-9])|(17[0135-8])|(18\\d)|16[267]|19[23589])\\d{8}$";
 
     public static final String REGEX_EMAIL = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 
