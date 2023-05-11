@@ -32,9 +32,8 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      */
     @Override
     public boolean deleteRelation(Long userId, Long permissionId) {
-        if (countRelation(userId, permissionId) == 0) {
-            return true;
-        }
+        if (countRelation(userId, permissionId) == 0) return true;
+
         return remove(buildWrapper(userId, permissionId));
     }
 

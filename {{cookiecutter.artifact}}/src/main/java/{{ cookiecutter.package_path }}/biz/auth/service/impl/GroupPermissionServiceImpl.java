@@ -57,9 +57,8 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      */
     @Override
     public boolean deleteRelation(Long groupId, Long permissionId) {
-        if (countRelation(groupId, permissionId) == 0) {
-            return true;
-        }
+        if (countRelation(groupId, permissionId) == 0) return true;
+
         return remove(buildWrapper(groupId, permissionId));
     }
 

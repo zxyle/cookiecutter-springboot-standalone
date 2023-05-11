@@ -32,9 +32,8 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      */
     @Override
     public boolean deleteRelation(Long userId, Long roleId) {
-        if (countRelation(userId, roleId) == 0) {
-            return true;
-        }
+        if (countRelation(userId, roleId) == 0) return true;
+
         return remove(buildWrapper(userId, roleId));
     }
 

@@ -34,9 +34,8 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      */
     @Override
     public boolean deleteRelation(Long userId, Long groupId) {
-        if (countRelation(userId, groupId) == 0) {
-            return true;
-        }
+        if (countRelation(userId, groupId) == 0) return true;
+
         return remove(buildWrapper(userId, groupId));
     }
 

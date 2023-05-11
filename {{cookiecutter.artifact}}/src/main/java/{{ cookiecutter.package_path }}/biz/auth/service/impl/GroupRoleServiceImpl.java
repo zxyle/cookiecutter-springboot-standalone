@@ -32,9 +32,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      */
     @Override
     public boolean deleteRelation(Long groupId, Long roleId) {
-        if (countRelation(groupId, roleId) == 0) {
-            return true;
-        }
+        if (countRelation(groupId, roleId) == 0) return true;
 
         return remove(buildWrapper(groupId, roleId));
     }

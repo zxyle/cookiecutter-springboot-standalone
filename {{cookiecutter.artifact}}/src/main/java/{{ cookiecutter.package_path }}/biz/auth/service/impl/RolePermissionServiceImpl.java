@@ -32,9 +32,8 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      */
     @Override
     public boolean deleteRelation(Long roleId, Long permissionId) {
-        if (countRelation(roleId, permissionId) == 0) {
-            return true;
-        }
+        if (countRelation(roleId, permissionId) == 0) return true;
+
         return remove(buildWrapper(roleId, permissionId));
     }
 
