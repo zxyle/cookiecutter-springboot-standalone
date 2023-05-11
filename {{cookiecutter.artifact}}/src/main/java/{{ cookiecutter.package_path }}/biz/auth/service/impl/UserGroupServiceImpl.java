@@ -98,9 +98,14 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
     @Transactional
     @Override
     public void updateRelation(Long userId, List<Long> groupIds) {
-        if (countRelation(userId, groupId) > 0) return true;
+        if (CollectionUtils.isEmpty(groupIds) || userId == null || userId == 0L) {
+            return;
+        }
 
-        return save(new UserGroup(userId, groupId));
+        remove(buildWrapper(userId, null));
+        for (Long groupId : groupIds) {
+            createRelation(userId, groupId);
+        }
     }
 
     // 构建wrapper
