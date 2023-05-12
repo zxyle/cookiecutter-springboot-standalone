@@ -11,6 +11,11 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.Area;
  */
 public interface IAreaService extends IService<Area> {
 
+    /**
+     * 查询行政区
+     *
+     * @param code 行政区编码
+     */
     Area getAreaByCode(String code);
 
 }
