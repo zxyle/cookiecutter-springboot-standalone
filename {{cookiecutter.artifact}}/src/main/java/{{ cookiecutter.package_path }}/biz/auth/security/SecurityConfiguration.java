@@ -26,8 +26,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * Spring Security配置
  */
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true) // 开启方法级别的权限控制, securedEnabled = true 开启 @Secured 注解过滤权限, prePostEnabled = true 开启 @PreAuthorize 注解过滤权限
 public class SecurityConfiguration {
 
     AntiSpiderFilter antiSpiderFilter;
