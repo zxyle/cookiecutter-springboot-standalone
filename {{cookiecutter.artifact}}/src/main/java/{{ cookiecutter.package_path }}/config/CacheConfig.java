@@ -13,6 +13,9 @@ import org.springframework.context.annotation.Primary;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 缓存配置
+ */
 @Configuration
 @EnableCaching // 开启缓存支持
 public class CacheConfig {
@@ -38,7 +41,7 @@ public class CacheConfig {
     }
 
     /**
-     * 永不过期
+     * 永不过期缓存管理器
      */
     @Bean("neverExpireCacheManager")
     public CacheManager neverExpireCacheManager() {
