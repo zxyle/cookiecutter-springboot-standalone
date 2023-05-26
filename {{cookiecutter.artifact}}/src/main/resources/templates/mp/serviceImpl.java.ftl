@@ -20,9 +20,9 @@ import org.springframework.stereotype.Service;
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
 
     /**
-     * 按ID查询（带缓存）
+     * 按ID查询（查询结果不为null则缓存）
      */
-    @Cacheable(cacheNames = "${entity}Cache", key = "#id")
+    @Cacheable(cacheNames = "${entity}Cache", key = "#id", unless = "#result == null")
     @Override
     public ${entity} queryById(Long id) {
         return getById(id);
