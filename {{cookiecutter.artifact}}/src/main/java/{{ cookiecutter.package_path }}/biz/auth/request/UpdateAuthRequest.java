@@ -7,6 +7,8 @@ import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 
@@ -29,10 +31,10 @@ public class UpdateAuthRequest extends BaseRequest {
     /**
      * 权限ID列表
      */
-    private List<Long> permissionIds;
+    private List<@Positive @NotNull Long> permissionIds;
 
     /**
      * 角色ID列表
      */
-    private List<Long> roleIds;
+    private List<@Positive @NotNull Long> roleIds;
 }

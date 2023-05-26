@@ -50,13 +50,19 @@ public class AddGroupRequest {
     private String description;
 
     /**
+     * 备注
+     */
+    @Length(max = 32, message = "备注长度不能超过32个字符")
+    private String remark;
+
+    /**
      * 权限ID列表
      */
-    private List<Long> permissionIds;
+    private List<@Positive Long> permissionIds;
 
     /**
      * 角色ID列表
      */
-    private List<Long> roleIds;
+    private List<@Positive Long> roleIds;
 
 }

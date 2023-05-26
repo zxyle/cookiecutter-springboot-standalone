@@ -7,6 +7,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 /**
@@ -41,7 +42,13 @@ public class AddRoleRequest {
     private String description;
 
     /**
+     * 备注
+     */
+    @Length(max = 32, message = "备注长度不能超过32个字符")
+    private String remark;
+
+    /**
      * 权限id列表
      */
-    private List<Long> permissionIds;
+    private List<@Positive Long> permissionIds;
 }
