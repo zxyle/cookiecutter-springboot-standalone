@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 /**
  * IP操作工具类
  */
-public class IpUtil {
+public final class IpUtil {
 
     private IpUtil() {
     }

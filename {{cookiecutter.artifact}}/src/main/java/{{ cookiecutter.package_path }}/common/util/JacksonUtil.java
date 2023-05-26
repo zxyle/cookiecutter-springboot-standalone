@@ -14,7 +14,7 @@ import java.util.List;
  * json工具类
  */
 @Slf4j
-public class JacksonUtil {
+public final class JacksonUtil {
 
     private JacksonUtil() {
     }

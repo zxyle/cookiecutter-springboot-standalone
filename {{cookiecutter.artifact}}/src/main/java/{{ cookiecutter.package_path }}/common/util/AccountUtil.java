@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * 账号工具类
  */
-public class AccountUtil {
+public final class AccountUtil {
 
     private AccountUtil() {
     }

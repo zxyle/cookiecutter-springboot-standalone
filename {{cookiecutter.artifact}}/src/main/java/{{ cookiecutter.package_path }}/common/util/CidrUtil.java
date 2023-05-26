@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * CIDR网段工具类
  */
-public class CidrUtil {
+public final class CidrUtil {
 
     private CidrUtil() {
     }
