@@ -48,27 +48,8 @@ public class RegisterController {
     @PostMapping("/register")
     public R<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
         String account = request.getAccount();
-        // 检查是否开放注册
-        if (!setting.get("auth.user.open-registration").isReal()) {
-            return R.fail("系统未开放注册");
-        }
-
-        // 校验验证码是否正确
-        if (AccountUtil.isUsername(account)) {
-            if (!codeService.verify(request.getCode(), request.getCaptchaId())) {
-                return R.fail("验证码可能错误或过期");
-            }
-        } else {
-            String key = "code:" + account;
-            if (!validateService.validate(key, request.getCode())) {
-                return R.fail("验证码可能错误或过期");
-            }
-        }
-
-        // 检查账号是否已被占用
-        if (userService.queryByAccount(account) != null) {
-            return R.fail("账号已被占用");
-        }
+        R<LoginResponse> r = beforeRegister(request);
+        if (!r.isSuccess()) return r;
 
         // 创建用户
         User user = userService.create(account, encoder.encode(request.getPassword()));
@@ -121,5 +102,35 @@ public class RegisterController {
         // 有待进一步增强该接口
         list.add(request.getPrefix() + "_001");
         return R.ok(list);
+    }
+
+    /**
+     * 用户注册前判断
+     */
+    private R<LoginResponse> beforeRegister(RegisterRequest request) {
+        String account = request.getAccount();
+        // 检查是否开放注册
+        if (!setting.get("auth.user.open-registration").isReal()) {
+            return R.fail("系统未开放注册");
+        }
+
+        // 校验验证码是否正确
+        if (AccountUtil.isUsername(account)) {
+            if (!codeService.verify(request.getCode(), request.getCaptchaId())) {
+                return R.fail("验证码可能错误或过期");
+            }
+        } else {
+            String key = "code:" + account;
+            if (!validateService.validate(key, request.getCode())) {
+                return R.fail("验证码可能错误或过期");
+            }
+        }
+
+        // 检查账号是否已被占用
+        if (userService.queryByAccount(account) != null) {
+            return R.fail("账号已被占用");
+        }
+
+        return R.ok("注册账号成功");
     }
 }

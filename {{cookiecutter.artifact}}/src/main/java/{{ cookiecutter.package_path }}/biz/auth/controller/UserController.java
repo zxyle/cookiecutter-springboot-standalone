@@ -79,7 +79,7 @@ public class UserController extends AuthBaseController {
     @PostMapping("/users")
     public R<User> add(@Valid @RequestBody AdminAddUserRequest request) {
         if (thisService.queryByAccount(request.getAccount()) != null) {
-            return R.fail("创建失败，账号已存在");
+            return R.fail("创建失败，用户名被占用");
         }
 
         // 构建用户
