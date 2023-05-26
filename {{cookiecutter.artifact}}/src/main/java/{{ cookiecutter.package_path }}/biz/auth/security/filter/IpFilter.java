@@ -52,8 +52,8 @@ public class IpFilter extends OncePerRequestFilter {
             return;
         }
 
-        boolean blackEnable = setting.get("blacklist.enable").getBool();
-        boolean whiteEnable = setting.get("whitelist.enable").getBool();
+        boolean blackEnable = setting.get("blacklist.enable").isReal();
+        boolean whiteEnable = setting.get("whitelist.enable").isReal();
 
         String ip = request.getRemoteAddr();
         List<String> blacklist = blacklistService.getBlacklist();

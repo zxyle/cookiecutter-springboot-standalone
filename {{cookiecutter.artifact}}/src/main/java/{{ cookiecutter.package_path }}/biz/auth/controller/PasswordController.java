@@ -61,7 +61,7 @@ public class PasswordController extends AuthBaseController {
 
         if (thisService.isRight(request.getOldPassword(), user.getPwd())) {
             // 判断新密码是否和旧密码一致
-            if (!setting.get("pwd.enable-same").getBool() && thisService.isRight(request.getNewPassword(), user.getPwd())) {
+            if (!setting.get("pwd.enable-same").isReal() && thisService.isRight(request.getNewPassword(), user.getPwd())) {
                 return R.fail("修改失败，密码不符合规则");
             }
 
@@ -76,7 +76,7 @@ public class PasswordController extends AuthBaseController {
         String key = "pwd:change:" + user.getId();
         Long times = stringRedisTemplate.opsForValue().increment(key);
         int retryTime = times == null ? 1 : times.intValue();
-        Integer maxRetry = setting.get("pwd.change-max-retry-times").getIntValue();
+        int maxRetry = setting.get("pwd.change-max-retry-times").getIntValue();
         if (maxRetry > retryTime) {
             Integer remainTime = maxRetry - retryTime;
             String message = String.format("修改失败，旧密码可能不正确，还可重试%d次", remainTime);

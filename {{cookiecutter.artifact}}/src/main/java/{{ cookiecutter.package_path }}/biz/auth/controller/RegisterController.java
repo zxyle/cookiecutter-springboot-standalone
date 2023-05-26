@@ -49,7 +49,7 @@ public class RegisterController {
     public R<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
         String account = request.getAccount();
         // 检查是否开放注册
-        if (!setting.get("auth.user.open-registration").getBool()) {
+        if (!setting.get("auth.user.open-registration").isReal()) {
             return R.fail("系统未开放注册");
         }
 
@@ -82,7 +82,7 @@ public class RegisterController {
         userService.updateRelation(user.getId(),  Collections.singletonList(defaultRole), null, null);
 
         // 自动登录
-        if (setting.get("auth.user.auto-login").getBool()) {
+        if (setting.get("auth.user.auto-login").isReal()) {
             LoginResponse loginResponse = loginService.login(account, request.getPassword());
             return R.ok(loginResponse);
         }

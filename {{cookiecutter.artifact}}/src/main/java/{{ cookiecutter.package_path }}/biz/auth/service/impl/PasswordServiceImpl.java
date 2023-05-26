@@ -52,7 +52,7 @@ public class PasswordServiceImpl implements IPasswordService {
         updateWrapper.eq("id", userId);
 
         boolean success = userService.update(updateWrapper);
-        if (success && setting.get("pwd.enable-history").getBool()) {
+        if (success && setting.get("pwd.enable-history").isReal()) {
             // 记录密码修改日志
             passwordHistoryService.insert(user, newPwd, policy);
         }

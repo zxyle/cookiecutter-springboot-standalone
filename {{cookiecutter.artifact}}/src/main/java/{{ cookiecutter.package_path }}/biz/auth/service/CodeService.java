@@ -56,7 +56,7 @@ public class CodeService {
      * @return 校验结果 true-通过、 false-不通过
      */
     public boolean verify(String code, String captchaId) {
-        if (!settingService.get("captcha.on").getBool()) {
+        if (!settingService.get("captcha.on").isReal()) {
             return true;
         }
 
