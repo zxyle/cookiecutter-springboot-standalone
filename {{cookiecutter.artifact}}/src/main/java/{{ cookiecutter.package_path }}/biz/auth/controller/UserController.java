@@ -84,7 +84,7 @@ public class UserController extends AuthBaseController {
 
         // 构建用户
         User user = thisService.create(request.getAccount(), encoder.encode(request.getPassword()));
-        Boolean isReset = setting.get("auth.user.reset").getBool();
+        bool isReset = setting.get("auth.user.reset").isReal();
         user.setMustChangePwd((request.isMustChangePwd() && isReset) ? 1 : 0);
         boolean success = thisService.save(user);
         if (!success) {
