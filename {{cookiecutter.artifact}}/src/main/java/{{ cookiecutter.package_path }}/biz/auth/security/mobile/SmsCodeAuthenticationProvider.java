@@ -40,6 +40,8 @@ public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("输入的验证码不正确或可能过期，请重新输入");
         }
 
+         // TODO 如果用户不存在，则注册用户
+
         // 调用自定义的userDetailsService认证
         UserDetails user = userDetailsService.loadUserByUsername((String) authenticationToken.getPrincipal());
         if (user == null) {

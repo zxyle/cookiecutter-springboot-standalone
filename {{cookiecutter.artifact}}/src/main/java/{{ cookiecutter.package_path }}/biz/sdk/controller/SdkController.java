@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * SDK接口
@@ -47,7 +48,7 @@ public class SdkController {
     /**
      * 获取用户ID
      */
-    @PostMapping("/parseToken")
+    @PostMapping("/getUserId")
     public Long parseToken(@Valid @RequestBody SdkRequest request) {
         if (!before(request)) {
             return null;
@@ -100,11 +101,29 @@ public class SdkController {
     /**
      * 获取权限列表
      */
-    @GetMapping("/permissions")
+    @PostMapping("/permissions")
     public List<String> permissions(@Valid @RequestBody SdkRequest request) {
         if (!before(request)) return null;
 
         String userId = parseUserId(request.getToken());
+        List<String> permissions = getPermissions(userId);
+        return permissions.stream().filter(e -> !e.startsWith("ROLE_"))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取角色列表
+     */
+    @PostMapping("/roles")
+    public List<String> roles(@Valid @RequestBody SdkRequest request) {
+        String userId = parseUserId(request.getToken());
+        List<String> permissions = getPermissions(userId);
+        return permissions.stream().filter(e -> e.startsWith("ROLE_"))
+                .map(e -> e.substring(5))
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getPermissions(String userId) {
         String key = AuthConst.KEY_PREFIX + userId;
         String value = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isBlank(value))

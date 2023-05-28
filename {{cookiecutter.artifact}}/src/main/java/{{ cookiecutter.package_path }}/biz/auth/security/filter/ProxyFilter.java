@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class ProxyFilter  extends OncePerRequestFilter {
+public class ProxyFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

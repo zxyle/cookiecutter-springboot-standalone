@@ -3,6 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
+/**
+ * 基础请求
+ */
 public class BaseRequest {
 
     /**
@@ -10,7 +13,7 @@ public class BaseRequest {
      *
      * @mock 1644541518652
      */
-    private String ts;
+    private Long ts;
 
     /**
      * 请求体签名
@@ -22,11 +25,11 @@ public class BaseRequest {
      */
     private String nonce;
 
-    public String getTs() {
+    public Long getTs() {
         return ts;
     }
 
-    public void setTs(String ts) {
+    public void setTs(Long ts) {
         this.ts = ts;
     }
 

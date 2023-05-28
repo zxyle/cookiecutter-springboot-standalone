@@ -30,7 +30,7 @@ public class R<T> implements Serializable {
     private Integer code;
 
     /**
-     * 消息
+     * 信息描述
      *
      * @mock 操作成功
      */
@@ -44,7 +44,7 @@ public class R<T> implements Serializable {
     private boolean success;
 
     /**
-     * 数据体
+     * 响应数据
      */
     private T data;
 
