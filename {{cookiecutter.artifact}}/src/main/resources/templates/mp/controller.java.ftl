@@ -94,7 +94,7 @@ public class ${table.controllerName} {
     @PostMapping("/${table.entityPath}s")
     public R<${entity}> add(@Valid @RequestBody ${entity} entity) {
         boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增失败");
+        return success ? R.ok(entity) : R.fail("新增${table.comment!}失败");
     }
 
 
@@ -116,7 +116,7 @@ public class ${table.controllerName} {
     public R<Object> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        return success ? R.ok("更新成功") : R.fail("更新失败");
+        return success ? R.ok("更新${table.comment!}成功") : R.fail("更新${table.comment!}失败");
     }
 
     /**
@@ -126,7 +126,7 @@ public class ${table.controllerName} {
     @DeleteMapping("/${table.entityPath}s/{id}")
     public R<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        return success ? R.ok("删除成功") : R.fail("删除失败");
+        return success ? R.ok("删除${table.comment!}成功") : R.fail("删除${table.comment!}失败");
     }
 
 }

@@ -50,7 +50,7 @@ public class DictController {
     @PostMapping("/dicts")
     public R<Dict> add(@Valid @RequestBody Dict entity) {
         boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增失败");
+        return success ? R.ok(entity) : R.fail("新增字典失败");
     }
 
 
@@ -98,7 +98,7 @@ public class DictController {
     public R<Object> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        return success ? R.ok("更新成功") : R.fail("更新失败");
+        return success ? R.ok("更新字典成功") : R.fail("更新字典失败");
     }
 
     /**
@@ -108,7 +108,7 @@ public class DictController {
     @DeleteMapping("/dicts/{id}")
     public R<Object> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        return success ? R.ok("删除成功") : R.fail("删除失败");
+        return success ? R.ok("删除字典成功") : R.fail("删除字典失败");
     }
 
 }
