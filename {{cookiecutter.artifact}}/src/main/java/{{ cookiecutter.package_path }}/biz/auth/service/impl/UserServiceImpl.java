@@ -16,6 +16,7 @@ import {{ cookiecutter.basePackage }}.common.util.AccountUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -42,6 +43,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     final IProfileService profileService;
 
     // 删除用户及其关联角色、用户组、权限
+    @CacheEvict(value = "UserCache", key = "#userId")
     @Transactional
     @Override
     public boolean delete(Long userId) {
@@ -208,7 +210,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     // 带缓存的ID查询
-    @Cacheable(cacheNames = "UserCache", key = "#userId")
+    @Cacheable(cacheNames = "UserCache", key = "#userId", unless = "#result == null")
     @Override
     public User queryById(Long userId) {
         return getById(userId);

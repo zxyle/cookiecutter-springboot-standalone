@@ -23,7 +23,7 @@ public class OperateLogServiceImpl extends ServiceImpl<OperateLogMapper, Operate
     /**
      * 按ID查询
      */
-    @Cacheable(cacheNames = "OperateLogCache", key = "#id")
+    @Cacheable(cacheNames = "OperateLogCache", key = "#id", unless = "#result == null")
     @Override
     public OperateLog queryById(Long id) {
         return getById(id);

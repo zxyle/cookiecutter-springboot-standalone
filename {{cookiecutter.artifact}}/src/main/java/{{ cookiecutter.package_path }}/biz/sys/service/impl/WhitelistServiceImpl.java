@@ -26,7 +26,7 @@ public class WhitelistServiceImpl extends ServiceImpl<WhitelistMapper, Whitelist
     /**
      * 按ID查询
      */
-    @Cacheable(cacheNames = "WhitelistCache", key = "#id")
+    @Cacheable(cacheNames = "WhitelistCache", key = "#id", unless = "#result == null")
     @Override
     public Whitelist queryById(Long id) {
         return getById(id);

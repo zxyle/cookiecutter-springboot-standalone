@@ -22,7 +22,7 @@ public class VerificationServiceImpl extends ServiceImpl<VerificationMapper, Ver
     /**
      * 按ID查询
      */
-    @Cacheable(cacheNames = "VerificationCache", key = "#id")
+    @Cacheable(cacheNames = "VerificationCache", key = "#id", unless = "#result == null")
     @Override
     public Verification queryById(Long id) {
         return getById(id);

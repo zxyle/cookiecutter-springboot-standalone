@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +79,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     /**
      * 获取该用户组下所有子用户组ID（包括自身）
      */
-    @Cacheable(cacheNames = "subGroupsCache", key = "#rootGroupId")
+    @Cacheable(cacheNames = "subGroupsCache", key = "#rootGroupId", unless = "#result == null")
     @Override
     public List<String> getSubGroups(Long rootGroupId) {
         List<Group> groups = getAllChildren(null, rootGroupId);
@@ -90,6 +91,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      *
      * @param groupId 用户组ID
      */
+    @CacheEvict(cacheNames = "GroupCache", key = "#groupId")
     @Transactional
     @Override
     public boolean delete(Long groupId) {
@@ -241,5 +243,14 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         }
 
         return count(groupId, null) > 0;
+    }
+
+    /**
+     * 按ID查询（查询结果不为null则缓存）
+     */
+    @Cacheable(cacheNames = "GroupCache", key = "#id", unless = "#result == null")
+    @Override
+    public Group queryById(Long id) {
+        return getById(id);
     }
 }

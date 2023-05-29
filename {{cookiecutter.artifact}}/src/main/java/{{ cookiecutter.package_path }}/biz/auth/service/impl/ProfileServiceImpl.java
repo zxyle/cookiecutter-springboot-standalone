@@ -31,7 +31,7 @@ public class ProfileServiceImpl extends ServiceImpl<ProfileMapper, Profile> impl
      *
      * @param userId 用户ID
      */
-    @Cacheable(key = "#userId")
+    @Cacheable(key = "#userId", unless = "#result == null")
     @Override
     public Profile queryByUserId(Long userId) {
         QueryWrapper<Profile> wrapper = new QueryWrapper<>();

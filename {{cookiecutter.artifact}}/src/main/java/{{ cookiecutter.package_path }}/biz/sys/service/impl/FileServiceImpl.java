@@ -22,7 +22,7 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
     /**
      * 按ID查询
      */
-    @Cacheable(cacheNames = "FileCache", key = "#id")
+    @Cacheable(cacheNames = "FileCache", key = "#id", unless = "#result == null")
     @Override
     public File queryById(Long id) {
         return getById(id);

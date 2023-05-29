@@ -24,6 +24,11 @@ public interface IGroupPermissionService extends IService<GroupPermission> {
      */
     List<Permission> selectPermissionsByGroup(Long userId, List<UserGroup> groups);
 
+    /**
+     * 查询用户组拥有的权限代码列表
+     *
+     * @param groupId 用户组ID
+     */
     List<Permission> selectPermissionsByGroupId(Long groupId);
 
     /**

@@ -23,7 +23,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
      *
      * @param code 行政区编码
      */
-    @Cacheable(value = "area", key = "#code")
+    @Cacheable(value = "areaCache", key = "#code", unless = "#result == null")
     @Override
     public Area getAreaByCode(String code) {
         QueryWrapper<Area> wrapper = new QueryWrapper<>();

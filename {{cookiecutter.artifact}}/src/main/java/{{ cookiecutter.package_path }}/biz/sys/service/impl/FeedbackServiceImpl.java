@@ -25,7 +25,7 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
     /**
      * 按ID查询（带缓存）
      */
-    @Cacheable(cacheNames = "FeedbackCache", key = "#id")
+    @Cacheable(cacheNames = "FeedbackCache", key = "#id", unless = "#result == null")
     @Override
     public Feedback queryById(Long id) {
         return getById(id);

@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,6 +78,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
      *
      * @param roleId 角色ID
      */
+    @CacheEvict(cacheNames = "roleCache", key = "#roleId")
     @Transactional
     @Override
     public boolean delete(Long roleId) {
@@ -92,7 +94,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
      *
      * @param roleId 角色ID
      */
-    @Cacheable(cacheNames = "roleCache", key = "#roleId")
+    @Cacheable(cacheNames = "roleCache", key = "#roleId", unless = "#result == null")
     @Override
     public Role queryById(Long roleId) {
         return getById(roleId);

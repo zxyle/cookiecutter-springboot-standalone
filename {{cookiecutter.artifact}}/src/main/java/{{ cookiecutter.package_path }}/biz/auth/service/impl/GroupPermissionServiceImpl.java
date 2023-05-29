@@ -44,6 +44,11 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
         return permissions;
     }
 
+    /**
+     * 查询用户组拥有的权限代码列表
+     *
+     * @param groupId 用户组ID
+     */
     @Override
     public List<Permission> selectPermissionsByGroupId(Long groupId) {
         return baseMapper.getPermissionByGroupId(groupId);

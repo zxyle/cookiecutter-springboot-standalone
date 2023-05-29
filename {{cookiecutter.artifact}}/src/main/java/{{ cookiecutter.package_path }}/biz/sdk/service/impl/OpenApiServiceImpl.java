@@ -27,7 +27,7 @@ public class OpenApiServiceImpl extends ServiceImpl<OpenApiMapper, OpenApi> impl
     /**
      * 按ID查询（带缓存）
      */
-    @Cacheable(cacheNames = "OpenApiCache", key = "#id")
+    @Cacheable(cacheNames = "OpenApiCache", key = "#id", unless = "#result == null")
     @Override
     public OpenApi queryById(Long id) {
         return getById(id);

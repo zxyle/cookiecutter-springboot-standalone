@@ -30,7 +30,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
     /**
      * 按ID查询
      */
-    @Cacheable(cacheNames = "SettingCache", key = "#id")
+    @Cacheable(cacheNames = "SettingCache", key = "#id", unless = "#result == null")
     @Override
     public Setting queryById(Long id) {
         return getById(id);

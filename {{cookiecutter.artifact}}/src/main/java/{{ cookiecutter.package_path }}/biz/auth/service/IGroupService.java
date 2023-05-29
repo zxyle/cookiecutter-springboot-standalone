@@ -92,4 +92,9 @@ public interface IGroupService extends IService<Group> {
      */
     boolean isAlreadyUsed(Long groupId);
 
+    /**
+     * 按ID查询（带缓存）
+     */
+    Group queryById(Long id);
+
 }
