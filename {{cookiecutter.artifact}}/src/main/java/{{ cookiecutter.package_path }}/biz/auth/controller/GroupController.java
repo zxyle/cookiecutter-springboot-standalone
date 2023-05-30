@@ -108,7 +108,7 @@ public class GroupController extends AuthBaseController {
             return R.fail("无权限查询该用户组");
         }
 
-        Group group = groupService.getById(groupId);
+        Group group = groupService.queryById(groupId);
         return R.ok(groupService.attachGroupInfo(group, true));
     }
 
@@ -126,7 +126,7 @@ public class GroupController extends AuthBaseController {
         }
 
         // 判断同级用户组下是否有名称重复
-        Group group = groupService.getById(groupId);
+        Group group = groupService.queryById(groupId);
         Integer count = groupService.count(group.getParentId(), request.getName());
         if (StringUtils.isNotBlank(request.getName()) && count > 0) {
             return R.fail("同级用户组名称不能重复");
