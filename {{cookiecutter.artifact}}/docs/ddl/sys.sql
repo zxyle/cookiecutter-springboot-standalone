@@ -384,8 +384,8 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '牙买加', 'Jamaica', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '日本', 'Japan', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '约旦', 'Jordan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '柬埔寨', 'Kampuchea (Cambodia )', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '哈萨克斯坦', 'Kazakstan', 'country');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '柬埔寨', 'Cambodia', 'country');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '哈萨克斯坦', 'Kazakhstan', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '肯尼亚', 'Kenya', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '韩国', 'Korea', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '科威特', 'Kuwait', 'country');
@@ -418,7 +418,7 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '纳米比亚', 'Namibia', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '瑙鲁', 'Nauru', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '尼泊尔', 'Nepal', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '荷属安的列斯', 'Netheriands Antilles', 'country');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '荷属安的列斯', 'Netherlands Antilles', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '荷兰', 'Netherlands', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '新西兰', 'New Zealand', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '尼加拉瓜', 'Nicaragua', 'country');
@@ -429,7 +429,7 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '阿曼', 'Oman', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴基斯坦', 'Pakistan', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴拿马', 'Panama', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴布亚新几内亚', 'Papua New Cuinea', 'country');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴布亚新几内亚', 'Papua New Guinea', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '巴拉圭', 'Paraguay', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '秘鲁', 'Peru', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '菲律宾', 'Philippines', 'country');
@@ -440,7 +440,7 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '留尼旺', 'Reunion', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '罗马尼亚', 'Romania', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '俄罗斯', 'Russia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣卢西亚', 'Saint Lueia', 'country');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣卢西亚', 'Saint Lucia', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣文森特岛', 'Saint Vincent', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '东萨摩亚(美)', 'Samoa Eastern', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '西萨摩亚', 'Samoa Western', 'country');
@@ -458,15 +458,13 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '南非', 'South Africa', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '西班牙', 'Spain', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '斯里兰卡', 'SriLanka', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣卢西亚', 'St.Lucia', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '圣文森特', 'St.Vincent', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '苏丹', 'Sudan', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '苏里南', 'Suri\"name\"', 'country');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '苏里南', 'Suriname', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '斯威士兰', 'Swaziland', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '瑞典', 'Sweden', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '瑞士', 'Switzerland', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '叙利亚', 'Syria', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '塔吉克斯坦', 'Tajikstan', 'country');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '塔吉克斯坦', 'Tajikistan', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '坦桑尼亚', 'Tanzania', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '泰国', 'Thailand', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '多哥', 'Togo', 'country');
@@ -478,7 +476,7 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '乌干达', 'Uganda', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '乌克兰', 'Ukraine', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '阿拉伯联合酋长国', 'United Arab Emirates', 'country');
-INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '英国', 'United Kiongdom', 'country');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '英国', 'United Kingdom', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '美国', 'United States of America', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '乌拉圭', 'Uruguay', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '乌兹别克斯坦', 'Uzbekistan', 'country');

@@ -55,4 +55,7 @@ public final class RegexConst {
     // HH:mm:ss
     public static final String REGEX_TIME = "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$";
 
+    // UUID: 1e6a9d02-0eb1-4316-ad31-94010bfecd4d
+    public static final String REGEX_UUID = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$";
+
 }
