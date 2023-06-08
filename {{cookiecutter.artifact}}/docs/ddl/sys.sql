@@ -487,6 +487,24 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '津巴布韦', 'Zimbabwe', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '扎伊尔', 'Zaire', 'country');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('国家', 0, '赞比亚', 'Zambia', 'country');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '美元', 'USD', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '欧元', 'EUR', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '日元', 'JPY', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '英镑', 'GBP', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '加拿大元', 'CAD', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '澳大利亚元', 'AUD', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '瑞士法郎', 'CHF', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '人民币', 'CNY', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '瑞典克朗', 'SEK', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '新加坡元', 'SGD', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '韩元', 'KRW', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '印度卢比', 'INR', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '巴西雷亚尔', 'BRL', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '新西兰元', 'NZD', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '香港元', 'HKD', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '新台币', 'TWD', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '澳门元', 'MOP', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '俄罗斯卢布', 'RUB', 'currency');
 COMMIT;
 
 -- ----------------------------
