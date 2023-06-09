@@ -22,6 +22,5 @@ public class BatchRequest {
     @NotEmpty(message = "ID不能为空")
     private List<@NotNull @Positive Long> ids;
 
-
 }
 

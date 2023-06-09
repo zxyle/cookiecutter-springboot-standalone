@@ -28,7 +28,7 @@ public class JwtUtil {
     // 设置秘钥明文
     private static final String JWT_KEY = "bBOuzpIPIHVggIyljKUtRzTIsRviSEyf";
 
-    public static String getUUID() {
+    private static String getUUID() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
@@ -37,7 +37,7 @@ public class JwtUtil {
      *
      * @param subject token中要存放的数据（json格式）
      */
-    private static String createJWT(String subject) {
+    public static String createJWT(String subject) {
         JwtBuilder builder = getJwtBuilder(subject, null, getUUID());// 设置过期时间
         return builder.compact();
     }
