@@ -82,7 +82,7 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:key:set')")
     @PostMapping("/keys")
-    public R<Object> set(@Valid @RequestBody KeySetRequest request) {
+    public R<Void> set(@Valid @RequestBody KeySetRequest request) {
         if (!"string".equalsIgnoreCase(request.getType())) {
             return R.fail("设置失败，目前只支持string类型");
         }
@@ -102,7 +102,7 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:key:rename')")
     @PutMapping("/keys/{oldKey}/rename/{newKey}")
-    public R<Object> rename(@PathVariable String oldKey, @PathVariable String newKey) {
+    public R<Void> rename(@PathVariable String oldKey, @PathVariable String newKey) {
         Boolean hasKey = stringRedisTemplate.hasKey(oldKey);
         if (Boolean.FALSE.equals(hasKey)) {
             return R.fail("重命名失败，key不存在");
@@ -120,7 +120,7 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:key:expire')")
     @PutMapping("/keys/{key}/expire/{seconds}")
-    public R<Object> expire(@PathVariable String key, @PathVariable Integer seconds) {
+    public R<Void> expire(@PathVariable String key, @PathVariable Integer seconds) {
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         if (Boolean.FALSE.equals(hasKey)) {
             return R.fail("设置过期时间，key不存在");

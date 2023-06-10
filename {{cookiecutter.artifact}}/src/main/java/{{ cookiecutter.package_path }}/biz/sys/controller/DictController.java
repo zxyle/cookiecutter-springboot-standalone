@@ -95,7 +95,7 @@ public class DictController {
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:update')")
     @PutMapping("/dicts/{id}")
-    public R<Object> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
+    public R<Void> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
         return success ? R.ok("更新字典成功") : R.fail("更新字典失败");
@@ -106,7 +106,7 @@ public class DictController {
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
     @DeleteMapping("/dicts/{id}")
-    public R<Object> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除字典成功") : R.fail("删除字典失败");
     }

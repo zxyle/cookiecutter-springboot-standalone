@@ -75,7 +75,7 @@ public class WhitelistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:update')")
     @PutMapping("/whitelists/{id}")
-    public R<Object> update(@PathVariable Long id, @Valid @RequestBody Whitelist entity) {
+    public R<Void> update(@PathVariable Long id, @Valid @RequestBody Whitelist entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
         return success ? R.ok("更新成功") : R.fail("更新失败");
@@ -86,7 +86,7 @@ public class WhitelistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:delete')")
     @DeleteMapping("/whitelists/{id}")
-    public R<Object> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除成功") : R.fail("删除失败");
     }

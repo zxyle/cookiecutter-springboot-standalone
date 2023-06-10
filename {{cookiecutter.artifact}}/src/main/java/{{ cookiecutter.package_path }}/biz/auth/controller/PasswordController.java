@@ -56,7 +56,7 @@ public class PasswordController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:password:change')")
     @PostMapping("/change")
-    public R<Object> change(@Valid @RequestBody ChangeByOldRequest request) {
+    public R<Void> change(@Valid @RequestBody ChangeByOldRequest request) {
         User user = getLoggedInUser();
 
         if (thisService.isRight(request.getOldPassword(), user.getPwd())) {
@@ -91,7 +91,7 @@ public class PasswordController extends AuthBaseController {
      * 忘记/找回密码（通过短信或邮件验证码方式）
      */
     @PostMapping("/forget")
-    public R<Object> forget(@Valid @RequestBody ForgetRequest request) {
+    public R<Void> forget(@Valid @RequestBody ForgetRequest request) {
         String account = request.getAccount();
         String key = "code:" + account;
         if (!validateService.validate(key, request.getCode())) {
@@ -151,7 +151,7 @@ public class PasswordController extends AuthBaseController {
      * 初次登录后修改密码
      */
     @PostMapping("/init")
-    public R<Object> init(@RequestBody InitPasswordRequest request) {
+    public R<Void> init(@RequestBody InitPasswordRequest request) {
         User user = getLoggedInUser();
 
         // 初次登录，最后登录时间在1分钟内，不需要校验旧密码, 直接修改密码

@@ -58,7 +58,7 @@ public class InfoController {
      */
     @PreAuthorize("@ck.hasPermit('sys:info:update')")
     @PutMapping("/infos/{id}")
-    public R<Object> update(@PathVariable Long id, @Valid @RequestBody Info entity) {
+    public R<Void> update(@PathVariable Long id, @Valid @RequestBody Info entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
         return success ? R.ok("更新成功") : R.fail("更新失败");
@@ -70,7 +70,7 @@ public class InfoController {
      */
     @PreAuthorize("@ck.hasPermit('sys:info:delete')")
     @DeleteMapping("/infos/{id}")
-    public R<Object> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除成功") : R.fail("删除失败");
     }

@@ -95,11 +95,11 @@ public class PermissionController extends AuthBaseController {
         entity.setId(permissionId);
         boolean success = thisService.updateById(entity);
         if (success) {
-            List<Long> users = thisService.holdPermission(permission.getCode());
-            users.forEach(userId -> thisService.refreshPermissions(userId));
-            return R.ok("更新成功");
+            List<Long> userIds = thisService.holdPermission(permission.getCode());
+            userIds.forEach(thisService::refreshPermissions);
+            return R.ok("更新权限成功");
         }
-        return R.fail("更新失败");
+        return R.fail("更新权限失败");
     }
 
     /**
@@ -109,7 +109,7 @@ public class PermissionController extends AuthBaseController {
      */
     @DeleteMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permission:delete')")
-    public R<Object> delete(@PathVariable Long permissionId) {
+    public R<Void> delete(@PathVariable Long permissionId) {
         if (thisService.isAlreadyUsed(permissionId)) {
             return R.fail("删除失败，该权限正在使用");
         }
@@ -118,10 +118,10 @@ public class PermissionController extends AuthBaseController {
         boolean success = thisService.delete(permissionId);
         if (success) {
             // 所有持有该权限的用户，都刷新权限
-            List<Long> users = thisService.holdPermission(permission.getCode());
-            users.forEach(userId -> thisService.refreshPermissions(userId));
-            return R.ok("删除成功");
+            List<Long> userIds = thisService.holdPermission(permission.getCode());
+            userIds.forEach(thisService::refreshPermissions);
+            return R.ok("删除权限成功");
         }
-        return R.fail("删除失败");
+        return R.fail("删除权限失败");
     }
 }

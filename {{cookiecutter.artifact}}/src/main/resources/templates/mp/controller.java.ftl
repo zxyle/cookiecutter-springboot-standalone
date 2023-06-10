@@ -113,7 +113,7 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:update')")
     @PutMapping("/${table.entityPath}s/{id}")
-    public R<Object> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
+    public R<Void> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
         return success ? R.ok("更新${table.comment!}成功") : R.fail("更新${table.comment!}失败");
@@ -124,7 +124,7 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:delete')")
     @DeleteMapping("/${table.entityPath}s/{id}")
-    public R<Object> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除${table.comment!}成功") : R.fail("删除${table.comment!}失败");
     }

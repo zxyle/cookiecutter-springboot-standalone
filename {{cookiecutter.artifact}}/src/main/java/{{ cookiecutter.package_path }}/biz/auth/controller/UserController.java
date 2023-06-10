@@ -110,7 +110,7 @@ public class UserController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PutMapping("/users/{userId}")
-    public R<Object> update(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
+    public R<Void> update(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
         if (!groupService.isAllowed(getUserId(), userId, null)) {
             return R.fail("没有权限更新用户");
         }
@@ -149,7 +149,7 @@ public class UserController extends AuthBaseController {
     @LogOperation("按ID删除用户")
     @PreAuthorize("@ck.hasPermit('auth:user:delete')")
     @DeleteMapping("/users/{userId}")
-    public R<Object> delete(@PathVariable Long userId) {
+    public R<Void> delete(@PathVariable Long userId) {
         if (userId.equals(getUserId())) {
             return R.fail("不能删除自己");
         }
@@ -171,7 +171,7 @@ public class UserController extends AuthBaseController {
     @LogOperation("禁用用户")
     @PreAuthorize("@ck.hasPermit('auth:user:disable')")
     @PutMapping("/users/{userId}/disable")
-    public R<Object> disable(@PathVariable Long userId) {
+    public R<Void> disable(@PathVariable Long userId) {
         if (userId.equals(getUserId())) {
             return R.fail("不能禁用自己");
         }
@@ -193,7 +193,7 @@ public class UserController extends AuthBaseController {
     @LogOperation("启用用户")
     @PreAuthorize("@ck.hasPermit('auth:user:enable')")
     @PutMapping("/users/{userId}/enable")
-    public R<Object> enable(@PathVariable Long userId) {
+    public R<Void> enable(@PathVariable Long userId) {
         if (!groupService.isAllowed(getUserId(), userId, null)) {
             return R.fail("没有权限启用用户");
         }
@@ -211,7 +211,7 @@ public class UserController extends AuthBaseController {
     @LogOperation("下线用户")
     @PreAuthorize("@ck.hasPermit('auth:user:kick')")
     @PutMapping("/users/{userId}/kick")
-    public R<Object> kick(@PathVariable Long userId) {
+    public R<Void> kick(@PathVariable Long userId) {
         if (userId.equals(getUserId())) {
             return R.fail("不能将自己下线");
         }

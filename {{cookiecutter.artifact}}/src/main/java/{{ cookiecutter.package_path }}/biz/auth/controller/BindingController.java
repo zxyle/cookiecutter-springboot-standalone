@@ -37,7 +37,7 @@ public class BindingController extends AuthBaseController {
      * @apiNote 该接口需先请求发送验证码接口
      */
     @PostMapping("/binding")
-    public R<Object> binding(@Valid @RequestBody BindingRequest request) {
+    public R<Void> binding(@Valid @RequestBody BindingRequest request) {
         User user = getLoggedInUser();
 
         // 校验是否已解绑

@@ -87,7 +87,7 @@ public class FeedbackController {
      */
     @PreAuthorize("@ck.hasPermit('sys:feedback:update')")
     @PutMapping("/feedbacks/{id}")
-    public R<Object> update(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
+    public R<Void> update(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
         entity.setId(id);
         checkId(id);
         boolean success = thisService.updateById(entity);
@@ -99,7 +99,7 @@ public class FeedbackController {
      */
     @PreAuthorize("@ck.hasPermit('sys:feedback:delete')")
     @DeleteMapping("/feedbacks/{id}")
-    public R<Object> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除成功") : R.fail("删除失败");
     }

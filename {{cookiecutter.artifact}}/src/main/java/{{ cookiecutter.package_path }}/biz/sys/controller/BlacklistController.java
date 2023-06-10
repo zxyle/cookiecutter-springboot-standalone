@@ -60,7 +60,7 @@ public class BlacklistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:blacklist:delete')")
     @DeleteMapping("/blacklists/{id}")
-    public R<Object> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除成功") : R.fail("删除失败");
     }

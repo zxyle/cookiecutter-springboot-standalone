@@ -77,7 +77,7 @@ public class UploadController {
      */
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/delete")
-    public R<Object> delete(@NotBlank String objectName) {
+    public R<Void> delete(@NotBlank String objectName) {
         boolean success = fileStoreService.delete(objectName);
         return R.result(success);
     }

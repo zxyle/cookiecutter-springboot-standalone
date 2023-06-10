@@ -111,7 +111,7 @@ public class RoleController extends AuthBaseController {
      */
     @PutMapping("/roles/{roleId}")
     @PreAuthorize("@ck.hasPermit('auth:roles:update')")
-    public R<Object> update(@Valid @RequestBody UpdateRoleRequest request, @PathVariable Long roleId) {
+    public R<Void> update(@Valid @RequestBody UpdateRoleRequest request, @PathVariable Long roleId) {
         // 更新角色信息
         Role role = new Role();
         BeanUtils.copyProperties(request, role);
@@ -136,7 +136,7 @@ public class RoleController extends AuthBaseController {
      */
     @DeleteMapping("/roles/{roleId}")
     @PreAuthorize("@ck.hasPermit('auth:roles:delete')")
-    public R<Object> delete(@PathVariable Long roleId) {
+    public R<Void> delete(@PathVariable Long roleId) {
         if (thisService.isAlreadyUsed(roleId)) {
             return R.fail("该角色正在使用，无法删除");
         }

@@ -80,7 +80,7 @@ public class GroupController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:groups:add')")
     @PostMapping("/groups")
-    public R<Object> add(@Valid @RequestBody AddGroupRequest request) {
+    public R<Void> add(@Valid @RequestBody AddGroupRequest request) {
         if (!groupService.isAllowed(getUserId(), null, request.getParentId())) {
             return R.fail("无权限创建该用户组");
         }
@@ -148,7 +148,7 @@ public class GroupController extends AuthBaseController {
     @LogOperation("按ID删除用户组")
     @PreAuthorize("@ck.hasPermit('auth:groups:delete')")
     @DeleteMapping("/groups/{groupId}")
-    public R<Object> delete(@PathVariable Long groupId) {
+    public R<Void> delete(@PathVariable Long groupId) {
         if (!groupService.isAllowed(getUserId(), null, groupId)) {
             return R.fail("无权限删除该用户组");
         }
@@ -167,7 +167,7 @@ public class GroupController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:groups:migrate')")
     @PostMapping("/groups/migrate")
-    public R<Object> migrate(@Valid @RequestBody MigrateGroupRequest request) {
+    public R<Void> migrate(@Valid @RequestBody MigrateGroupRequest request) {
         if (!isSubGroup(request.getParentId()) || !isSubGroup(request.getCurrentId())) {
             return R.fail("无权限移动到该用户组下");
         }

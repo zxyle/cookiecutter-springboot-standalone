@@ -65,7 +65,7 @@ public class SettingController {
      */
     @PreAuthorize("@ck.hasPermit('sys:setting:update')")
     @PutMapping("/settings/{id}")
-    public R<Object> update(@Valid @RequestBody Setting entity, @PathVariable Long id) {
+    public R<Void> update(@Valid @RequestBody Setting entity, @PathVariable Long id) {
         entity.setId(id);
         Setting setting = thisService.getById(id);
         String optionValue = entity.getOptionValue();
@@ -78,7 +78,7 @@ public class SettingController {
      */
     @PreAuthorize("@ck.hasPermit('sys:setting:delete')")
     @DeleteMapping("/settings/{id}")
-    public R<Object> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除成功") : R.fail("删除失败");
     }
