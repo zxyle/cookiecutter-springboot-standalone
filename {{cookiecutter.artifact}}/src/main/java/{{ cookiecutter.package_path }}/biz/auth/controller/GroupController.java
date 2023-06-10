@@ -80,7 +80,7 @@ public class GroupController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:groups:add')")
     @PostMapping("/groups")
-    public R<Void> add(@Valid @RequestBody AddGroupRequest request) {
+    public R<Group> add(@Valid @RequestBody AddGroupRequest request) {
         if (!groupService.isAllowed(getUserId(), null, request.getParentId())) {
             return R.fail("无权限创建该用户组");
         }
