@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * 密码复杂度检查工具类
  */
-public class PasswordChecker {
+public final class PasswordChecker {
 
     private PasswordChecker() {
     }

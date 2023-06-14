@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * JWT工具类
  */
-public class JwtUtil {
+public final class JwtUtil {
 
     private JwtUtil() {
     }
@@ -26,7 +26,7 @@ public class JwtUtil {
     private static final Long JWT_TTL = 24 * 60 * 60 * 1000L;  // 一天
 
     // 设置秘钥明文
-    private static final String JWT_KEY = "bBOuzpIPIHVggIyljKUtRzTIsRviSEyf";
+    private static final String JWT_KEY = "{{ random_ascii_string(32) }}";
 
     private static String getUUID() {
         return UUID.randomUUID().toString().replace("-", "");

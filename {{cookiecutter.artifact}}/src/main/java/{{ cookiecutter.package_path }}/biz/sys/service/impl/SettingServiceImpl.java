@@ -50,7 +50,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
      *
      * @param label 选项名称
      */
-    @Cacheable(cacheNames = "SettingCache", key = "#label", cacheManager = "neverExpireCacheManager")
+    @Cacheable(cacheNames = "SettingCache", key = "#label", cacheManager = "neverExpireCacheManager", unless = "#result == null")
     @Override
     public Item get(String label) {
         QueryWrapper<Setting> wrapper = new QueryWrapper<>();
