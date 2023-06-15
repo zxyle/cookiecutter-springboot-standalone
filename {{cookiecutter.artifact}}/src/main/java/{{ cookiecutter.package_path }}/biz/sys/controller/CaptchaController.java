@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import {{ cookiecutter.basePackage }}.biz.sys.request.SendCodeRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
-import {{ cookiecutter.basePackage }}.common.util.AccountUtil;
+import {{ cookiecutter.basePackage }}.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.response.CaptchaResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
