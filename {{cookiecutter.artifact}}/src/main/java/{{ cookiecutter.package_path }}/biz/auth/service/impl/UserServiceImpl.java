@@ -12,7 +12,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.util.CaptchaUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
-import {{ cookiecutter.basePackage }}.common.util.AccountUtil;
+import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
