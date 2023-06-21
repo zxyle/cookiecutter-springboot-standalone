@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 实体类工具类
  */
-public class EntityUtil {
+public final class EntityUtil {
 
     private EntityUtil() {
     }

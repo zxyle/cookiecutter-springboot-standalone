@@ -9,7 +9,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ResponseUtil {
+public final class ResponseUtil {
 
     private ResponseUtil() {
     }

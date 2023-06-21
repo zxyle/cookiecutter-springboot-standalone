@@ -21,7 +21,7 @@ import java.sql.*;
 
 @Data
 @Slf4j
-public class JdbcUtil {
+public final class JdbcUtil {
 
     private String url;
     private String username = "root";

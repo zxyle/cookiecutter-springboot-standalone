@@ -12,16 +12,16 @@ import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.util.ObjectToHashMap;
 import {{ cookiecutter.basePackage }}.biz.auth.util.SignUtils;
 import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,19 +31,15 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/auth/sdk")
 public class SdkController {
 
     private final WildcardPermission wildcardPermission = new WildcardPermission();
 
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    HttpServletRequest servletRequest;
-
-    @Autowired
-    IOpenApiService openApiService;
+    final StringRedisTemplate stringRedisTemplate;
+    final HttpServletRequest servletRequest;
+    final IOpenApiService openApiService;
 
     /**
      * 获取用户ID
@@ -103,7 +99,7 @@ public class SdkController {
      */
     @PostMapping("/permissions")
     public List<String> permissions(@Valid @RequestBody SdkRequest request) {
-        if (!before(request)) return null;
+        if (!before(request)) return Collections.emptyList();
 
         String userId = parseUserId(request.getToken());
         List<String> permissions = getPermissions(userId);
@@ -127,7 +123,7 @@ public class SdkController {
         String key = AuthConst.KEY_PREFIX + userId;
         String value = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isBlank(value))
-            return null;
+            return Collections.emptyList();
 
         return Arrays.asList(value.split(AuthConst.DELIMITER));
     }

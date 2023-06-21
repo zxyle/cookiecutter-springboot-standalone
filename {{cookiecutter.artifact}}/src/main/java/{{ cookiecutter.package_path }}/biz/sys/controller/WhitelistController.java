@@ -38,7 +38,7 @@ public class WhitelistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:list')")
     @GetMapping("/whitelists")
-    public R<PageVO<Whitelist>> list(@Valid KeyWordPaginationRequest request) throws IOException {
+    public R<PageVO<Whitelist>> list(@Valid KeyWordPaginationRequest request) {
         QueryWrapper<Whitelist> wrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(request.getKeyword())) {
             wrapper.and(w -> w.like("ip", request.getKeyword())

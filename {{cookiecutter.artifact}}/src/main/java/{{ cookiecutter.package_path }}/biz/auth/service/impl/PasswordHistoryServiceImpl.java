@@ -36,8 +36,8 @@ public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMappe
     @Async
     @Override
     public void insert(User user, String newPwd, ChangePasswordEnum policy) {
-        Integer currentCount = countHistory(user.getId()) + 1;
-        Integer count = setting.get("pwd.history-count").getIntValue();
+        int currentCount = countHistory(user.getId()) + 1;
+        int count = setting.get("pwd.history-count").getIntValue();
         if (count != 0 && currentCount > count) {
             removeHistory(user.getId(), currentCount - count);
         }

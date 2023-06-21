@@ -8,32 +8,27 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-// 参考文章： https://blog.csdn.net/qq_22075913/article/details/125148535
+/**
+ * 自定义用户信息加载
+ * <a href="https://blog.csdn.net/qq_22075913/article/details/125148535">参考文章</a>
+ */
 @Service
+@RequiredArgsConstructor
 public class UserDetailServiceImpl implements UserDetailsService {
 
-    @Autowired
-    IUserService userService;
-
-    @Autowired
-    IPermissionService permissionService;
-
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
-
-    @Autowired
-    ISettingService setting;
+    final IUserService userService;
+    final IPermissionService permissionService;
+    final StringRedisTemplate stringRedisTemplate;
+    final ISettingService setting;
 
     @Override
     public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {

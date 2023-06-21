@@ -396,7 +396,7 @@ CREATE TABLE `auth_user_group` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `remark`, `admin`) VALUES (1, 1, 1, NULL, 1);
-INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `remark`, `admin`) VALUES (1, 1, 2, NULL, 1);
+INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `remark`, `admin`) VALUES (2, 1, 2, NULL, 1);
 COMMIT;
 
 -- ----------------------------

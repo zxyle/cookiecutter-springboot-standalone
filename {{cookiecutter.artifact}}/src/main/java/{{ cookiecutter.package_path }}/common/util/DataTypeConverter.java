@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.common.util;
 /**
  * 数据类型转换工具类
  */
-public class DataTypeConverter {
+public final class DataTypeConverter {
 
     private DataTypeConverter() {
     }

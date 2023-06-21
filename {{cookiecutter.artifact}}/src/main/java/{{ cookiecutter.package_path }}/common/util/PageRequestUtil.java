@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 /**
  * 检查分页参数工具类
  */
-public class PageRequestUtil {
+public final class PageRequestUtil {
 
     private PageRequestUtil() {
     }

@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.biz.sys.task;
 
 import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -16,13 +16,11 @@ import javax.annotation.PostConstruct;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class LoadDataTask {
 
-    @Autowired
-    IDictService dictService;
-
-    @Autowired
-    ISettingService settingService;
+    final IDictService dictService;
+    final ISettingService settingService;
 
     @PostConstruct
     public void load() {

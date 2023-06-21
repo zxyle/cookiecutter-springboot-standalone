@@ -5,11 +5,13 @@ package {{ cookiecutter.basePackage }}.biz.sys.request;
 
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 登录日志分页查询请求
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class LoginLogRequest extends PaginationRequest {
 
     /**

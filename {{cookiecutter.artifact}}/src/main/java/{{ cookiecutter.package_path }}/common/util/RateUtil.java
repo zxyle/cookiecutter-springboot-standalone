@@ -8,7 +8,7 @@ import java.text.NumberFormat;
 /**
  * 百分比计算工具类
  */
-public class RateUtil {
+public final class RateUtil {
 
     private RateUtil() {
     }

@@ -12,6 +12,7 @@ import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +23,10 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class OpenApiController {
 
-    IOpenApiService thisService;
-
-    public OpenApiController(IOpenApiService thisService) {
-        this.thisService = thisService;
-    }
+    final IOpenApiService thisService;
 
     /**
      * 开放接口分页查询

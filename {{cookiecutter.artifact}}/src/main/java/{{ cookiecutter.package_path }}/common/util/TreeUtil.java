@@ -13,7 +13,7 @@ import java.util.List;
  * 树工具类
  * 可用于用户组管理、菜单管理
  */
-public class TreeUtil {
+public final class TreeUtil {
 
     private TreeUtil() {
     }
