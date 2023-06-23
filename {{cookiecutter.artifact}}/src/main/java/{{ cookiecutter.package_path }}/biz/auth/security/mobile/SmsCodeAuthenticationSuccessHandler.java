@@ -5,8 +5,11 @@ package {{ cookiecutter.basePackage }}.biz.auth.security.mobile;
 
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -24,10 +27,11 @@ import java.io.IOException;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+    final ILoginLogService loginLogService;
     static StringRedisTemplate stringRedisTemplate;
-
 
     // 解决 @Component 下 @Autowired 注入为null的情况
     @Autowired
@@ -39,10 +43,24 @@ public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSucces
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         LoginUser principal = (LoginUser) authentication.getPrincipal();
 
+        // 登录成功后，记录登录日志
+        recordLog(request);
+
         // 登录成功后，返回token
         LoginResponse loginResponse = new LoginResponse(principal.getUser());
         response.setContentType("application/json;charset=UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getOutputStream(), R.ok(loginResponse));
+    }
+
+    private void recordLog(HttpServletRequest request) {
+        String account = (String) request.getAttribute("account");
+        LoginLog loginLog = new LoginLog();
+        loginLog.setIp(request.getRemoteAddr());
+        loginLog.setUa(request.getHeader("User-Agent"));
+        loginLog.setAccount(account);
+        loginLog.setMsg("登录成功");
+        loginLog.setIsSuccess(1);
+        loginLogService.saveLoginLog(loginLog);
     }
 }

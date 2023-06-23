@@ -26,7 +26,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
 
     public SmsCodeAuthenticationFilter() {
         // 处理的验证码登录请求处理url
-        super(new AntPathRequestMatcher("/auth/user/loginByCode", "POST"));
+        super(new AntPathRequestMatcher("/auth/user/login/code", "POST"));
     }
 
     @Override
@@ -49,6 +49,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
         }
 
         account = account.trim();
+        request.setAttribute("account", account);
         // 创建SmsCodeAuthenticationToken(未认证)
         SmsCodeAuthenticationToken authRequest = new SmsCodeAuthenticationToken(account, code);
 

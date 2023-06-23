@@ -4,6 +4,8 @@
 package {{ cookiecutter.basePackage }}.biz.auth.security.mobile;
 
 import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
+import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,23 +18,20 @@ import org.springframework.stereotype.Component;
  * 验证码登录认证配置
  */
 @Component
+@RequiredArgsConstructor
 public class SmsSecurityConfigurerAdapter extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
-    UserDetailsService userDetailsService;
-
-    ValidateService validateService;
-
-    public SmsSecurityConfigurerAdapter(UserDetailsService userDetailsService, ValidateService validateService) {
-        this.userDetailsService = userDetailsService;
-        this.validateService = validateService;
-    }
+    final UserDetailsService userDetailsService;
+    final ValidateService validateService;
+    final ILoginLogService loginLogService;
 
     @Override
     public void configure(HttpSecurity http) {
         // 自定义SmsCodeAuthenticationFilter过滤器
         SmsCodeAuthenticationFilter smsAuthenticationFilter = new SmsCodeAuthenticationFilter();
         smsAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        smsAuthenticationFilter.setAuthenticationSuccessHandler(new SmsCodeAuthenticationSuccessHandler());
+        smsAuthenticationFilter.setAuthenticationSuccessHandler(new SmsCodeAuthenticationSuccessHandler(loginLogService));
+        smsAuthenticationFilter.setAuthenticationFailureHandler(new SmsCodeAuthenticationFailureHandler(loginLogService));
 
         // 设置自定义SmsCodeAuthenticationProvider的认证器userDetailsService
         SmsCodeAuthenticationProvider smsCodeAuthenticationProvider =

@@ -54,7 +54,7 @@ public class LoginController extends AuthBaseController {
     /**
      * 邮箱/手机号 + 验证码登录
      */
-    @PostMapping("/loginByCode")
+    @PostMapping("/login/code")
     public R<LoginResponse> loginByCode(@Valid @RequestBody CodeLoginRequest request) {
         // 登录逻辑直接走Filter即可，无需在这里实现
         log.debug("account: {}, code: {}", request.getAccount(), request.getCode());
