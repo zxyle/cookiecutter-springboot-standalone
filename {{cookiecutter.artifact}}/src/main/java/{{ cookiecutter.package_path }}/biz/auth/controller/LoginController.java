@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.controller;
 import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.CodeLoginRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.request.login.ThirdPartyLoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.LoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
@@ -58,6 +59,17 @@ public class LoginController extends AuthBaseController {
     public R<LoginResponse> loginByCode(@Valid @RequestBody CodeLoginRequest request) {
         // 登录逻辑直接走Filter即可，无需在这里实现
         log.debug("account: {}, code: {}", request.getAccount(), request.getCode());
+        return R.ok(null);
+    }
+
+    /**
+     * 第三方登录
+     */
+    @GetMapping("/login/oauth")
+    public R<LoginResponse> dingTalkLogin(@Valid ThirdPartyLoginRequest request) {
+        log.info("code: {}, provider: {}", request.getCode(), request.getProvider());
+        // 登录逻辑直接走UscCodeAuthenticationFilter即可，无需在这里实现
+        // 该接口占位仅为生成接口文档使用
         return R.ok(null);
     }
 
