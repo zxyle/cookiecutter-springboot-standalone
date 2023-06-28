@@ -24,6 +24,35 @@ def remove_build_tool(tool: str):
     remove_files(file_names)
 
 
+def read_all_files(directory):
+    files = []
+    for root, dirs, files in os.walk(directory):
+        for file_name in files:
+            if file_name.endswith(".java"):
+                file_path = os.path.join(root, file_name)
+                files.append(file_path)
+    return files
+
+
+# 在spring boot 3.0中，javax.*包被移除，需要替换为jakarta.*包
+def replace_namespace():
+    if "{{ cookiecutter.bootVersion }}".split(".")[0] != "3":
+        return
+
+    files = read_all_files("src/main/java")
+    for file_path in files:
+        with open(file_path, 'r') as file:
+            content = file.read()
+
+            updated_content = content.replace("import javax.validation", "import jakarta.validation")
+            updated_content = updated_content.replace("import javax.servlet", "import jakarta.servlet")
+            updated_content = updated_content.replace("import javax.annotation", "import jakarta.annotation")
+            updated_content = updated_content.replace("import javax.mail", "import jakarta.mail")
+
+            with open(file_path, 'w') as file1:
+                file1.write(updated_content)
+
+
 def git_init():
     commands = [
         'git init --initial-branch=master',
@@ -47,6 +76,7 @@ def main():
     tool = "maven"
     remove_build_tool(tool)
     git_init()
+    replace_namespace()
 
 
 if __name__ == "__main__":
