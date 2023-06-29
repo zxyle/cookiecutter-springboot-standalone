@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.CodeLoginRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -42,6 +43,10 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
 
         if (account == null) {
             account = "";
+        }
+
+        if (!(AccountUtil.isEmail(account) || AccountUtil.isMobile(account))) {
+            throw new AuthenticationServiceException("账号格式错误, 请输入正确的手机号或邮箱");
         }
 
         if (code == null) {
