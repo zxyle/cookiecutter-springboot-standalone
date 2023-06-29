@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
-import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
+import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;

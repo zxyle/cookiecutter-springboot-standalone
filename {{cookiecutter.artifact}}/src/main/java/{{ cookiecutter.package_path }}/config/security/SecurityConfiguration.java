@@ -3,10 +3,10 @@
 
 package {{ cookiecutter.basePackage }}.config.security;
 
-import {{ cookiecutter.basePackage }}.biz.auth.security.filter.AntiSpiderFilter;
-import {{ cookiecutter.basePackage }}.biz.auth.security.filter.IpFilter;
-import {{ cookiecutter.basePackage }}.biz.auth.security.filter.JwtAuthenticationTokenFilter;
-import {{ cookiecutter.basePackage }}.biz.auth.security.mobile.SmsSecurityConfigurerAdapter;
+import {{ cookiecutter.basePackage }}.config.security.filter.AntiSpiderFilter;
+import {{ cookiecutter.basePackage }}.config.security.filter.IpFilter;
+import {{ cookiecutter.basePackage }}.config.security.filter.JwtAuthenticationTokenFilter;
+import {{ cookiecutter.basePackage }}.config.security.mobile.SmsSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

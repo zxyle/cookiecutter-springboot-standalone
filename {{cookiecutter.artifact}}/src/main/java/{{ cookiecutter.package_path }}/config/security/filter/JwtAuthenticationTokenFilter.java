@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.config.security.filter;
 
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
-import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
+import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
