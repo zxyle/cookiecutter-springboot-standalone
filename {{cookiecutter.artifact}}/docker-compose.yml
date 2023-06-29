@@ -30,4 +30,4 @@ services:
       - app
 
   app:
-    image: openjdk:{{ cookiecutter.javaVersion }}
+    image: eclipse-temurin:{{ cookiecutter.javaVersion }}

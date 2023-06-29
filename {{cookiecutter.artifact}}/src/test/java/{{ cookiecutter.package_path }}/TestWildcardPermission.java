@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }};
 
-import {{ cookiecutter.basePackage }}.biz.auth.security.WildcardPermission;
+import {{ cookiecutter.basePackage }}.config.security.WildcardPermission;
 import org.junit.jupiter.api.Test;
 import org.wildfly.common.Assert;
 

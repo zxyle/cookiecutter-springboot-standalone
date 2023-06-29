@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.aspect;
 
-import {{ cookiecutter.basePackage }}.biz.auth.security.LoginUser;
+import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IOperateLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;

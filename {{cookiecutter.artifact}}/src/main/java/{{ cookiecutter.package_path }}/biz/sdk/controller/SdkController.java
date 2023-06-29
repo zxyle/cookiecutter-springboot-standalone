@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.sdk.controller;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.sdk.entity.OpenApi;
 import {{ cookiecutter.basePackage }}.biz.sdk.request.SdkRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.security.WildcardPermission;
+import {{ cookiecutter.basePackage }}.config.security.WildcardPermission;
 import {{ cookiecutter.basePackage }}.biz.sdk.service.IOpenApiService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.util.ObjectToHashMap;
