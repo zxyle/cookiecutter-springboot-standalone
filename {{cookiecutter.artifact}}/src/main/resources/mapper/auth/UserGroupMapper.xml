@@ -25,4 +25,34 @@
             a.`user_id` = 1
     </select>
 
+    <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Group">
+        SELECT
+        b.*
+        FROM ( SELECT group_id FROM auth_user_group WHERE user_id = #{userId} ) a
+        LEFT JOIN auth_group b
+        ON a.group_id = b.id
+        <if test="request != null and request.keyword != null">
+            WHERE b.name LIKE CONCAT('%', #{request.keyword}, '%')
+        </if>
+    </select>
+
+    <select id="pageUser" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.User">
+        SELECT
+        b.id,
+        b.nickname,
+        b.employee_code,
+        b.main_job
+        FROM (SELECT user_id FROM auth_user_group WHERE group_id=#{groupId}) a
+        LEFT JOIN auth_user b
+        ON a.user_id=b.id
+        <where>
+            <if test="request != null and request.keyword != null">
+                b.nickname LIKE CONCAT('%', #{request.keyword}, '%')
+            </if>
+            <if test="request != null and request.enabled != null">
+                AND b.enabled = #{request.enabled}
+            </if>
+        </where>
+    </select>
+
 </mapper>

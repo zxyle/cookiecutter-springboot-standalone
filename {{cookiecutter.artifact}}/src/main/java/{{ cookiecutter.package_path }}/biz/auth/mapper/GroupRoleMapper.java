@@ -4,8 +4,10 @@
 package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,5 +20,10 @@ public interface GroupRoleMapper extends BaseMapper<GroupRole> {
 
     // 查询用户组拥有的角色编码列表
     List<Role> getRolesByGroupId(Long groupId);
+
+    /**
+     * 分页查询用户组下的角色
+     */
+    IPage<Role> page(IPage<Role> page, Long groupId, PaginationRequest request);
 
 }

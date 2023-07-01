@@ -3,9 +3,11 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.RolePermission;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,5 +20,10 @@ public interface RolePermissionMapper extends BaseMapper<RolePermission> {
 
     // 查询角色所拥有的权限列表
     List<Permission> getPermissionByRoleId(Long roleId);
+
+    /**
+     * 分页查询角色拥有的权限
+     */
+    IPage<Permission> page(IPage<Permission> page, Long roleId, PaginationRequest request);
 
 }

@@ -10,4 +10,19 @@
         WHERE a.group_id = #{groupId}
     </select>
 
+    <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Role">
+        SELECT
+        b.*
+        FROM ( SELECT role_id FROM auth_group_role WHERE group_id = #{groupId} ) a
+        LEFT JOIN auth_role b
+        ON a.role_id = b.id
+        <where>
+            <if test="request != null and request.keyword != null">
+                b.name LIKE CONCAT('%', #{request.keyword}, '%')
+                OR b.code LIKE CONCAT('%', #{request.keyword}, '%')
+                OR b.description LIKE CONCAT('%', #{request.keyword}, '%')
+            </if>
+        </where>
+    </select>
+
 </mapper>

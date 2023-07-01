@@ -52,7 +52,7 @@ public class ${table.controllerName} {
     /**
      * ${table.comment!}分页查询
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:list')")
     @GetMapping("/${table.entityPath}s")
     public R<PageVO<${entity}>> page(@Valid PaginationRequest request, HttpServletResponse response) throws IOException {
         QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
@@ -79,7 +79,7 @@ public class ${table.controllerName} {
      * ${table.comment!}列表查询
      */
     // 当数据量不大时，需要查出全部数据，可以使用此接口，不需要可以删除
-    // @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:list')")
+    // @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:list')")
     // @GetMapping("/${table.entityPath}s")
     // public R<List<${entity}>> list() {
         // QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
@@ -90,7 +90,7 @@ public class ${table.controllerName} {
     /**
      * 新增${table.comment!}
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:add')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:add')")
     @PostMapping("/${table.entityPath}s")
     public R<${entity}> add(@Valid @RequestBody ${entity} entity) {
         boolean success = thisService.save(entity);
@@ -101,7 +101,7 @@ public class ${table.controllerName} {
     /**
      * 按ID查询${table.comment!}
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:get')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:get')")
     @GetMapping("/${table.entityPath}s/{id}")
     public R<${entity}> get(@PathVariable Long id) {
         ${entity} entity = thisService.queryById(id);
@@ -111,7 +111,7 @@ public class ${table.controllerName} {
     /**
      * 按ID更新${table.comment!}
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:update')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:update')")
     @PutMapping("/${table.entityPath}s/{id}")
     public R<Void> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
         entity.setId(id);
@@ -122,7 +122,7 @@ public class ${table.controllerName} {
     /**
      * 按ID删除${table.comment!}
      */
-    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}s:delete')")
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:delete')")
     @DeleteMapping("/${table.entityPath}s/{id}")
     public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);

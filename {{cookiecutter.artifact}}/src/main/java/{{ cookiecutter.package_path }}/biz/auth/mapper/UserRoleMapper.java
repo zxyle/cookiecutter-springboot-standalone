@@ -4,8 +4,10 @@
 package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,4 +20,9 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
 
     // 根据用户ID 查询该用户所拥有的角色信息
     List<Role> selectRoleByUserId(Long userId);
+
+    /**
+     * 分页查询用户直接拥有的角色
+     */
+    IPage<Role> page(IPage<Role> page, Long userId, PaginationRequest request);
 }

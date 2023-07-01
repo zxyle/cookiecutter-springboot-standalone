@@ -8,6 +8,9 @@ import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 /**
  * 用户角色关联
  */
@@ -26,6 +29,8 @@ public class UserRole extends BaseEntity {
     /**
      * 角色ID
      */
+    @Positive(message = "角色ID必须为正数")
+    @NotNull(message = "角色ID不能为空")
     private Long roleId;
 
     /**

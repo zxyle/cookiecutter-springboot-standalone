@@ -31,7 +31,7 @@ public class OpenApiController {
     /**
      * 开放接口分页查询
      */
-    @PreAuthorize("@ck.hasPermit('auth:openApis:list')")
+    @PreAuthorize("@ck.hasPermit('auth:openApi:list')")
     @GetMapping("/openApis")
     public R<PageVO<OpenApi>> page(@Valid PaginationRequest request) {
         QueryWrapper<OpenApi> wrapper = new QueryWrapper<>();
@@ -46,7 +46,7 @@ public class OpenApiController {
     /**
      * 新增开放接口
      */
-    @PreAuthorize("@ck.hasPermit('auth:openApis:add')")
+    @PreAuthorize("@ck.hasPermit('auth:openApi:add')")
     @PostMapping("/openApis")
     public R<OpenApi> add(@Valid @RequestBody OpenApi entity) {
         boolean success = thisService.save(entity);
@@ -57,7 +57,7 @@ public class OpenApiController {
     /**
      * 按ID查询开放接口
      */
-    @PreAuthorize("@ck.hasPermit('auth:openApis:get')")
+    @PreAuthorize("@ck.hasPermit('auth:openApi:get')")
     @GetMapping("/openApis/{id}")
     public R<OpenApi> get(@PathVariable Long id) {
         OpenApi entity = thisService.queryById(id);
@@ -68,7 +68,7 @@ public class OpenApiController {
     /**
      * 按ID更新开放接口
      */
-    @PreAuthorize("@ck.hasPermit('auth:openApis:update')")
+    @PreAuthorize("@ck.hasPermit('auth:openApi:update')")
     @PutMapping("/openApis/{id}")
     public R<Void> update(@Valid @RequestBody OpenApi entity, @PathVariable Long id) {
         entity.setId(id);
@@ -80,7 +80,7 @@ public class OpenApiController {
     /**
      * 按ID删除开放接口
      */
-    @PreAuthorize("@ck.hasPermit('auth:openApis:delete')")
+    @PreAuthorize("@ck.hasPermit('auth:openApi:delete')")
     @DeleteMapping("/openApis/{id}")
     public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);

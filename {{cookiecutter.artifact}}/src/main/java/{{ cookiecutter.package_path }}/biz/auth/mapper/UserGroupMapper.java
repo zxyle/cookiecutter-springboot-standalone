@@ -3,10 +3,13 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,4 +26,19 @@ public interface UserGroupMapper extends BaseMapper<UserGroup> {
     // 查询用户所属的用户组
     List<Group> listGroups(Long userId);
 
+    /**
+     * 分页查询用户所属的用户组
+     */
+    IPage<Group> page(IPage<Group> page, Long userId, PaginationRequest request);
+
+    /**
+     * 分页查询用户组下的用户
+     *
+     * @param page    分页对象
+     * @param groupId 用户组ID
+     * @param request 请求对象
+     */
+    IPage<User> pageUser(IPage<User> page, Long groupId, ListAuthRequest request);
+
 }
+

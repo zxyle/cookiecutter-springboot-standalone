@@ -3,9 +3,11 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
-import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupPermission;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,5 +20,10 @@ public interface GroupPermissionMapper extends BaseMapper<GroupPermission> {
 
     // 查询用户组拥有的权限代码列表
     List<Permission> getPermissionByGroupId(Long groupId);
+
+    /**
+     * 分页查询用户组下的权限
+     */
+    IPage<Permission> page(IPage<Permission> page, Long groupId, PaginationRequest request);
 
 }

@@ -42,8 +42,8 @@ public class RoleController extends AuthBaseController {
     /**
      * 角色列表分页查询
      */
+    @PreAuthorize("@ck.hasPermit('auth:role:list')")
     @GetMapping("/roles")
-    @PreAuthorize("@ck.hasPermit('auth:roles:list')")
     public R<PageVO<RoleResponse>> list(@Valid ListAuthRequest request) {
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
         wrapper.select("id, name, code, description");
@@ -65,8 +65,8 @@ public class RoleController extends AuthBaseController {
     /**
      * 创建角色
      */
+    @PreAuthorize("@ck.hasPermit('auth:role:add')")
     @PostMapping("/roles")
-    @PreAuthorize("@ck.hasPermit('auth:roles:add')")
     public R<Role> add(@Valid @RequestBody AddRoleRequest request) {
         if (thisService.isDuplicate(request.getName(), request.getCode())) {
             return R.fail("角色名称或代码重复");
@@ -91,8 +91,8 @@ public class RoleController extends AuthBaseController {
      *
      * @param roleId 角色ID
      */
+    @PreAuthorize("@ck.hasPermit('auth:role:get')")
     @GetMapping("/roles/{roleId}")
-    @PreAuthorize("@ck.hasPermit('auth:roles:get')")
     public R<RoleResponse> get(@PathVariable Long roleId) {
         Role role = thisService.queryById(roleId);
         if (role == null) {
@@ -109,8 +109,8 @@ public class RoleController extends AuthBaseController {
      *
      * @param roleId 角色ID
      */
+    @PreAuthorize("@ck.hasPermit('auth:role:update')")
     @PutMapping("/roles/{roleId}")
-    @PreAuthorize("@ck.hasPermit('auth:roles:update')")
     public R<Void> update(@Valid @RequestBody UpdateRoleRequest request, @PathVariable Long roleId) {
         // 更新角色信息
         Role role = new Role();
@@ -134,8 +134,8 @@ public class RoleController extends AuthBaseController {
      *
      * @param roleId 角色ID
      */
+    @PreAuthorize("@ck.hasPermit('auth:role:delete')")
     @DeleteMapping("/roles/{roleId}")
-    @PreAuthorize("@ck.hasPermit('auth:roles:delete')")
     public R<Void> delete(@PathVariable Long roleId) {
         if (thisService.isAlreadyUsed(roleId)) {
             return R.fail("该角色正在使用，无法删除");

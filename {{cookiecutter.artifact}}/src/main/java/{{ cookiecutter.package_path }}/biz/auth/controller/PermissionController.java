@@ -76,8 +76,8 @@ public class PermissionController extends AuthBaseController {
      *
      * @param permissionId 权限ID
      */
-    @GetMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permission:get')")
+    @GetMapping("/permissions/{permissionId}")
     public R<Permission> get(@PathVariable Long permissionId) {
         Permission entity = thisService.getById(permissionId);
         return entity == null ? R.fail("权限不存在") : R.ok(entity);
@@ -88,9 +88,9 @@ public class PermissionController extends AuthBaseController {
      *
      * @param permissionId 权限ID
      */
-    @PutMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permission:update')")
-    public R<Object> update(@Valid @RequestBody Permission entity, @PathVariable Long permissionId) {
+    @PutMapping("/permissions/{permissionId}")
+    public R<Void> update(@Valid @RequestBody Permission entity, @PathVariable Long permissionId) {
         Permission permission = thisService.getById(permissionId);
         entity.setId(permissionId);
         boolean success = thisService.updateById(entity);
@@ -107,8 +107,8 @@ public class PermissionController extends AuthBaseController {
      *
      * @param permissionId 权限ID
      */
-    @DeleteMapping("/permissions/{permissionId}")
     @PreAuthorize("@ck.hasPermit('auth:permission:delete')")
+    @DeleteMapping("/permissions/{permissionId}")
     public R<Void> delete(@PathVariable Long permissionId) {
         if (thisService.isAlreadyUsed(permissionId)) {
             return R.fail("删除失败，该权限正在使用");

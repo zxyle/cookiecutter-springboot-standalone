@@ -8,6 +8,9 @@ import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 /**
  * 角色权限关联
  */
@@ -26,6 +29,8 @@ public class RolePermission extends BaseEntity {
     /**
      * 权限ID
      */
+    @Positive(message = "权限ID必须为正数")
+    @NotNull(message = "权限ID不能为空")
     private Long permissionId;
 
     /**
