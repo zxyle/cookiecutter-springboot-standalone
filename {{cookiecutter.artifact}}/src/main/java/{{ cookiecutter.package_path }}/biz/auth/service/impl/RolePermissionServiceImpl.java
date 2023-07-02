@@ -100,18 +100,13 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
             return false;
         }
 
-        // 删除旧的映射关系
+        // 删除已有的映射关系
         boolean del = deleteRelation(roleId, null);
 
-        boolean result = true;
         // 创建新的映射关系
-        for (Long permissionId : permissionIds) {
-            boolean success = createRelation(roleId, permissionId);
-            if (!success) {
-                result = false;
-            }
-        }
-        return del && result;
+        boolean success = permissionIds.stream()
+                .allMatch(permissionId -> createRelation(roleId, permissionId));
+        return del && success;
     }
 
     // 构建wrapper

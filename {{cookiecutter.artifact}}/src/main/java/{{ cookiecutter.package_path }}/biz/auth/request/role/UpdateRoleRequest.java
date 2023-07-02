@@ -6,6 +6,8 @@ package {{ cookiecutter.basePackage }}.biz.auth.request.role;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 /**
@@ -33,6 +35,6 @@ public class UpdateRoleRequest {
     /**
      * 权限id列表
      */
-    private List<Long> permissionIds;
+    private List<@Positive @NotNull Long> permissionIds;
 
 }

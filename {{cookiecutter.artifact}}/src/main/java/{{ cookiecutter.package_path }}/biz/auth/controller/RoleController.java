@@ -69,7 +69,7 @@ public class RoleController extends AuthBaseController {
     @PostMapping("/roles")
     public R<Role> add(@Valid @RequestBody AddRoleRequest request) {
         if (thisService.isDuplicate(request.getName(), request.getCode())) {
-            return R.fail("角色名称或代码重复");
+            return R.fail("角色名称或角色代码已重复");
         }
 
         Role role = new Role();
