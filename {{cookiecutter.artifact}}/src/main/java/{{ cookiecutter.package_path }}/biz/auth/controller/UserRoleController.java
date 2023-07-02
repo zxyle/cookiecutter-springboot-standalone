@@ -35,7 +35,7 @@ public class UserRoleController extends AuthBaseController {
     final UserRoleMapper userRoleMapper;
 
     /**
-     * 分页查询用户的角色信息
+     * 分页查询用户拥有的角色
      *
      * @param userId 用户ID
      */

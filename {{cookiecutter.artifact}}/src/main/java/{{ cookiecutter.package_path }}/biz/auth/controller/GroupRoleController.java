@@ -35,7 +35,7 @@ public class GroupRoleController extends AuthBaseController {
     final GroupRoleMapper thisMapper;
 
     /**
-     * 分页查询根据用户组拥有的角色
+     * 分页查询用户组拥有的角色
      *
      * @param groupId 用户组ID
      */

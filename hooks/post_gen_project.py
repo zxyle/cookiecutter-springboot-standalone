@@ -48,6 +48,12 @@ def replace_namespace():
             updated_content = updated_content.replace("import javax.servlet", "import jakarta.servlet")
             updated_content = updated_content.replace("import javax.annotation", "import jakarta.annotation")
             updated_content = updated_content.replace("import javax.mail", "import jakarta.mail")
+            # updated_content = updated_content.replace("import javax.xml", "import jakarta.xml")
+            # updated_content = updated_content.replace("import javax.transaction", "import jakarta.transaction")
+            # updated_content = updated_content.replace("import javax.ws", "import jakarta.ws")
+            # updated_content = updated_content.replace("import javax.security", "import jakarta.security")
+            # updated_content = updated_content.replace("import javax.json", "import jakarta.json")
+            # updated_content = updated_content.replace("import javax.enterprise", "import jakarta.enterprise")
 
             with open(file_path, 'w') as file1:
                 file1.write(updated_content)

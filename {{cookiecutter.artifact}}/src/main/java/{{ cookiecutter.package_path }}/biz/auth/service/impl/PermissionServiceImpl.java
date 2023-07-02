@@ -72,7 +72,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
      *
      * @param userId 用户ID
      */
-    @Cacheable(cacheNames = "permissionCache", key = "#userId")
+    @Cacheable(cacheNames = "permissionCache", key = "#userId", unless = "#result == null")
     @Override
     public List<Permission> getAllPermissions(Long userId) {
         List<UserGroup> groups = userGroupService.queryRelation(userId, 0L);

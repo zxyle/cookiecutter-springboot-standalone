@@ -364,7 +364,9 @@ CREATE TABLE `auth_user` (
   `registered_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
   `last_login_time` datetime DEFAULT NULL COMMENT '最后登录时间',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_email` (`email`) USING BTREE
+  UNIQUE KEY `uk_email` (`email`) USING BTREE,
+  KEY `idx_username` (`username`) USING BTREE,
+  KEY `idx_mobile` (`mobile`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户';
 
 -- ----------------------------
