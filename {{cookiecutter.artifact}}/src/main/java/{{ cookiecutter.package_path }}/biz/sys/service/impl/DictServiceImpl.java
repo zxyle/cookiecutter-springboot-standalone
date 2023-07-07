@@ -47,6 +47,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         wrapper.select("label, value");
         wrapper.eq("dict_type", dictType);
+        wrapper.orderByAsc("dict_sort");
         return list(wrapper);
     }
 }
