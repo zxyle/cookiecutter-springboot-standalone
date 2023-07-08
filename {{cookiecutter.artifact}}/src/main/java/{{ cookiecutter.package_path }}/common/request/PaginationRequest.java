@@ -89,10 +89,17 @@ public class PaginationRequest extends BaseRequest {
 
 
     /**
-     * 是否asc排序
+     * 是否正序排序
      */
     public boolean isAsc() {
-        return StringUtils.isBlank(order) || order.equalsIgnoreCase(DEFAULT_ORDER);
+        return StringUtils.isNotBlank(order) && order.equalsIgnoreCase(DEFAULT_ORDER);
+    }
+
+    /**
+     * 是否倒序排序
+     */
+    public boolean isDesc() {
+        return StringUtils.isNotBlank(order) && !order.equalsIgnoreCase(DEFAULT_ORDER);
     }
 
     public String getField() {

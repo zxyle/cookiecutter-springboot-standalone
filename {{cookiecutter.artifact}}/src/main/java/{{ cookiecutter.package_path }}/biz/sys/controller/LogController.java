@@ -6,13 +6,15 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
-import {{ cookiecutter.basePackage }}.biz.sys.mapper.LoginLogMapper;
+import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
 import {{ cookiecutter.basePackage }}.biz.sys.request.LoginLogRequest;
+import {{ cookiecutter.basePackage }}.biz.sys.request.OperateLogRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
-import {{ cookiecutter.basePackage }}.common.response.R;
-import lombok.RequiredArgsConstructor;
+import {{ cookiecutter.basePackage }}.biz.sys.service.IOperateLogService;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
+import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,27 +24,43 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 /**
- * 登录日志
+ * 日志审计
  */
 @RestController
+@RequestMapping("/sys")
 @RequiredArgsConstructor
-@RequestMapping("/sys/login")
-public class LoginLogController {
+public class LogController {
 
-    final LoginLogMapper thisMapper;
-    final ILoginLogService thisService;
+    final ILoginLogService loginLogService;
+    final IOperateLogService operateLogService;
 
     /**
      * 登录日志列表分页查询
      */
     @PreAuthorize("@ck.hasPermit('sys:login:list')")
-    @GetMapping("/logs")
+    @GetMapping("/login/logs")
     public R<PageVO<LoginLog>> list(@Valid LoginLogRequest request) {
         QueryWrapper<LoginLog> wrapper = new QueryWrapper<>();
         wrapper.like(StringUtils.isNotBlank(request.getAccount()), "account", request.getAccount());
+        wrapper.orderBy(true, request.isAsc(), "create_time");
         IPage<LoginLog> page = PageRequestUtil.checkForMp(request);
-        IPage<LoginLog> list = thisService.page(page, wrapper);
+        IPage<LoginLog> list = loginLogService.page(page, wrapper);
         return PageRequestUtil.extractFromMp(list);
     }
 
+    /**
+     * 操作日志列表分页查询
+     */
+    @PreAuthorize("@ck.hasPermit('sys:operate:list')")
+    @GetMapping("/operate/logs")
+    public R<PageVO<OperateLog>> page(@Valid OperateLogRequest request) {
+        QueryWrapper<OperateLog> wrapper = new QueryWrapper<>();
+        wrapper.eq(request.getUserId() != null, "user_id", request.getUserId());
+        wrapper.between(request.getStartTime() != null && request.getEndTime() != null,
+                "operate_time", request.getStartTime(), request.getEndTime());
+        wrapper.orderBy(true, request.isAsc(), "operate_time");
+        IPage<OperateLog> page = PageRequestUtil.checkForMp(request);
+        IPage<OperateLog> list = operateLogService.page(page, wrapper);
+        return PageRequestUtil.extractFromMp(list);
+    }
 }

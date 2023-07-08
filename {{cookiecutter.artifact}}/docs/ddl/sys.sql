@@ -600,10 +600,10 @@ CREATE TABLE `sys_login_log` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `account` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '登录用户名',
-  `ip` varchar(255) DEFAULT NULL COMMENT 'IP地址',
+  `ip` varchar(15) DEFAULT NULL COMMENT 'IP地址',
   `ua` varchar(255) DEFAULT NULL COMMENT '浏览器请求头',
   `msg` varchar(255) DEFAULT NULL COMMENT '消息',
-  `is_success` tinyint unsigned DEFAULT '0' COMMENT '1-成功 0-失败',
+  `success` tinyint unsigned DEFAULT '0' COMMENT '1-成功 0-失败',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='登录日志';
 

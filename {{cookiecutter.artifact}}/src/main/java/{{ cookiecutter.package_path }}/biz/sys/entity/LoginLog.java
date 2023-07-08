@@ -46,6 +46,6 @@ public class LoginLog extends BaseEntity {
     /**
      * 登录是否成功（1-成功 0-失败）
      */
-    private Integer isSuccess;
+    private Integer success;
 
 }

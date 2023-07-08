@@ -60,7 +60,7 @@ public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSucces
         loginLog.setUa(request.getHeader("User-Agent"));
         loginLog.setAccount(account);
         loginLog.setMsg("登录成功");
-        loginLog.setIsSuccess(1);
+        loginLog.setSuccess(1);
         loginLogService.saveLoginLog(loginLog);
     }
 }
