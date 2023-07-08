@@ -14,7 +14,7 @@
 
     <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
         SELECT
-        b.*
+            b.*
         FROM (SELECT permission_id FROM auth_user_permission WHERE user_id=#{userId}) a
         LEFT JOIN auth_permission b
         ON a.permission_id=b.id

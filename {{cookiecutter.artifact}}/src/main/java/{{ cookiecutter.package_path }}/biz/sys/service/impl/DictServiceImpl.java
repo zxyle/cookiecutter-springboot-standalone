@@ -43,7 +43,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
      */
     @Override
     @Cacheable(value = "dictCache", key = "#dictType", unless = "#result == null")
-    public List<Dict> listAllDicts(String dictType) {
+    public List<Dict> listDictsByType(String dictType) {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         wrapper.select("label, value");
         wrapper.eq("dict_type", dictType);

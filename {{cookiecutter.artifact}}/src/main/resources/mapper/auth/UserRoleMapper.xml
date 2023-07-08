@@ -13,7 +13,7 @@
 
     <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Role">
         SELECT
-        b.*
+            b.*
         FROM ( SELECT role_id FROM auth_user_role WHERE user_id = #{userId} ) a
         LEFT JOIN auth_role b
         ON a.role_id = b.id

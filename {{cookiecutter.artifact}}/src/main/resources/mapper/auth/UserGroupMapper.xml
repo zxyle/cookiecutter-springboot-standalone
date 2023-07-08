@@ -27,7 +27,7 @@
 
     <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Group">
         SELECT
-        b.*
+            b.*
         FROM ( SELECT group_id FROM auth_user_group WHERE user_id = #{userId} ) a
         LEFT JOIN auth_group b
         ON a.group_id = b.id
@@ -38,10 +38,8 @@
 
     <select id="pageUser" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.User">
         SELECT
-        b.id,
-        b.nickname,
-        b.employee_code,
-        b.main_job
+            b.id,
+            b.nickname
         FROM (SELECT user_id FROM auth_user_group WHERE group_id=#{groupId}) a
         LEFT JOIN auth_user b
         ON a.user_id=b.id

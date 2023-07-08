@@ -72,7 +72,7 @@ public class DictController {
         Map<String, List<Dict>> map = new HashMap<>();
         String[] types = request.getTypes().split(",");
         for (String type : types) {
-            List<Dict> dicts = thisService.listAllDicts(type.trim());
+            List<Dict> dicts = thisService.listDictsByType(type.trim());
             map.put(type, dicts);
         }
         return R.ok(map);

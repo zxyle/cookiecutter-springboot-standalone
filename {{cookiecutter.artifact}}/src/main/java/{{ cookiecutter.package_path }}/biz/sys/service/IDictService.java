@@ -26,5 +26,5 @@ public interface IDictService extends IService<Dict> {
      *
      * @param dictType 字典类型
      */
-    List<Dict> listAllDicts(String dictType);
+    List<Dict> listDictsByType(String dictType);
 }
