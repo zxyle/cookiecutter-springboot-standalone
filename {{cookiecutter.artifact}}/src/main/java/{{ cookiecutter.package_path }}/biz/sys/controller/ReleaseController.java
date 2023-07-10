@@ -44,7 +44,7 @@ public class ReleaseController {
     @PostMapping("/releases")
     public R<Release> add(@Valid @RequestBody Release entity) {
         boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增失败");
+        return success ? R.ok(entity) : R.fail("新增发布版本失败");
     }
 
 
@@ -66,7 +66,7 @@ public class ReleaseController {
     public R<Void> update(@Valid @RequestBody Release entity, @PathVariable Long id) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        return success ? R.ok("更新成功") : R.fail("更新失败");
+        return success ? R.ok("更新发布版本成功") : R.fail("更新发布版本失败");
     }
 
     /**
@@ -76,7 +76,7 @@ public class ReleaseController {
     @DeleteMapping("/releases/{id}")
     public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        return success ? R.ok("删除成功") : R.fail("删除失败");
+        return success ? R.ok("删除发布版本成功") : R.fail("删除发布版本失败");
     }
 
 }

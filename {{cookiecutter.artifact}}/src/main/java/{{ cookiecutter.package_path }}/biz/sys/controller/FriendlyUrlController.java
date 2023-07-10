@@ -31,7 +31,7 @@ public class FriendlyUrlController {
      * 获取友链列表
      */
     @GetMapping("/urls")
-    @Cacheable(cacheNames = "urlCache")
+    @Cacheable(cacheNames = "urlCache", unless = "#result == null || #result.size() == 0")
     public R<List<FriendlyUrl>> list() {
         QueryWrapper<FriendlyUrl> wrapper = new QueryWrapper<>();
         wrapper.select("content", "url");
@@ -47,8 +47,8 @@ public class FriendlyUrlController {
     @PreAuthorize("@ck.hasPermit('sys:friendly:add')")
     @PostMapping("/urls")
     public R<FriendlyUrl> add(@Valid @RequestBody FriendlyUrl entity) {
-        thisService.save(entity);
-        return R.ok(entity);
+        boolean success = thisService.save(entity);
+        return success ? R.ok(entity) : R.fail("新增失败");
     }
 
     /**
@@ -63,8 +63,8 @@ public class FriendlyUrlController {
         if (entity == null) {
             return R.fail("友链不存在");
         }
-        thisService.removeById(id);
-        return R.ok("删除成功");
+        boolean success = thisService.removeById(id);
+        return success ? R.ok("删除友链成功") : R.fail("删除友链失败");
     }
 
     /**

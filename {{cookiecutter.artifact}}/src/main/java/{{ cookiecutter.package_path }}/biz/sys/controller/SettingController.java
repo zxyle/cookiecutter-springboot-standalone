@@ -46,7 +46,7 @@ public class SettingController {
     @PostMapping("/settings")
     public R<Setting> add(@Valid @RequestBody Setting entity) {
         boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增失败");
+        return success ? R.ok(entity) : R.fail("新增系统设置失败");
     }
 
 
@@ -70,7 +70,7 @@ public class SettingController {
         Setting setting = thisService.getById(id);
         String optionValue = entity.getOptionValue();
         Item item = thisService.update(setting.getOptionLabel(), optionValue);
-        return item != null ? R.ok("更新成功") : R.fail("更新失败");
+        return item != null ? R.ok("更新系统设置成功") : R.fail("更新系统设置失败");
     }
 
     /**
@@ -80,7 +80,7 @@ public class SettingController {
     @DeleteMapping("/settings/{id}")
     public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        return success ? R.ok("删除成功") : R.fail("删除失败");
+        return success ? R.ok("删除系统设置成功") : R.fail("删除系统设置失败");
     }
 
 }

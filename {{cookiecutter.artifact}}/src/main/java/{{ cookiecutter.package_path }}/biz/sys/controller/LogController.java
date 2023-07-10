@@ -35,7 +35,7 @@ public class LogController {
     final IOperateLogService operateLogService;
 
     /**
-     * 登录日志列表分页查询
+     * 登录日志分页查询
      */
     @PreAuthorize("@ck.hasPermit('sys:login:list')")
     @GetMapping("/login/logs")
@@ -49,7 +49,7 @@ public class LogController {
     }
 
     /**
-     * 操作日志列表分页查询
+     * 操作日志分页查询
      */
     @PreAuthorize("@ck.hasPermit('sys:operate:list')")
     @GetMapping("/operate/logs")

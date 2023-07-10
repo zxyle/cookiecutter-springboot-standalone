@@ -9,7 +9,7 @@ import {{ cookiecutter.basePackage }}.biz.sdk.request.SdkRequest;
 import {{ cookiecutter.basePackage }}.config.security.WildcardPermission;
 import {{ cookiecutter.basePackage }}.biz.sdk.service.IOpenApiService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
-import {{ cookiecutter.basePackage }}.biz.auth.util.ObjectToHashMap;
+import {{ cookiecutter.basePackage }}.common.util.ObjectToHashMap;
 import {{ cookiecutter.basePackage }}.biz.auth.util.SignUtils;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;

@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 
 /**
- * 意见反馈
+ * 意见反馈管理
  */
 @RestController
 @RequestMapping("/sys")
@@ -68,7 +68,7 @@ public class FeedbackController {
     @PostMapping("/feedbacks")
     public R<Feedback> add(@Valid @RequestBody Feedback entity) {
         boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增失败");
+        return success ? R.ok(entity) : R.fail("新增意见反馈失败");
     }
 
 
@@ -91,7 +91,7 @@ public class FeedbackController {
         entity.setId(id);
         checkId(id);
         boolean success = thisService.updateById(entity);
-        return success ? R.ok("更新成功") : R.fail("更新失败");
+        return success ? R.ok("更新意见反馈成功") : R.fail("更新意见反馈失败");
     }
 
     /**
@@ -101,7 +101,7 @@ public class FeedbackController {
     @DeleteMapping("/feedbacks/{id}")
     public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        return success ? R.ok("删除成功") : R.fail("删除失败");
+        return success ? R.ok("删除意见反馈成功") : R.fail("删除意见反馈失败");
     }
 
     public void checkId(Long id) {

@@ -50,7 +50,7 @@ public class RedisController {
             return R.fail("删除失败，key不存在");
         }
         Boolean delete = stringRedisTemplate.delete(key);
-        return Boolean.TRUE.equals(delete) ? R.ok("删除成功") : R.fail("删除失败");
+        return Boolean.TRUE.equals(delete) ? R.ok("删除key成功") : R.fail("删除key失败");
     }
 
     /**
@@ -109,7 +109,7 @@ public class RedisController {
         }
 
         stringRedisTemplate.rename(oldKey, newKey);
-        return R.ok("重命名成功");
+        return R.ok("重命名key成功");
     }
 
     /**

@@ -50,7 +50,7 @@ public class InfoController {
     @PostMapping("/infos")
     public R<Info> add(@Valid @RequestBody Info entity) {
         boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增失败");
+        return success ? R.ok(entity) : R.fail("新增系统信息失败");
     }
 
     /**
@@ -61,7 +61,7 @@ public class InfoController {
     public R<Void> update(@PathVariable Long id, @Valid @RequestBody Info entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        return success ? R.ok("更新成功") : R.fail("更新失败");
+        return success ? R.ok("更新系统信息成功") : R.fail("更新系统信息失败");
     }
 
 
@@ -72,7 +72,7 @@ public class InfoController {
     @DeleteMapping("/infos/{id}")
     public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        return success ? R.ok("删除成功") : R.fail("删除失败");
+        return success ? R.ok("删除系统信息成功") : R.fail("删除系统信息失败");
     }
 
 }

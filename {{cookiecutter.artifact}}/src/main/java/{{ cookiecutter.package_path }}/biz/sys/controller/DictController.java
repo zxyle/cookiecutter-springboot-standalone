@@ -13,6 +13,7 @@ import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class DictController {
      * 新增字典
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:add')")
-    @Cacheable(cacheNames = "dictCache")
+    @CacheEvict(cacheNames = "dictCache", key = "#entity.dictType")
     @PostMapping("/dicts")
     public R<Dict> add(@Valid @RequestBody Dict entity) {
         boolean success = thisService.save(entity);
@@ -93,6 +94,7 @@ public class DictController {
     /**
      * 按ID更新字典
      */
+    @CacheEvict(cacheNames = "dictCache", key = "#entity.dictType")
     @PreAuthorize("@ck.hasPermit('sys:dict:update')")
     @PutMapping("/dicts/{id}")
     public R<Void> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
