@@ -26,10 +26,10 @@ import java.time.Duration;
 public class TokenController extends AuthBaseController {
 
     // token刷新窗口期
-    public static final int WINDOW_MINUTES = 30;
+    private static final int WINDOW_MINUTES = 30;
 
     // token刷新次数限制
-    public static final int MAX_REFRESH_COUNT = 5;
+    private static final int MAX_REFRESH_COUNT = 5;
 
     @Resource
     StringRedisTemplate stringRedisTemplate;

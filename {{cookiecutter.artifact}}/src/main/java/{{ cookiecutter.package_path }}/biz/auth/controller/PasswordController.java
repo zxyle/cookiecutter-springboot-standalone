@@ -75,11 +75,11 @@ public class PasswordController extends AuthBaseController {
         // 并记录日志，用户通过管理员重置密码或自行找回密码
         String key = "pwd:change:" + user.getId();
         Long times = stringRedisTemplate.opsForValue().increment(key);
-        int retryTime = times == null ? 1 : times.intValue();
+        int retryTimes = times == null ? 1 : times.intValue();
         int maxRetry = setting.get("pwd.change-max-retry-times").getIntValue();
-        if (maxRetry > retryTime) {
-            Integer remainTime = maxRetry - retryTime;
-            String message = String.format("修改失败，旧密码可能不正确，还可重试%d次", remainTime);
+        if (maxRetry > retryTimes) {
+            Integer remainTimes = maxRetry - retryTimes;
+            String message = String.format("修改失败，旧密码可能不正确，还可重试%d次", remainTimes);
             return R.fail(message);
         }
 

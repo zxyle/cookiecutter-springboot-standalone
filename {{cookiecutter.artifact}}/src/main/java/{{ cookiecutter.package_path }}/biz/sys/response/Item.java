@@ -18,6 +18,9 @@ public class Item {
 
     private int intValue;
 
+    /**
+     * 布尔值
+     */
     private boolean real;
 
 
