@@ -27,7 +27,7 @@ public class ImageValidator implements ConstraintValidator<Image, MultipartFile>
     private int height;
 
     /**
-     * 图片校验策略
+     * 图片尺寸校验策略
      */
     private ImagePolicy policy;
 
@@ -46,14 +46,17 @@ public class ImageValidator implements ConstraintValidator<Image, MultipartFile>
             int height = bufferedImage.getHeight();
             if (policy == ImagePolicy.EQUAL) {
                 if (width != this.width || height != this.height) {
+                    overWriteMessage(context, "图片尺寸需要为" + this.width + "x" + this.height);
                     return false;
                 }
             } else if (policy == ImagePolicy.GREATER_EQUAL) {
                 if (width < this.width || height < this.height) {
+                    overWriteMessage(context, "图片尺寸需要大于等于" + this.width + "x" + this.height);
                     return false;
                 }
             } else if (policy == ImagePolicy.LESS_EQUAL) {
                 if (width > this.width || height > this.height) {
+                    overWriteMessage(context, "图片尺寸需要小于等于" + this.width + "x" + this.height);
                     return false;
                 }
             }
@@ -62,5 +65,17 @@ public class ImageValidator implements ConstraintValidator<Image, MultipartFile>
         }
 
         return true;
+    }
+
+
+    /**
+     * 重写校验失败信息
+     *
+     * @param message                    错误消息
+     * @param constraintValidatorContext 上下文
+     */
+    public void overWriteMessage(ConstraintValidatorContext constraintValidatorContext, String message) {
+        constraintValidatorContext.disableDefaultConstraintViolation();
+        constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
     }
 }
