@@ -5,21 +5,21 @@ package {{ cookiecutter.basePackage }}.biz.sys.util;
 
 import java.security.SecureRandom;
 
-public class CaptchaUtil {
+public final class CaptchaUtil {
 
     private CaptchaUtil() {
     }
 
-    public static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
-    public static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    public static final String DIGIT = "0123456789";
-    public static final String SPECIAL_CHAR = "!@#$%^&*";
+    private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
+    private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String DIGIT = "0123456789";
+    private static final String SPECIAL_CHAR = "!@#$%^&*";
 
     public static String randNumber(int len) {
         return randCode(len, false, false, true, false);
     }
 
-    public static String randAlphabeta(int len) {
+    public static String randAlphabet(int len) {
         return randCode(len, true, true, false, false);
     }
 

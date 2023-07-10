@@ -147,7 +147,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public User create(String account, String encodedPassword) {
         User user = new User();
         user.setPwd(encodedPassword);
-        user.setNickname("用户_" + CaptchaUtil.randAlphabeta(6));
+        user.setNickname("用户_" + CaptchaUtil.randAlphabet(6));
         if (AccountUtil.isMobile(account)) {
             user.setMobile(account);
         } else if (AccountUtil.isEmail(account)) {
