@@ -7,8 +7,8 @@ import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
-import {{ cookiecutter.basePackage }}.biz.sys.request.KeyWordPaginationRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class WhitelistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:whitelist:list')")
     @GetMapping("/whitelists")
-    public R<PageVO<Whitelist>> list(@Valid KeyWordPaginationRequest request) {
+    public R<PageVO<Whitelist>> list(@Valid PaginationRequest request) {
         QueryWrapper<Whitelist> wrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(request.getKeyword())) {
             wrapper.and(w -> w.like("ip", request.getKeyword())

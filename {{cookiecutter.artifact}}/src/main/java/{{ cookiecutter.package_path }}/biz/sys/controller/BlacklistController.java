@@ -6,8 +6,8 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Blacklist;
-import {{ cookiecutter.basePackage }}.biz.sys.request.KeyWordPaginationRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IBlacklistService;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
@@ -33,7 +33,7 @@ public class BlacklistController {
      */
     @PreAuthorize("@ck.hasPermit('sys:blacklist:list')")
     @GetMapping("/blacklists")
-    public R<PageVO<Blacklist>> list(@Valid KeyWordPaginationRequest request) {
+    public R<PageVO<Blacklist>> list(@Valid PaginationRequest request) {
         QueryWrapper<Blacklist> wrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(request.getKeyword())) {
             wrapper.and(w -> w.like("ip", request.getKeyword())
