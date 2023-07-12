@@ -14,6 +14,7 @@ public final class DateFormatConst {
     }
 
     public static final String YYYYMMDD = "yyyyMMdd";
+    public static final DateTimeFormatter YYYYMMDD_DTF = DateTimeFormatter.ofPattern(YYYYMMDD);
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
     public static final DateTimeFormatter YYYY_MM_DD_DTF = DateTimeFormatter.ofPattern(YYYY_MM_DD);
 

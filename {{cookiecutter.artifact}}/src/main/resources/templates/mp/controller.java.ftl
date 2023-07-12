@@ -129,4 +129,34 @@ public class ${table.controllerName} {
         return success ? R.ok("删除${table.comment!}成功") : R.fail("删除${table.comment!}失败");
     }
 
+    /**
+     * 批量新增
+     */
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:add')")
+    @PostMapping("/${table.entityPath}s/batch-create")
+    public R<Void> batchCreate(@RequestBody List<${entity}> list) {
+        boolean success = thisService.saveBatch(list);
+        return success ? R.ok("批量新增成功") : R.fail("批量新增失败");
+    }
+
+    /**
+     * 批量更新
+     */
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:update')")
+    @PutMapping("/${table.entityPath}s/batch-update")
+    public R<Void> batchUpdate(@RequestBody List<${entity}> list) {
+        boolean success = thisService.updateBatchById(list);
+        return success ? R.ok("批量更新成功") : R.fail("批量更新失败");
+    }
+
+    /**
+     * 批量删除
+     */
+    @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:delete')")
+    @DeleteMapping("/${table.entityPath}s/batch-delete")
+    public R<Void> batchDelete(@RequestBody List<Long> ids) {
+        boolean success = thisService.removeByIds(ids);
+        return success ? R.ok("批量删除成功") : R.fail("批量删除失败");
+    }
+
 }
