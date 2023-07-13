@@ -12,13 +12,13 @@
         <result column="ip" property="ip" />
         <result column="ua" property="ua" />
         <result column="msg" property="msg" />
-        <result column="is_success" property="isSuccess" />
+        <result column="success" property="success" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
-        create_time, update_time, user_id, account, ip, ua, msg, is_success
+        create_time, update_time, user_id, account, ip, ua, msg, success
     </sql>
 
 
