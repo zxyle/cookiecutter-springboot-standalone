@@ -10,7 +10,7 @@ import {{ cookiecutter.basePackage }}.config.security.WildcardPermission;
 import {{ cookiecutter.basePackage }}.biz.sdk.service.IOpenApiService;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
 import {{ cookiecutter.basePackage }}.common.util.ObjectToHashMap;
-import {{ cookiecutter.basePackage }}.biz.auth.util.SignUtils;
+import {{ cookiecutter.basePackage }}.biz.sdk.util.SignUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -147,7 +147,7 @@ public class SdkController {
 
         Map<String, String> map = ObjectToHashMap.convertObjectToHashMap(request);
         map.put("appSecret", openApi.getAppSecret());
-        if (!SignUtils.isCorrect(map)) {
+        if (!SignUtil.isCorrect(map)) {
             log.info("appId: {} 签名错误", request.getAppId());
             return false;
         }

@@ -14,9 +14,9 @@ import java.util.*;
  * 生成有序map,签名，验签
  * 通过appId、timestamp、appSecret做签名
  */
-public final class SignUtils {
+public final class SignUtil {
 
-    private SignUtils() {
+    private SignUtil() {
     }
 
     /**
