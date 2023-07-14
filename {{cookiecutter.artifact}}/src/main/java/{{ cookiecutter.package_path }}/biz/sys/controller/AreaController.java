@@ -10,7 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IAreaService;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
-import {{ cookiecutter.basePackage }}.common.util.AreaNode;
+import {{ cookiecutter.basePackage }}.biz.sys.response.AreaNode;
 import {{ cookiecutter.basePackage }}.common.util.TreeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
