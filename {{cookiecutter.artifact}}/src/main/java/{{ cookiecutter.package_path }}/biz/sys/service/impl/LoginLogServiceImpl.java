@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.LoginLogMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,11 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
     @Async
     @Override
     public void saveLoginLog(LoginLog loginLog) {
+        // 如果 ua 字段超过255个字符，截取前255个字符, 避免插入数据库失败
+        if (loginLog != null && StringUtils.isNotBlank(loginLog.getUa())) {
+            loginLog.setUa(StringUtils.substring(loginLog.getUa(), 0, 255));
+        }
+
         this.save(loginLog);
     }
 
