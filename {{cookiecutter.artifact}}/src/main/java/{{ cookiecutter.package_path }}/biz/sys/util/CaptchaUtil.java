@@ -5,6 +5,9 @@ package {{ cookiecutter.basePackage }}.biz.sys.util;
 
 import java.security.SecureRandom;
 
+/**
+ * 验证码工具类
+ */
 public final class CaptchaUtil {
 
     private CaptchaUtil() {
@@ -49,12 +52,17 @@ public final class CaptchaUtil {
      * @return 随机码
      */
     public static String randCode(int len, String chars) {
-        StringBuilder builder = new StringBuilder();
+        if (len <= 0) {
+            throw new IllegalArgumentException("Length must be greater than zero.");
+        }
+        if (chars == null || chars.isEmpty()) {
+            throw new IllegalArgumentException("Character set cannot be null or empty.");
+        }
+        StringBuilder builder = new StringBuilder(len);
+        SecureRandom random = new SecureRandom();
         for (int i = 0; i < len; i++) {
-            SecureRandom random = new SecureRandom();
             int no = random.nextInt(chars.length());
             builder.append(chars.charAt(no));
-
         }
         return builder.toString();
     }

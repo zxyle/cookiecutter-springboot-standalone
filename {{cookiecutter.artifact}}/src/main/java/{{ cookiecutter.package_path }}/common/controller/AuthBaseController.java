@@ -106,6 +106,7 @@ public class AuthBaseController {
      * 获取持有指定角色的用户
      *
      * @param roleId 角色ID
+     * @return 用户ID列表
      */
     public List<Long> getUsersByRole(Long roleId) {
         List<UserRole> roles = userRoleService.queryRelation(0L, roleId);

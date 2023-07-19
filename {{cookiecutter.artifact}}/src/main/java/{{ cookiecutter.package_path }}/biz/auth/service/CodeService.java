@@ -43,7 +43,7 @@ public class CodeService {
         CaptchaPair captchaPair = captchaService.generate();
         String redisKey = settingService.get("captcha.key-prefix").getStr() + captchaPair.getCaptchaId();
         String code = captchaPair.getCode();
-        Integer aliveTime = settingService.get("captcha.alive-time").getIntValue();
+        int aliveTime = settingService.get("captcha.alive-time").getIntValue();
         stringRedisTemplate.opsForValue().set(redisKey, code, aliveTime, TimeUnit.MINUTES);
         return captchaPair;
     }
