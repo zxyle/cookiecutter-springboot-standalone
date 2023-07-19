@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern;
 
 
 /**
- * 批量查询字典
+ * 批量查询字典请求
  */
 @Data
 public class MultiDictTypeRequest {
