@@ -23,7 +23,7 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     /**
      * 按ID删除（带缓存）
      */
-    void deleteById(Long id);
+    boolean deleteById(Long id);
 
     /**
      * 分页查询（带缓存）

@@ -7,7 +7,7 @@ plugins {
 group = '{{ cookiecutter.group }}'
 version = '{{ cookiecutter.version }}'
 sourceCompatibility = '{{ cookiecutter.javaVersion }}'
-
+description '{{ cookiecutter.project_short_description }}'
 
 configurations {
     compileOnly {
@@ -22,15 +22,61 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'mysql:mysql-connector-java'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'com.google.guava:guava:32.1.1-jre'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    runtimeOnly 'mysql:mysql-connector-j'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.2'
+    implementation 'com.baomidou:mybatis-plus-generator:3.4.1'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
+    implementation 'cn.hutool:hutool-all:5.8.12'
+    implementation 'p6spy:p6spy:3.9.1'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'org.apache.commons:commons-pool2'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'dev.zhengxiang:kaptcha:2.3.2'
+    implementation 'dev.zhengxiang:patchca:0.5.0'
+    implementation 'dev.zhengxiang:frontend:1.0.0'
+    implementation 'dev.zhengxiang:tool:1.0.0'
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'com.alibaba:easyexcel:3.1.4'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = '{{ cookiecutter.javaVersion }}'
+    targetCompatibility = '{{ cookiecutter.javaVersion }}'
+}
+
+bootJar {
+    mainClassName = '{{ cookiecutter.basePackage }}.{{ cookiecutter.app_name }}Application'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task copyDependencies(type: Copy) {
+    from(configurations.runtimeClasspath)
+    into("$buildDir/lib")
 }

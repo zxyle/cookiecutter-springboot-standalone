@@ -43,8 +43,8 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
      */
      @CacheEvict(cacheNames = "${entity}Cache", key = "#id")
      @Override
-     public void deleteById(Long id) {
-         removeById(id);
+     public boolean deleteById(Long id) {
+         return removeById(id);
      }
 
     /**
