@@ -28,9 +28,9 @@ import java.util.List;
  * 文件管理
  */
 @RestController
-@RequestMapping("/file")
+@RequestMapping("/sys/file")
 @RequiredArgsConstructor
-public class UploadController {
+public class FileController {
 
     final IFileService fileService;
     final StringRedisTemplate stringRedisTemplate;
