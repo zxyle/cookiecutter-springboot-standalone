@@ -90,6 +90,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     // 通过账号名查询用户
+    @Cacheable(cacheNames = "UserCache", key = "#account", unless = "#result == null")
     @Override
     public User queryByAccount(String account) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();

@@ -69,7 +69,7 @@ public class SecurityConfiguration {
                 .antMatchers("/auth/user/login", "/sys/friendly/urls").anonymous()
                 .antMatchers("/auth/sdk/**", "/sys/dicts/**", "/sys/area/**", "/file/**", "/sys/infos", "/auth/user/register",
                         "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers",
-                        "/getPublicKey").permitAll()
+                        "/getPublicKey", "/auth/user/login/qrcode", "/auth/user/login/scan").permitAll()
 
                 // 除上述请求 全部需要鉴权认证
                 .anyRequest().authenticated()

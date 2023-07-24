@@ -3,25 +3,33 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import cn.hutool.core.util.IdUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Totp;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.CodeLoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.ThirdPartyLoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.login.LoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.response.TokenResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.CodeService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.ITotpService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
 import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
+import {{ cookiecutter.basePackage }}.biz.auth.util.Authenticator;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 登录管理
@@ -35,9 +43,11 @@ public class LoginController extends AuthBaseController {
     final IUserService userService;
     final LoginService loginService;
     final CodeService codeService;
+    final ITotpService totpService;
+    final StringRedisTemplate stringRedisTemplate;
 
     /**
-     * 用户名/邮箱/手机号 + 密码登录
+     * 方式一：用户名/邮箱/手机号 + 密码登录
      */
     @PostMapping("/login")
     public R<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest servletRequest) {
@@ -53,24 +63,86 @@ public class LoginController extends AuthBaseController {
 
 
     /**
-     * 邮箱/手机号 + 验证码登录
+     * 方式二：邮箱/手机号 + 验证码登录
      */
     @PostMapping("/login/code")
-    public R<LoginResponse> loginByCode(@Valid @RequestBody CodeLoginRequest request) {
+    public R<LoginResponse> codeLogin(@Valid @RequestBody CodeLoginRequest request) {
         // 登录逻辑直接走Filter即可，无需在这里实现
         log.debug("account: {}, code: {}", request.getAccount(), request.getCode());
         return R.ok(null);
     }
 
     /**
-     * 第三方登录
+     * 方式三：第三方账号登录
      */
     @GetMapping("/login/oauth")
-    public R<LoginResponse> dingTalkLogin(@Valid ThirdPartyLoginRequest request) {
+    public R<LoginResponse> oauthLogin(@Valid ThirdPartyLoginRequest request) {
         log.info("code: {}, provider: {}", request.getCode(), request.getProvider());
         // 登录逻辑直接走UscCodeAuthenticationFilter即可，无需在这里实现
         // 该接口占位仅为生成接口文档使用
         return R.ok(null);
+    }
+
+    /**
+     * PC端生成二维码
+     */
+    @GetMapping("/login/qrcode")
+    public R<TokenResponse> qrcode() {
+        String qrcode = IdUtil.fastSimpleUUID();
+        stringRedisTemplate.opsForValue().set("qrcode:" + qrcode, qrcode, 10, TimeUnit.MINUTES);
+        return R.ok(new TokenResponse(qrcode));
+    }
+
+    /**
+     * 移动端确认扫码
+     *
+     * @param code 二维码
+     */
+    @GetMapping("/login/scan/ack")
+    public R<Void> ack(@NotBlank String code) {
+        User user = getLoggedInUser();
+        String key = "scan:" + code;
+        stringRedisTemplate.opsForValue().set(key, user.getId().toString(), 10, TimeUnit.MINUTES);
+        return R.ok("确认成功");
+    }
+
+    /**
+     * 方式四：使用移动端扫码登录
+     *
+     * @param code 二维码
+     */
+    @GetMapping("/login/scan")
+    public R<LoginResponse> scanLogin(@NotBlank String code) {
+        // 1. PC网站请求该接口，生成一个随机的UUID，并将该UUID作为参数拼接到二维码的URL中
+        // 2. 移动端扫码后，会请求该接口，将二维码中的UUID作为参数传递过来
+
+        String key = "scan:" + code;
+        String userId = stringRedisTemplate.opsForValue().get(key);
+        if (userId == null) return R.fail("二维码已过期，请刷新页面重试");
+
+        User user = userService.queryById(Long.valueOf(userId));
+        if (user == null) return R.fail("用户不存在");
+
+        LoginResponse response = new LoginResponse(user);
+        // 3. 服务端根据UUID查询到对应的用户信息，然后将用户信息返回给移动端
+        return R.ok(response);
+    }
+
+    /**
+     * 方式五：使用验证器一次性密码登录
+     */
+    @PostMapping("/login/totp")
+    public R<Void> totpLogin(@Valid @RequestBody CodeLoginRequest request) {
+        User user = userService.queryByAccount(request.getAccount());
+        if (user == null) return R.fail("用户不存在");
+
+        Totp totp = totpService.queryByUserId(getUserId());
+        if (totp == null) return R.fail("用户未设置TOTP");
+
+        if (!Authenticator.valid(totp.getSecret(), request.getCode())) return R.fail("验证码错误，请重新输入");
+
+        // TODO 登录逻辑
+        return R.ok("登录成功");
     }
 
     /**
