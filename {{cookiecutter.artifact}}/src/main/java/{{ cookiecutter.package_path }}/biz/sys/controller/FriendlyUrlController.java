@@ -16,14 +16,14 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 友链管理
+ * 友情链接管理
  */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/sys/friendly")
 public class FriendlyUrlController {
 
-    public static final int ENABLE = 1;
+    private static final int ENABLE = 1;
 
     final IFriendlyUrlService thisService;
 
@@ -47,8 +47,8 @@ public class FriendlyUrlController {
     @PreAuthorize("@ck.hasPermit('sys:friendly:add')")
     @PostMapping("/urls")
     public R<FriendlyUrl> add(@Valid @RequestBody FriendlyUrl entity) {
-        boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增失败");
+        boolean saved = thisService.save(entity);
+        return saved ? R.ok(entity) : R.fail("新增失败");
     }
 
     /**
@@ -60,11 +60,10 @@ public class FriendlyUrlController {
     @DeleteMapping("/urls/{id}")
     public R<FriendlyUrl> delete(@PathVariable("id") Long id) {
         FriendlyUrl entity = thisService.getById(id);
-        if (entity == null) {
-            return R.fail("友链不存在");
-        }
-        boolean success = thisService.removeById(id);
-        return success ? R.ok("删除友链成功") : R.fail("删除友链失败");
+        if (entity == null) return R.fail("友链不存在");
+
+        boolean removed = thisService.removeById(id);
+        return removed ? R.ok("删除友链成功") : R.fail("删除友链失败");
     }
 
     /**
@@ -79,11 +78,10 @@ public class FriendlyUrlController {
     public R<FriendlyUrl> update(@PathVariable Long id, @Valid @RequestBody FriendlyUrl entity) {
         entity.setId(id);
         FriendlyUrl oldEntity = thisService.getById(id);
-        if (oldEntity == null) {
-            return R.fail("友链不存在");
-        }
-        thisService.updateById(entity);
-        return R.ok(entity);
+        if (oldEntity == null) return R.fail("友链不存在");
+
+        boolean updated = thisService.updateById(entity);
+        return updated ? R.ok(entity) : R.fail("更新失败");
     }
 
 }

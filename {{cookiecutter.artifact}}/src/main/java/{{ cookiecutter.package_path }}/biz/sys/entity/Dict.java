@@ -8,6 +8,9 @@ import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+
 /**
  * 字典数据表
  */
@@ -21,26 +24,31 @@ public class Dict extends BaseEntity {
     /**
      * 字典名称
      */
+    @NotBlank(message = "字典名称不能为空")
     private String name;
 
     /**
      * 字典排序
      */
+    @Positive(message = "字典排序必须为正整数")
     private Integer dictSort;
 
     /**
      * 字典标签
      */
+    @NotBlank(message = "字典标签不能为空")
     private String label;
 
     /**
      * 字典键值
      */
+    @NotBlank(message = "字典键值不能为空")
     private String value;
 
     /**
      * 字典类型
      */
+    @NotBlank(message = "字典类型不能为空")
     private String dictType;
 
 }

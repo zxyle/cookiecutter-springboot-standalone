@@ -43,8 +43,8 @@ public class ReleaseController {
     @PreAuthorize("@ck.hasPermit('sys:release:add')")
     @PostMapping("/releases")
     public R<Release> add(@Valid @RequestBody Release entity) {
-        boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增发布版本失败");
+        boolean saved = thisService.save(entity);
+        return saved ? R.ok(entity) : R.fail("新增发布版本失败");
     }
 
 
@@ -65,8 +65,8 @@ public class ReleaseController {
     @PutMapping("/releases/{id}")
     public R<Void> update(@Valid @RequestBody Release entity, @PathVariable Long id) {
         entity.setId(id);
-        boolean success = thisService.updateById(entity);
-        return success ? R.ok("更新发布版本成功") : R.fail("更新发布版本失败");
+        boolean updated = thisService.updateById(entity);
+        return updated ? R.ok("更新发布版本成功") : R.fail("更新发布版本失败");
     }
 
     /**
@@ -75,8 +75,8 @@ public class ReleaseController {
     @PreAuthorize("@ck.hasPermit('sys:release:delete')")
     @DeleteMapping("/releases/{id}")
     public R<Void> delete(@PathVariable Long id) {
-        boolean success = thisService.removeById(id);
-        return success ? R.ok("删除发布版本成功") : R.fail("删除发布版本失败");
+        boolean removed = thisService.removeById(id);
+        return removed ? R.ok("删除发布版本成功") : R.fail("删除发布版本失败");
     }
 
 }

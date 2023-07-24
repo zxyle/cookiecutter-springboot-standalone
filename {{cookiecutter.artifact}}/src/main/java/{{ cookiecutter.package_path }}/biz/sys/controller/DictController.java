@@ -6,13 +6,14 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
+import {{ cookiecutter.basePackage }}.biz.sys.request.dict.DictPageRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.request.dict.MultiDictTypeRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
-import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,9 +37,11 @@ public class DictController {
      */
     @Cacheable(cacheNames = "dictCache")
     @GetMapping("/dicts")
-    public R<PageVO<Dict>> list(@Valid PaginationRequest request) {
+    public R<PageVO<Dict>> list(@Valid DictPageRequest request) {
         IPage<Dict> page = PageRequestUtil.checkForMp(request);
-        IPage<Dict> list = thisService.page(page);
+        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
+        wrapper.eq(StringUtils.isNotBlank(request.getDictType()), "dict_type", request.getDictType());
+        IPage<Dict> list = thisService.page(page, wrapper);
         return PageRequestUtil.extractFromMp(list);
     }
 
@@ -50,8 +53,8 @@ public class DictController {
     @CacheEvict(cacheNames = "dictCache", key = "#entity.dictType")
     @PostMapping("/dicts")
     public R<Dict> add(@Valid @RequestBody Dict entity) {
-        boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增字典失败");
+        boolean saved = thisService.save(entity);
+        return saved ? R.ok(entity) : R.fail("新增字典失败");
     }
 
 
@@ -83,7 +86,7 @@ public class DictController {
      * 查询所有字典类型
      */
     @GetMapping("/dicts/dictTypes")
-    public R<List<Dict>> all() {
+    public R<List<Dict>> allTypes() {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         wrapper.select("name, dict_type");
         wrapper.groupBy("name", "dict_type");
@@ -99,8 +102,8 @@ public class DictController {
     @PutMapping("/dicts/{id}")
     public R<Void> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
         entity.setId(id);
-        boolean success = thisService.updateById(entity);
-        return success ? R.ok("更新字典成功") : R.fail("更新字典失败");
+        boolean updated = thisService.updateById(entity);
+        return updated ? R.ok("更新字典成功") : R.fail("更新字典失败");
     }
 
     /**
@@ -109,8 +112,8 @@ public class DictController {
     @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
     @DeleteMapping("/dicts/{id}")
     public R<Void> delete(@PathVariable Long id) {
-        boolean success = thisService.removeById(id);
-        return success ? R.ok("删除字典成功") : R.fail("删除字典失败");
+        boolean removed = thisService.removeById(id);
+        return removed ? R.ok("删除字典成功") : R.fail("删除字典失败");
     }
 
 }
