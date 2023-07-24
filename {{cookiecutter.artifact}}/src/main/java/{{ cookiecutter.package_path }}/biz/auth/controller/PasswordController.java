@@ -3,17 +3,16 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Answer;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.enums.ChangePasswordEnum;
 import {{ cookiecutter.basePackage }}.biz.auth.request.password.*;
 import {{ cookiecutter.basePackage }}.biz.auth.response.password.PasswordComplexityResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.response.password.ResetPasswordResponse;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IPasswordService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.LoginService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
+import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.util.PasswordChecker;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
@@ -50,6 +49,7 @@ public class PasswordController extends AuthBaseController {
     final IPasswordService thisService;
     final LoginService loginService;
     final ValidateService validateService;
+    final IAnswerService answerService;
 
     /**
      * 使用旧密码方式修改密码
@@ -90,7 +90,7 @@ public class PasswordController extends AuthBaseController {
     /**
      * 忘记/找回密码（通过短信或邮件验证码方式）
      */
-    @PostMapping("/forget")
+    @PostMapping("/forget/code")
     public R<Void> forget(@Valid @RequestBody ForgetRequest request) {
         String account = request.getAccount();
         String key = "code:" + account;
@@ -109,9 +109,42 @@ public class PasswordController extends AuthBaseController {
 
         // 修改密码
         boolean success = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.FORGET);
-        if (!success) {
-            return R.fail("找回密码失败");
+        if (!success) return R.fail("找回密码失败");
+        // 用户可能已经在某处登录，退出登录
+        loginService.logout(user.getId());
+        userService.unlock(user.getId());
+        return R.ok("找回密码成功, 请重新登录");
+    }
+
+
+    /**
+     * 忘记/找回密码（通过密保问题方式）
+     */
+    @PostMapping("/forget/question")
+    public R<Void> forgetByQuestion(@Valid @RequestBody ForgetByQuestionRequest request) {
+        User user = userService.queryByAccount(request.getAccount());
+        if (null == user) return R.fail("找回密码失败，用户不存在");
+
+        // 校验密保问题
+        List<AnswerRequest> answers = request.getAnswers();
+        AnswerRequest answerRequest = answers.get(0);
+
+        // 判断密保问题是否与随机生成的密保问题一致
+        Long questionId = answerRequest.getQuestionId();
+        String s = stringRedisTemplate.opsForValue().get("question:" + user.getId());
+        if (StringUtils.isBlank(s) || !Long.valueOf(s).equals(questionId)) return R.fail("找回密码失败，密保问题不存在");
+        stringRedisTemplate.delete("question:" + user.getId());
+
+        // 判断密保问题答案是否正确
+        Answer answer = answerService.queryByUserId(user.getId(), questionId);
+        if (null == answer) return R.fail("找回密码失败，密保问题不存在");
+        if (!DigestUtil.md5Hex(answerRequest.getAnswer().trim()).equalsIgnoreCase(answer.getAnswer())) {
+            return R.fail("找回密码失败，密保问题答案错误");
         }
+
+        // 回答正确，修改密码
+        boolean success = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.FORGET);
+        if (!success) return R.fail("找回密码失败");
         // 用户可能已经在某处登录，退出登录
         loginService.logout(user.getId());
         userService.unlock(user.getId());
