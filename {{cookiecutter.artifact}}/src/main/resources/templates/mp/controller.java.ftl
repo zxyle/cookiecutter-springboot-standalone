@@ -93,8 +93,8 @@ public class ${table.controllerName} {
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:add')")
     @PostMapping("/${table.entityPath}s")
     public R<${entity}> add(@Valid @RequestBody ${entity} entity) {
-        boolean saved = thisService.save(entity);
-        return saved ? R.ok(entity) : R.fail("新增${table.comment!}失败");
+        ${entity} entity = thisService.insert(entity);
+        return entity != null ? R.ok(entity) : R.fail("新增${table.comment!}失败");
     }
 
 
@@ -105,7 +105,7 @@ public class ${table.controllerName} {
     @GetMapping("/${table.entityPath}s/{id}")
     public R<${entity}> get(@PathVariable Long id) {
         ${entity} entity = thisService.queryById(id);
-        return entity == null ? R.fail("数据不存在") : R.ok(entity);
+        return entity == null ? R.fail("${table.comment!}不存在") : R.ok(entity);
     }
 
     /**
@@ -115,8 +115,8 @@ public class ${table.controllerName} {
     @PutMapping("/${table.entityPath}s/{id}")
     public R<Void> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
         entity.setId(id);
-        boolean updated = thisService.updateById(entity);
-        return updated ? R.ok("更新${table.comment!}成功") : R.fail("更新${table.comment!}失败");
+        ${entity} result = thisService.putById(entity);
+        return result != null ? R.ok(result) : R.fail("更新${table.comment!}失败");
     }
 
     /**
@@ -125,8 +125,8 @@ public class ${table.controllerName} {
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:delete')")
     @DeleteMapping("/${table.entityPath}s/{id}")
     public R<Void> delete(@PathVariable Long id) {
-        boolean removed = thisService.removeById(id);
-        return removed ? R.ok("删除${table.comment!}成功") : R.fail("删除${table.comment!}失败");
+        boolean deleted = thisService.deleteById(id);
+        return deleted ? R.ok("删除${table.comment!}成功") : R.fail("删除${table.comment!}失败");
     }
 
     /**

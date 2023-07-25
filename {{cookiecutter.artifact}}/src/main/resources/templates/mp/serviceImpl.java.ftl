@@ -20,6 +20,16 @@ import org.springframework.stereotype.Service;
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
 
     /**
+     * 新增${table.comment!}（带缓存）
+     */
+    @CachePut(cacheNames = "${entity}Cache", key = "#result.id", unless = "#result == null")
+    @Override
+    public ${entity} insert(${entity} entity) {
+        save(entity);
+        return entity;
+    }
+
+    /**
      * 按ID查询（查询结果不为null则缓存）
      */
     @Cacheable(cacheNames = "${entity}Cache", key = "#id", unless = "#result == null")

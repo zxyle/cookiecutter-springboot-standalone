@@ -11,6 +11,11 @@ import ${superServiceClassPackage};
 public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
 
     /**
+     * 新增${table.comment!}（带缓存）
+     */
+    ${entity} insert(${entity} entity);
+
+    /**
      * 按ID查询（带缓存）
      */
     ${entity} queryById(Long id);
