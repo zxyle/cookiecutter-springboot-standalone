@@ -241,6 +241,12 @@ INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`,
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (126, '按ID删除意见反馈', 'sys:feedback:delete', NULL, 121, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (127, 'Excel数据导出意见反馈', 'sys:feedback:export', NULL, 121, 2, NULL, 1);
 INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (128, 'Excel数据导入意见反馈', 'sys:feedback:upload', NULL, 121, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (129, '应用管理所有权限', 'sys:app:*', NULL, 1, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (130, '应用管理列表分页查询', 'sys:app:list', NULL, 129, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (131, '新增应用', 'sys:app:add', NULL, 129, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (132, '按ID查询应用', 'sys:app:get', NULL, 129, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (133, '按ID更新应用', 'sys:app:update', NULL, 129, 2, NULL, 1);
+INSERT INTO `auth_permission` (`id`, `name`, `code`, `description`, `parent_id`, `kind`, `path`, `sort`) VALUES (134, '按ID删除应用', 'sys:app:delete', NULL, 129, 2, NULL, 1);
 COMMIT;
 
 -- ----------------------------
@@ -445,5 +451,24 @@ BEGIN;
 INSERT INTO `auth_user_role` (`id`, `user_id`, `role_id`, `remark`) VALUES (1, 1, 5, NULL);
 INSERT INTO `auth_user_role` (`id`, `user_id`, `role_id`, `remark`) VALUES (2, 2, 3, NULL);
 COMMIT;
+
+-- ----------------------------
+-- Table structure for auth_app
+-- ----------------------------
+DROP TABLE IF EXISTS `auth_app`;
+CREATE TABLE `auth_app` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用名称',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用描述',
+  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '应用Logo',
+  `app_key` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用标识',
+  `app_secret` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用密钥',
+  `redirect_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '回调地址',
+  `status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '应用状态：0-禁用，1-启用',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_app_key` (`app_key`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='应用';
 
 SET FOREIGN_KEY_CHECKS = 1;
