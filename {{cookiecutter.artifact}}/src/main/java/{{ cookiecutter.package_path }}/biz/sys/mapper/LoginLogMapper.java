@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.sys.mapper;
 
 import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,9 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface LoginLogMapper extends BaseMapper<LoginLog> {
-
-    // 截断表
-    @Update("TRUNCATE TABLE sys_login_log")
-    void truncate();
 
 }

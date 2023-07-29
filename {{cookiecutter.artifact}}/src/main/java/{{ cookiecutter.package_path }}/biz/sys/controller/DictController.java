@@ -93,7 +93,7 @@ public class DictController {
     @DeleteMapping("/dicts/{dictType}/{label}")
     public R<Void> delete(@PathVariable String dictType, @PathVariable String label) {
         boolean success = thisService.deleteDict(dictType, label);
-        return success ? R.ok("删除字典成功") : R.fail("删除字典失败");
+        return success ? R.ok("删除字典成功") : R.fail("删除字典失败，字典条目不存在");
     }
 
 }
