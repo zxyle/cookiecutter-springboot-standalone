@@ -32,7 +32,7 @@ public class UserRoleController extends AuthBaseController {
 
     final IUserRoleService thisService;
     final IPermissionService permissionService;
-    final UserRoleMapper userRoleMapper;
+    final UserRoleMapper thisMapper;
 
     /**
      * 分页查询用户拥有的角色
@@ -43,7 +43,7 @@ public class UserRoleController extends AuthBaseController {
     @GetMapping("/users/{userId}/roles")
     public R<PageVO<Role>> list(@Valid PaginationRequest request, @PathVariable Long userId) {
         IPage<Role> page = PageRequestUtil.checkForMp(request);
-        IPage<Role> list = userRoleMapper.page(page, userId, request);
+        IPage<Role> list = thisMapper.page(page, userId, request);
         return PageRequestUtil.extractFromMp(list);
     }
 

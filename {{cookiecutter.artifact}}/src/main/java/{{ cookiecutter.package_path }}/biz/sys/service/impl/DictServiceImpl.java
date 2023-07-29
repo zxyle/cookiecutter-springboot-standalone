@@ -9,6 +9,8 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.DictMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -42,12 +44,50 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
      * @param dictType 字典类型
      */
     @Override
-    @Cacheable(value = "dictCache", key = "#dictType", unless = "#result == null")
+    @Cacheable(key = "#dictType", unless = "#result == null")
     public List<Dict> listDictsByType(String dictType) {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         wrapper.select("label, value");
         wrapper.eq("dict_type", dictType);
         wrapper.orderByAsc("dict_sort");
         return list(wrapper);
+    }
+
+    /**
+     * 新增字典（带缓存）
+     */
+    @CachePut(key = "#result.id", unless = "#result == null")
+    @Override
+    public Dict insert(Dict entity) {
+        save(entity);
+        return entity;
+    }
+
+    /**
+     * 按ID查询（查询结果不为null则缓存）
+     */
+    @Cacheable(key = "#id", unless = "#result == null")
+    @Override
+    public Dict queryById(Long id) {
+        return getById(id);
+    }
+
+    /**
+     * 按ID更新（带缓存）
+     */
+    @CachePut(key = "#entity.id")
+    @Override
+    public Dict putById(Dict entity) {
+        updateById(entity);
+        return getById(entity.getId());
+    }
+
+    /**
+     * 按ID删除（带缓存）
+     */
+    @CacheEvict(key = "#id")
+    @Override
+    public boolean deleteById(Long id) {
+        return removeById(id);
     }
 }

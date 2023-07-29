@@ -31,7 +31,7 @@ public class UserPermissionController {
 
     final IUserPermissionService thisService;
     final IPermissionService permissionService;
-    final UserPermissionMapper userPermissionMapper;
+    final UserPermissionMapper thisMapper;
 
     /**
      * 分页查询用户直接拥有的权限
@@ -42,7 +42,7 @@ public class UserPermissionController {
     @GetMapping("/users/{userId}/permissions")
     public R<PageVO<Permission>> list(@Valid PaginationRequest request, @PathVariable Long userId) {
         IPage<Permission> page = PageRequestUtil.checkForMp(request);
-        IPage<Permission> list = userPermissionMapper.page(page, userId, request);
+        IPage<Permission> list = thisMapper.page(page, userId, request);
         return PageRequestUtil.extractFromMp(list);
     }
 

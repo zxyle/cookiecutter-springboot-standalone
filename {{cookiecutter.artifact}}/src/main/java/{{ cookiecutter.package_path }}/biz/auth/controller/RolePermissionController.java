@@ -32,7 +32,7 @@ public class RolePermissionController extends AuthBaseController {
 
     final IRolePermissionService thisService;
     final IPermissionService permissionService;
-    final RolePermissionMapper rolePermissionMapper;
+    final RolePermissionMapper thisMapper;
 
     /**
      * 分页查询角色拥有的权限
@@ -43,7 +43,7 @@ public class RolePermissionController extends AuthBaseController {
     @GetMapping("/roles/{roleId}/permissions")
     public R<PageVO<Permission>> list(@Valid PaginationRequest request, @PathVariable Long roleId) {
         IPage<Permission> page = PageRequestUtil.checkForMp(request);
-        IPage<Permission> list = rolePermissionMapper.page(page, roleId, request);
+        IPage<Permission> list = thisMapper.page(page, roleId, request);
         return PageRequestUtil.extractFromMp(list);
     }
 

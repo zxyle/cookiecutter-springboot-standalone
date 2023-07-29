@@ -14,8 +14,6 @@ import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +33,6 @@ public class DictController {
     /**
      * 分页查询
      */
-    @Cacheable(cacheNames = "dictCache")
     @GetMapping("/dicts")
     public R<PageVO<Dict>> list(@Valid DictPageRequest request) {
         IPage<Dict> page = PageRequestUtil.checkForMp(request);
@@ -50,11 +47,10 @@ public class DictController {
      * 新增字典
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:add')")
-    @CacheEvict(cacheNames = "dictCache", key = "#entity.dictType")
     @PostMapping("/dicts")
     public R<Dict> add(@Valid @RequestBody Dict entity) {
-        boolean saved = thisService.save(entity);
-        return saved ? R.ok(entity) : R.fail("新增字典失败");
+        Dict dict = thisService.insert(entity);
+        return dict != null ? R.ok(entity) : R.fail("新增字典失败");
     }
 
 
@@ -62,10 +58,9 @@ public class DictController {
      * 按ID查询字典
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:get')")
-    @Cacheable(cacheNames = "dictCache", key = "#id", unless = "#result == null")
     @GetMapping("/dicts/{id}")
     public R<Dict> get(@PathVariable Long id) {
-        return R.ok(thisService.getById(id));
+        return R.ok(thisService.queryById(id));
     }
 
     /**
@@ -97,13 +92,12 @@ public class DictController {
     /**
      * 按ID更新字典
      */
-    @CacheEvict(cacheNames = "dictCache", key = "#entity.dictType")
     @PreAuthorize("@ck.hasPermit('sys:dict:update')")
     @PutMapping("/dicts/{id}")
-    public R<Void> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
+    public R<Dict> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
         entity.setId(id);
-        boolean updated = thisService.updateById(entity);
-        return updated ? R.ok("更新字典成功") : R.fail("更新字典失败");
+        Dict dict = thisService.putById(entity);
+        return dict != null ? R.ok(dict) : R.fail("更新字典失败");
     }
 
     /**
@@ -112,7 +106,7 @@ public class DictController {
     @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
     @DeleteMapping("/dicts/{id}")
     public R<Void> delete(@PathVariable Long id) {
-        boolean removed = thisService.removeById(id);
+        boolean removed = thisService.deleteById(id);
         return removed ? R.ok("删除字典成功") : R.fail("删除字典失败");
     }
 

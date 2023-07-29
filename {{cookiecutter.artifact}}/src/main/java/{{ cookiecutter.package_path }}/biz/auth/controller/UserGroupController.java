@@ -35,7 +35,7 @@ public class UserGroupController extends AuthBaseController {
 
     final IUserGroupService thisService;
     final IPermissionService permissionService;
-    final UserGroupMapper userGroupMapper;
+    final UserGroupMapper thisMapper;
 
     /**
      * 分页查询用户所属用户组
@@ -46,7 +46,7 @@ public class UserGroupController extends AuthBaseController {
     @GetMapping("/users/{userId}/groups")
     public R<PageVO<Group>> list(@Valid PaginationRequest request, @PathVariable Long userId) {
         IPage<Group> page = PageRequestUtil.checkForMp(request);
-        IPage<Group> list = userGroupMapper.page(page, userId, request);
+        IPage<Group> list = thisMapper.page(page, userId, request);
         return PageRequestUtil.extractFromMp(list);
     }
 
@@ -96,7 +96,7 @@ public class UserGroupController extends AuthBaseController {
     public R<PageVO<User>> pageUser(@PathVariable Long groupId, @Valid ListAuthRequest request) {
         IPage<User> page = PageRequestUtil.checkForMp(request);
         // todo 需支持查询子用户组下的用户
-        IPage<User> pageVo = userGroupMapper.pageUser(page, groupId, request);
+        IPage<User> pageVo = thisMapper.pageUser(page, groupId, request);
         return PageRequestUtil.extractFromMp(pageVo);
     }
 

@@ -27,4 +27,24 @@ public interface IDictService extends IService<Dict> {
      * @param dictType 字典类型
      */
     List<Dict> listDictsByType(String dictType);
+
+    /**
+     * 新增字典（带缓存）
+     */
+    Dict insert(Dict entity);
+
+    /**
+     * 按ID查询（带缓存）
+     */
+    Dict queryById(Long id);
+
+    /**
+     * 按ID更新（带缓存）
+     */
+    Dict putById(Dict entity);
+
+    /**
+     * 按ID删除（带缓存）
+     */
+    boolean deleteById(Long id);
 }
