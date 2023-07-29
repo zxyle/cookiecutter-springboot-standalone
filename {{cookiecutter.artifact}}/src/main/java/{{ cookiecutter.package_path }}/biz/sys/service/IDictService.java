@@ -14,15 +14,7 @@ import java.util.List;
 public interface IDictService extends IService<Dict> {
 
     /**
-     * 查询指定字典
-     *
-     * @param dictType  字典类型
-     * @param dictValue 字典值
-     */
-    Dict queryDict(String dictType, String dictValue);
-
-    /**
-     * 按dict_type查询所有
+     * 按字典类型查询所有字典
      *
      * @param dictType 字典类型
      */
@@ -34,17 +26,7 @@ public interface IDictService extends IService<Dict> {
     Dict insert(Dict entity);
 
     /**
-     * 按ID查询（带缓存）
+     * 删除字典
      */
-    Dict queryById(Long id);
-
-    /**
-     * 按ID更新（带缓存）
-     */
-    Dict putById(Dict entity);
-
-    /**
-     * 按ID删除（带缓存）
-     */
-    boolean deleteById(Long id);
+    boolean deleteDict(String dictType, String label);
 }

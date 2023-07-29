@@ -20,26 +20,11 @@ import java.util.List;
  * 字典数据表 服务实现类
  */
 @Service
-@CacheConfig(cacheNames = "dictCache")
+@CacheConfig(cacheNames = "DictCache")
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements IDictService {
 
     /**
-     * 查询指定字典
-     *
-     * @param dictType  字典类型
-     * @param dictValue 字典值
-     */
-    @Override
-    @Cacheable(key = "#dictType+#dictValue")
-    public Dict queryDict(String dictType, String dictValue) {
-        QueryWrapper<Dict> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("dict_type", dictType);
-        queryWrapper.eq("value", dictValue);
-        return getOne(queryWrapper);
-    }
-
-    /**
-     * 按dict_type查询所有
+     * 按字典类型查询所有字典
      *
      * @param dictType 字典类型
      */
@@ -49,14 +34,13 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         wrapper.select("label, value");
         wrapper.eq("dict_type", dictType);
-        wrapper.orderByAsc("dict_sort");
         return list(wrapper);
     }
 
     /**
      * 新增字典（带缓存）
      */
-    @CachePut(key = "#result.id", unless = "#result == null")
+    @CacheEvict(key = "#entity.dictType")
     @Override
     public Dict insert(Dict entity) {
         save(entity);
@@ -64,30 +48,14 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
     }
 
     /**
-     * 按ID查询（查询结果不为null则缓存）
+     * 删除字典
      */
-    @Cacheable(key = "#id", unless = "#result == null")
+    @CacheEvict(key = "#dictType")
     @Override
-    public Dict queryById(Long id) {
-        return getById(id);
-    }
-
-    /**
-     * 按ID更新（带缓存）
-     */
-    @CachePut(key = "#entity.id")
-    @Override
-    public Dict putById(Dict entity) {
-        updateById(entity);
-        return getById(entity.getId());
-    }
-
-    /**
-     * 按ID删除（带缓存）
-     */
-    @CacheEvict(key = "#id")
-    @Override
-    public boolean deleteById(Long id) {
-        return removeById(id);
+    public boolean deleteDict(String dictType, String label) {
+        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
+        wrapper.eq("dict_type", dictType);
+        wrapper.eq("label", label);
+        return remove(wrapper);
     }
 }

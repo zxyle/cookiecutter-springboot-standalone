@@ -11,4 +11,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface DictMapper extends BaseMapper<Dict> {
 
+    /**
+     * 查询最大排序号
+     *
+     * @param dictType 字典类型
+     */
+    Integer selectMaxSort(String dictType);
 }

@@ -22,4 +22,13 @@
         name, dict_sort, label, value, dict_type
     </sql>
 
+    <select id="selectMaxSort" resultType="java.lang.Integer">
+        SELECT
+            IFNULL( MAX( `dict_sort` ), 0 ) AS sort
+        FROM
+            `sys_dict`
+        WHERE
+            `dict_type` = #{dictType}
+    </select>
+
 </mapper>

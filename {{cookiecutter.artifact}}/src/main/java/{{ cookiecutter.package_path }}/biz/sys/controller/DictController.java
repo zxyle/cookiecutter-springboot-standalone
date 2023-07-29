@@ -4,21 +4,22 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
-import {{ cookiecutter.basePackage }}.biz.sys.request.dict.DictPageRequest;
+import {{ cookiecutter.basePackage }}.biz.sys.mapper.DictMapper;
+import {{ cookiecutter.basePackage }}.biz.sys.request.dict.AddDictRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.request.dict.MultiDictTypeRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
 import {{ cookiecutter.basePackage }}.common.response.R;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 字典管理
@@ -29,85 +30,70 @@ import java.util.*;
 public class DictController {
 
     final IDictService thisService;
-
-    /**
-     * 分页查询
-     */
-    @GetMapping("/dicts")
-    public R<PageVO<Dict>> list(@Valid DictPageRequest request) {
-        IPage<Dict> page = PageRequestUtil.checkForMp(request);
-        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
-        wrapper.eq(StringUtils.isNotBlank(request.getDictType()), "dict_type", request.getDictType());
-        IPage<Dict> list = thisService.page(page, wrapper);
-        return PageRequestUtil.extractFromMp(list);
-    }
+    final DictMapper thisMapper;
 
 
     /**
-     * 新增字典
+     * 新增字典条目
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:add')")
     @PostMapping("/dicts")
-    public R<Dict> add(@Valid @RequestBody Dict entity) {
-        Dict dict = thisService.insert(entity);
-        return dict != null ? R.ok(entity) : R.fail("新增字典失败");
+    public R<Dict> add(@Valid @RequestBody AddDictRequest request) {
+        Dict dict = new Dict();
+        BeanUtils.copyProperties(request, dict);
+        // 如果没有传排序字段，则自动排序
+        if (request.getDictSort() == null) {
+            dict.setDictSort(thisMapper.selectMaxSort(request.getDictType()) + 1);
+        }
+        Dict result = thisService.insert(dict);
+        return result != null ? R.ok(result) : R.fail("新增字典失败");
     }
 
 
     /**
-     * 按ID查询字典
-     */
-    @PreAuthorize("@ck.hasPermit('sys:dict:get')")
-    @GetMapping("/dicts/{id}")
-    public R<Dict> get(@PathVariable Long id) {
-        return R.ok(thisService.queryById(id));
-    }
-
-    /**
-     * 按多个字典类型查询
+     * 按字典类型查询条目
      */
     @GetMapping("/dicts/dictType")
-    public R<Map<String, List<Dict>>> getByDictType(@Valid MultiDictTypeRequest request) {
+    public R<Map<String, List<Dict>>> list(@Valid MultiDictTypeRequest request) {
         String[] types = request.getTypes().split(",");
         Map<String, List<Dict>> map = new HashMap<>(types.length);
-        for (String typeName : types) {
-            List<Dict> dicts = thisService.listDictsByType(typeName.trim());
-            map.put(typeName, dicts);
+        for (String type : types) {
+            List<Dict> dicts = thisService.listDictsByType(type.trim());
+            map.put(type, dicts);
         }
         return R.ok(map);
     }
 
+
     /**
      * 查询所有字典类型
+     *
+     * @param keyword 模糊查询关键字
      */
     @GetMapping("/dicts/dictTypes")
-    public R<List<Dict>> allTypes() {
+    public R<List<Dict>> allTypes(String keyword) {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
-        wrapper.select("name, dict_type");
+        wrapper.select("name", "dict_type");
+        if (StringUtils.isNotBlank(keyword)) {
+            wrapper.and(i -> i.like("name", keyword).or().like("dict_type", keyword));
+        }
         wrapper.groupBy("name", "dict_type");
         List<Dict> dicts = thisService.list(wrapper);
         return R.ok(dicts);
     }
 
-    /**
-     * 按ID更新字典
-     */
-    @PreAuthorize("@ck.hasPermit('sys:dict:update')")
-    @PutMapping("/dicts/{id}")
-    public R<Dict> update(@PathVariable Long id, @Valid @RequestBody Dict entity) {
-        entity.setId(id);
-        Dict dict = thisService.putById(entity);
-        return dict != null ? R.ok(dict) : R.fail("更新字典失败");
-    }
 
     /**
-     * 按ID删除字典
+     * 删除字典条目
+     *
+     * @param dictType 字典类型
+     * @param label    字典标签
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
-    @DeleteMapping("/dicts/{id}")
-    public R<Void> delete(@PathVariable Long id) {
-        boolean removed = thisService.deleteById(id);
-        return removed ? R.ok("删除字典成功") : R.fail("删除字典失败");
+    @DeleteMapping("/dicts/{dictType}/{label}")
+    public R<Void> delete(@PathVariable String dictType, @PathVariable String label) {
+        boolean success = thisService.deleteDict(dictType, label);
+        return success ? R.ok("删除字典成功") : R.fail("删除字典失败");
     }
 
 }
