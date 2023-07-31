@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Setting;
 import {{ cookiecutter.basePackage }}.biz.sys.response.Item;
@@ -17,11 +16,6 @@ public interface ISettingService extends IService<Setting> {
      * 按ID查询
      */
     Setting queryById(Long id);
-
-    /**
-     * 分页查询
-     */
-    IPage<Setting> pageQuery(IPage<Setting> page);
 
     /**
      * 按名称查询设置项

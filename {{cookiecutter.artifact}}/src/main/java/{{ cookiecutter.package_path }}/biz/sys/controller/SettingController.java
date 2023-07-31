@@ -34,7 +34,7 @@ public class SettingController {
     @GetMapping("/settings")
     public R<PageVO<Setting>> page(@Valid PaginationRequest request) {
         IPage<Setting> page = PageRequestUtil.checkForMp(request);
-        IPage<Setting> list = thisService.pageQuery(page);
+        IPage<Setting> list = thisService.page(page);
         return PageRequestUtil.extractFromMp(list);
     }
 

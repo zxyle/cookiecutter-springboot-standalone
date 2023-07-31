@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.WhitelistMapper;
@@ -33,14 +32,8 @@ public class WhitelistServiceImpl extends ServiceImpl<WhitelistMapper, Whitelist
     }
 
     /**
-     * 分页查询
+     * 获取有效的白名单
      */
-    @Cacheable(cacheNames = "WhitelistCache", key = "#p.getCurrent()+#p.getSize()")
-    @Override
-    public IPage<Whitelist> pageQuery(IPage<Whitelist> p, QueryWrapper<Whitelist> wrapper) {
-        return page(p, wrapper);
-    }
-
     @Override
     public List<String> getWhitelist() {
         QueryWrapper<Whitelist> wrapper = new QueryWrapper<>();

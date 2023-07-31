@@ -45,7 +45,7 @@ public class WhitelistController {
                     .or().like("remark", request.getKeyword()));
         }
         IPage<Whitelist> page = PageRequestUtil.checkForMp(request);
-        IPage<Whitelist> list = thisService.pageQuery(page, wrapper);
+        IPage<Whitelist> list = thisService.page(page, wrapper);
         return PageRequestUtil.extractFromMp(list);
     }
 

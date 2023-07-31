@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Setting;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.SettingMapper;
@@ -34,15 +33,6 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
     @Override
     public Setting queryById(Long id) {
         return getById(id);
-    }
-
-    /**
-     * 分页查询
-     */
-    @Cacheable(cacheNames = "SettingCache", key = "#p.getCurrent()+#p.getSize()")
-    @Override
-    public IPage<Setting> pageQuery(IPage<Setting> p) {
-        return page(p);
     }
 
     /**

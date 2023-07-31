@@ -3,8 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
 
@@ -21,10 +19,8 @@ public interface IWhitelistService extends IService<Whitelist> {
     Whitelist queryById(Long id);
 
     /**
-     * 分页查询
+     * 获取有效的白名单
      */
-    IPage<Whitelist> pageQuery(IPage<Whitelist> page, QueryWrapper<Whitelist> wrapper);
-
     List<String> getWhitelist();
 
 }
