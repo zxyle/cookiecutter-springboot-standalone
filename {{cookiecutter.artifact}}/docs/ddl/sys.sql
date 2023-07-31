@@ -505,6 +505,25 @@ INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALU
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '新台币', 'TWD', 'currency');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '澳门元', 'MOP', 'currency');
 INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('货币', 0, '俄罗斯卢布', 'RUB', 'currency');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('星期', 0, '星期一', 'Mon', 'week');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('星期', 0, '星期二', 'Tue', 'week');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('星期', 0, '星期三', 'Wed', 'week');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('星期', 0, '星期四', 'Thu', 'week');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('星期', 0, '星期五', 'Fri', 'week');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('星期', 0, '星期六', 'Sat', 'week');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('星期', 0, '星期日', 'Sun', 'week');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '一月', 'Jan', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '二月', 'Feb', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '三月', 'Mar', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '四月', 'Apr', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '五月', 'May', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '六月', 'Jun', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '七月', 'Jul', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '八月', 'Aug', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '九月', 'Sep', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '十月', 'Oct', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '十一月', 'Nov', 'month');
+INSERT INTO `sys_dict` (`name`, `dict_sort`, `label`, `value`, `dict_type`) VALUES ('月份', 0, '十二月', 'Dec', 'month');
 COMMIT;
 
 -- ----------------------------
