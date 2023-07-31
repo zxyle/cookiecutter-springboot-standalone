@@ -34,4 +34,9 @@ public interface IDictService extends IService<Dict> {
      * 更新字典条目
      */
     boolean updateDict(Dict entity);
+
+    /**
+     * 删除字典类型
+     */
+    boolean deleteByDictType(String dictType);
 }

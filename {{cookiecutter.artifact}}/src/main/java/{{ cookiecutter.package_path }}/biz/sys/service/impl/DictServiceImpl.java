@@ -64,4 +64,15 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
     public boolean updateDict(Dict entity) {
         return updateById(entity);
     }
+
+    /**
+     * 删除字典类型
+     */
+    @CacheEvict(key = "#dictType")
+    @Override
+    public boolean deleteByDictType(String dictType) {
+        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
+        wrapper.eq("dict_type", dictType);
+        return remove(wrapper);
+    }
 }

@@ -114,4 +114,17 @@ public class DictController {
         return success ? R.ok("更新字典成功") : R.fail("更新字典失败");
     }
 
+
+    /**
+     * 删除字典类型
+     *
+     * @param dictType 字典类型
+     */
+    @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
+    @DeleteMapping("/dicts/dictType/{dictType}")
+    public R<Void> deleteByDictType(@PathVariable String dictType) {
+        boolean success = thisService.deleteByDictType(dictType);
+        return success ? R.ok("删除字典成功") : R.fail("删除字典失败");
+    }
+
 }
