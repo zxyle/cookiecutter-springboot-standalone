@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
  * 权限
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
 @TableName("auth_permission")
+@EqualsAndHashCode(callSuper = false)
 public class Permission extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

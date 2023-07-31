@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
  * 计数器
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_counter")
+@EqualsAndHashCode(callSuper = true)
 public class Counter extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

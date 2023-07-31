@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
  * 操作日志
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_operate_log")
+@EqualsAndHashCode(callSuper = true)
 public class OperateLog extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

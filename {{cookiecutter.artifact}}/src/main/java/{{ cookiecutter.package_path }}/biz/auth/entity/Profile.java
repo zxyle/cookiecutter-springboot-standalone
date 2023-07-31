@@ -23,8 +23,8 @@ import java.util.Date;
  * 用户资料
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("auth_profile")
+@EqualsAndHashCode(callSuper = true)
 public class Profile extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

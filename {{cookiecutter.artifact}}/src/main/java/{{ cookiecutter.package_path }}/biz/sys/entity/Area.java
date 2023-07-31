@@ -13,8 +13,8 @@ import org.hibernate.validator.constraints.Range;
  * 行政区划
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_area")
+@EqualsAndHashCode(callSuper = true)
 public class Area extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

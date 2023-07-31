@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
  * 用户
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("auth_user")
+@EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

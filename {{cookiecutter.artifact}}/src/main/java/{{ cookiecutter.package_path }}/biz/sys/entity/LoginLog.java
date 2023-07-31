@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
  * 登录日志
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_login_log")
+@EqualsAndHashCode(callSuper = true)
 public class LoginLog extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
  * 系统信息
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_info")
+@EqualsAndHashCode(callSuper = true)
 public class Info extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

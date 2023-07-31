@@ -59,7 +59,7 @@ public class ${table.controllerName} {
         wrapper.orderBy(EntityUtil.getFields(${entity}.class).contains(request.getField()),
                 request.isAsc(), request.getField());
         IPage<${entity}> page = PageRequestUtil.checkForMp(request);
-        IPage<${entity}> list = thisService.pageQuery(page, wrapper);
+        IPage<${entity}> list = thisService.page(page, wrapper);
 
         // 数据导出Excel功能，不需要可以删除
         if (request.isExport()) {
@@ -136,7 +136,7 @@ public class ${table.controllerName} {
     @PostMapping("/${table.entityPath}s/batch-create")
     public R<Void> batchCreate(@RequestBody List<${entity}> list) {
         boolean saved = thisService.saveBatch(list);
-        return saved ? R.ok("批量新增成功") : R.fail("批量新增失败");
+        return saved ? R.ok("批量新增${table.comment!}成功") : R.fail("批量新增${table.comment!}失败");
     }
 
     /**
@@ -146,7 +146,7 @@ public class ${table.controllerName} {
     @PutMapping("/${table.entityPath}s/batch-update")
     public R<Void> batchUpdate(@RequestBody List<${entity}> list) {
         boolean updated = thisService.updateBatchById(list);
-        return updated ? R.ok("批量更新成功") : R.fail("批量更新失败");
+        return updated ? R.ok("批量更新${table.comment!}成功") : R.fail("批量更新${table.comment!}失败");
     }
 
     /**
@@ -156,7 +156,7 @@ public class ${table.controllerName} {
     @DeleteMapping("/${table.entityPath}s/batch-delete")
     public R<Void> batchDelete(@RequestBody List<Long> ids) {
         boolean removed = thisService.removeByIds(ids);
-        return removed ? R.ok("批量删除成功") : R.fail("批量删除失败");
+        return removed ? R.ok("批量删除${table.comment!}成功") : R.fail("批量删除${table.comment!}失败");
     }
 
 }

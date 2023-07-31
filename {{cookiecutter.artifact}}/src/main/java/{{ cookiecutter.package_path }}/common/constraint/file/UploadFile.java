@@ -10,8 +10,8 @@ import java.lang.annotation.*;
  * 上传文件校验注解
  */
 @Documented
-@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Constraint(validatedBy = UploadFileValidator.class)
 public @interface UploadFile {
 

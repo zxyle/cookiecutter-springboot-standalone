@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
  * 友链
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_friendly_url")
+@EqualsAndHashCode(callSuper = true)
 public class FriendlyUrl extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.auth.mapper;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.PasswordHistory;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,9 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PasswordHistoryMapper extends BaseMapper<PasswordHistory> {
-
-    // 截断表
-    @Update("TRUNCATE TABLE auth_password_history")
-    void truncate();
 
 }

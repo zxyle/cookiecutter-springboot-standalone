@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
  * 验证码发送记录
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_verification")
+@EqualsAndHashCode(callSuper = true)
 public class Verification extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

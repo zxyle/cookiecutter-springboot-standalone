@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
  * IP白名单
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_whitelist")
+@EqualsAndHashCode(callSuper = true)
 public class Whitelist extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

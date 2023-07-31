@@ -14,8 +14,8 @@ import java.sql.Blob;
  * 文件
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_file")
+@EqualsAndHashCode(callSuper = true)
 public class File extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

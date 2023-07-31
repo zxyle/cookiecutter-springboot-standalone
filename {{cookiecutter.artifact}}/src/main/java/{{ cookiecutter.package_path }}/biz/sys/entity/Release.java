@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
  * 发布版本
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_release")
+@EqualsAndHashCode(callSuper = true)
 public class Release extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

@@ -15,8 +15,8 @@ import javax.validation.constraints.Positive;
  * 用户组角色关联
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("auth_group_role")
+@EqualsAndHashCode(callSuper = true)
 public class GroupRole extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

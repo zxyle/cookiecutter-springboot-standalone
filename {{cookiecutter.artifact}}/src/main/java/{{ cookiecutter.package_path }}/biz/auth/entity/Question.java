@@ -15,8 +15,8 @@ import javax.validation.constraints.NotBlank;
  * 安全问题
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("auth_question")
+@EqualsAndHashCode(callSuper = true)
 public class Question extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

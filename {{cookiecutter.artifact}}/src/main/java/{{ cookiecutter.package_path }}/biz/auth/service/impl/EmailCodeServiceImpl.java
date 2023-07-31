@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
 
+/**
+ * 邮件验证码服务
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

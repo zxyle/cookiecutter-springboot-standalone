@@ -9,10 +9,10 @@ import java.lang.annotation.*;
 /**
  * 图片校验注解
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ImageValidator.class)
-@Documented
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface Image {
 
     /**

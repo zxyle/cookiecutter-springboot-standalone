@@ -10,8 +10,8 @@ import lombok.EqualsAndHashCode;
  * 意见反馈
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_feedback")
+@EqualsAndHashCode(callSuper = true)
 public class Feedback extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
  * IP黑名单
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("sys_blacklist")
+@EqualsAndHashCode(callSuper = true)
 public class Blacklist extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

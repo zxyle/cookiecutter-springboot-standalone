@@ -15,7 +15,7 @@ import java.time.Duration;
 /**
  * Authenticator
  */
-public class Authenticator {
+public final class Authenticator {
 
     /**
      * 生成二维码

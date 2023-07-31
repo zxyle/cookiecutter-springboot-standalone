@@ -15,8 +15,8 @@ import javax.validation.constraints.Positive;
  * 用户角色关联
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("auth_user_role")
+@EqualsAndHashCode(callSuper = true)
 public class UserRole extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

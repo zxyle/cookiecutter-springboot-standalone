@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
  * 用户组
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("auth_group")
+@EqualsAndHashCode(callSuper = true)
 public class Group extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

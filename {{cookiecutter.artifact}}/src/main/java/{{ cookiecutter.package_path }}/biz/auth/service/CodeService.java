@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 验证码服务
+ */
 @Service
 @RequiredArgsConstructor
 public class CodeService {
