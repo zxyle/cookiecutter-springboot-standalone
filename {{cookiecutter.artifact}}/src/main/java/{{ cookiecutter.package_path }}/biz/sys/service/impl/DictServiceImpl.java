@@ -32,13 +32,13 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
     @Cacheable(key = "#dictType", unless = "#result == null")
     public List<Dict> listDictsByType(String dictType) {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
-        wrapper.select("label, value");
+        wrapper.select("id", "label", "value");
         wrapper.eq("dict_type", dictType);
         return list(wrapper);
     }
 
     /**
-     * 新增字典（带缓存）
+     * 新增字典条目（带缓存）
      */
     @CacheEvict(key = "#entity.dictType")
     @Override
@@ -48,14 +48,20 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
     }
 
     /**
-     * 删除字典
+     * 删除字典条目
      */
     @CacheEvict(key = "#dictType")
     @Override
-    public boolean deleteDict(String dictType, String label) {
-        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
-        wrapper.eq("dict_type", dictType);
-        wrapper.eq("label", label);
-        return remove(wrapper);
+    public boolean deleteDict(String dictType, Long id) {
+        return removeById(id);
+    }
+
+    /**
+     * 更新字典条目
+     */
+    @CacheEvict(key = "#entity.dictType")
+    @Override
+    public boolean updateDict(Dict entity) {
+        return updateById(entity);
     }
 }

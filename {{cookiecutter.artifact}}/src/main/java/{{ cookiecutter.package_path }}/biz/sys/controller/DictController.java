@@ -8,6 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.DictMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.request.dict.AddDictRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.request.dict.MultiDictTypeRequest;
+import {{ cookiecutter.basePackage }}.biz.sys.request.dict.UpdateDictRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
@@ -85,15 +86,32 @@ public class DictController {
 
     /**
      * 删除字典条目
-     *
-     * @param dictType 字典类型
-     * @param label    字典标签
      */
     @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
-    @DeleteMapping("/dicts/{dictType}/{label}")
-    public R<Void> delete(@PathVariable String dictType, @PathVariable String label) {
-        boolean success = thisService.deleteDict(dictType, label);
-        return success ? R.ok("删除字典成功") : R.fail("删除字典失败，字典条目不存在");
+    @DeleteMapping("/dicts/{id}")
+    public R<Void> delete(@PathVariable Long id) {
+        Dict result = thisService.getById(id);
+        if (result == null) return R.fail("删除失败，字典不存在");
+
+        boolean success = thisService.deleteDict(result.getDictType(), id);
+        return success ? R.ok("删除字典成功") : R.fail("删除字典失败");
+    }
+
+    /**
+     * 更新字典条目
+     */
+    @PutMapping("/dicts/{id}")
+    public R<Void> update(@Valid @RequestBody UpdateDictRequest request, @PathVariable Long id) {
+        Dict result = thisService.getById(id);
+        if (result == null) return R.fail("更新失败，字典不存在");
+
+        Dict dict = new Dict();
+        BeanUtils.copyProperties(request, dict);
+        dict.setId(id);
+        dict.setDictType(result.getDictType());
+
+        boolean success = thisService.updateDict(dict);
+        return success ? R.ok("更新字典成功") : R.fail("更新字典失败");
     }
 
 }

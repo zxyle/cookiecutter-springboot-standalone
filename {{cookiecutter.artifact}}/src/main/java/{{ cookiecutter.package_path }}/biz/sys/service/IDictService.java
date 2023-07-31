@@ -21,12 +21,17 @@ public interface IDictService extends IService<Dict> {
     List<Dict> listDictsByType(String dictType);
 
     /**
-     * 新增字典（带缓存）
+     * 新增字典条目（带缓存）
      */
     Dict insert(Dict entity);
 
     /**
-     * 删除字典
+     * 删除字典条目
      */
-    boolean deleteDict(String dictType, String label);
+    boolean deleteDict(String dictType, Long id);
+
+    /**
+     * 更新字典条目
+     */
+    boolean updateDict(Dict entity);
 }
