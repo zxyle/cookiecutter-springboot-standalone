@@ -3,8 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Blacklist;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -15,15 +13,9 @@ import java.util.List;
  */
 public interface IBlacklistService extends IService<Blacklist> {
 
-    List<String> getBlacklist();
-
-    boolean addBlacklist(String ip);
-
-    boolean deleteBlacklist(Long id);
-
     /**
-     * 分页查询
+     * 获取有效期内黑名单列表
      */
-    IPage<Blacklist> pageQuery(IPage<Blacklist> page, QueryWrapper<Blacklist> wrapper);
+    List<String> getBlacklist();
 
 }

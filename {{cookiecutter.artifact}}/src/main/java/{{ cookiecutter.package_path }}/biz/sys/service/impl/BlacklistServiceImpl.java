@@ -4,14 +4,11 @@
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Blacklist;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.BlacklistMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IBlacklistService;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,7 +21,9 @@ import java.util.stream.Collectors;
 @Service
 public class BlacklistServiceImpl extends ServiceImpl<BlacklistMapper, Blacklist> implements IBlacklistService {
 
-    @Cacheable(value = "blacklist")
+    /**
+     * 获取有效期内黑名单列表
+     */
     @Override
     public List<String> getBlacklist() {
         QueryWrapper<Blacklist> wrapper = new QueryWrapper<>();
@@ -37,24 +36,4 @@ public class BlacklistServiceImpl extends ServiceImpl<BlacklistMapper, Blacklist
         return new ArrayList<>();
     }
 
-    @CachePut(value = "blacklist")
-    @Override
-    public boolean addBlacklist(String ip) {
-        Blacklist blacklist = new Blacklist();
-        blacklist.setIp(ip);
-        return save(blacklist);
-    }
-
-    @Override
-    public boolean deleteBlacklist(Long id) {
-        return removeById(id);
-    }
-
-    /**
-     * 分页查询
-     */
-    @Override
-    public IPage<Blacklist> pageQuery(IPage<Blacklist> page, QueryWrapper<Blacklist> wrapper) {
-        return page(page, wrapper);
-    }
 }

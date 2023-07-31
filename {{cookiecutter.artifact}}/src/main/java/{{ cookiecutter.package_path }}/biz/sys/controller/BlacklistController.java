@@ -41,7 +41,7 @@ public class BlacklistController {
         }
 
         IPage<Blacklist> page = PageRequestUtil.checkForMp(request);
-        IPage<Blacklist> list = thisService.pageQuery(page, wrapper);
+        IPage<Blacklist> list = thisService.page(page, wrapper);
         return PageRequestUtil.extractFromMp(list);
     }
 
@@ -52,7 +52,7 @@ public class BlacklistController {
     @PostMapping("/blacklists")
     public R<Blacklist> add(@Valid @RequestBody Blacklist entity) {
         boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增黑名单失败");
+        return success ? R.ok(entity) : R.fail("新增IP黑名单失败");
     }
 
     /**
@@ -62,7 +62,7 @@ public class BlacklistController {
     @DeleteMapping("/blacklists/{id}")
     public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        return success ? R.ok("删除黑名单成功") : R.fail("删除黑名单失败");
+        return success ? R.ok("删除IP黑名单成功") : R.fail("删除IP黑名单失败");
     }
 
 }
