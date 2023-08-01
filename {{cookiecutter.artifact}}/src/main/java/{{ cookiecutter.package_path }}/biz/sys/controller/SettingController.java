@@ -57,7 +57,7 @@ public class SettingController {
     @GetMapping("/settings/{id}")
     public R<Setting> get(@PathVariable Long id) {
         Setting entity = thisService.queryById(id);
-        return entity == null ? R.fail("数据不存在") : R.ok(entity);
+        return entity == null ? R.fail("设置不存在") : R.ok(entity);
     }
 
     /**

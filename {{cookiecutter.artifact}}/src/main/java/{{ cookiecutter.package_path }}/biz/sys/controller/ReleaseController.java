@@ -55,7 +55,7 @@ public class ReleaseController {
     @GetMapping("/releases/{id}")
     public R<Release> get(@PathVariable Long id) {
         Release entity = thisService.getById(id);
-        return entity == null ? R.fail("数据不存在") : R.ok(entity);
+        return entity == null ? R.fail("版本不存在") : R.ok(entity);
     }
 
     /**

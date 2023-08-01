@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -177,7 +178,7 @@ public class AppController extends AuthBaseController {
         if (app.getStatus() == 0) return R.fail("应用已下架");
 
         // 生成临时授权码, 存入redis, 30秒过期
-        String authCode = IdUtil.fastSimpleUUID();
+        String authCode = UUID.randomUUID().toString();
         String key = "authCode:" + authCode;
         String value = String.format("%s:%s", app.getAppSecret(), getUserId());
         stringRedisTemplate.opsForValue().set(key, value, 30, TimeUnit.SECONDS);

@@ -122,4 +122,11 @@ public class PaginationRequest extends BaseRequest {
                 DEFAULT_PAGE_SIZE : pageSize;
     }
 
+    /**
+     * 获取分页偏移量
+     */
+    public Integer getOffset() {
+        return (getPageNum() - 1) * getPageSize();
+    }
+
 }

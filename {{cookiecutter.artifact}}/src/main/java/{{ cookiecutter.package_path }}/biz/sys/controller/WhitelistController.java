@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
-import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
@@ -14,14 +13,10 @@ import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.net.URLEncoder;
 
 /**
  * IP白名单管理
@@ -89,20 +84,6 @@ public class WhitelistController {
     public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除黑名单成功") : R.fail("删除黑名单失败");
-    }
-
-    /**
-     * Excel导出白名单
-     */
-    @PreAuthorize("@ck.hasPermit('sys:whitelist:export')")
-    @GetMapping("/whitelists/export")
-    public void export(HttpServletResponse response) throws IOException {
-        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        String fileName = "IP白名单";
-        String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
-        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
-        EasyExcelFactory.write(response.getOutputStream(), Whitelist.class)
-                .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(thisService.list());
     }
 
 }

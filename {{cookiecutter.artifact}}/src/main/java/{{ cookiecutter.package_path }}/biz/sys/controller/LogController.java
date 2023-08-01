@@ -27,7 +27,7 @@ import javax.validation.Valid;
  * 日志审计
  */
 @RestController
-@RequestMapping("/sys")
+@RequestMapping("/sys/logs")
 @RequiredArgsConstructor
 public class LogController {
 
@@ -38,7 +38,7 @@ public class LogController {
      * 登录日志分页查询
      */
     @PreAuthorize("@ck.hasPermit('sys:login:list')")
-    @GetMapping("/login/logs")
+    @GetMapping("/login")
     public R<PageVO<LoginLog>> list(@Valid LoginLogRequest request) {
         QueryWrapper<LoginLog> wrapper = new QueryWrapper<>();
         wrapper.like(StringUtils.isNotBlank(request.getAccount()), "account", request.getAccount());
@@ -52,7 +52,7 @@ public class LogController {
      * 操作日志分页查询
      */
     @PreAuthorize("@ck.hasPermit('sys:operate:list')")
-    @GetMapping("/operate/logs")
+    @GetMapping("/operate")
     public R<PageVO<OperateLog>> page(@Valid OperateLogRequest request) {
         QueryWrapper<OperateLog> wrapper = new QueryWrapper<>();
         wrapper.eq(request.getUserId() != null, "user_id", request.getUserId());

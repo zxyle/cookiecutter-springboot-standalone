@@ -24,6 +24,8 @@ services:
 
   nginx:
     image: nginx:1.21.6
+    ports:
+      - "80:80"
     depends_on:
       - mysql
       - redis
