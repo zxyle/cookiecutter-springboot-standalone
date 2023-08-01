@@ -7,6 +7,11 @@ import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 /**
  * 友链
@@ -21,21 +26,27 @@ public class FriendlyUrl extends BaseEntity {
     /**
      * 链接文本
      */
+    @Length(max = 255, message = "链接文本不能超过255个字符")
+    @NotBlank(message = "链接文本不能为空")
     private String content;
 
     /**
      * 链接
      */
+    @Length(max = 255, message = "链接不能超过255个字符")
+    @NotBlank(message = "链接不能为空")
     private String url;
 
     /**
      * 排序
      */
+    @Positive(message = "排序必须为正整数")
     private Integer sort;
 
     /**
      * 1-启用 0-禁用
      */
+    @Range(min = 0, max = 1, message = "状态只能为0或1")
     private Integer status;
 
 }

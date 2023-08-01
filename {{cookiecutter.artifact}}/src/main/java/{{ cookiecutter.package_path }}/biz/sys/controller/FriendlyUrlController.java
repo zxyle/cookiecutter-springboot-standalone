@@ -8,6 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.FriendlyUrl;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFriendlyUrlService;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +32,10 @@ public class FriendlyUrlController {
      * 获取友链列表
      */
     @GetMapping("/urls")
-    @Cacheable(cacheNames = "urlCache", unless = "#result == null || #result.size() == 0")
+    @Cacheable(cacheNames = "UrlCache", unless = "#result == null")
     public R<List<FriendlyUrl>> list() {
         QueryWrapper<FriendlyUrl> wrapper = new QueryWrapper<>();
-        wrapper.select("content", "url");
+        wrapper.select("id", "content", "url");
         wrapper.eq("status", ENABLE);
         wrapper.orderByAsc("sort");
         List<FriendlyUrl> urls = thisService.list(wrapper);
@@ -44,6 +45,7 @@ public class FriendlyUrlController {
     /**
      * 添加友链
      */
+    @CacheEvict(cacheNames = "UrlCache", allEntries = true)
     @PreAuthorize("@ck.hasPermit('sys:friendly:add')")
     @PostMapping("/urls")
     public R<FriendlyUrl> add(@Valid @RequestBody FriendlyUrl entity) {
@@ -56,14 +58,13 @@ public class FriendlyUrlController {
      *
      * @param id 友链ID
      */
+    @CacheEvict(cacheNames = "UrlCache", allEntries = true)
     @PreAuthorize("@ck.hasPermit('sys:friendly:delete')")
     @DeleteMapping("/urls/{id}")
     public R<FriendlyUrl> delete(@PathVariable("id") Long id) {
-        FriendlyUrl entity = thisService.getById(id);
         if (entity == null) return R.fail("友链不存在");
-
         boolean removed = thisService.removeById(id);
-        return removed ? R.ok("删除友链成功") : R.fail("删除友链失败");
+        return removed ? R.ok(entity) : R.fail("删除友链失败");
     }
 
     /**
@@ -73,15 +74,15 @@ public class FriendlyUrlController {
      * @param entity 友链实体
      * @return 友链实体
      */
+    @CacheEvict(cacheNames = "UrlCache", allEntries = true)
     @PreAuthorize("@ck.hasPermit('sys:friendly:update')")
     @PutMapping("/urls/{id}")
     public R<FriendlyUrl> update(@PathVariable Long id, @Valid @RequestBody FriendlyUrl entity) {
         entity.setId(id);
-        FriendlyUrl oldEntity = thisService.getById(id);
-        if (oldEntity == null) return R.fail("友链不存在");
-
+        FriendlyUrl result = thisService.getById(id);
+        if (result == null) return R.fail("友链不存在");
         boolean updated = thisService.updateById(entity);
-        return updated ? R.ok(entity) : R.fail("更新失败");
+        return updated ? R.ok(entity) : R.fail("更新友链失败");
     }
 
 }
