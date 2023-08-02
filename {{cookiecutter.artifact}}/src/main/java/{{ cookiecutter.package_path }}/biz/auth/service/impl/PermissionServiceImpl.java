@@ -95,7 +95,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
      */
     @Override
     public boolean create(Permission permission) {
-        if (permission.getParentId() != null) {
+        // 设置排序
+        if (permission.getParentId() != null && permission.getSort() == null) {
             Integer sort = baseMapper.selectMaxSort(permission.getParentId());
             permission.setSort(sort == null ? 1 : sort + 1);
         }

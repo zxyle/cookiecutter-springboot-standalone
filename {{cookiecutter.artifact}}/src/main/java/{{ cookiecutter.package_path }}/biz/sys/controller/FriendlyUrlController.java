@@ -62,7 +62,8 @@ public class FriendlyUrlController {
     @PreAuthorize("@ck.hasPermit('sys:friendly:delete')")
     @DeleteMapping("/urls/{id}")
     public R<FriendlyUrl> delete(@PathVariable("id") Long id) {
-        if (entity == null) return R.fail("友链不存在");
+        FriendlyUrl result = thisService.getById(id);
+        if (result == null) return R.fail("友链不存在");
         boolean removed = thisService.removeById(id);
         return removed ? R.ok("删除友链成功") : R.fail("删除友链失败");
     }

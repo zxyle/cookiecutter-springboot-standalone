@@ -52,7 +52,7 @@ public class WhitelistController {
     @PostMapping("/whitelists")
     public R<Whitelist> add(@Valid @RequestBody Whitelist entity) {
         boolean success = thisService.save(entity);
-        return success ? R.ok(entity) : R.fail("新增黑名单失败");
+        return success ? R.ok(entity) : R.fail("新增白名单失败");
     }
 
 
@@ -73,7 +73,7 @@ public class WhitelistController {
     public R<Void> update(@PathVariable Long id, @Valid @RequestBody Whitelist entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
-        return success ? R.ok("更新黑名单成功") : R.fail("更新黑名单失败");
+        return success ? R.ok("更新白名单成功") : R.fail("更新白名单失败");
     }
 
     /**
@@ -83,7 +83,7 @@ public class WhitelistController {
     @DeleteMapping("/whitelists/{id}")
     public R<Void> delete(@PathVariable Long id) {
         boolean success = thisService.removeById(id);
-        return success ? R.ok("删除黑名单成功") : R.fail("删除黑名单失败");
+        return success ? R.ok("删除白名单成功") : R.fail("删除白名单失败");
     }
 
 }

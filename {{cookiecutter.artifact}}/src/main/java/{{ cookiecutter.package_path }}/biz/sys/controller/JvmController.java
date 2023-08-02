@@ -45,10 +45,9 @@ public class JvmController {
 
 
     // 获取进程ID
-    public static int getProcessID() {
+    private static int getProcessID() {
         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
         return Integer.parseInt(runtimeMXBean.getName().split("@")[0]);
     }
-
 
 }

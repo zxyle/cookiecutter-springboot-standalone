@@ -120,7 +120,7 @@ public class RedisController {
      */
     @PreAuthorize("@ck.hasPermit('sys:key:expire')")
     @PutMapping("/keys/{key}/expire/{seconds}")
-    public R<Void> expire(@PathVariable String key, @PathVariable Integer seconds) {
+    public R<Void> expire(@PathVariable String key, @PathVariable Long seconds) {
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         if (Boolean.FALSE.equals(hasKey)) {
             return R.fail("设置过期时间，key不存在");

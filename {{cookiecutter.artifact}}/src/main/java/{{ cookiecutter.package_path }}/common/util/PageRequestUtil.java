@@ -62,7 +62,7 @@ public final class PageRequestUtil {
      * @return 有效分页大小
      */
     public static Integer checkPageSize(Integer pageSize) {
-        return checkPageSize(pageSize, PageConst.DEFAULT_PAGE_SIZE);
+        return checkPageSize(pageSize, PageConst.MAX_PAGE_SIZE);
     }
 
     /**

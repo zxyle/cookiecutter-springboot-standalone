@@ -103,7 +103,7 @@ CREATE TABLE `auth_permission` (
   `description` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '描述信息',
   `parent_id` bigint unsigned NOT NULL DEFAULT '1' COMMENT '父级权限ID',
   `kind` tinyint unsigned NOT NULL COMMENT '权限类型（1：页面/路由，2：接口/功能 3：按钮/组件）',
-  `path` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '页面路由（用于前端控制）',
+  `path` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '页面路由（用于前端控制）',
   `sort` smallint unsigned NOT NULL DEFAULT '1' COMMENT '显示顺序',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_code` (`code`) USING BTREE

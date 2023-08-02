@@ -55,7 +55,7 @@ public class ValidateService {
         String code = CaptchaUtil.randNumber(settingService.get("captcha.digits").getIntValue());
         stringRedisTemplate.opsForHash().put(key, "account", account);
         stringRedisTemplate.opsForHash().put(key, "code", code);
-        Integer aliveTime = settingService.get("captcha.alive-time").getIntValue();
+        int aliveTime = settingService.get("captcha.alive-time").getIntValue();
         stringRedisTemplate.expire(key, Duration.ofMinutes(aliveTime));
         return code;
     }

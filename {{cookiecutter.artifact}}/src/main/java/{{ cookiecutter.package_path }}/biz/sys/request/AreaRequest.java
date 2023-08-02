@@ -12,9 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 @Data
 public class AreaRequest {
 
-    public static final int DEFAULT_LEVEL = 4;
+    private static final int DEFAULT_LEVEL = 4;
 
-    public static final String DEFAULT_ROOT_ID = "0000";
+    private static final String DEFAULT_ROOT_ID = "0000";
 
     /**
      * 根节点ID

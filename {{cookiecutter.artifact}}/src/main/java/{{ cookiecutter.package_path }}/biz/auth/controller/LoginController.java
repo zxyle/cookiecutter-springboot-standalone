@@ -152,7 +152,7 @@ public class LoginController extends AuthBaseController {
     @PostMapping("/logout")
     public R<Void> logout() {
         boolean success = loginService.logout(getUserId());
-        return R.result(success);
+        return success ? R.ok("退出成功") : R.fail("退出失败");
     }
 
     /**
