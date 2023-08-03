@@ -23,13 +23,10 @@ import java.util.List;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class AntiSpiderFilter extends OncePerRequestFilter {
 
-    Environment environment;
-
-    public AntiSpiderFilter(Environment environment) {
-        this.environment = environment;
-    }
+    final Environment environment;
 
     /**
      * 爬虫关键字 包括搜索引擎爬虫和常见的爬虫框架

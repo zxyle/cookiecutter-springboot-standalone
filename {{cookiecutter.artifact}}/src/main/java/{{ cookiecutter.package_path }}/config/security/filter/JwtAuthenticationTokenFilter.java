@@ -29,19 +29,12 @@ import java.util.List;
  * JWT 过滤器
  */
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
-    IUserService userService;
-
-    ISettingService setting;
-
-    StringRedisTemplate stringRedisTemplate;
-
-    public JwtAuthenticationTokenFilter(IUserService userService, ISettingService setting, StringRedisTemplate stringRedisTemplate) {
-        this.userService = userService;
-        this.stringRedisTemplate = stringRedisTemplate;
-        this.setting = setting;
-    }
+    final UserService userService;
+    final SettingService setting;
+    final StringRedisTemplate stringRedisTemplate;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

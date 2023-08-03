@@ -25,23 +25,13 @@ import java.util.List;
  * IP黑白名单过滤器
  */
 @Component
+@RequiredArgsConstructor
 public class IpFilter extends OncePerRequestFilter {
 
-    IBlacklistService blacklistService;
-
-    IWhitelistService whitelistService;
-
-    Environment environment;
-
-    ISettingService setting;
-
-    public IpFilter(IBlacklistService blacklistService, IWhitelistService whitelistService,
-                    Environment environment, ISettingService setting) {
-        this.blacklistService = blacklistService;
-        this.whitelistService = whitelistService;
-        this.environment = environment;
-        this.setting = setting;
-    }
+    final BlacklistService blacklistService;
+    final WhitelistService whitelistService;
+    final Environment environment;
+    final SettingService setting;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
