@@ -31,7 +31,7 @@ public class ProfileController extends AuthBaseController {
     /**
      * 获取当前用户资料
      */
-    @LogOperation("获取当前用户信息")
+    @LogOperation("获取当前用户资料")
     @PreAuthorize("@ck.hasPermit('auth:profile:get')")
     @GetMapping("/profile")
     public R<Profile> get() {
@@ -42,7 +42,7 @@ public class ProfileController extends AuthBaseController {
     /**
      * 更新当前用户资料
      */
-    @LogOperation("更新当前用户信息")
+    @LogOperation("更新当前用户资料")
     @PreAuthorize("@ck.hasPermit('auth:profile:update')")
     @PutMapping("/profile")
     public R<Profile> update(@Valid @RequestBody Profile entity) {

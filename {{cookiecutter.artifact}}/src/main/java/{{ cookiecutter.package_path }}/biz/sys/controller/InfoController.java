@@ -38,7 +38,7 @@ public class InfoController {
         QueryWrapper<Info> wrapper = new QueryWrapper<>();
         wrapper.select("param_key", "param_value");
         List<Info> params = thisService.list(wrapper);
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(params.size());
         params.forEach(info -> map.put(info.getParamKey(), info.getParamValue()));
         return R.ok(map);
     }

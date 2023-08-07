@@ -124,7 +124,7 @@ public class DictController {
     @DeleteMapping("/dicts/dictType/{dictType}")
     public R<Void> deleteByDictType(@PathVariable String dictType) {
         boolean success = thisService.deleteByDictType(dictType);
-        return success ? R.ok("删除字典成功") : R.fail("删除字典失败");
+        return success ? R.ok("删除字典类型成功") : R.fail("删除字典类型失败");
     }
 
 }

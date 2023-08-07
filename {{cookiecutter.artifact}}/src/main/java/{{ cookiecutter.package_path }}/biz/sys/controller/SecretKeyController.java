@@ -8,12 +8,12 @@ import {{ cookiecutter.basePackage }}.biz.sys.response.SecretKeyResponse;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import dev.zhengxiang.tool.crypto.PlainKeyPair;
 import dev.zhengxiang.tool.crypto.RSAEncrypt;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 
@@ -22,10 +22,10 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class SecretKeyController {
 
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
+    final StringRedisTemplate stringRedisTemplate;
 
     /**
      * 获取RSA公钥

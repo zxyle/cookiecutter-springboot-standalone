@@ -55,7 +55,7 @@ public class Item {
                 this.real = Boolean.parseBoolean(setting.getOptionValue());
                 break;
             default:
-                throw new RuntimeException("不支持的数据类型：" + setting.getDataType());
+                throw new IllegalArgumentException("不支持的数据类型：" + setting.getDataType());
         }
     }
 }
