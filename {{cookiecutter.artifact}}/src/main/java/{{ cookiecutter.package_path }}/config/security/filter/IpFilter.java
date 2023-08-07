@@ -28,10 +28,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IpFilter extends OncePerRequestFilter {
 
-    final BlacklistService blacklistService;
-    final WhitelistService whitelistService;
+    final IBlacklistService blacklistService;
+    final IWhitelistService whitelistService;
     final Environment environment;
-    final SettingService setting;
+    final ISettingService setting;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
