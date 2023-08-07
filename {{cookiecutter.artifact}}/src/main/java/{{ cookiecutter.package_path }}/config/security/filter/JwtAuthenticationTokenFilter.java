@@ -32,8 +32,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
-    final UserService userService;
-    final SettingService setting;
+    final IUserService userService;
+    final ISettingService setting;
     final StringRedisTemplate stringRedisTemplate;
 
     @Override
