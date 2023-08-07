@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import lombok.RequiredArgsConstructor;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
