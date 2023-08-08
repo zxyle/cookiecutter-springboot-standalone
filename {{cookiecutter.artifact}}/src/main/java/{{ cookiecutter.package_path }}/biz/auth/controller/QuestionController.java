@@ -26,7 +26,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +48,7 @@ public class QuestionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:question:list')")
     @GetMapping("/questions")
-    public R<PageVO<Question>> page(@Valid PaginationRequest request) throws IOException {
+    public R<PageVO<Question>> page(@Valid PaginationRequest request) {
         QueryWrapper<Question> wrapper = new QueryWrapper<>();
         wrapper.select("id", "question");
         wrapper.like(request.getKeyword() != null, "question", request.getKeyword());

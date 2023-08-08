@@ -49,6 +49,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             return;
         }
 
+        // 从Bearer token中获取jwt
         token = token.substring(7);
 
         // 解析jwt, 解析失败则放行

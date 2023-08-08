@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -53,7 +52,7 @@ public class AppController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:app:list')")
     @GetMapping("/apps")
-    public R<PageVO<App>> page(@Valid PaginationRequest request) throws IOException {
+    public R<PageVO<App>> page(@Valid PaginationRequest request) {
         QueryWrapper<App> wrapper = new QueryWrapper<>();
         wrapper.orderBy(EntityUtil.getFields(App.class).contains(request.getField()),
                 request.isAsc(), request.getField());

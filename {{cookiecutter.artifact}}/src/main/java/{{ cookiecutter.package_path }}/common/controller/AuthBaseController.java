@@ -69,8 +69,7 @@ public class AuthBaseController {
      * 获取当前登录用户所在的用户组ID
      */
     public Long getCurrentGroup() {
-        User user = getLoggedInUser();
-        Long userId = user.getId();
+        Long userId = getUserId();
         // TODO 目前只支持一个用户对应一个用户组
         List<UserGroup> groups = userGroupService.queryRelation(userId, 0L);
         return groups.get(0).getGroupId();
