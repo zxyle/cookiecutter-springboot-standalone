@@ -8,6 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.App;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.AppMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IAppService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,12 +19,13 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "AppCache")
 public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements IAppService {
 
     /**
      * 新增应用（带缓存）
      */
-    @CachePut(cacheNames = "AppCache", key = "#result.id", unless = "#result == null")
+    @CachePut(key = "#result.id", unless = "#result == null")
     @Override
     public App insert(App entity) {
         save(entity);
@@ -33,7 +35,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements IAppS
     /**
      * 按ID查询（查询结果不为null则缓存）
      */
-    @Cacheable(cacheNames = "AppCache", key = "#id", unless = "#result == null")
+    @Cacheable(key = "#id", unless = "#result == null")
     @Override
     public App queryById(Long id) {
         return getById(id);
@@ -42,7 +44,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements IAppS
     /**
      * 按ID更新（带缓存）
      */
-    @CachePut(cacheNames = "AppCache", key = "#entity.id")
+    @CachePut(key = "#entity.id")
     @Override
     public App putById(App entity) {
         updateById(entity);
@@ -52,7 +54,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements IAppS
     /**
      * 按ID删除（带缓存）
      */
-    @CacheEvict(cacheNames = "AppCache", key = "#id")
+    @CacheEvict(key = "#id")
     @Override
     public boolean deleteById(Long id) {
         return removeById(id);
