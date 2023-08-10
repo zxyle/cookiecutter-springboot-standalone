@@ -33,6 +33,6 @@ public class Answer extends BaseEntity {
      * 安全问题答案md5
      */
     @Length(max = 32, message = "安全问题答案md5长度不能超过32个字符")
-    private String answer;
+    private String secret;
 
 }

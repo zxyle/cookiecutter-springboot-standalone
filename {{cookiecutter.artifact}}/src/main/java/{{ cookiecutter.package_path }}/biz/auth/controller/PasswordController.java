@@ -138,7 +138,7 @@ public class PasswordController extends AuthBaseController {
         // 判断密保问题答案是否正确
         Answer answer = answerService.queryByUserId(user.getId(), questionId);
         if (null == answer) return R.fail("找回密码失败，密保问题不存在");
-        if (!DigestUtil.md5Hex(answerRequest.getAnswer().trim()).equalsIgnoreCase(answer.getAnswer())) {
+        if (!DigestUtil.md5Hex(answerRequest.getAnswer().trim()).equalsIgnoreCase(answer.getSecret())) {
             return R.fail("找回密码失败，密保问题答案错误");
         }
 

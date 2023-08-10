@@ -10,7 +10,6 @@ import {{ cookiecutter.basePackage }}.biz.sys.mapper.DictMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 

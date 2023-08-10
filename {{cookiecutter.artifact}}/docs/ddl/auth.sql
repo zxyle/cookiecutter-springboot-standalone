@@ -463,7 +463,7 @@ CREATE TABLE `auth_answer` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `question_id` bigint unsigned NOT NULL COMMENT '安全问题ID',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
-  `answer` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '安全问题答案md5',
+  `secret` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '安全问题答案md5',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_id` (`user_id`,`question_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='安全问题答案';
@@ -477,7 +477,7 @@ CREATE TABLE `auth_question` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `question` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '安全问题',
+  `ask` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '安全问题',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='安全问题';
 

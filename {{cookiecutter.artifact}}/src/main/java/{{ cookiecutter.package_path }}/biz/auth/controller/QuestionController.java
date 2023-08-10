@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +43,7 @@ public class QuestionController extends AuthBaseController {
     final IAnswerService answerService;
     final ValidateService validateService;
     final StringRedisTemplate stringRedisTemplate;
+    private final Random random = new Random();
 
     /**
      * 安全问题分页查询
@@ -106,7 +108,7 @@ public class QuestionController extends AuthBaseController {
         }
 
         // 随机查询出一个问题
-        Question question = questions.get((int) (Math.random() * questions.size()));
+        Question question = questions.get(random.nextInt(questions.size()));
         stringRedisTemplate.opsForValue().set("question:" + getUserId(), String.valueOf(question.getId()));
         return R.ok(question);
     }
@@ -147,7 +149,7 @@ public class QuestionController extends AuthBaseController {
             Answer answer = new Answer();
             answer.setUserId(userId);
             answer.setQuestionId(ans.getQuestionId());
-            answer.setAnswer(DigestUtil.md5Hex(ans.getAnswer().trim()));  // md5加密，防止数据库泄露
+            answer.setSecret(DigestUtil.md5Hex(ans.getAnswer().trim()));  // md5加密，防止数据库泄露
             return answer;
         }).collect(Collectors.toList());
         return answerService.saveBatch(answers);

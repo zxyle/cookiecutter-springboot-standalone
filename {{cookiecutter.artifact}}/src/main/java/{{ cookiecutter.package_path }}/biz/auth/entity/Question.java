@@ -26,6 +26,6 @@ public class Question extends BaseEntity {
      */
     @Length(max = 64, message = "安全问题长度不能超过64个字符")
     @NotBlank(message = "安全问题不能为空")
-    private String question;
+    private String ask;
 
 }
