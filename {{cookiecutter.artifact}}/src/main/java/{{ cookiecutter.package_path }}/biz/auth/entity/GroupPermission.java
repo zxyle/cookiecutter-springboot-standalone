@@ -15,8 +15,8 @@ import javax.validation.constraints.Positive;
  * 用户组权限
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("auth_group_permission")
+@EqualsAndHashCode(callSuper = true)
 public class GroupPermission extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

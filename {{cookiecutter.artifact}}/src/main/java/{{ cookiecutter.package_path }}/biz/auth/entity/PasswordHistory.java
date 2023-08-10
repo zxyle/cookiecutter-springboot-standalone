@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
  * 密码历史表
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 @TableName("auth_password_history")
+@EqualsAndHashCode(callSuper = true)
 public class PasswordHistory extends BaseEntity {
     private static final long serialVersionUID = 1L;
 

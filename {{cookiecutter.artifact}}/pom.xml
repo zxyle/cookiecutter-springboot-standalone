@@ -189,6 +189,17 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <!-- ignore files -->
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>smart-doc.json</exclude>
+                    <exclude>templates/mp/**</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
