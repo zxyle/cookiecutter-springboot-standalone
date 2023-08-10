@@ -3,11 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupPermission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 
 import java.util.List;
 
@@ -18,18 +16,8 @@ public interface IGroupPermissionService extends IService<GroupPermission> {
 
     /**
      * 查询用户组拥有的权限列表
-     *
-     * @param userId 用户ID
-     * @param groups 用户组
      */
-    List<Permission> selectPermissionsByGroup(Long userId, List<UserGroup> groups);
-
-    /**
-     * 查询用户组拥有的权限代码列表
-     *
-     * @param groupId 用户组ID
-     */
-    List<Permission> selectPermissionsByGroupId(Long groupId);
+    List<Permission> findPermissionsByGroupId(Long groupId);
 
     /**
      * 删除映射关系
@@ -70,13 +58,5 @@ public interface IGroupPermissionService extends IService<GroupPermission> {
      * @param permissionIds 权限ID列表
      */
     void updateRelation(Long groupId, List<Long> permissionIds);
-
-    /**
-     * 分页查询映射关系
-     *
-     * @param groupId      用户组ID
-     * @param permissionId 权限ID
-     */
-    IPage<GroupPermission> pageRelation(Long groupId, Long permissionId, IPage<GroupPermission> page);
 
 }

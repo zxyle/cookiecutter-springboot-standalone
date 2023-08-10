@@ -52,7 +52,7 @@ public class PermissionController extends AuthBaseController {
     @GetMapping("/permissions")
     @PreAuthorize("@ck.hasPermit('auth:permission:list')")
     public R<List<Permission>> list() {
-        List<Permission> permissions = thisService.getAllPermissions(getUserId());
+        List<Permission> permissions = thisService.getAllPermissions(getUserId(), getGroupIds());
         return R.ok(permissions);
     }
 

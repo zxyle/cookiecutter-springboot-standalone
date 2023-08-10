@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Group;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
@@ -49,14 +48,6 @@ public interface IUserGroupService extends IService<UserGroup> {
     boolean createRelation(Long userId, Long groupId);
 
     /**
-     * 分页查询映射关系
-     *
-     * @param userId  用户ID
-     * @param groupId 用户组ID
-     */
-    IPage<UserGroup> pageRelation(Long userId, Long groupId, IPage<UserGroup> page);
-
-    /**
      * 更新映射关系
      *
      * @param userId   用户ID
@@ -64,8 +55,18 @@ public interface IUserGroupService extends IService<UserGroup> {
      */
     void updateRelation(Long userId, List<Long> groupIds);
 
-    List<Group> selectGroupByUserId(Long userId);
+    /**
+     * 查询用户所属的用户组
+     *
+     * @param userId 用户ID
+     */
+    List<Group> findGroupsByUserId(Long userId);
 
-    List<User> selectUserByGroupId(Long groupId);
+    /**
+     * 查询用户组下的用户
+     *
+     * @param groupId 用户组ID
+     */
+    List<User> findUsersByGroupId(Long groupId);
 
 }

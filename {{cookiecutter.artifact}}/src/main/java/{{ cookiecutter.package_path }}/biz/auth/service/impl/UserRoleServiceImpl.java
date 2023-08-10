@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
@@ -12,6 +11,10 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "UserRoleCache")
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> implements IUserRoleService {
 
     /**
@@ -30,6 +34,11 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      * @param userId 用户ID
      * @param roleId 角色ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#userId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #roleId"),
+            @CacheEvict(key = "'roles:' +#userId")
+    })
     @Override
     public boolean deleteRelation(Long userId, Long roleId) {
         if (countRelation(userId, roleId) == 0) return true;
@@ -43,10 +52,11 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      * @param userId 用户ID
      * @param roleId 角色ID
      */
+    @Cacheable(key = "#userId + ':' + #roleId", unless = "#result == null")
     @Override
     public List<UserRole> queryRelation(Long userId, Long roleId) {
         QueryWrapper<UserRole> wrapper = buildWrapper(userId, roleId);
-        wrapper.select("user_id, role_id");
+        wrapper.select("user_id", "role_id");
         return list(wrapper);
     }
 
@@ -67,24 +77,16 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      * @param userId 用户ID
      * @param roleId 角色ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#userId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #roleId"),
+            @CacheEvict(key = "'roles:' + #userId")
+    })
     @Override
     public boolean createRelation(Long userId, Long roleId) {
         if (countRelation(userId, roleId) > 0) return true;
 
         return save(new UserRole(userId, roleId));
-    }
-
-    /**
-     * 分页查询映射关系
-     *
-     * @param userId 用户ID
-     * @param roleId 角色ID
-     */
-    @Override
-    public IPage<UserRole> pageRelation(Long userId, Long roleId, IPage<UserRole> iPage) {
-        QueryWrapper<UserRole> wrapper = buildWrapper(userId, roleId);
-        wrapper.select("user_id, role_id");
-        return page(iPage, wrapper);
     }
 
     /**
@@ -107,16 +109,21 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     }
 
     // 构建wrapper
-    public QueryWrapper<UserRole> buildWrapper(Long userId, Long roleId) {
+    private QueryWrapper<UserRole> buildWrapper(Long userId, Long roleId) {
         QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
         wrapper.eq(userId != null && userId != 0L, "user_id", userId);
         wrapper.eq(roleId != null && roleId != 0L, "role_id", roleId);
         return wrapper;
     }
 
-    // 根据用户ID 查询该用户所拥有的角色信息
+    /**
+     * 根据用户ID 查询该用户所拥有的角色信息
+     *
+     * @param userId 用户ID
+     */
+    @Cacheable(key = "'roles:' + #userId", unless = "#result == null")
     @Override
-    public List<Role> selectRoleByUserId(Long userId) {
-        return baseMapper.selectRoleByUserId(userId);
+    public List<Role> findRolesByUserId(Long userId) {
+        return baseMapper.findRolesByUserId(userId);
     }
 }

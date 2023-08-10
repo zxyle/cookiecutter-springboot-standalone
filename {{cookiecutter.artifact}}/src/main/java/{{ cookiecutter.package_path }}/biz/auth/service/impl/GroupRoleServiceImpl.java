@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
@@ -12,6 +11,10 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupRoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "GroupRoleCache")
 public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole> implements IGroupRoleService {
 
     /**
@@ -30,6 +34,11 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      * @param groupId 用户组ID
      * @param roleId  角色ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#groupId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #roleId"),
+            @CacheEvict(key = "'roles:'+#groupId"),
+    })
     @Override
     public boolean deleteRelation(Long groupId, Long roleId) {
         if (countRelation(groupId, roleId) == 0) return true;
@@ -43,6 +52,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      * @param groupId 用户组ID
      * @param roleId  角色ID
      */
+    @Cacheable(key = "#groupId + ':' + #roleId", unless = "#result == null")
     @Override
     public List<GroupRole> queryRelation(Long groupId, Long roleId) {
         QueryWrapper<GroupRole> wrapper = buildWrapper(groupId, roleId);
@@ -67,24 +77,16 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      * @param groupId 用户组ID
      * @param roleId  角色ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#groupId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #roleId"),
+            @CacheEvict(key = "'roles:'+#groupId")
+    })
     @Override
     public boolean createRelation(Long groupId, Long roleId) {
         if (countRelation(groupId, roleId) > 0) return true;
 
         return save(new GroupRole(groupId, roleId));
-    }
-
-    /**
-     * 分页查询映射关系
-     *
-     * @param groupId 用户组ID
-     * @param roleId  角色ID
-     */
-    @Override
-    public IPage<GroupRole> pageRelation(Long groupId, Long roleId, IPage<GroupRole> iPage) {
-        QueryWrapper<GroupRole> wrapper = buildWrapper(groupId, roleId);
-        wrapper.select("group_id, role_id");
-        return page(iPage, wrapper);
     }
 
     /**
@@ -107,15 +109,27 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
     }
 
     // 构建wrapper
-    public QueryWrapper<GroupRole> buildWrapper(Long groupId, Long roleId) {
+    private QueryWrapper<GroupRole> buildWrapper(Long groupId, Long roleId) {
         QueryWrapper<GroupRole> wrapper = new QueryWrapper<>();
         wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
         wrapper.eq(roleId != null && roleId != 0L, "role_id", roleId);
         return wrapper;
     }
 
+    /**
+     * 根据用户组ID列表查询角色列表
+     */
+    @Cacheable(key = "'roles:'+#groupId", unless = "#result == null")
     @Override
-    public List<Role> selectRolesByGroupId(Long groupId) {
-        return baseMapper.getRolesByGroupId(groupId);
+    public List<Role> findRolesByGroupId(Long groupId) {
+        return baseMapper.findRolesByGroupId(groupId);
+    }
+
+    /**
+     * 根据用户组ID列表查询角色列表
+     */
+    @Override
+    public List<Role> findRolesByGroupIds(List<Long> groupIds) {
+        return baseMapper.findRolesByGroupIds(groupIds);
     }
 }

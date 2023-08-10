@@ -18,6 +18,6 @@ public interface QuestionMapper extends BaseMapper<Question> {
     /**
      * 根据用户ID查询安全问题列表
      */
-    List<Question> selectAllByUserId(Long userId);
+    List<Question> findQuestionsByUserId(Long userId);
 
 }

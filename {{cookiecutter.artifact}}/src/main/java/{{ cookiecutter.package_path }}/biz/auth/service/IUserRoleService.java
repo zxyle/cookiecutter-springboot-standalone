@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
@@ -48,14 +47,6 @@ public interface IUserRoleService extends IService<UserRole> {
     boolean createRelation(Long userId, Long roleId);
 
     /**
-     * 分页查询映射关系
-     *
-     * @param userId 用户ID
-     * @param roleId 角色ID
-     */
-    IPage<UserRole> pageRelation(Long userId, Long roleId, IPage<UserRole> page);
-
-    /**
      * 更新用户角色关系
      *
      * @param userId  用户ID
@@ -63,7 +54,11 @@ public interface IUserRoleService extends IService<UserRole> {
      */
     void updateRelation(Long userId, List<Long> roleIds);
 
-    // 根据用户ID 查询该用户所拥有的角色信息
-    List<Role> selectRoleByUserId(Long userId);
+    /**
+     * 查询用户所拥有的角色信息
+     *
+     * @param userId 用户ID
+     */
+    List<Role> findRolesByUserId(Long userId);
 
 }

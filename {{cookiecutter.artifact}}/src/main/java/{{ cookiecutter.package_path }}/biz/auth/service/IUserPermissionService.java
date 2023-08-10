@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserPermission;
 
@@ -48,14 +47,6 @@ public interface IUserPermissionService extends IService<UserPermission> {
     boolean createRelation(Long userId, Long permissionId);
 
     /**
-     * 分页查询映射关系
-     *
-     * @param userId       用户ID
-     * @param permissionId 权限ID
-     */
-    IPage<UserPermission> pageRelation(Long userId, Long permissionId, IPage<UserPermission> page);
-
-    /**
      * 更新映射关系
      *
      * @param userId        用户ID
@@ -68,6 +59,6 @@ public interface IUserPermissionService extends IService<UserPermission> {
      *
      * @param userId 用户ID
      */
-    List<Permission> selectPermissionByUserId(Long userId);
+    List<Permission> findPermissionsByUserId(Long userId);
 
 }

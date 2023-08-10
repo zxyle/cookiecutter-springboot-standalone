@@ -5,20 +5,20 @@ package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupPermission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupPermissionService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,31 +27,16 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "GroupPermissionCache")
 public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMapper, GroupPermission> implements IGroupPermissionService {
-
-    final IUserGroupService userGroupService;
 
     /**
      * 查询用户组拥有的权限列表
-     *
-     * @param userId 用户ID
-     * @param groups 用户组
      */
+    @Cacheable(key = "'permissions:' + #groupId", unless = "#result == null")
     @Override
-    public List<Permission> selectPermissionsByGroup(Long userId, List<UserGroup> groups) {
-        List<Permission> permissions = new ArrayList<>();
-        groups.forEach(group -> permissions.addAll(baseMapper.getPermissionByGroupId(group.getGroupId())));
-        return permissions;
-    }
-
-    /**
-     * 查询用户组拥有的权限代码列表
-     *
-     * @param groupId 用户组ID
-     */
-    @Override
-    public List<Permission> selectPermissionsByGroupId(Long groupId) {
-        return baseMapper.getPermissionByGroupId(groupId);
+    public List<Permission> findPermissionsByGroupId(Long groupId) {
+        return baseMapper.findPermissionsByGroupId(groupId);
     }
 
     /**
@@ -60,6 +45,11 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      * @param groupId      用户组ID
      * @param permissionId 权限ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#groupId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #permissionId"),
+            @CacheEvict(key = "'permissions:' + #groupId")
+    })
     @Override
     public boolean deleteRelation(Long groupId, Long permissionId) {
         if (countRelation(groupId, permissionId) == 0) return true;
@@ -73,25 +63,12 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      * @param groupId      用户组ID
      * @param permissionId 权限ID
      */
+    @Cacheable(key = "#groupId + ':' + #permissionId", unless = "#result == null")
     @Override
     public List<GroupPermission> queryRelation(Long groupId, Long permissionId) {
         QueryWrapper<GroupPermission> wrapper = buildWrapper(groupId, permissionId);
-        wrapper.select("group_id, permission_id");
+        wrapper.select("group_id", "permission_id");
         return list(wrapper);
-    }
-
-    /**
-     * 分页查询映射关系
-     *
-     * @param groupId      用户组ID
-     * @param permissionId 权限ID
-     * @param iPage        分页对象
-     */
-    @Override
-    public IPage<GroupPermission> pageRelation(Long groupId, Long permissionId, IPage<GroupPermission> iPage) {
-        QueryWrapper<GroupPermission> wrapper = buildWrapper(groupId, permissionId);
-        wrapper.select("group_id, permission_id");
-        return page(iPage, wrapper);
     }
 
     /**
@@ -111,6 +88,11 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      * @param groupId      用户组ID
      * @param permissionId 权限ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#groupId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #permissionId"),
+            @CacheEvict(key = "'permissions:' + #groupId")
+    })
     @Override
     public boolean createRelation(Long groupId, Long permissionId) {
         if (countRelation(groupId, permissionId) > 0) return true;
@@ -137,7 +119,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
     }
 
     // 构建wrapper
-    public QueryWrapper<GroupPermission> buildWrapper(Long groupId, Long permissionId) {
+    private QueryWrapper<GroupPermission> buildWrapper(Long groupId, Long permissionId) {
         QueryWrapper<GroupPermission> wrapper = new QueryWrapper<>();
         wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
         wrapper.eq(permissionId != null && permissionId != 0L, "permission_id", permissionId);

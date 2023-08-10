@@ -8,16 +8,19 @@ import cn.hutool.core.lang.tree.TreeNodeConfig;
 import cn.hutool.core.lang.tree.TreeUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
+import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.PermissionMapper;
+import {{ cookiecutter.basePackage }}.biz.auth.mapper.RolePermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -35,56 +38,32 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "PermissionCache")
 public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService {
 
     final IUserPermissionService userPermissionService;
     final IUserRoleService userRoleService;
     final IUserGroupService userGroupService;
     final IGroupPermissionService groupPermissionService;
+    final GroupPermissionMapper groupPermissionMapper;
     final IRolePermissionService rolePermissionService;
-    final IRoleService roleService;
+    final RolePermissionMapper rolePermissionMapper;
     final StringRedisTemplate stringRedisTemplate;
-
-    // 查询角色对应的权限
-    public List<Permission> selectRolesPermission(List<Long> roleIds) {
-        List<Permission> permissions = new ArrayList<>();
-        roleIds.forEach(roleId -> permissions.addAll(rolePermissionService.selectPermissionByRoleId(roleId)));
-        return permissions;
-    }
-
-    // 查询用户-角色-权限
-    public List<Permission> selectPermissionsByRole(Long userId) {
-        List<UserRole> userRoles = userRoleService.queryRelation(userId, 0L);
-        List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
-        return selectRolesPermission(roleIds);
-    }
-
-    // 查询用户-用户组-角色-权限
-    public List<Permission> selectPermissionByGroupRole(List<UserGroup> groups) {
-        List<Permission> permissions = new ArrayList<>();
-        groups.forEach(group -> permissions.addAll(selectRolesPermission(roleService.selectRolesByGroup(group.getGroupId()))));
-        return permissions;
-    }
-
+    final IGroupRoleService groupRoleService;
 
     /**
      * 获取用户所有权限名称
      *
      * @param userId 用户ID
      */
-    @Cacheable(cacheNames = "permissionCache", key = "#userId", unless = "#result == null")
     @Override
-    public List<Permission> getAllPermissions(Long userId) {
-        List<UserGroup> groups = userGroupService.queryRelation(userId, 0L);
-        List<Permission> permissions = new ArrayList<>();
+    public List<Permission> getAllPermissions(Long userId, List<Long> groupIds) {
         // 用户直接拥有的权限
-        permissions.addAll(userPermissionService.selectPermissionByUserId(userId));
-        // 所在用户组拥有的权限
-        permissions.addAll(groupPermissionService.selectPermissionsByGroup(userId, groups));
-        // 用户拥有角色所获得权限
-        permissions.addAll(selectPermissionsByRole(userId));
-        // 所在用户组拥有的角色 所拥有的权限
-        permissions.addAll(selectPermissionByGroupRole(groups));
+        List<Permission> permissions = new ArrayList<>(userPermissionService.findPermissionsByUserId(userId));
+        // 用户所在用户组拥有的权限
+        if (CollectionUtils.isNotEmpty(groupIds)) {
+            permissions.addAll(groupPermissionMapper.findPermissionsByGroupIds(groupIds));
+        }
         return permissions.stream().distinct().collect(Collectors.toList());
     }
 
@@ -108,6 +87,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
      *
      * @param permissionId 权限ID
      */
+    @CacheEvict(key = "#permissionId")
     @Transactional
     @Override
     public boolean delete(Long permissionId) {
@@ -125,9 +105,22 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
      */
     @Override
     public List<String> getSecurityPermissions(Long userId) {
-        List<Permission> allPermissions = new ArrayList<>();
-        // 查询用户所有权限码
-        List<Permission> permissions = new ArrayList<>(getAllPermissions(userId));
+        // 查询用户所在用户组
+        List<UserGroup> groups = userGroupService.queryRelation(userId, 0L);
+        List<Long> groupIds = groups.stream().map(UserGroup::getGroupId).collect(Collectors.toList());
+
+        // 查询用户所有角色
+        List<Role> roles = userRoleService.findRolesByUserId(userId);
+        if (CollectionUtils.isNotEmpty(groupIds)) {
+            roles.addAll(groupRoleService.findRolesByGroupIds(groupIds));
+        }
+        List<Long> roleIds = roles.stream().map(Role::getId).distinct().collect(Collectors.toList());
+
+        // 查询角色关联的权限
+        List<Permission> allPermissions = new ArrayList<>(rolePermissionMapper.findPermissionsByRoleIds(roleIds));
+
+        // 查询用户直接和用户组关联的权限
+        List<Permission> permissions = new ArrayList<>(getAllPermissions(userId, groupIds));
 
         // 获取子权限
         List<Permission> permissionList = listAll();
@@ -136,11 +129,10 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         }
         allPermissions.addAll(permissions);
 
-        // 查询用户所有角色码（spring security需要角色以ROLE_开头）
-        List<String> roles = roleService.getAllRoles(userId);
-        List<String> list = new ArrayList<>();
-        list.addAll(allPermissions.stream().map(Permission::getCode).collect(Collectors.toList()));
-        list.addAll(roles.stream().map(e -> "ROLE_" + e).collect(Collectors.toList()));
+        // 组装权限码和角色码
+        List<String> list = new ArrayList<>(allPermissions.size() + roles.size());
+        list.addAll(allPermissions.stream().map(Permission::getCode).distinct().collect(Collectors.toList()));
+        list.addAll(roles.stream().map(e -> "ROLE_" + e.getCode()).distinct().collect(Collectors.toList()));
         return list;
     }
 
@@ -250,10 +242,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return children;
     }
 
-    @Cacheable(value = "permissionsCache")
     public List<Permission> listAll() {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        wrapper.select("id,name,code,description,parent_id,kind,path,sort");
+        wrapper.select("id", "code", "parent_id");
         return list(wrapper);
     }
 }

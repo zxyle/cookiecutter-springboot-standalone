@@ -100,7 +100,7 @@ public class QuestionController extends AuthBaseController {
      */
     @GetMapping("/questions/random")
     public R<Question> get() {
-        List<Question> questions = thisMapper.selectAllByUserId(getUserId());
+        List<Question> questions = thisMapper.findQuestionsByUserId(getUserId());
         if (CollectionUtils.isEmpty(questions)) {
             return R.fail("请先设置安全问题");
         }
@@ -116,7 +116,7 @@ public class QuestionController extends AuthBaseController {
      */
     @PostMapping("/answers")
     public R<Void> add(@Valid @RequestBody AddAnswerRequest request) {
-        List<Question> questions = thisMapper.selectAllByUserId(getUserId());
+        List<Question> questions = thisMapper.findQuestionsByUserId(getUserId());
         if (CollectionUtils.isNotEmpty(questions)) {
             return R.fail("用户已经设置过安全问题");
         }

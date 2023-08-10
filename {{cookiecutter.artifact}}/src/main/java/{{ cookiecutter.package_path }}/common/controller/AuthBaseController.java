@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,29 +67,22 @@ public class AuthBaseController {
     }
 
     /**
-     * 获取当前登录用户所在的用户组ID
-     */
-    public Long getCurrentGroup() {
-        Long userId = getUserId();
-        // TODO 目前只支持一个用户对应一个用户组
-        List<UserGroup> groups = userGroupService.queryRelation(userId, 0L);
-        return groups.get(0).getGroupId();
-    }
-
-    /**
      * 获取当前用户组以及子用户组ID
      */
-    public List<String> getSubGroupIds() {
-        Long groupId = getCurrentGroup();
-        return groupService.getSubGroups(groupId);
+    public List<Long> getSubGroupIds() {
+        List<Long> longs = new ArrayList<>();
+        for (Long groupId : getGroupIds()) {
+            longs.addAll(groupService.getSubGroups(groupId));
+        }
+        return longs.stream().distinct().collect(Collectors.toList());
     }
 
     /**
      * 判断该用户组是否是其子用户组
      */
     public boolean isSubGroup(Long groupId) {
-        List<String> subGroups = getSubGroupIds();
-        return subGroups.contains(String.valueOf(groupId));
+        List<Long> subGroups = getSubGroupIds();
+        return subGroups.contains(groupId);
     }
 
     /**
@@ -110,6 +104,12 @@ public class AuthBaseController {
     public List<Long> getUsersByRole(Long roleId) {
         List<UserRole> roles = userRoleService.queryRelation(0L, roleId);
         return roles.stream().map(UserRole::getUserId).collect(Collectors.toList());
+    }
+
+    // 查询用户所在用户组Ids
+    public List<Long> getGroupIds() {
+        List<UserGroup> groups = userGroupService.queryRelation(getUserId(), 0L);
+        return groups.stream().map(UserGroup::getGroupId).collect(Collectors.toList());
     }
 
 }

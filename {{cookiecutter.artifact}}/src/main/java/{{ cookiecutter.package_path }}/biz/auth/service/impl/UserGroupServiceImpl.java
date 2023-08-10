@@ -9,10 +9,13 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserGroupMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +26,8 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "UserGroupCache")
 public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup> implements IUserGroupService {
-
 
     /**
      * 删除映射关系
@@ -32,6 +35,12 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      * @param userId  用户ID
      * @param groupId 用户组ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#userId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #groupId"),
+            @CacheEvict(key = "'users:group' + #groupId"),
+            @CacheEvict(key = "'groups:user' + #userId")
+    })
     @Override
     public boolean deleteRelation(Long userId, Long groupId) {
         if (countRelation(userId, groupId) == 0) return true;
@@ -45,10 +54,11 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      * @param userId  用户ID
      * @param groupId 用户组ID
      */
+    @Cacheable(key = "#userId + ':' + #groupId", unless = "#result == null")
     @Override
     public List<UserGroup> queryRelation(Long userId, Long groupId) {
         QueryWrapper<UserGroup> wrapper = buildWrapper(userId, groupId);
-        wrapper.select("user_id, group_id");
+        wrapper.select("user_id", "group_id");
         return list(wrapper);
     }
 
@@ -69,24 +79,17 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      * @param userId  用户ID
      * @param groupId 用户组ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#userId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #groupId"),
+            @CacheEvict(key = "'users:group' + #groupId"),
+            @CacheEvict(key = "'groups:user' + #userId")
+    })
     @Override
     public boolean createRelation(Long userId, Long groupId) {
         if (countRelation(userId, groupId) > 0) return true;
 
         return save(new UserGroup(userId, groupId));
-    }
-
-    /**
-     * 分页查询映射关系
-     *
-     * @param userId  用户ID
-     * @param groupId 用户组ID
-     */
-    @Override
-    public IPage<UserGroup> pageRelation(Long userId, Long groupId, IPage<UserGroup> iPage) {
-        QueryWrapper<UserGroup> wrapper = buildWrapper(userId, groupId);
-        wrapper.select("user_id, group_id");
-        return page(iPage, wrapper);
     }
 
     /**
@@ -109,20 +112,32 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
     }
 
     // 构建wrapper
-    public QueryWrapper<UserGroup> buildWrapper(Long userId, Long groupId) {
+    private QueryWrapper<UserGroup> buildWrapper(Long userId, Long groupId) {
         QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
         wrapper.eq(userId != null && userId != 0L, "user_id", userId);
         wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
         return wrapper;
     }
 
+    /**
+     * 查询用户所属的用户组
+     *
+     * @param userId 用户ID
+     */
+    @Cacheable(key = "'groups:user' + #userId", unless = "#result == null")
     @Override
-    public List<Group> selectGroupByUserId(Long userId) {
+    public List<Group> findGroupsByUserId(Long userId) {
         return baseMapper.listGroups(userId);
     }
 
+    /**
+     * 查询用户组下的用户
+     *
+     * @param groupId 用户组ID
+     */
+    @Cacheable(key = "'users:group' + #groupId", unless = "#result == null")
     @Override
-    public List<User> selectUserByGroupId(Long groupId) {
+    public List<User> findUsersByGroupId(Long groupId) {
         return baseMapper.listUsers(groupId);
     }
 }

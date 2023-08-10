@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.RolePermission;
@@ -12,6 +11,10 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.RolePermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IRolePermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "RolePermissionCache")
 public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper, RolePermission> implements IRolePermissionService {
 
     /**
@@ -30,6 +34,10 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      * @param roleId       角色ID
      * @param permissionId 权限ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#roleId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #permissionId")
+    })
     @Override
     public boolean deleteRelation(Long roleId, Long permissionId) {
         if (countRelation(roleId, permissionId) == 0) return true;
@@ -43,6 +51,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      * @param roleId       角色ID
      * @param permissionId 权限ID
      */
+    @Cacheable(key = "#roleId + ':' + #permissionId", unless = "#result == null")
     @Override
     public List<RolePermission> queryRelation(Long roleId, Long permissionId) {
         QueryWrapper<RolePermission> wrapper = buildWrapper(roleId, permissionId);
@@ -67,24 +76,15 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      * @param roleId       角色ID
      * @param permissionId 权限ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#roleId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #permissionId")
+    })
     @Override
     public boolean createRelation(Long roleId, Long permissionId) {
         if (countRelation(roleId, permissionId) > 0) return true;
 
         return save(new RolePermission(roleId, permissionId));
-    }
-
-    /**
-     * 分页查询映射关系
-     *
-     * @param roleId       角色ID
-     * @param permissionId 权限ID
-     */
-    @Override
-    public IPage<RolePermission> pageRelation(Long roleId, Long permissionId, IPage<RolePermission> iPage) {
-        QueryWrapper<RolePermission> wrapper = buildWrapper(roleId, permissionId);
-        wrapper.select("role_id, permission_id");
-        return page(iPage, wrapper);
     }
 
     /**
@@ -110,7 +110,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
     }
 
     // 构建wrapper
-    public QueryWrapper<RolePermission> buildWrapper(Long roleId, Long permissionId) {
+    private QueryWrapper<RolePermission> buildWrapper(Long roleId, Long permissionId) {
         QueryWrapper<RolePermission> wrapper = new QueryWrapper<>();
         wrapper.eq(roleId != null && roleId != 0L, "role_id", roleId);
         wrapper.eq(permissionId != null && permissionId != 0L, "permission_id", permissionId);
@@ -123,7 +123,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      * @param roleId 角色ID
      */
     @Override
-    public List<Permission> selectPermissionByRoleId(Long roleId) {
-        return baseMapper.getPermissionByRoleId(roleId);
+    public List<Permission> findPermissionsByRoleId(Long roleId) {
+        return baseMapper.findPermissionsByRoleId(roleId);
     }
 }

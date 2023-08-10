@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
@@ -56,13 +55,13 @@ public interface IGroupRoleService extends IService<GroupRole> {
     void updateRelation(Long groupId, List<Long> roleIds);
 
     /**
-     * 分页查询映射关系
-     *
-     * @param groupId 用户组ID
-     * @param roleId  角色ID
+     * 根据用户组ID列表查询角色列表
      */
-    IPage<GroupRole> pageRelation(Long groupId, Long roleId, IPage<GroupRole> page);
+    List<Role> findRolesByGroupId(Long groupId);
 
-    List<Role> selectRolesByGroupId(Long groupId);
+    /**
+     * 根据用户组ID列表查询角色列表
+     */
+    List<Role> findRolesByGroupIds(List<Long> groupIds);
 
 }

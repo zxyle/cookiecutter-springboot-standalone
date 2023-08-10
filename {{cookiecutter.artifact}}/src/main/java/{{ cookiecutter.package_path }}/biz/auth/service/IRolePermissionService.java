@@ -3,9 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.service;
 
-import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.RolePermission;
 
 import java.util.List;
@@ -48,14 +47,6 @@ public interface IRolePermissionService extends IService<RolePermission> {
     boolean createRelation(Long roleId, Long permissionId);
 
     /**
-     * 分页查询映射关系
-     *
-     * @param roleId       角色ID
-     * @param permissionId 权限ID
-     */
-    IPage<RolePermission> pageRelation(Long roleId, Long permissionId, IPage<RolePermission> page);
-
-    /**
      * 更新映射关系
      *
      * @param roleId        角色ID
@@ -63,12 +54,11 @@ public interface IRolePermissionService extends IService<RolePermission> {
      */
     boolean updateRelation(Long roleId, List<Long> permissionIds);
 
-
     /**
      * 查询角色所拥有的权限列表
      *
      * @param roleId 角色ID
      */
-    List<Permission> selectPermissionByRoleId(Long roleId);
+    List<Permission> findPermissionsByRoleId(Long roleId);
 
 }

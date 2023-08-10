@@ -19,7 +19,7 @@ public interface IPermissionService extends IService<Permission> {
      *
      * @param userId 用户ID
      */
-    List<Permission> getAllPermissions(Long userId);
+    List<Permission> getAllPermissions(Long userId, List<Long> groupIds);
 
     /**
      * 新增权限
@@ -71,7 +71,6 @@ public interface IPermissionService extends IService<Permission> {
      * @return true:正在被使用 false:未被使用
      */
     boolean isAlreadyUsed(Long permissionId);
-
 
     /**
      * 递归获取所有子权限

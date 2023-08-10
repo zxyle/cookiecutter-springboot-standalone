@@ -16,6 +16,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "UserCache")
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     final StringRedisTemplate stringRedisTemplate;
@@ -43,7 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     final IProfileService profileService;
 
     // 删除用户及其关联角色、用户组、权限
-    @CacheEvict(value = "UserCache", key = "#userId")
+    @CacheEvict(key = "#userId")
     @Transactional
     @Override
     public boolean delete(Long userId) {
@@ -105,13 +107,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public UserResponse attachUserInfo(User user, boolean full) {
         UserResponse userResponse = new UserResponse();
         if (full) {
-            List<Group> groups = userGroupService.selectGroupByUserId(user.getId());
+            List<Group> groups = userGroupService.findGroupsByUserId(user.getId());
             userResponse.setGroups(CollectionUtils.isNotEmpty(groups) ? groups : null);
 
-            List<Role> roles = userRoleService.selectRoleByUserId(user.getId());
+            List<Role> roles = userRoleService.findRolesByUserId(user.getId());
             userResponse.setRoles(CollectionUtils.isNotEmpty(roles) ? roles : null);
 
-            List<Permission> permissions = userPermissionService.selectPermissionByUserId(user.getId());
+            List<Permission> permissions = userPermissionService.findPermissionsByUserId(user.getId());
             userResponse.setPermissions(CollectionUtils.isNotEmpty(permissions) ? permissions : null);
         }
 
@@ -211,7 +213,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     // 带缓存的ID查询
-    @Cacheable(cacheNames = "UserCache", key = "#userId", unless = "#result == null")
+    @Cacheable(key = "#userId", unless = "#result == null")
     @Override
     public User queryById(Long userId) {
         return getById(userId);

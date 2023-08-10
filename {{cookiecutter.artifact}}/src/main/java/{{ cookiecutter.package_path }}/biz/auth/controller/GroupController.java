@@ -61,17 +61,17 @@ public class GroupController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:tree')")
     @GetMapping("/groups/tree")
-    public R<List<Tree<Integer>>> tree(@RequestParam(defaultValue = "0") Integer rootId) {
+    public R<List<Tree<Long>>> tree(@RequestParam(defaultValue = "1") Long rootId) {
         // 查询当前用户，所在用户组作为rootId
         QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", getUserId());
         wrapper.eq("admin", AuthConst.ENABLED);
         List<UserGroup> list = userGroupService.list(wrapper);
         if (CollectionUtils.isNotEmpty(list)) {
-            rootId = list.get(0).getGroupId().intValue();
+            rootId = list.get(0).getGroupId();
         }
 
-        List<Tree<Integer>> tree = groupService.getTree(rootId);
+        List<Tree<Long>> tree = groupService.getTree(rootId);
         return R.ok(tree);
     }
 

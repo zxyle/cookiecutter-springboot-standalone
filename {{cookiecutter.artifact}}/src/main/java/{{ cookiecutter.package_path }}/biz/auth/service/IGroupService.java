@@ -31,11 +31,10 @@ public interface IGroupService extends IService<Group> {
      */
     Integer count(Long parentId, String name);
 
-
     /**
      * 获取该用户组下所有子用户组ID（包括自身）
      */
-    List<String> getSubGroups(Long rootGroupId);
+    List<Long> getSubGroups(Long rootGroupId);
 
     /**
      * 删除用户组及关联关系
@@ -49,7 +48,7 @@ public interface IGroupService extends IService<Group> {
      *
      * @param rootId 根节点ID
      */
-    List<Tree<Integer>> getTree(Integer rootId);
+    List<Tree<Long>> getTree(Long rootId);
 
     /**
      * 获取所有子用户组（包含自身）

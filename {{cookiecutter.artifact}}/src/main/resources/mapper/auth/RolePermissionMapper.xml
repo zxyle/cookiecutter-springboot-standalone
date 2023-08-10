@@ -2,13 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.mapper.RolePermissionMapper">
 
-    <select id="getPermissionByRoleId" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
+    <select id="findPermissionsByRoleId" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
         SELECT
-            b.*
+            b.id, b.parent_id, b.code
         FROM `auth_role_permission` a
         LEFT JOIN `auth_permission` b
         ON a.permission_id = b.id
         WHERE a.role_id = #{roleId};
+    </select>
+
+    <select id="findPermissionsByRoleIds" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
+        SELECT
+            b.id, b.parent_id, b.code
+        FROM `auth_role_permission` a
+        LEFT JOIN `auth_permission` b
+        ON a.permission_id = b.id
+        WHERE a.role_id IN
+        <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
     </select>
 
     <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">

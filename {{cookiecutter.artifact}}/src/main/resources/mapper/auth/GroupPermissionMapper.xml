@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.mapper.GroupPermissionMapper">
 
-    <select id="getPermissionByGroupId" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
+    <select id="findPermissionsByGroupId" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
         SELECT
-            b.*
+            b.id, b.parent_id, b.code
         FROM `auth_group_permission` a
         LEFT JOIN `auth_permission` b
         ON a.permission_id = b.id
@@ -24,6 +24,18 @@
                 OR b.description LIKE CONCAT('%', #{request.keyword}, '%')
             </if>
         </where>
+    </select>
+
+    <select id="findPermissionsByGroupIds" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Permission">
+        SELECT
+            b.id, b.parent_id, b.code
+        FROM `auth_group_permission` a
+        LEFT JOIN `auth_permission` b
+        ON a.permission_id = b.id
+        WHERE a.group_id IN
+        <foreach collection="groupIds" item="groupId" open="(" separator="," close=")">
+            #{groupId}
+        </foreach>
     </select>
 
 </mapper>

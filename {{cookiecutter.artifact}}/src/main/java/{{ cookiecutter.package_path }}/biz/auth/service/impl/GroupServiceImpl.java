@@ -7,16 +7,19 @@ import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.*;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.GroupResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.response.UserResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
+import {{ cookiecutter.basePackage }}.common.entity.LiteEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -29,9 +32,10 @@ import java.util.stream.Collectors;
 /**
  * 用户组信息 服务实现类
  */
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "GroupCache")
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements IGroupService {
 
     final IGroupPermissionService groupPermissionService;
@@ -43,6 +47,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      *
      * @param group 用户组对象
      */
+    @Cacheable(key = "#result.id")
     @Override
     public Group create(Group group) {
         // 判断同级下, 是否有同名用户组
@@ -81,9 +86,9 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      */
     @Cacheable(cacheNames = "subGroupsCache", key = "#rootGroupId", unless = "#result == null")
     @Override
-    public List<String> getSubGroups(Long rootGroupId) {
+    public List<Long> getSubGroups(Long rootGroupId) {
         List<Group> groups = getAllChildren(null, rootGroupId);
-        return groups.stream().map(e -> String.valueOf(e.getId())).distinct().collect(Collectors.toList());
+        return groups.stream().map(LiteEntity::getId).distinct().collect(Collectors.toList());
     }
 
     /**
@@ -91,7 +96,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      *
      * @param groupId 用户组ID
      */
-    @CacheEvict(cacheNames = "GroupCache", key = "#groupId")
+    @CacheEvict(key = "#groupId")
     @Transactional
     @Override
     public boolean delete(Long groupId) {
@@ -108,17 +113,20 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @param rootId 根节点ID
      */
     @Override
-    public List<Tree<Integer>> getTree(Integer rootId) {
+    public List<Tree<Long>> getTree(Long rootId) {
         // 查询所有数据
-        List<Group> list = list();
+        QueryWrapper<Group> wrapper = new QueryWrapper<>();
+        wrapper.select("id", "parent_id", "name", "sort");
+        wrapper.eq("parent_id", rootId);
+        List<Group> list = list(wrapper);
 
         TreeNodeConfig config = new TreeNodeConfig();
         config.setNameKey("name");
         config.setIdKey("id");
         config.setWeightKey("sort");
         return cn.hutool.core.lang.tree.TreeUtil.build(list, rootId, config, (object, tree) -> {
-            tree.setId(object.getId().intValue());// 必填属性
-            tree.setParentId(object.getParentId().intValue());// 必填属性
+            tree.setId(object.getId());// 必填属性
+            tree.setParentId(object.getParentId());// 必填属性
             tree.setName(object.getName());
             tree.putExtra("sort", object.getSort());
         });
@@ -132,8 +140,11 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      */
     @Override
     public List<Group> getAllChildren(List<Group> groups, Long groupId) {
-        if (CollectionUtils.isEmpty(groups))
-            groups = list();
+        if (CollectionUtils.isEmpty(groups)){
+            QueryWrapper<Group> wrapper = new QueryWrapper<>();
+            wrapper.select("id", "parent_id");
+            groups = list(wrapper);
+        }
 
         List<Group> children = new ArrayList<>();
         for (Group group : groups) {
@@ -142,7 +153,11 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
                 children.addAll(getAllChildren(groups, group.getId()));
             }
         }
-        children.add(getById(groupId));
+
+        // 添加自身
+        Group group = new Group();
+        group.setId(groupId);
+        children.add(group);
         return children;
     }
 
@@ -152,14 +167,16 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
         wrapper.select("user_id, group_id");
         wrapper.eq("user_id", actionUserId);
-        wrapper.eq("admin", 1);
+        wrapper.eq("admin", AuthConst.ENABLED);
         List<UserGroup> userGroups = userGroupService.list(wrapper);
         if (CollectionUtils.isEmpty(userGroups)) {
             return false;
         }
 
         List<Group> allGroups = new ArrayList<>();
-        List<Group> groups = list();
+        QueryWrapper<Group> wrapper1 = new QueryWrapper<>();
+        wrapper1.select("id", "parent_id");
+        List<Group> groups = list(wrapper1);
         // 获取所有子用户组
         for (UserGroup userGroup : userGroups) {
             allGroups.addAll(getAllChildren(groups, userGroup.getGroupId()));
@@ -215,13 +232,13 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         BeanUtils.copyProperties(group, response);
 
         if (full) {
-            List<Permission> permissions = groupPermissionService.selectPermissionsByGroupId(group.getId());
+            List<Permission> permissions = groupPermissionService.findPermissionsByGroupId(group.getId());
             response.setPermissions(CollectionUtils.isNotEmpty(permissions) ? permissions : null);
 
-            List<Role> roles = groupRoleService.selectRolesByGroupId(group.getId());
+            List<Role> roles = groupRoleService.findRolesByGroupId(group.getId());
             response.setRoles(CollectionUtils.isNotEmpty(roles) ? roles : null);
 
-            List<User> users = userGroupService.selectUserByGroupId(group.getId());
+            List<User> users = userGroupService.findUsersByGroupId(group.getId());
             // 对用户信息进行脱敏处理
             List<UserResponse> collect = users.stream()
                     .map(UserResponse::new).collect(Collectors.toList());
@@ -248,7 +265,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     /**
      * 按ID查询（查询结果不为null则缓存）
      */
-    @Cacheable(cacheNames = "GroupCache", key = "#id", unless = "#result == null")
+    @Cacheable(key = "#id", unless = "#result == null")
     @Override
     public Group queryById(Long id) {
         return getById(id);

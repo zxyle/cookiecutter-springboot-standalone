@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.mapper.GroupRoleMapper">
 
-    <select id="getRolesByGroupId" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Role">
+    <select id="findRolesByGroupId" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Role">
         SELECT
-            b.*
+            b.id, b.code
         FROM `auth_group_role` a
         LEFT JOIN `auth_role` b ON a.role_id = b.id
         WHERE a.group_id = #{groupId}
@@ -23,6 +23,17 @@
                 OR b.description LIKE CONCAT('%', #{request.keyword}, '%')
             </if>
         </where>
+    </select>
+
+    <select id="findRolesByGroupIds" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Role">
+        SELECT
+            b.id, b.code
+        FROM `auth_group_role` a
+        LEFT JOIN `auth_role` b ON a.role_id = b.id
+        WHERE a.group_id IN
+        <foreach collection="groupIds" item="groupId" open="(" separator="," close=")">
+            #{groupId}
+        </foreach>
     </select>
 
 </mapper>

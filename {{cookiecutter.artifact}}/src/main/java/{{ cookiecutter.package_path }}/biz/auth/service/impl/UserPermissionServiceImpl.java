@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserPermission;
@@ -12,6 +11,10 @@ import {{ cookiecutter.basePackage }}.biz.auth.mapper.UserPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.IUserPermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "UserPermissionCache")
 public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper, UserPermission> implements IUserPermissionService {
 
     /**
@@ -30,6 +34,11 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      * @param userId       用户ID
      * @param permissionId 权限ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#userId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #permissionId"),
+            @CacheEvict(key = "'permissions:' + #userId"),
+    })
     @Override
     public boolean deleteRelation(Long userId, Long permissionId) {
         if (countRelation(userId, permissionId) == 0) return true;
@@ -43,10 +52,11 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      * @param userId       用户ID
      * @param permissionId 权限ID
      */
+    @Cacheable(key = "#userId + ':' + #permissionId", unless = "#result == null")
     @Override
     public List<UserPermission> queryRelation(Long userId, Long permissionId) {
         QueryWrapper<UserPermission> wrapper = buildWrapper(userId, permissionId);
-        wrapper.select("user_id, permission_id");
+        wrapper.select("user_id", "permission_id");
         return list(wrapper);
     }
 
@@ -67,24 +77,16 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      * @param userId       用户ID
      * @param permissionId 权限ID
      */
+    @Caching(evict = {
+            @CacheEvict(key = "#userId + ':' + null"),
+            @CacheEvict(key = "null + ':' + #permissionId"),
+            @CacheEvict(key = "'permissions:'+#userId")
+    })
     @Override
     public boolean createRelation(Long userId, Long permissionId) {
         if (countRelation(userId, permissionId) > 0) return true;
 
         return save(new UserPermission(userId, permissionId));
-    }
-
-    /**
-     * 分页查询映射关系
-     *
-     * @param userId       用户ID
-     * @param permissionId 权限ID
-     */
-    @Override
-    public IPage<UserPermission> pageRelation(Long userId, Long permissionId, IPage<UserPermission> iPage) {
-        QueryWrapper<UserPermission> wrapper = buildWrapper(userId, permissionId);
-        wrapper.select("user_id, permission_id");
-        return page(iPage, wrapper);
     }
 
     /**
@@ -109,7 +111,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
     }
 
     // 构建wrapper
-    public QueryWrapper<UserPermission> buildWrapper(Long userId, Long permissionId) {
+    private QueryWrapper<UserPermission> buildWrapper(Long userId, Long permissionId) {
         QueryWrapper<UserPermission> wrapper = new QueryWrapper<>();
         wrapper.eq(userId != null && userId != 0L, "user_id", userId);
         wrapper.eq(permissionId != null && permissionId != 0L, "permission_id", permissionId);
@@ -121,8 +123,9 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      *
      * @param userId 用户ID
      */
+    @Cacheable(key = "'permissions:' + #userId", unless = "#result == null")
     @Override
-    public List<Permission> selectPermissionByUserId(Long userId) {
-        return baseMapper.selectPermissionByUserId(userId);
+    public List<Permission> findPermissionsByUserId(Long userId) {
+        return baseMapper.findPermissionsByUserId(userId);
     }
 }

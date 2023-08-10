@@ -5,10 +5,8 @@ package {{ cookiecutter.basePackage }}.biz.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.GroupRole;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.RoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.response.RoleResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
@@ -16,69 +14,32 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 角色信息 服务实现类
  */
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "RoleCache")
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
-    final IUserGroupService userGroupService;
     final IGroupRoleService groupRoleService;
     final IRolePermissionService rolePermissionService;
     final IUserRoleService userRoleService;
-
-    /**
-     * 查询用户组对应角色ID
-     *
-     * @param groupId 用户组ID
-     */
-    @Override
-    public List<Long> selectRolesByGroup(Long groupId) {
-        List<GroupRole> groupRoles = groupRoleService.queryRelation(groupId, 0L);
-        return groupRoles.stream().map(GroupRole::getRoleId).collect(Collectors.toList());
-    }
-
-    /**
-     * 获取用户所有角色名称
-     *
-     * @param userId 用户ID
-     */
-    @Cacheable(cacheNames = "roleCache", key = "#userId")
-    @Override
-    public List<String> getAllRoles(Long userId) {
-        List<Role> roles = userRoleService.selectRoleByUserId(userId);
-        List<String> roleCodes = roles.stream().map(Role::getCode).collect(Collectors.toList());
-
-        List<UserGroup> userGroups = userGroupService.queryRelation(userId, 0L);
-        userGroups.forEach(ug -> {
-            // 查询用户组对应那些角色ID
-            List<Long> rolesIds = selectRolesByGroup(ug.getGroupId());
-            rolesIds.forEach(roleId -> {
-                Role role = queryById(roleId);
-                if (role != null) {
-                    roleCodes.add(role.getCode());
-                }
-            });
-        });
-
-        return roleCodes.stream().distinct().collect(Collectors.toList());
-    }
 
     /**
      * 删除角色
      *
      * @param roleId 角色ID
      */
-    @CacheEvict(cacheNames = "roleCache", key = "#roleId")
+    @CacheEvict(key = "#roleId")
     @Transactional
     @Override
     public boolean delete(Long roleId) {
@@ -94,7 +55,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
      *
      * @param roleId 角色ID
      */
-    @Cacheable(cacheNames = "roleCache", key = "#roleId", unless = "#result == null")
+    @Cacheable(key = "#roleId", unless = "#result == null")
     @Override
     public Role queryById(Long roleId) {
         return getById(roleId);
@@ -126,7 +87,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         RoleResponse response = new RoleResponse();
 
         if (full) {
-            List<Permission> permissions = rolePermissionService.selectPermissionByRoleId(role.getId());
+            List<Permission> permissions = rolePermissionService.findPermissionsByRoleId(role.getId());
             response.setPermissions(CollectionUtils.isNotEmpty(permissions) ? permissions : null);
         }
 

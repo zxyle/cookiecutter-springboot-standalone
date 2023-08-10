@@ -15,20 +15,6 @@ import java.util.List;
 public interface IRoleService extends IService<Role> {
 
     /**
-     * 查询用户组对应角色ID
-     *
-     * @param groupId 用户组ID
-     */
-    List<Long> selectRolesByGroup(Long groupId);
-
-    /**
-     * 获取用户所有角色名称
-     *
-     * @param userId 用户ID
-     */
-    List<String> getAllRoles(Long userId);
-
-    /**
      * 删除角色及其关联关系
      *
      * @param roleId 角色ID
