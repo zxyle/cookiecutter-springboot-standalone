@@ -38,7 +38,7 @@ public class PermissionController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:permission:tree')")
     @Secured("ROLE_admin")
     @GetMapping("/permissions/tree")
-    public R<List<Tree<Integer>>> tree(TreePermissionRequest request) {
+    public R<List<Tree<Integer>>> tree(@Valid TreePermissionRequest request) {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
         wrapper.eq(request.getKind() != null, "kind", request.getKind());
         List<Permission> list = thisService.list(wrapper);

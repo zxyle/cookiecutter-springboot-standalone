@@ -31,8 +31,8 @@ public class EmailCodeServiceImpl implements EmailCodeService {
     /**
      * 发送邮件验证码
      *
-     * @param code      验证码
      * @param recipient 接收者邮箱
+     * @param code      验证码
      */
     @Async
     @Override

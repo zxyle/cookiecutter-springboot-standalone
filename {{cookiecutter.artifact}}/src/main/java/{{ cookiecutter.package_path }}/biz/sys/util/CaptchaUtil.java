@@ -13,6 +13,8 @@ public final class CaptchaUtil {
     private CaptchaUtil() {
     }
 
+    private static final SecureRandom random = new SecureRandom();
+
     private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
     private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String DIGIT = "0123456789";
@@ -59,7 +61,6 @@ public final class CaptchaUtil {
             throw new IllegalArgumentException("Character set cannot be null or empty.");
         }
         StringBuilder builder = new StringBuilder(len);
-        SecureRandom random = new SecureRandom();
         for (int i = 0; i < len; i++) {
             int no = random.nextInt(chars.length());
             builder.append(chars.charAt(no));

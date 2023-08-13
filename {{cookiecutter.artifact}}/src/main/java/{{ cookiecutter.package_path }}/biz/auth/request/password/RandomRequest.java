@@ -14,7 +14,7 @@ import javax.validation.constraints.DecimalMin;
 @Data
 public class RandomRequest {
 
-    public static final String LETTER = "abcdefghijklmnopqrstuvwxyz";
+    private static final String LETTER = "abcdefghijklmnopqrstuvwxyz";
 
     /**
      * 密码长度

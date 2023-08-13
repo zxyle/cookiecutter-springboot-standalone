@@ -787,6 +787,14 @@ CREATE TABLE `sys_whitelist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='IP白名单';
 
 -- ----------------------------
+-- Records of sys_whitelist
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_whitelist` (`id`, `ip`, `end_time`, `remark`) VALUES (1, 'localhost', NULL, NULL);
+INSERT INTO `sys_whitelist` (`id`, `ip`, `end_time`, `remark`) VALUES (2, '127.0.0.1', NULL, NULL);
+COMMIT;
+
+-- ----------------------------
 -- Table structure for template
 -- ----------------------------
 DROP TABLE IF EXISTS `template`;

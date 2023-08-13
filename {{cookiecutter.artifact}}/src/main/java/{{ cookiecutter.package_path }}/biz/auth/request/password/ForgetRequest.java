@@ -13,8 +13,8 @@ import javax.validation.constraints.NotBlank;
 /**
  * 忘记/找回密码请求
  */
-@EqualsAndHashCode(callSuper = false)
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class ForgetRequest extends BaseRequest {
 
     /**

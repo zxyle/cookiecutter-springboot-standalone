@@ -48,7 +48,7 @@ public class LoginResponse {
     private boolean admin;
 
     /**
-     * 是否需要修改密码, 返回true后, 跳转到修改密码页面
+     * 是否需要修改密码, 返回true后, 需跳转到修改密码页面
      *
      * @mock false
      */

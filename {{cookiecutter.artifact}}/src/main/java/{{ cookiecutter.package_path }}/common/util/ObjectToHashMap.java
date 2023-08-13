@@ -21,8 +21,8 @@ public final class ObjectToHashMap {
      * @return HashMap
      */
     public static Map<String, String> convertObjectToHashMap(Object object) {
-        Map<String, String> hashMap = new HashMap<>();
         Field[] fields = getAllFields(object);
+        Map<String, String> hashMap = new HashMap<>(fields.length);
         for (Field field : fields) {
             field.setAccessible(true);
             String fieldName = field.getName();

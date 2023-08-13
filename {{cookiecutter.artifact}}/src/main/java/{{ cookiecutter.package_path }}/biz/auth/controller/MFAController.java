@@ -80,7 +80,7 @@ public class MFAController extends AuthBaseController {
         String username = getCurrentUsername();
         TotpResponse response = Authenticator.generate(username, domain);
         String key = "totp:" + getUserId();
-        stringRedisTemplate.opsForValue().set(key, response.getSecret(), 60 * 3, TimeUnit.SECONDS);
+        stringRedisTemplate.opsForValue().set(key, response.getSecret(), 3, TimeUnit.MINUTES);
         return R.ok(response);
     }
 

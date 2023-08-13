@@ -18,7 +18,7 @@ import java.nio.file.Files;
 @Service
 public class LocalFileStoreServiceImpl implements FileStoreService {
 
-    public static final String LOCAL_FILE_STORE = "/tmp";
+    private static final String LOCAL_FILE_STORE = "/tmp";
 
     /**
      * 上传文件

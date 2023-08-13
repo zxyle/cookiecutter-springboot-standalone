@@ -24,7 +24,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/sys")
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "infoCache")
+@CacheConfig(cacheNames = "InfoCache")
 public class InfoController {
 
     final IInfoService thisService;

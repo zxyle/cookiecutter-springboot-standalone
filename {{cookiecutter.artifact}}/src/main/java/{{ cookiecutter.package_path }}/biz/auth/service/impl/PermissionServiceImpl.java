@@ -216,12 +216,13 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public boolean isAlreadyUsed(Long permissionId) {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
         wrapper.eq("parent_id", permissionId);
-        List<Permission> permissions = list(wrapper);
+        if (count(wrapper) > 0) return true;
         Integer userPermissions = userPermissionService.countRelation(null, permissionId);
+        if (userPermissions > 0) return true;
         Integer rolePermissions = rolePermissionService.countRelation(null, permissionId);
+        if (rolePermissions > 0) return true;
         Integer groupPermissions = groupPermissionService.countRelation(null, permissionId);
-        return userPermissions > 0 || rolePermissions > 0
-                || groupPermissions > 0 || CollectionUtils.isNotEmpty(permissions);
+        return groupPermissions > 0;
     }
 
     /**

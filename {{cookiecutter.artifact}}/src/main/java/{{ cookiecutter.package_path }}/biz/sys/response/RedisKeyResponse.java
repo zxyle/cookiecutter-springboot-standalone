@@ -7,8 +7,8 @@ import org.springframework.data.redis.connection.DataType;
 /**
  * Redis key响应
  */
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 public class RedisKeyResponse {
 
     /**

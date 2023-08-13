@@ -27,7 +27,7 @@ public class ProxyFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 识别请求使用了IP代理
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(19);
         map.put("Proxy-Client-IP", request.getHeader("Proxy-Client-IP"));
         map.put("WL-Proxy-Client-IP", request.getHeader("WL-Proxy-Client-IP"));
         map.put("HTTP_CLIENT_IP", request.getHeader("HTTP_CLIENT_IP"));

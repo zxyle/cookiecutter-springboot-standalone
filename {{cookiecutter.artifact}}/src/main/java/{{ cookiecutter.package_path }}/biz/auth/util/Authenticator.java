@@ -20,8 +20,8 @@ public final class Authenticator {
     /**
      * 生成二维码
      *
-     * @param account 账号
-     * @param issuer  服务提供者
+     * @param account 账号名
+     * @param issuer  服务提供者(一般为为网址)
      */
     public static TotpResponse generate(String account, String issuer) {
         byte[] secret = SecretGenerator.generate();
@@ -39,7 +39,7 @@ public final class Authenticator {
      * 验证
      *
      * @param secret 密钥
-     * @param code   验证码
+     * @param code   动态验证码
      */
     public static boolean valid(String secret, String code) {
         TOTPGenerator generator = build(secret.getBytes());
@@ -54,11 +54,6 @@ public final class Authenticator {
                 })
                 .withPeriod(Duration.ofSeconds(30))
                 .build();
-    }
-
-    public static void main(String[] args) throws URISyntaxException {
-        TotpResponse response = generate("Jack", "www.taobao.com");
-        System.out.println(response);
     }
 
 }

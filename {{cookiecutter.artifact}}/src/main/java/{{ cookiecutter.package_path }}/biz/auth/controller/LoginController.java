@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth/user")
+@RequestMapping("/auth")
 public class LoginController extends AuthBaseController {
 
     final IUserService userService;
@@ -49,7 +49,7 @@ public class LoginController extends AuthBaseController {
     /**
      * 方式一：用户名/邮箱/手机号 + 密码登录
      */
-    @PostMapping("/login")
+    @PostMapping("/login/account")
     public R<LoginResponse> login(@Valid @RequestBody LoginRequest request, HttpServletRequest servletRequest) {
         log.debug("用户登录：{}", servletRequest.getRequestURI());
         R<LoginResponse> beforeLoginResponse = beforeLogin(request);

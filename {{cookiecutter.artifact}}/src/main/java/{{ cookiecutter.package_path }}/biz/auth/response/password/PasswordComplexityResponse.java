@@ -9,8 +9,8 @@ import lombok.Data;
 /**
  * 密码复杂度响应
  */
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 public class PasswordComplexityResponse {
 
     /**

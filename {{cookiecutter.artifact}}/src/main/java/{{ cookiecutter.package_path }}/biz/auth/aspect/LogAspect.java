@@ -85,9 +85,9 @@ public class LogAspect {
         LoginLog loginLog = new LoginLog();
 
         logger.info("around start");
-        Map<String, Object> map = new HashMap<>();
         Object[] values = pjp.getArgs();
         String[] names = ((CodeSignature) pjp.getSignature()).getParameterNames();
+        Map<String, Object> map = new HashMap<>(names.length);
         for (int i = 0; i < names.length; i++) {
             map.put(names[i], values[i]);
         }

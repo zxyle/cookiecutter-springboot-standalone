@@ -9,6 +9,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.Area;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.AreaMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IAreaService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
  * 行政区 服务实现类
  */
 @Service
+@CacheConfig(cacheNames = "AreaCache")
 public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IAreaService {
 
     /**
@@ -23,7 +25,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
      *
      * @param code 行政区编码
      */
-    @Cacheable(value = "areaCache", key = "#code", unless = "#result == null")
+    @Cacheable(key = "#code", unless = "#result == null")
     @Override
     public Area getAreaByCode(String code) {
         QueryWrapper<Area> wrapper = new QueryWrapper<>();

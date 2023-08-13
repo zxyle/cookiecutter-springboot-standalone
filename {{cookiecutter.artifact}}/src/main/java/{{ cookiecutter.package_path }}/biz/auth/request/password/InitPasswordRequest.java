@@ -19,7 +19,7 @@ public class InitPasswordRequest {
      *
      * @mock lHfxoPrKOaWjSqwN
      */
-    @NotBlank(message = "新密码不能为空")
     @Length(min = 8, max = 32, message = "新密码长度需要8~32位")
+    @NotBlank(message = "新密码不能为空")
     private String password;
 }
