@@ -3,6 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service;
 
+import cn.hutool.core.util.IdUtil;
+
 public interface CaptchaService {
 
     /**
@@ -11,4 +13,8 @@ public interface CaptchaService {
      * @return 返回由验证码图片字节数组、验证码结果、验证码ID组成的对象
      */
     CaptchaPair generate();
+
+    default String getCaptchaId() {
+        return IdUtil.simpleUUID();
+    }
 }

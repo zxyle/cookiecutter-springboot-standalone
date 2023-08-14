@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
-import cn.hutool.core.util.IdUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
@@ -16,6 +15,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/**
+ * Kaptcha验证码实现
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class KaptchaServiceImpl implements CaptchaService {
@@ -25,15 +27,15 @@ public class KaptchaServiceImpl implements CaptchaService {
 
     @Override
     public CaptchaPair generate() {
-        String captchaId = IdUtil.simpleUUID();
-        String capText = captchaProducer.createText();
-        BufferedImage bi = captchaProducer.createImage(capText);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try {
+        String captchaId = getCaptchaId();
+        String code = captchaProducer.createText();
+        BufferedImage bi = captchaProducer.createImage(code);
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             ImageIO.write(bi, setting.get("captcha.format").getStr(), byteArrayOutputStream);
+            return new CaptchaPair(byteArrayOutputStream, code, captchaId);
         } catch (IOException e) {
             log.error("kaptcha error: ", e);
         }
-        return new CaptchaPair(byteArrayOutputStream, capText, captchaId);
+        return null;
     }
 }

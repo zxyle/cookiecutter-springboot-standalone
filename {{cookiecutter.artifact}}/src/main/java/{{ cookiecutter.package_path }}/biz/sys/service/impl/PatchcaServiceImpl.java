@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
-import cn.hutool.core.util.IdUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaPair;
 import {{ cookiecutter.basePackage }}.biz.sys.service.CaptchaService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
@@ -21,14 +20,16 @@ import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-
+/**
+ * Patchca验证码实现
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class PatchcaServiceImpl implements CaptchaService {
 
     final ISettingService setting;
 
-    public ConfigurableCaptchaService randomCs() {
+    private ConfigurableCaptchaService randomCs() {
         ConfigurableCaptchaService cs = new ConfigurableCaptchaService();
         RandomWordFactory wordFactory = new RandomWordFactory();
         wordFactory.setMaxLength(setting.get("captcha.digits").getIntValue());
@@ -74,14 +75,14 @@ public class PatchcaServiceImpl implements CaptchaService {
 
     @Override
     public CaptchaPair generate() {
-        String captchaId = IdUtil.simpleUUID();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        String token = null;
-        try {
-            token = EncoderHelper.getChallangeAndWriteImage(randomCs(), setting.get("captcha.format").getStr(), byteArrayOutputStream);
+        String captchaId = getCaptchaId();
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            String format = setting.get("captcha.format").getStr();
+            String code = EncoderHelper.getChallangeAndWriteImage(randomCs(), format, byteArrayOutputStream);
+            return new CaptchaPair(byteArrayOutputStream, code, captchaId);
         } catch (IOException e) {
             log.error("patchca error: ", e);
         }
-        return new CaptchaPair(byteArrayOutputStream, token, captchaId);
+        return null;
     }
 }

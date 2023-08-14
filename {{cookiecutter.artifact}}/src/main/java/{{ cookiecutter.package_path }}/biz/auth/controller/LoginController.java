@@ -172,15 +172,16 @@ public class LoginController extends AuthBaseController {
      */
     @Async
     public void afterLogin(LoginResponse response) {
+        User user = new User();
+        user.setId(response.getUserId());
+
         // 用户初次登录后，需要在24小时内修改密码，否则到期后无法登录
         if (response.isMustChangePwd()) {
             response.setMustChangePwd(true);
-            userService.markExpired(response.getUserId(), LocalDateTime.now().plusHours(24));
+            user.setExpireTime(LocalDateTime.now().plusHours(24));
         }
 
         // 更新用户最后登录时间
-        User user = new User();
-        user.setId(response.getUserId());
         user.setLastLoginTime(LocalDateTime.now());
         userService.updateById(user);
     }

@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 
 /**
- * 发送短信邮件验证码
+ * 发送短信或邮件验证码
  */
 @Data
 public class SendCodeRequest {

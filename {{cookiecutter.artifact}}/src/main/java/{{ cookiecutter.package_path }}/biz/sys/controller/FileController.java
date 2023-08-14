@@ -44,6 +44,7 @@ public class FileController {
         List<String> list = new ArrayList<>(request.getFiles().size());
         List<MultipartFile> files = request.getFiles();
         for (MultipartFile file : files) {
+            if (file.isEmpty()) continue;
             String url = store(file, request.getFolder());
             list.add(url);
         }

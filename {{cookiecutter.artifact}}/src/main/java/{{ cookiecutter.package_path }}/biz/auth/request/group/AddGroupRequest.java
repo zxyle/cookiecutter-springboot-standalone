@@ -58,11 +58,11 @@ public class AddGroupRequest {
     /**
      * 权限ID列表
      */
-    private List<@Positive Long> permissionIds;
+    private List<@Positive @NotNull Long> permissionIds;
 
     /**
      * 角色ID列表
      */
-    private List<@Positive Long> roleIds;
+    private List<@Positive @NotNull Long> roleIds;
 
 }

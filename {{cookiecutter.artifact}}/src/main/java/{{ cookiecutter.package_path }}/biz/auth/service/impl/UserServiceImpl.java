@@ -20,11 +20,9 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -127,22 +125,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         userRoleService.updateRelation(userId, roleIds);
         userGroupService.updateRelation(userId, groupIds);
         userPermissionService.updateRelation(userId, permissionIds);
-    }
-
-    /**
-     * 标记用户过期
-     *
-     * @param userId    用户ID
-     * @param expiredAt 过期时间，如果为null，则标记为当前时间
-     */
-    @Async
-    @Override
-    public void markExpired(Long userId, LocalDateTime expiredAt) {
-        User user = new User();
-        user.setId(userId);
-        expiredAt = expiredAt == null ? LocalDateTime.now() : expiredAt;
-        user.setExpireTime(expiredAt);
-        updateById(user);
     }
 
     // 创建用户

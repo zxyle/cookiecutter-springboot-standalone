@@ -8,6 +8,8 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -39,12 +41,12 @@ public class AdminAddUserRequest {
     /**
      * 角色列表
      */
-    private List<Long> roleIds;
+    private List<@Positive @NotNull Long> roleIds;
 
     /**
      * 用户组ID
      */
-    private List<Long> groupIds;
+    private List<@Positive @NotNull Long> groupIds;
 
     /**
      * 是否需要修改密码
