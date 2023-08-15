@@ -9,14 +9,14 @@ CREATE TABLE `sys_area` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `code` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '行政区编码',
-  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '行政区名称',
-  `parent_id` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '上级编码',
-  `postcode` char(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '邮政编码',
+  `code` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '行政区编码',
+  `name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '行政区名称',
+  `parent_id` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '上级编码',
+  `postcode` char(6) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '邮政编码',
   `level` tinyint NOT NULL COMMENT '级别',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_level` (`level`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='中国行政区划';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='中国行政区划';
 
 -- ----------------------------
 -- Table structure for sys_blacklist
@@ -26,12 +26,12 @@ CREATE TABLE `sys_blacklist` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `ip` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'IP',
+  `ip` varchar(20) CHARACTER SET utf8mb4 NOT NULL COMMENT 'IP',
   `end_time` datetime DEFAULT NULL COMMENT '截止日期',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_ip` (`ip`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='IP黑名单';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='IP黑名单';
 
 -- ----------------------------
 -- Table structure for sys_dict
@@ -41,14 +41,14 @@ CREATE TABLE `sys_dict` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '字典名称',
+  `name` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '字典名称',
   `dict_sort` int NOT NULL DEFAULT '0' COMMENT '字典排序',
-  `label` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '字典标签',
-  `value` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '字典键值',
-  `dict_type` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '字典类型',
+  `label` varchar(100) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '字典标签',
+  `value` varchar(100) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '字典键值',
+  `dict_type` varchar(25) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '字典类型',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_dict_type` (`dict_type`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='字典数据表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='字典数据表';
 
 -- ----------------------------
 -- Records of sys_dict
@@ -534,11 +534,11 @@ CREATE TABLE `sys_feedback` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `email` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '联系邮箱',
+  `email` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '联系邮箱',
   `tel` varchar(32) DEFAULT NULL COMMENT '联系电话',
   `description` varchar(2048) DEFAULT NULL COMMENT '详细描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='意见反馈';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='意见反馈';
 
 -- ----------------------------
 -- Table structure for sys_file
@@ -551,7 +551,7 @@ CREATE TABLE `sys_file` (
   `filename` varchar(255) DEFAULT NULL COMMENT '文件名',
   `content` longblob NOT NULL COMMENT '文件内容',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='文件';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文件';
 
 -- ----------------------------
 -- Table structure for sys_friendly_url
@@ -566,7 +566,7 @@ CREATE TABLE `sys_friendly_url` (
   `sort` tinyint NOT NULL COMMENT '排序',
   `status` tinyint NOT NULL COMMENT '1-启用 0-禁用',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='友情链接';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='友情链接';
 -- ----------------------------
 -- Records of sys_friendly_url
 -- ----------------------------
@@ -584,11 +584,11 @@ CREATE TABLE `sys_info` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `param_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '参数名称',
-  `param_value` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '参数值',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '描述信息',
+  `param_key` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '参数名称',
+  `param_value` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '参数值',
+  `description` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '描述信息',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统信息';
 -- ----------------------------
 -- Records of sys_info
 -- ----------------------------
@@ -618,13 +618,13 @@ CREATE TABLE `sys_login_log` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `account` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '登录用户名',
+  `account` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '登录用户名',
   `ip` varchar(15) DEFAULT NULL COMMENT 'IP地址',
   `ua` varchar(255) DEFAULT NULL COMMENT '浏览器请求头',
   `msg` varchar(255) DEFAULT NULL COMMENT '消息',
   `success` tinyint unsigned DEFAULT '0' COMMENT '1-成功 0-失败',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='登录日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登录日志';
 
 -- ----------------------------
 -- Table structure for sys_operate_log
@@ -636,11 +636,11 @@ CREATE TABLE `sys_operate_log` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `operate_time` datetime NOT NULL COMMENT '操作时间',
   `user_id` bigint unsigned NOT NULL COMMENT '操作用户ID',
-  `operation_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '操作类型',
+  `operation_type` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '操作类型',
   `object_id` bigint unsigned DEFAULT NULL COMMENT '操作对象ID',
   `result` enum('true','false') NOT NULL DEFAULT 'false' COMMENT '操作结果',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='操作日志';
 
 -- ----------------------------
 -- Table structure for sys_release
@@ -650,10 +650,10 @@ CREATE TABLE `sys_release` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `version` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '版本号',
-  `description` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '版本描述',
+  `version` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '版本号',
+  `description` varchar(1024) CHARACTER SET utf8mb4 NOT NULL COMMENT '版本描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='发布版本';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发布版本';
 -- ----------------------------
 -- Records of sys_release
 -- ----------------------------
@@ -670,14 +670,14 @@ CREATE TABLE `sys_setting` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `option_label` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项',
-  `option_value` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项值',
-  `data_type` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'string' COMMENT 'Java数据类型',
-  `description` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '选项描述',
-  `default_value` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '默认值',
+  `option_label` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '选项',
+  `option_value` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '选项值',
+  `data_type` varchar(32) CHARACTER SET utf8mb4 DEFAULT 'string' COMMENT 'Java数据类型',
+  `description` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '选项描述',
+  `default_value` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '默认值',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_label` (`option_label`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统设置';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统设置';
 
 -- ----------------------------
 -- Records of sys_setting
@@ -751,10 +751,10 @@ CREATE TABLE `sys_task` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '定时任务名称',
-  `cron` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '定时任务表达式',
+  `name` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '定时任务名称',
+  `cron` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '定时任务表达式',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='定时任务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='定时任务';
 
 -- ----------------------------
 -- Table structure for sys_verification
@@ -764,11 +764,11 @@ CREATE TABLE `sys_verification` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `kind` enum('email','mobile') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '验证码类型',
-  `receiver` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '接收者',
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '内容',
+  `kind` enum('email','mobile') CHARACTER SET utf8mb4 NOT NULL COMMENT '验证码类型',
+  `receiver` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '接收者',
+  `content` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '内容',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='验证码发送记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='验证码发送记录';
 
 
 -- ----------------------------
@@ -779,12 +779,12 @@ CREATE TABLE `sys_whitelist` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `ip` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'IP',
+  `ip` varchar(20) CHARACTER SET utf8mb4 NOT NULL COMMENT 'IP',
   `end_time` datetime DEFAULT NULL COMMENT '截止日期',
   `remark` varchar(64) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_ip` (`ip`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='IP白名单';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='IP白名单';
 
 -- ----------------------------
 -- Records of sys_whitelist
@@ -803,7 +803,7 @@ CREATE TABLE `template` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='模板表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='模板表';
 
 -- ----------------------------
 -- Table structure for sys_counter
@@ -813,11 +813,11 @@ CREATE TABLE `sys_counter` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `biz` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '键',
+  `biz` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '键',
   `number` bigint unsigned NOT NULL DEFAULT '0' COMMENT '计数值',
   PRIMARY KEY (`id`),
   KEY `uk_biz` (`biz`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='计数器';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='计数器';
 
 -- ----------------------------
 -- Table structure for auth_answer
@@ -829,10 +829,10 @@ CREATE TABLE `auth_answer` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `question_id` bigint unsigned NOT NULL COMMENT '安全问题ID',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
-  `answer` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '安全问题答案md5',
+  `answer` char(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '安全问题答案md5',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_id` (`user_id`,`question_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='安全问题答案';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='安全问题答案';
 
 -- ----------------------------
 -- Table structure for auth_question
@@ -842,9 +842,9 @@ CREATE TABLE `auth_question` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `question` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '安全问题',
+  `question` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '安全问题',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='安全问题';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COMMENT='安全问题';
 
 -- ----------------------------
 -- Records of auth_question

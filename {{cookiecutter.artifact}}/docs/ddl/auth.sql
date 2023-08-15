@@ -9,13 +9,13 @@ CREATE TABLE `auth_group` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `name` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '用户组名称',
+  `name` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '用户组名称',
   `parent_id` bigint unsigned NOT NULL COMMENT '上级用户组ID',
-  `description` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '描述信息',
+  `description` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '描述信息',
   `sort` smallint unsigned NOT NULL DEFAULT '1' COMMENT '显示顺序',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_name_parent_id` (`name`,`parent_id`) USING BTREE COMMENT '同级不允许同名用户组'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户组';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组';
 
 -- ----------------------------
 -- Records of auth_group
@@ -35,10 +35,10 @@ CREATE TABLE `auth_group_permission` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
   `permission_id` bigint unsigned NOT NULL COMMENT '权限ID',
-  `remark` varchar(32) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '注释',
+  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_group_id_permission_id` (`group_id`,`permission_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户组权限';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组权限';
 
 -- ----------------------------
 -- Records of auth_group_permission
@@ -59,7 +59,7 @@ CREATE TABLE `auth_group_role` (
   `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_group_id_role_id` (`group_id`,`role_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户组角色关联';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组角色关联';
 
 -- ----------------------------
 -- Records of auth_group_role
@@ -76,13 +76,13 @@ CREATE TABLE `auth_password_history` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
-  `kind` enum('initial','reset','forget','change') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码修改类型： 初始密码、重置密码、找回密码、修改密码',
-  `edited_by` enum('user','admin') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改人',
-  `after_pwd` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改后密码',
-  `before_pwd` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改前密码',
+  `kind` enum('initial','reset','forget','change') CHARACTER SET utf8mb4 NOT NULL COMMENT '密码修改类型： 初始密码、重置密码、找回密码、修改密码',
+  `edited_by` enum('user','admin') CHARACTER SET utf8mb4 NOT NULL COMMENT '修改人',
+  `after_pwd` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '修改后密码',
+  `before_pwd` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '修改前密码',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_user_id` (`user_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='密码历史表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='密码历史表';
 
 -- ----------------------------
 -- Records of auth_password_history
@@ -98,16 +98,16 @@ CREATE TABLE `auth_permission` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限名称',
-  `code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限代码',
-  `description` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '描述信息',
+  `name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '权限名称',
+  `code` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '权限代码',
+  `description` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '描述信息',
   `parent_id` bigint unsigned NOT NULL DEFAULT '1' COMMENT '父级权限ID',
   `kind` tinyint unsigned NOT NULL COMMENT '权限类型（1：页面/路由，2：接口/功能 3：按钮/组件）',
-  `path` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '页面路由（用于前端控制）',
+  `path` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '页面路由（用于前端控制）',
   `sort` smallint unsigned NOT NULL DEFAULT '1' COMMENT '显示顺序',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_code` (`code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='权限';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='权限';
 
 -- ----------------------------
 -- Records of auth_permission
@@ -260,26 +260,26 @@ CREATE TABLE `auth_profile` (
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
   `birthday` date DEFAULT NULL COMMENT '出生日期',
   `age` tinyint unsigned DEFAULT NULL COMMENT '年龄',
-  `gender` enum('男','女') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '性别',
-  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '头像',
-  `nickname` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '昵称/名字/真实姓名（只用于展示）',
-  `qq` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'QQ',
-  `wechat` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '微信',
-  `weibo` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '微博',
-  `intro` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '简介',
-  `address` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '地址',
-  `region` char(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '地区',
-  `school` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '学校',
-  `education` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '学历',
-  `major` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '专业',
-  `company` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '公司',
-  `position` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '职位',
-  `industry` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '行业',
-  `profession` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '职业',
-  `telephone` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '固定电话',
+  `gender` enum('男','女') CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '性别',
+  `avatar` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '头像',
+  `nickname` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '昵称/名字/真实姓名（只用于展示）',
+  `qq` varchar(10) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT 'QQ',
+  `wechat` varchar(20) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '微信',
+  `weibo` varchar(30) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '微博',
+  `intro` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '简介',
+  `address` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '地址',
+  `region` char(6) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '地区',
+  `school` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '学校',
+  `education` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '学历',
+  `major` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '专业',
+  `company` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '公司',
+  `position` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '职位',
+  `industry` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '行业',
+  `profession` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '职业',
+  `telephone` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '固定电话',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id` (`user_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户信息';
 
 -- ----------------------------
 -- Records of auth_profile
@@ -297,13 +297,13 @@ CREATE TABLE `auth_role` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `name` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '角色名称',
-  `code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '角色代码',
-  `description` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '描述信息',
+  `name` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '角色名称',
+  `code` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '角色代码',
+  `description` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '描述信息',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_code` (`code`) USING BTREE,
   UNIQUE KEY `uk_name` (`name`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色';
 
 -- ----------------------------
 -- Records of auth_role
@@ -330,7 +330,7 @@ CREATE TABLE `auth_role_permission` (
   `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_role_id_permission_id` (`role_id`,`permission_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色权限';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色权限';
 
 -- ----------------------------
 -- Records of auth_role_permission
@@ -356,11 +356,11 @@ CREATE TABLE `auth_user` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '登录用户名',
-  `mobile` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '手机号码',
-  `email` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '邮箱地址',
-  `pwd` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码',
-  `nickname` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '昵称/名字/真实姓名（只用于展示）',
+  `username` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '登录用户名',
+  `mobile` varchar(11) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '手机号码',
+  `email` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '邮箱地址',
+  `pwd` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '密码',
+  `nickname` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '昵称/名字/真实姓名（只用于展示）',
   `locked` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '账号是否锁定 （1-上锁 0-未锁）',
   `is_super` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否为超级管理员',
   `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
@@ -373,7 +373,7 @@ CREATE TABLE `auth_user` (
   UNIQUE KEY `uk_email` (`email`) USING BTREE,
   KEY `idx_username` (`username`) USING BTREE,
   KEY `idx_mobile` (`mobile`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户';
 
 -- ----------------------------
 -- Records of auth_user
@@ -393,11 +393,11 @@ CREATE TABLE `auth_user_group` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
-  `remark` varchar(32) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '注释',
+  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   `admin` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否是该组管理员',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户-用户组关联';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-用户组关联';
 
 -- ----------------------------
 -- Records of auth_user_group
@@ -417,10 +417,10 @@ CREATE TABLE `auth_user_permission` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
   `permission_id` bigint unsigned NOT NULL COMMENT '权限ID',
-  `remark` varchar(32) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '注释',
+  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_permission_id` (`user_id`,`permission_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户-权限关联';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-权限关联';
 
 -- ----------------------------
 -- Records of auth_user_permission
@@ -442,7 +442,7 @@ CREATE TABLE `auth_user_role` (
   `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_role_id` (`user_id`,`role_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户和角色关联表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户和角色关联表';
 
 -- ----------------------------
 -- Records of auth_user_role
@@ -463,10 +463,10 @@ CREATE TABLE `auth_answer` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `question_id` bigint unsigned NOT NULL COMMENT '安全问题ID',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
-  `secret` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '安全问题答案md5',
+  `secret` char(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '安全问题答案md5',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_id` (`user_id`,`question_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='安全问题答案';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='安全问题答案';
 
 
 -- ----------------------------
@@ -477,34 +477,34 @@ CREATE TABLE `auth_question` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `ask` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '安全问题',
+  `ask` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '安全问题',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='安全问题';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COMMENT='安全问题';
 
 -- ----------------------------
 -- Records of auth_question
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_question` (`id`, `question`) VALUES (1, '您的出生地是哪里？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (2, '您最喜欢的宠物的名字是什么？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (3, '您母亲的生日是哪一天？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (4, '您父亲的全名是什么？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (5, '您最喜欢的电影是哪一部？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (6, '您最喜欢的食物是什么？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (7, '您小学时最喜欢的老师叫什么名字？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (8, '您最喜欢的运动队是哪个？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (9, '您最喜欢的歌曲是哪一首？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (10, '您最喜欢的颜色是什么？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (11, '您最喜欢的电视节目是什么？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (12, '您的中学校名是什么？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (13, '您最喜欢的运动是什么？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (14, '您第一次去的国家/城市是哪里？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (15, '您最喜欢的作家是谁？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (16, '您最喜欢的电子游戏是什么？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (17, '您最喜欢的季节是哪个？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (18, '您第一次乘坐飞机的年份是哪一年？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (19, '您最喜欢的演员或演员是谁？');
-INSERT INTO `auth_question` (`id`, `question`) VALUES (20, '您最喜欢的书是哪本？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (1, '您的出生地是哪里？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (2, '您最喜欢的宠物的名字是什么？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (3, '您母亲的生日是哪一天？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (4, '您父亲的全名是什么？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (5, '您最喜欢的电影是哪一部？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (6, '您最喜欢的食物是什么？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (7, '您小学时最喜欢的老师叫什么名字？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (8, '您最喜欢的运动队是哪个？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (9, '您最喜欢的歌曲是哪一首？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (10, '您最喜欢的颜色是什么？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (11, '您最喜欢的电视节目是什么？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (12, '您的中学校名是什么？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (13, '您最喜欢的运动是什么？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (14, '您第一次去的国家/城市是哪里？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (15, '您最喜欢的作家是谁？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (16, '您最喜欢的电子游戏是什么？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (17, '您最喜欢的季节是哪个？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (18, '您第一次乘坐飞机的年份是哪一年？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (19, '您最喜欢的演员或演员是谁？');
+INSERT INTO `auth_question` (`id`, `ask`) VALUES (20, '您最喜欢的书是哪本？');
 COMMIT;
 
 -- ----------------------------
@@ -515,15 +515,15 @@ CREATE TABLE `auth_app` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用名称',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用描述',
-  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '应用Logo',
-  `app_key` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用标识',
-  `app_secret` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '应用密钥',
-  `redirect_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '回调地址',
+  `name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '应用名称',
+  `description` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '应用描述',
+  `logo` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '应用Logo',
+  `app_key` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '应用标识',
+  `app_secret` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '应用密钥',
+  `redirect_url` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '回调地址',
   `status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '应用状态：0-禁用，1-启用',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_app_key` (`app_key`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='应用';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用';
 
 SET FOREIGN_KEY_CHECKS = 1;
