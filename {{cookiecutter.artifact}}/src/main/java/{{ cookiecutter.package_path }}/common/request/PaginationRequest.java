@@ -10,8 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * 带分页/排序/时间范围/搜索/导出请求对象
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class PaginationRequest extends BaseRequest {
 
     private static final String DEFAULT_ORDER = "asc";

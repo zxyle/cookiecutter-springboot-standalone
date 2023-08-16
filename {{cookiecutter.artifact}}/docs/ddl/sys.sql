@@ -623,6 +623,7 @@ CREATE TABLE `sys_login_log` (
   `ua` varchar(255) DEFAULT NULL COMMENT '浏览器请求头',
   `msg` varchar(255) DEFAULT NULL COMMENT '消息',
   `success` tinyint unsigned DEFAULT '0' COMMENT '1-成功 0-失败',
+  `user_id` bigint unsigned DEFAULT NULL COMMENT '用户id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登录日志';
 
@@ -683,7 +684,7 @@ CREATE TABLE `sys_setting` (
 -- Records of sys_setting
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.on', 'true', 'java.lang.Boolean', '登录是否开启图形验证码', 'true');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.on', 'false', 'java.lang.Boolean', '登录是否开启图形验证码', 'true');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.alive-time', '30', 'java.lang.Integer', '验证码存活时间（单位：分钟）', '30');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.digits', '6', 'java.lang.Integer', '验证码位数/长度', '6');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('captcha.between', '60', 'java.lang.Integer', '两次验证码请求间隔时间（单位：秒）', '60');

@@ -54,7 +54,7 @@ public class ${table.controllerName} {
      */
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:list')")
     @GetMapping("/${table.entityPath}s")
-    public R<PageVO<${entity}>> page(@Valid PaginationRequest request, HttpServletResponse response) throws IOException {
+    public R<PageVO<${entity}>> page(@Valid PaginationRequest request, HttpServletResponse servletResponse) throws IOException {
         QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
         wrapper.orderBy(EntityUtil.getFields(${entity}.class).contains(request.getField()),
                 request.isAsc(), request.getField());
@@ -63,11 +63,11 @@ public class ${table.controllerName} {
 
         // 数据导出Excel功能，不需要可以删除
         if (request.isExport()) {
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            servletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             String fileName = "${table.comment!}";
             String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
-            EasyExcelFactory.write(response.getOutputStream(), ${entity}.class)
+            servletResponse.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
+            EasyExcelFactory.write(servletResponse.getOutputStream(), ${entity}.class)
                     .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(list.getRecords());
             return null;
         }

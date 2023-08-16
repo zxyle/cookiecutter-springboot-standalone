@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
+import {{ cookiecutter.basePackage }}.common.constant.DateFormatConst;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class HealthController {
      */
     @GetMapping("/ping")
     public Map<String, String> ping() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(1);
         map.put("ping", "pong");
         return map;
     }
@@ -74,7 +74,7 @@ public class HealthController {
      */
     @GetMapping("/now")
     public String now() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return LocalDateTime.now().format(DateFormatConst.YYYY_MM_DD_HH_MM_SS_DTF);
     }
 
 }
