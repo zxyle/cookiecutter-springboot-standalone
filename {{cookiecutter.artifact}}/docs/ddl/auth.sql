@@ -491,4 +491,19 @@ CREATE TABLE `auth_app` (
   UNIQUE KEY `uk_app_key` (`app_key`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用';
 
+
+-- ----------------------------
+-- Table structure for auth_totp
+-- ----------------------------
+DROP TABLE IF EXISTS `auth_totp`;
+CREATE TABLE `auth_totp` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_time` datetime(6) NOT NULL COMMENT '创建时间',
+  `update_time` datetime(6) NOT NULL COMMENT '更新时间',
+  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
+  `secret` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密钥',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='TOTP（基于时间的一次性密码）';
+
 SET FOREIGN_KEY_CHECKS = 1;
