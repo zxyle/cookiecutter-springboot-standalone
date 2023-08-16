@@ -14,6 +14,8 @@ public class AnswerRequest {
 
     /**
      * 问题id
+     *
+     * @mock 1
      */
     @Positive(message = "问题id必须为正整数")
     @NotNull(message = "问题id不能为空")
@@ -21,6 +23,8 @@ public class AnswerRequest {
 
     /**
      * 答案
+     *
+     * @mock 浙江杭州
      */
     @NotBlank(message = "答案不能为空")
     private String answer;

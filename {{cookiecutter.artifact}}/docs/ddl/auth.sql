@@ -31,20 +31,11 @@ COMMIT;
 DROP TABLE IF EXISTS `auth_group_permission`;
 CREATE TABLE `auth_group_permission` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
   `permission_id` bigint unsigned NOT NULL COMMENT '权限ID',
-  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_group_id_permission_id` (`group_id`,`permission_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组权限';
-
--- ----------------------------
--- Records of auth_group_permission
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for auth_group_role
@@ -52,20 +43,11 @@ COMMIT;
 DROP TABLE IF EXISTS `auth_group_role`;
 CREATE TABLE `auth_group_role` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
   `role_id` bigint unsigned NOT NULL COMMENT '角色ID',
-  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_group_id_role_id` (`group_id`,`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组角色关联';
-
--- ----------------------------
--- Records of auth_group_role
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for auth_password_history
@@ -84,11 +66,6 @@ CREATE TABLE `auth_password_history` (
   KEY `idx_user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='密码历史表';
 
--- ----------------------------
--- Records of auth_password_history
--- ----------------------------
-BEGIN;
-COMMIT;
 
 -- ----------------------------
 -- Table structure for auth_permission
@@ -323,11 +300,8 @@ COMMIT;
 DROP TABLE IF EXISTS `auth_role_permission`;
 CREATE TABLE `auth_role_permission` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `role_id` bigint unsigned NOT NULL COMMENT '角色id',
   `permission_id` bigint unsigned NOT NULL COMMENT '权限id',
-  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_role_id_permission_id` (`role_id`,`permission_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色权限';
@@ -336,16 +310,16 @@ CREATE TABLE `auth_role_permission` (
 -- Records of auth_role_permission
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (1, 2, 1, '管理员拥有所有权限');
-INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (2, 3, 12, '注册用户拥有用户登录');
-INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (3, 3, 13, '注册用户拥有退出登录');
-INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (4, 3, 17, '注册用户拥有修改密码');
-INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (5, 3, 23, '注册用户拥有获取当前用户信息');
-INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (6, 3, 24, '注册用户拥有更新当前用户信息');
-INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (7, 3, 48, '注册用户拥有刷新/续约token');
-INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (8, 5, 3, '组管理员拥有用户管理');
-INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (9, 5, 32, '组管理员拥有用户组管理');
-INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`, `remark`) VALUES (10, 5, 19, '组管理员拥有重置密码');
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`) VALUES (1, 2, 1);
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`) VALUES (2, 3, 12);
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`) VALUES (3, 3, 13);
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`) VALUES (4, 3, 17);
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`) VALUES (5, 3, 23);
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`) VALUES (6, 3, 24);
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`) VALUES (7, 3, 48);
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`) VALUES (8, 5, 3);
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`) VALUES (9, 5, 32);
+INSERT INTO `auth_role_permission` (`id`, `role_id`, `permission_id`) VALUES (10, 5, 19);
 COMMIT;
 
 -- ----------------------------
@@ -389,11 +363,8 @@ COMMIT;
 DROP TABLE IF EXISTS `auth_user_group`;
 CREATE TABLE `auth_user_group` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
   `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
-  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   `admin` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否是该组管理员',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE
@@ -403,8 +374,8 @@ CREATE TABLE `auth_user_group` (
 -- Records of auth_user_group
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `remark`, `admin`) VALUES (1, 1, 1, NULL, 1);
-INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `remark`, `admin`) VALUES (2, 1, 2, NULL, 1);
+INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `admin`) VALUES (1, 1, 1, 1);
+INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `admin`) VALUES (2, 1, 2, 1);
 COMMIT;
 
 -- ----------------------------
@@ -413,11 +384,8 @@ COMMIT;
 DROP TABLE IF EXISTS `auth_user_permission`;
 CREATE TABLE `auth_user_permission` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
   `permission_id` bigint unsigned NOT NULL COMMENT '权限ID',
-  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_permission_id` (`user_id`,`permission_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-权限关联';
@@ -426,7 +394,7 @@ CREATE TABLE `auth_user_permission` (
 -- Records of auth_user_permission
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user_permission` (`id`, `user_id`, `permission_id`, `remark`) VALUES (1, 1, 1, NULL);
+INSERT INTO `auth_user_permission` (`id`, `user_id`, `permission_id`) VALUES (1, 1, 1);
 COMMIT;
 
 -- ----------------------------
@@ -435,11 +403,8 @@ COMMIT;
 DROP TABLE IF EXISTS `auth_user_role`;
 CREATE TABLE `auth_user_role` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` bigint NOT NULL COMMENT '用户ID',
   `role_id` bigint NOT NULL COMMENT '角色ID',
-  `remark` varchar(32) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_role_id` (`user_id`,`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户和角色关联表';
@@ -448,8 +413,8 @@ CREATE TABLE `auth_user_role` (
 -- Records of auth_user_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user_role` (`id`, `user_id`, `role_id`, `remark`) VALUES (1, 1, 5, NULL);
-INSERT INTO `auth_user_role` (`id`, `user_id`, `role_id`, `remark`) VALUES (2, 2, 3, NULL);
+INSERT INTO `auth_user_role` (`id`, `user_id`, `role_id`) VALUES (1, 1, 5);
+INSERT INTO `auth_user_role` (`id`, `user_id`, `role_id`) VALUES (2, 2, 3);
 COMMIT;
 
 

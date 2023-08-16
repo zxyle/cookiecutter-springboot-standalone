@@ -30,9 +30,7 @@ public class DbCounterServiceImpl implements CounterService {
         wrapper.eq("biz", key);
         Counter one = counterService.getOne(wrapper);
         if (one == null) {
-            one = new Counter();
-            one.setBiz(key);
-            one.setNumber(1L);
+            one = new Counter(key, 1L);
             counterService.save(one);
             return one.getNumber();
         }

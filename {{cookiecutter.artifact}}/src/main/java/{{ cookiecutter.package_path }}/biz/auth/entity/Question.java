@@ -23,6 +23,8 @@ public class Question extends BaseEntity {
 
     /**
      * 安全问题
+     *
+     * @mock 你的出生地是哪里？
      */
     @Length(max = 64, message = "安全问题长度不能超过64个字符")
     @NotBlank(message = "安全问题不能为空")

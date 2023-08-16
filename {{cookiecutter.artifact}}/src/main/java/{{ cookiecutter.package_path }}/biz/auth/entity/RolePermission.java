@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import {{ cookiecutter.basePackage }}.common.entity.LiteEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,7 +17,7 @@ import javax.validation.constraints.Positive;
 @Data
 @TableName("auth_role_permission")
 @EqualsAndHashCode(callSuper = true)
-public class RolePermission extends BaseEntity {
+public class RolePermission extends LiteEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,11 +32,6 @@ public class RolePermission extends BaseEntity {
     @Positive(message = "权限ID必须为正数")
     @NotNull(message = "权限ID不能为空")
     private Long permissionId;
-
-    /**
-     * 注释
-     */
-    private String remark;
 
     public RolePermission(Long roleId, Long permissionId) {
         this.roleId = roleId;

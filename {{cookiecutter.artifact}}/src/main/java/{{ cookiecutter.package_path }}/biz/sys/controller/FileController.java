@@ -89,7 +89,7 @@ public class FileController {
      * @param file   待上传文件
      * @param folder 上传到指定目录
      */
-    public String store(MultipartFile file, String folder) {
+    private String store(MultipartFile file, String folder) {
         String objectName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
         if (StringUtils.isNotBlank(folder)) {
             objectName = folder + "/" + objectName;

@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import {{ cookiecutter.basePackage }}.common.entity.LiteEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @TableName("auth_user_group")
 @EqualsAndHashCode(callSuper = true)
-public class UserGroup extends BaseEntity {
+public class UserGroup extends LiteEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,11 +27,6 @@ public class UserGroup extends BaseEntity {
      * 用户组ID
      */
     private Long groupId;
-
-    /**
-     * 注释
-     */
-    private String remark;
 
     /**
      * 是否是该组管理员

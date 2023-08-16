@@ -43,7 +43,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         // 获取token, 不存在则放行
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (StringUtils.isBlank(token) || request.getServletPath().equals("/auth/user/login")) {
+        if (StringUtils.isBlank(token) || request.getServletPath().startsWith("/auth/login/")) {
             SecurityContextHolder.clearContext();
             filterChain.doFilter(request, response);
             return;

@@ -28,4 +28,12 @@ public class Counter extends BaseEntity {
      */
     private Long number;
 
+    public Counter(String biz, Long number) {
+        this.biz = biz;
+        this.number = number;
+    }
+
+    public Counter() {
+    }
+
 }
