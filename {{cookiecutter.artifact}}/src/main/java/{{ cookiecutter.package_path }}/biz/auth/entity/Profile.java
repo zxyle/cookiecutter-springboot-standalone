@@ -160,7 +160,7 @@ public class Profile extends BaseEntity {
      * @mock 软件工程师
      */
     @Length(max = 32, message = "职位长度不能超过32个中英文字符")
-    private String position;
+    private String job;
 
     /**
      * 行业
