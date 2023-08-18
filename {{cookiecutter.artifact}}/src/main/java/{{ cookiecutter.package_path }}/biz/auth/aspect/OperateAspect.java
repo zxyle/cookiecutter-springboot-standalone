@@ -52,6 +52,11 @@ public class OperateAspect {
             op.setMethod(request.getMethod());
         }
 
+        // 获取方法信息和参数
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        Method method = methodSignature.getMethod();
+        Object[] args = joinPoint.getArgs();
+
         // 获取@LogOperation注解上的操作名称和业务名称
         LogOperation annotation = method.getAnnotation(LogOperation.class);
         String operationName = annotation.name();
