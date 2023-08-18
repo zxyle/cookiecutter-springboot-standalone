@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.controller;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Answer;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Question;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.QuestionMapper;
@@ -48,6 +49,7 @@ public class QuestionController extends AuthBaseController {
     /**
      * 安全问题分页查询
      */
+    @LogOperation(name = "安全问题分页查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:question:list')")
     @GetMapping("/questions")
     public R<PageVO<Question>> page(@Valid PaginationRequest request) {
@@ -75,6 +77,7 @@ public class QuestionController extends AuthBaseController {
     /**
      * 新增安全问题
      */
+    @LogOperation(name = "新增安全问题", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:question:add')")
     @PostMapping("/questions")
     public R<Question> add(@Valid @RequestBody Question entity) {
@@ -86,6 +89,7 @@ public class QuestionController extends AuthBaseController {
     /**
      * 按ID删除安全问题
      */
+    @LogOperation(name = "按ID删除安全问题", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:question:delete')")
     @DeleteMapping("/questions/{id}")
     public R<Void> delete(@PathVariable Long id) {
@@ -100,6 +104,7 @@ public class QuestionController extends AuthBaseController {
     /**
      * 随机查询用户设置的安全问题
      */
+    @LogOperation(name = "随机查询用户设置的安全问题", biz = "auth")
     @GetMapping("/questions/random")
     public R<Question> get() {
         List<Question> questions = thisMapper.findQuestionsByUserId(getUserId());
@@ -116,6 +121,7 @@ public class QuestionController extends AuthBaseController {
     /**
      * 用户设置安全问题
      */
+    @LogOperation(name = "用户设置安全问题", biz = "auth")
     @PostMapping("/answers")
     public R<Void> add(@Valid @RequestBody AddAnswerRequest request) {
         List<Question> questions = thisMapper.findQuestionsByUserId(getUserId());
@@ -130,6 +136,7 @@ public class QuestionController extends AuthBaseController {
     /**
      * 用户修改安全问题（需先校验验证码）
      */
+    @LogOperation(name = "用户修改安全问题", biz = "auth")
     @PutMapping("/answers")
     public R<Void> update(@Valid @RequestBody UpdateAnswerRequest request) {
         String key = "code:" + getUserId();

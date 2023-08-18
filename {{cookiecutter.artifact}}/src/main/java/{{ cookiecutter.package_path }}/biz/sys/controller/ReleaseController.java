@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Release;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IReleaseService;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -40,6 +41,7 @@ public class ReleaseController {
     /**
      * 新增发布版本
      */
+    @LogOperation(name = "新增发布版本", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:release:add')")
     @PostMapping("/releases")
     public R<Release> add(@Valid @RequestBody Release entity) {
@@ -51,6 +53,7 @@ public class ReleaseController {
     /**
      * 按ID查询发布版本
      */
+    @LogOperation(name = "按ID查询发布版本", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:release:get')")
     @GetMapping("/releases/{id}")
     public R<Release> get(@PathVariable Long id) {
@@ -61,6 +64,7 @@ public class ReleaseController {
     /**
      * 按ID更新发布版本
      */
+    @LogOperation(name = "按ID更新发布版本", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:release:update')")
     @PutMapping("/releases/{id}")
     public R<Void> update(@Valid @RequestBody Release entity, @PathVariable Long id) {
@@ -72,6 +76,7 @@ public class ReleaseController {
     /**
      * 按ID删除发布版本
      */
+    @LogOperation(name = "按ID删除发布版本", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:release:delete')")
     @DeleteMapping("/releases/{id}")
     public R<Void> delete(@PathVariable Long id) {

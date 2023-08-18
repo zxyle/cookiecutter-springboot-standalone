@@ -3,11 +3,14 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.aspect;
 
-import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IOperateLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
-import org.apache.commons.lang3.StringUtils;
+import {{ cookiecutter.basePackage }}.common.util.IpUtil;
+import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
+import {{ cookiecutter.basePackage }}.config.security.LoginUser;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,72 +18,74 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
-import java.util.regex.Pattern;
 
-// 操作日志切面
-@Component
+/**
+ * 操作日志记录切面
+ */
+@Slf4j
 @Aspect
+@Component
+@RequiredArgsConstructor
 public class OperateAspect {
 
-    IOperateLogService logService;
+    final IOperateLogService logService;
 
-    public OperateAspect(IOperateLogService logService) {
-        this.logService = logService;
-    }
-
+    /**
+     * 记录操作日志
+     */
     @Around("@annotation(LogOperation)")
     public Object logOperation(ProceedingJoinPoint joinPoint) throws Throwable {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        OperateLog op = new OperateLog();
 
-        // 获取方法信息和参数
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        Method method = methodSignature.getMethod();
-        Object[] args = joinPoint.getArgs();
+        // 获取请求IP、路径和方法
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            op.setIp(IpUtil.getIpAddr(request));
+            op.setPath(request.getRequestURI());
+            op.setMethod(request.getMethod());
+        }
 
-        // 获取@LogOperation注解上的操作描述信息
-        LogOperation logOperation = method.getAnnotation(LogOperation.class);
-        String operation = logOperation.value();
+        // 获取@LogOperation注解上的操作名称和业务名称
+        LogOperation annotation = method.getAnnotation(LogOperation.class);
+        String operationName = annotation.name();
+        String biz = annotation.biz();
 
         // 记录日志信息
-        OperateLog log = new OperateLog();
-        log.setOperationType(operation);
-        log.setUserId(loginUser.getUser().getId());
-        log.setObjectId(getObjectId(args));
-        log.setOperateTime(LocalDateTime.now());
+        op.setBiz(biz);
+        op.setOperationName(operationName);
+        op.setUserId(getUserId());
+        op.setOperateTime(LocalDateTime.now());
+        if (args.length > 0)
+            op.setRequest(JacksonUtil.serialize(args));
 
         // 调用目标方法
+        long startTime = System.currentTimeMillis();
         Object result = joinPoint.proceed();
 
+        // 记录操作结果
+        op.setMeasured(System.currentTimeMillis() - startTime);
         R<Object> response = (R) result;
-        log.setResult(String.valueOf(response.isSuccess()));
-        logService.saveLog(log);
+        op.setSuccess(response.isSuccess());
+        op.setTraceId(response.getTraceId());
+        // 如果操作失败，记录失败原因
+        if (!response.isSuccess())
+            op.setResponse(response.getMessage());
+
+        logService.saveLog(op);
         return result;
     }
 
-
-    // 获取被操作对象用户ID
-    public Long getObjectId(Object[] args) {
-        if (args.length > 0) {
-            Object arg = args[0];
-            String s = arg.toString();
-            // 从Url中获取用户ID
-            if (StringUtils.isNumeric(s))
-                return Long.valueOf(s);
-
-            // 从请求对象中使用正则表达式获取用户ID
-            Pattern pattern = Pattern.compile("userId=\\d+");
-            if (pattern.matcher(s).find()) {
-                String[] split = s.split("userId=");
-                String[] split1 = split[1].split(",");
-                String userId = split1[0];
-                return Long.valueOf(userId);
-            }
-        }
-        return null;
+    private Long getUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        return loginUser.getUser().getId();
     }
 }
 

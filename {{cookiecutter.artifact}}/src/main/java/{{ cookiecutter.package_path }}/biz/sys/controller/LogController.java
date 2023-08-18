@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
 import {{ cookiecutter.basePackage }}.biz.sys.request.LoginLogRequest;
@@ -37,6 +38,7 @@ public class LogController {
     /**
      * 登录日志分页查询
      */
+    @LogOperation(name = "登录日志分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:login:list')")
     @GetMapping("/login")
     public R<PageVO<LoginLog>> list(@Valid LoginLogRequest request) {
@@ -51,11 +53,13 @@ public class LogController {
     /**
      * 操作日志分页查询
      */
+    @LogOperation(name = "操作日志分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:operate:list')")
     @GetMapping("/operate")
     public R<PageVO<OperateLog>> page(@Valid OperateLogRequest request) {
         QueryWrapper<OperateLog> wrapper = new QueryWrapper<>();
         wrapper.eq(request.getUserId() != null, "user_id", request.getUserId());
+        wrapper.eq(StringUtils.isNotBlank(request.getBiz()), "biz", request.getBiz());
         wrapper.between(request.getStartTime() != null && request.getEndTime() != null,
                 "operate_time", request.getStartTime(), request.getEndTime());
         wrapper.orderBy(true, request.isAsc(), "operate_time");

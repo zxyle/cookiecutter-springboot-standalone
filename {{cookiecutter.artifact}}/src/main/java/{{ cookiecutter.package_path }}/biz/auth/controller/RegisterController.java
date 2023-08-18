@@ -60,7 +60,7 @@ public class RegisterController {
 
         // 赋予默认角色
         Long defaultRole = setting.get("auth.user.default-role").getLongValue();
-        userService.updateRelation(user.getId(),  Collections.singletonList(defaultRole), null, null);
+        userService.updateRelation(user.getId(), Collections.singletonList(defaultRole), null, null);
 
         // 自动登录
         if (setting.get("auth.user.auto-login").isReal()) {

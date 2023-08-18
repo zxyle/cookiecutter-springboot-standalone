@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.controller;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.request.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.role.AddRoleRequest;
@@ -42,6 +43,7 @@ public class RoleController extends AuthBaseController {
     /**
      * 角色列表分页查询
      */
+    @LogOperation(name = "角色列表分页查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:list')")
     @GetMapping("/roles")
     public R<PageVO<RoleResponse>> list(@Valid ListAuthRequest request) {
@@ -65,6 +67,7 @@ public class RoleController extends AuthBaseController {
     /**
      * 创建角色
      */
+    @LogOperation(name = "创建角色", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:add')")
     @PostMapping("/roles")
     public R<Role> add(@Valid @RequestBody AddRoleRequest request) {
@@ -91,13 +94,12 @@ public class RoleController extends AuthBaseController {
      *
      * @param roleId 角色ID
      */
+    @LogOperation(name = "按ID查询角色", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:get')")
     @GetMapping("/roles/{roleId}")
     public R<RoleResponse> get(@PathVariable Long roleId) {
         Role role = thisService.queryById(roleId);
-        if (role == null) {
-            return R.fail("角色不存在");
-        }
+        if (role == null) return R.fail("角色不存在");
 
         // 查询角色对应权限关系
         RoleResponse response = thisService.attachRoleInfo(role, true);
@@ -109,6 +111,7 @@ public class RoleController extends AuthBaseController {
      *
      * @param roleId 角色ID
      */
+    @LogOperation(name = "按ID更新角色", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:update')")
     @PutMapping("/roles/{roleId}")
     public R<Void> update(@Valid @RequestBody UpdateRoleRequest request, @PathVariable Long roleId) {
@@ -134,6 +137,7 @@ public class RoleController extends AuthBaseController {
      *
      * @param roleId 角色ID
      */
+    @LogOperation(name = "按ID删除角色", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:delete')")
     @DeleteMapping("/roles/{roleId}")
     public R<Void> delete(@PathVariable Long roleId) {

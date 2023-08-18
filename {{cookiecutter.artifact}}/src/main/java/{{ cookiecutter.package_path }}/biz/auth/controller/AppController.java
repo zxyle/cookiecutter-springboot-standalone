@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.controller;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.App;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.app.AddAppRequest;
@@ -50,6 +51,7 @@ public class AppController extends AuthBaseController {
     /**
      * 应用分页查询
      */
+    @LogOperation(name = "应用分页查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:list')")
     @GetMapping("/apps")
     public R<PageVO<App>> page(@Valid PaginationRequest request) {
@@ -70,6 +72,7 @@ public class AppController extends AuthBaseController {
     /**
      * 新增应用
      */
+    @LogOperation(name = "新增应用", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:add')")
     @PostMapping("/apps")
     public R<App> add(@Valid @RequestBody AddAppRequest request) {
@@ -83,6 +86,7 @@ public class AppController extends AuthBaseController {
     /**
      * 按ID查询应用
      */
+    @LogOperation(name = "按ID查询应用", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:get')")
     @GetMapping("/apps/{id}")
     public R<App> get(@PathVariable Long id) {
@@ -94,6 +98,7 @@ public class AppController extends AuthBaseController {
     /**
      * 按ID更新应用
      */
+    @LogOperation(name = "按ID更新应用", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:update')")
     @PutMapping("/apps/{id}")
     public R<App> update(@Valid @RequestBody UpdateAppRequest request, @PathVariable Long id) {
@@ -108,6 +113,7 @@ public class AppController extends AuthBaseController {
     /**
      * 按ID删除应用
      */
+    @LogOperation(name = "按ID删除应用", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:delete')")
     @DeleteMapping("/apps/{id}")
     public R<Void> delete(@PathVariable Long id) {
@@ -120,6 +126,7 @@ public class AppController extends AuthBaseController {
      *
      * @param id 应用id
      */
+    @LogOperation(name = "重新生成密钥", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:update')")
     @GetMapping("/apps/{id}/regenerateSecret")
     public R<App> regenerateSecret(@PathVariable Long id) {
@@ -136,6 +143,7 @@ public class AppController extends AuthBaseController {
      *
      * @param id 应用id
      */
+    @LogOperation(name = "应用上架", biz = "auth")
     @GetMapping("/apps/{id}/publish")
     public R<Void> publish(@PathVariable Long id) {
         App app = thisService.queryById(id);
@@ -152,6 +160,7 @@ public class AppController extends AuthBaseController {
      *
      * @param id 应用id
      */
+    @LogOperation(name = "应用下架", biz = "auth")
     @GetMapping("/apps/{id}/revoke")
     public R<Void> revoke(@PathVariable Long id) {
         App app = thisService.queryById(id);
@@ -169,6 +178,7 @@ public class AppController extends AuthBaseController {
      *
      * @param id 应用id
      */
+    @LogOperation(name = "应用跳转", biz = "auth")
     @GetMapping("/apps/{id}/redirect")
     public R<RedirectResponse> redirect(@PathVariable Long id) {
         // 根据appId查询应用
@@ -192,6 +202,7 @@ public class AppController extends AuthBaseController {
     /**
      * 根据临时授权码获取用户详情
      */
+    @LogOperation(name = "根据临时授权码获取用户详情", biz = "auth")
     @PostMapping("/apps/currentUser")
     public R<User> check(@Valid @RequestBody CheckRequest request) {
         String appKey = servletRequest.getHeader("appKey");

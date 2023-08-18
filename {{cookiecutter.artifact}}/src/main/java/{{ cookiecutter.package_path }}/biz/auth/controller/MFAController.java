@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Totp;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.request.user.BindingRequest;
@@ -42,6 +43,7 @@ public class MFAController extends AuthBaseController {
      *
      * @apiNote 该接口需先请求发送验证码接口
      */
+    @LogOperation(name = "绑定手机号或邮箱", biz = "auth")
     @PostMapping("/code/bind")
     public R<Void> codeBind(@Valid @RequestBody BindingRequest request) {
         User user = getLoggedInUser();
@@ -74,6 +76,7 @@ public class MFAController extends AuthBaseController {
     /**
      * 生成TOTP随机密钥
      */
+    @LogOperation(name = "生成TOTP随机密钥", biz = "auth")
     @GetMapping("/totp/generate")
     public R<TotpResponse> generate() {
         String domain = "www.example.com";  // 需修改
@@ -89,6 +92,7 @@ public class MFAController extends AuthBaseController {
      *
      * @param code 动态验证码
      */
+    @LogOperation(name = "绑定TOTP验证器", biz = "auth")
     @GetMapping("/totp/bind")
     public R<Void> bind(@NotBlank String code) {
         Totp result = totpService.queryByUserId(getUserId());
@@ -111,6 +115,7 @@ public class MFAController extends AuthBaseController {
      *
      * @param code 动态验证码
      */
+    @LogOperation(name = "解绑TOTP验证器", biz = "auth")
     @GetMapping("/totp/unbind")
     public R<Void> unbind(@NotBlank String code) {
         Totp result = totpService.queryByUserId(getUserId());

@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Dict;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.DictMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.request.dict.AddDictRequest;
@@ -37,6 +38,7 @@ public class DictController {
     /**
      * 新增字典条目
      */
+    @LogOperation(name = "新增字典条目", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:dict:add')")
     @PostMapping("/dicts")
     public R<Dict> add(@Valid @RequestBody AddDictRequest request) {
@@ -87,6 +89,7 @@ public class DictController {
     /**
      * 删除字典条目
      */
+    @LogOperation(name = "删除字典条目", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
     @DeleteMapping("/dicts/{id}")
     public R<Void> delete(@PathVariable Long id) {
@@ -100,6 +103,7 @@ public class DictController {
     /**
      * 更新字典条目
      */
+    @LogOperation(name = "更新字典条目", biz = "sys")
     @PutMapping("/dicts/{id}")
     public R<Void> update(@Valid @RequestBody UpdateDictRequest request, @PathVariable Long id) {
         Dict result = thisService.getById(id);
@@ -120,6 +124,7 @@ public class DictController {
      *
      * @param dictType 字典类型
      */
+    @LogOperation(name = "删除字典类型", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
     @DeleteMapping("/dicts/dictType/{dictType}")
     public R<Void> deleteByDictType(@PathVariable String dictType) {

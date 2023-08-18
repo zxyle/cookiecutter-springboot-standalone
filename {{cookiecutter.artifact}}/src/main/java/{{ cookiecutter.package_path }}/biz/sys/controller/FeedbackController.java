@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Feedback;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFeedbackService;
 import {{ cookiecutter.basePackage }}.common.exception.DataNotFoundException;
@@ -37,6 +38,7 @@ public class FeedbackController {
     /**
      * 意见反馈列表分页查询
      */
+    @LogOperation(name = "意见反馈列表分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:feedback:list')")
     @GetMapping("/feedbacks")
     public R<PageVO<Feedback>> list(@Valid PaginationRequest request, HttpServletResponse response) throws IOException {
@@ -75,6 +77,7 @@ public class FeedbackController {
     /**
      * 按ID查询意见反馈
      */
+    @LogOperation(name = "按ID查询意见反馈", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:feedback:get')")
     @GetMapping("/feedbacks/{id}")
     public R<Feedback> get(@PathVariable Long id) {
@@ -85,6 +88,7 @@ public class FeedbackController {
     /**
      * 按ID更新意见反馈
      */
+    @LogOperation(name = "按ID更新意见反馈", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:feedback:update')")
     @PutMapping("/feedbacks/{id}")
     public R<Void> update(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
@@ -97,6 +101,7 @@ public class FeedbackController {
     /**
      * 按ID删除意见反馈
      */
+    @LogOperation(name = "按ID删除意见反馈", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:feedback:delete')")
     @DeleteMapping("/feedbacks/{id}")
     public R<Void> delete(@PathVariable Long id) {

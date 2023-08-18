@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Setting;
 import {{ cookiecutter.basePackage }}.biz.sys.response.Item;
 import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
@@ -30,6 +31,7 @@ public class SettingController {
     /**
      * 系统设置分页查询
      */
+    @LogOperation(name = "系统设置分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:setting:list')")
     @GetMapping("/settings")
     public R<PageVO<Setting>> page(@Valid PaginationRequest request) {
@@ -42,6 +44,7 @@ public class SettingController {
     /**
      * 新增系统设置
      */
+    @LogOperation(name = "新增系统设置", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:setting:add')")
     @PostMapping("/settings")
     public R<Setting> add(@Valid @RequestBody Setting entity) {
@@ -53,6 +56,7 @@ public class SettingController {
     /**
      * 按ID查询系统设置
      */
+    @LogOperation(name = "按ID查询系统设置", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:setting:get')")
     @GetMapping("/settings/{id}")
     public R<Setting> get(@PathVariable Long id) {
@@ -63,6 +67,7 @@ public class SettingController {
     /**
      * 按ID更新系统设置
      */
+    @LogOperation(name = "按ID更新系统设置", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:setting:update')")
     @PutMapping("/settings/{id}")
     public R<Void> update(@Valid @RequestBody Setting entity, @PathVariable Long id) {
@@ -76,6 +81,7 @@ public class SettingController {
     /**
      * 按ID删除系统设置
      */
+    @LogOperation(name = "按ID删除系统设置", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:setting:delete')")
     @DeleteMapping("/settings/{id}")
     public R<Void> delete(@PathVariable Long id) {

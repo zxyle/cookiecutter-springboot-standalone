@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
 import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.request.permission.AddPermissionRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.request.permission.TreePermissionRequest;
@@ -35,6 +36,7 @@ public class PermissionController extends AuthBaseController {
      *
      * @apiNote 1. 该接口只有管理员才能访问 2. 该接口返回name-节点名、id-节点值、children-子节点、path-路由、sort-排序等字段
      */
+    @LogOperation(name = "获取权限树", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:permission:tree')")
     @Secured("ROLE_admin")
     @GetMapping("/permissions/tree")
@@ -49,6 +51,7 @@ public class PermissionController extends AuthBaseController {
     /**
      * 查询用户拥有所有权限信息
      */
+    @LogOperation(name = "查询用户拥有所有权限信息", biz = "auth")
     @GetMapping("/permissions")
     @PreAuthorize("@ck.hasPermit('auth:permission:list')")
     public R<List<Permission>> list() {
@@ -60,6 +63,7 @@ public class PermissionController extends AuthBaseController {
     /**
      * 新增权限
      */
+    @LogOperation(name = "新增权限", biz = "auth")
     @PostMapping("/permissions")
     @PreAuthorize("@ck.hasPermit('auth:permission:add')")
     public R<Permission> add(@Valid @RequestBody AddPermissionRequest request) {
@@ -76,6 +80,7 @@ public class PermissionController extends AuthBaseController {
      *
      * @param permissionId 权限ID
      */
+    @LogOperation(name = "按ID查询权限", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:permission:get')")
     @GetMapping("/permissions/{permissionId}")
     public R<Permission> get(@PathVariable Long permissionId) {
@@ -88,6 +93,7 @@ public class PermissionController extends AuthBaseController {
      *
      * @param permissionId 权限ID
      */
+    @LogOperation(name = "按ID更新权限", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:permission:update')")
     @PutMapping("/permissions/{permissionId}")
     public R<Void> update(@Valid @RequestBody Permission entity, @PathVariable Long permissionId) {
@@ -107,6 +113,7 @@ public class PermissionController extends AuthBaseController {
      *
      * @param permissionId 权限ID
      */
+    @LogOperation(name = "按ID删除权限", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:permission:delete')")
     @DeleteMapping("/permissions/{permissionId}")
     public R<Void> delete(@PathVariable Long permissionId) {

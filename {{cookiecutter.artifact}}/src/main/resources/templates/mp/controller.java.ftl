@@ -3,6 +3,7 @@ package ${package.Controller};
 import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,7 @@ public class ${table.controllerName} {
     /**
      * ${table.comment!}分页查询
      */
+    @LogOperation(name = "分页查询${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:list')")
     @GetMapping("/${table.entityPath}s")
     public R<PageVO<${entity}>> page(@Valid PaginationRequest request, HttpServletResponse servletResponse) throws IOException {
@@ -79,6 +81,7 @@ public class ${table.controllerName} {
      * ${table.comment!}列表查询
      */
     // 当数据量不大时，需要查出全部数据，可以使用此接口，不需要可以删除
+    // @LogOperation(name = "${table.comment!}列表查询", biz = "${package.ModuleName}")
     // @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:list')")
     // @GetMapping("/${table.entityPath}s")
     // public R<List<${entity}>> list() {
@@ -90,6 +93,7 @@ public class ${table.controllerName} {
     /**
      * 新增${table.comment!}
      */
+    @LogOperation(name = "新增${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:add')")
     @PostMapping("/${table.entityPath}s")
     public R<${entity}> add(@Valid @RequestBody ${entity} entity) {
@@ -101,6 +105,7 @@ public class ${table.controllerName} {
     /**
      * 按ID查询${table.comment!}
      */
+    @LogOperation(name = "按ID查询${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:get')")
     @GetMapping("/${table.entityPath}s/{id}")
     public R<${entity}> get(@PathVariable Long id) {
@@ -111,6 +116,7 @@ public class ${table.controllerName} {
     /**
      * 按ID更新${table.comment!}
      */
+    @LogOperation(name = "按ID更新${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:update')")
     @PutMapping("/${table.entityPath}s/{id}")
     public R<Void> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
@@ -122,6 +128,7 @@ public class ${table.controllerName} {
     /**
      * 按ID删除${table.comment!}
      */
+    @LogOperation(name = "按ID删除${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:delete')")
     @DeleteMapping("/${table.entityPath}s/{id}")
     public R<Void> delete(@PathVariable Long id) {
@@ -132,6 +139,7 @@ public class ${table.controllerName} {
     /**
      * 批量新增${table.comment!}
      */
+    @LogOperation(name = "批量新增${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:add')")
     @PostMapping("/${table.entityPath}s/batch-create")
     public R<Void> batchCreate(@RequestBody List<${entity}> list) {
@@ -142,6 +150,7 @@ public class ${table.controllerName} {
     /**
      * 批量更新${table.comment!}
      */
+    @LogOperation(name = "批量更新${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:update')")
     @PutMapping("/${table.entityPath}s/batch-update")
     public R<Void> batchUpdate(@RequestBody List<${entity}> list) {
@@ -152,6 +161,7 @@ public class ${table.controllerName} {
     /**
      * 批量删除${table.comment!}
      */
+    @LogOperation(name = "批量删除${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:delete')")
     @DeleteMapping("/${table.entityPath}s/batch-delete")
     public R<Void> batchDelete(@RequestBody List<Long> ids) {

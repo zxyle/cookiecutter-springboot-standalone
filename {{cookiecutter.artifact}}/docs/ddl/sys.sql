@@ -630,13 +630,18 @@ CREATE TABLE `sys_login_log` (
 DROP TABLE IF EXISTS `sys_operate_log`;
 CREATE TABLE `sys_operate_log` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `operate_time` datetime NOT NULL COMMENT '操作时间',
+  `biz` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '业务模块',
   `user_id` bigint unsigned NOT NULL COMMENT '操作用户ID',
-  `operation_type` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '操作类型',
-  `object_id` bigint unsigned DEFAULT NULL COMMENT '操作对象ID',
-  `result` enum('true','false') NOT NULL DEFAULT 'false' COMMENT '操作结果',
+  `operation_name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '操作名称',
+  `request` varchar(2048) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '请求体',
+  `ip` varchar(20) NOT NULL COMMENT '请求来源IP',
+  `method` varchar(6) CHARACTER SET utf8mb4 NOT NULL COMMENT 'http方法',
+  `path` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '请求路径',
+  `response` varchar(1024) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '响应体',
+  `success` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '操作是否成功',
+  `trace_id` char(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '链路追踪ID',
+  `measured` smallint unsigned NOT NULL DEFAULT '0' COMMENT '操作耗时(毫秒)',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='操作日志';
 

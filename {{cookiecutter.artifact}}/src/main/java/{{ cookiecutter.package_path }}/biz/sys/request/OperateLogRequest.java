@@ -7,6 +7,8 @@ import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.Positive;
+
 /**
  * 操作日志分页查询请求
  */
@@ -17,15 +19,11 @@ public class OperateLogRequest extends PaginationRequest {
     /**
      * 操作用户ID
      */
+    @Positive(message = "用户ID必须是正数")
     private Long userId;
 
     /**
-     * 操作开始时间
+     * 业务模块
      */
-    private String startTime;
-
-    /**
-     * 操作结束时间
-     */
-    private String endTime;
+    private String biz;
 }

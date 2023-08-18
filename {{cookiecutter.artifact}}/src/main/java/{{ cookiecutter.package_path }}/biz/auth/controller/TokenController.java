@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.controller;
 
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import {{ cookiecutter.basePackage }}.biz.auth.response.RegisterResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.util.JwtUtil;
@@ -37,6 +38,7 @@ public class TokenController extends AuthBaseController {
     /**
      * 刷新/续约token
      */
+    @LogOperation(name = "刷新/续约token", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:token:renew')")
     @RequestMapping("/renew")
     public R<RegisterResponse> renew() {
@@ -51,7 +53,7 @@ public class TokenController extends AuthBaseController {
      *
      * @param userId 用户id
      */
-    public RegisterResponse refreshToken(String userId) {
+    private RegisterResponse refreshToken(String userId) {
         RegisterResponse response = new RegisterResponse();
         String key = "refresh:" + userId;
         String s = stringRedisTemplate.opsForValue().get(key);

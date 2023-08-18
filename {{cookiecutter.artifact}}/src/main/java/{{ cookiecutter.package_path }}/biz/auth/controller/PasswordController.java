@@ -54,6 +54,7 @@ public class PasswordController extends AuthBaseController {
     /**
      * 使用旧密码方式修改密码
      */
+    @LogOperation(name = "使用旧密码方式修改密码", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:password:change')")
     @PostMapping("/change")
     public R<Void> change(@Valid @RequestBody ChangeByOldRequest request) {
@@ -154,7 +155,7 @@ public class PasswordController extends AuthBaseController {
     /**
      * 重置密码（支持系统管理员、用户组管理员重置密码）
      */
-    @LogOperation("重置密码")
+    @LogOperation(name = "重置密码", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:password:reset')")
     @Secured({"ROLE_admin", "ROLE_group-admin"})
     @PostMapping("/reset")
@@ -183,6 +184,7 @@ public class PasswordController extends AuthBaseController {
     /**
      * 初次登录后修改密码
      */
+    @LogOperation(name = "初次登录后修改密码", biz = "auth")
     @PostMapping("/init")
     public R<Void> init(@RequestBody InitPasswordRequest request) {
         User user = getLoggedInUser();

@@ -3,13 +3,11 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.OperateLogMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IOperateLogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +19,8 @@ import org.springframework.stereotype.Service;
 public class OperateLogServiceImpl extends ServiceImpl<OperateLogMapper, OperateLog> implements IOperateLogService {
 
     /**
-     * 按ID查询
+     * 异步保存操作日志
      */
-    @Cacheable(cacheNames = "OperateLogCache", key = "#id", unless = "#result == null")
-    @Override
-    public OperateLog queryById(Long id) {
-        return getById(id);
-    }
-
-    /**
-     * 分页查询
-     */
-    @Cacheable(cacheNames = "OperateLogCache", key = "#p.getCurrent()+#p.getSize()")
-    @Override
-    public IPage<OperateLog> pageQuery(IPage<OperateLog> p) {
-        return page(p);
-    }
-
     @Async
     @Override
     public void saveLog(OperateLog log) {

@@ -11,13 +11,12 @@ import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.CodeSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
@@ -28,14 +27,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@Aspect    // 定义切面
+/**
+ * 登录日志切面
+ */
+@Slf4j
+@Aspect
 @Component
+@RequiredArgsConstructor
 public class LogAspect {
 
-    @Autowired
-    ILoginLogService loginLogService;
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    final ILoginLogService loginLogService;
 
     @Pointcut("execution(* {{ cookiecutter.basePackage }}.biz.auth.controller.LoginController.login(..))")
     // 定义切入点表达式
@@ -44,7 +45,7 @@ public class LogAspect {
 
     @Before("log()")    // 引用切入点
     public void doBefore(JoinPoint joinPoint) {
-        logger.info("进入切面");
+        log.info("进入切面");
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
@@ -61,19 +62,18 @@ public class LogAspect {
 
         RequestLog requestLog = new RequestLog(url, ip, classMethod, args);
         // 打印请求信息
-        logger.info("Request: {}", requestLog);
+        log.info("Request: {}", requestLog);
     }
 
     @After("log()")
     public void doAfter() {
-        logger.info("------------doAfter------------");
+        log.info("------------doAfter------------");
     }
 
     @AfterReturning(returning = "result", pointcut = "log()")
     public void doAfterReturn(Object result) {
-
         // 打印返回值
-        logger.info("AfterReturning Result: {}", result);
+        log.info("AfterReturning Result: {}", result);
     }
 
 
@@ -84,41 +84,41 @@ public class LogAspect {
     public R<LoginResponse> doAround(ProceedingJoinPoint pjp) throws Throwable {
         LoginLog loginLog = new LoginLog();
 
-        logger.info("around start");
+        log.info("around start");
         Object[] values = pjp.getArgs();
         String[] names = ((CodeSignature) pjp.getSignature()).getParameterNames();
         Map<String, Object> map = new HashMap<>(names.length);
         for (int i = 0; i < names.length; i++) {
             map.put(names[i], values[i]);
         }
-        logger.info("params map: {}", map);
+        log.info("params map: {}", map);
         HttpServletRequest servletRequest = (HttpServletRequest) map.get("servletRequest");
         LoginRequest request = (LoginRequest) map.get("request");
         String header = servletRequest.getHeader("User-Agent");
-        logger.info("UA: {}", header);
+        log.info("UA: {}", header);
         loginLog.setUa(servletRequest.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setIp(IpUtil.getIpAddr(servletRequest));
         loginLog.setAccount(request.getAccount());
         long start = System.currentTimeMillis();
         // 调用执行目标方法(result为目标方法执行结果)，必须有此行代码才会执行目标调用的方法（等价于@befor+@after），否则只会执行一次之前的（等价于@before）
         R<LoginResponse> result = (R) pjp.proceed();
-        logger.info("Around Result: {}", result);
+        log.info("Around Result: {}", result);
         long end = System.currentTimeMillis();
         loginLog.setMsg(result.getMessage());
         loginLog.setSuccess(result.isSuccess() ? 1 : 0);
 
 
-        logger.debug("{} -> {}, 耗费时间: {}毫秒.", pjp.getTarget().getClass().getSimpleName(), pjp.getSignature().getName(), (end - start));
-        logger.info("耗费时间: {}毫秒", (end - start));
-        logger.info("log: {}", loginLog);
+        log.debug("{} -> {}, 耗费时间: {}毫秒.", pjp.getTarget().getClass().getSimpleName(), pjp.getSignature().getName(), (end - start));
+        log.info("耗费时间: {}毫秒", (end - start));
+        log.info("log: {}", loginLog);
         loginLogService.saveLoginLog(loginLog);
         return result;
     }
 
     @AfterThrowing(throwing = "e", pointcut = "log()")
     public void doAfterThrowing(Throwable e) {
-        logger.error("------------doAfterThrowing------------");
-        logger.error("Exception: {}", e.getMessage());
+        log.error("------------doAfterThrowing------------");
+        log.error("Exception: {}", e.getMessage());
         // 获取RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
@@ -126,12 +126,12 @@ public class LogAspect {
         }
         // 从获取RequestAttributes中获取HttpServletRequest的信息
         HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
-        logger.error("request: {}", request);
+        log.error("request: {}", request);
     }
 
     @Data
     @AllArgsConstructor
-    public class RequestLog {      // 用于封装请求信息
+    public static class RequestLog {      // 用于封装请求信息
         private String url;
         private String ip;
         private String classMethod;

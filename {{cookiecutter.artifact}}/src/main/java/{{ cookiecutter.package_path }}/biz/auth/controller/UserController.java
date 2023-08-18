@@ -44,6 +44,7 @@ public class UserController extends AuthBaseController {
     /**
      * 分页查询用户列表
      */
+    @LogOperation(name = "分页查询用户列表", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:list')")
     @GetMapping("/users")
     public R<PageVO<UserResponse>> list(@Valid ListAuthRequest request) {
@@ -75,6 +76,7 @@ public class UserController extends AuthBaseController {
     /**
      * 使用用户名创建用户
      */
+    @LogOperation(name = "使用用户名创建用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:add')")
     @PostMapping("/users")
     public R<User> add(@Valid @RequestBody AdminAddUserRequest request) {
@@ -108,6 +110,7 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
+    @LogOperation(name = "更新用户信息", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PutMapping("/users/{userId}")
     public R<Void> update(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
@@ -126,7 +129,7 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @LogOperation("按ID查询用户")
+    @LogOperation(name = "按ID查询用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:get')")
     @GetMapping("/users/{userId}")
     public R<UserResponse> get(@PathVariable Long userId) {
@@ -146,7 +149,7 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @LogOperation("按ID删除用户")
+    @LogOperation(name = "按ID删除用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:delete')")
     @DeleteMapping("/users/{userId}")
     public R<Void> delete(@PathVariable Long userId) {
@@ -168,7 +171,7 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @LogOperation("禁用用户")
+    @LogOperation(name = "禁用用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:disable')")
     @PutMapping("/users/{userId}/disable")
     public R<Void> disable(@PathVariable Long userId) {
@@ -190,7 +193,7 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @LogOperation("启用用户")
+    @LogOperation(name = "启用用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:enable')")
     @PutMapping("/users/{userId}/enable")
     public R<Void> enable(@PathVariable Long userId) {
@@ -208,7 +211,7 @@ public class UserController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @LogOperation("下线用户")
+    @LogOperation(name = "下线用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:kick')")
     @PutMapping("/users/{userId}/kick")
     public R<Void> kick(@PathVariable Long userId) {

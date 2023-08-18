@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Info;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IInfoService;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -46,6 +47,7 @@ public class InfoController {
     /**
      * 新增系统信息
      */
+    @LogOperation(name = "新增系统信息", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:info:add')")
     @PostMapping("/infos")
     public R<Info> add(@Valid @RequestBody Info entity) {
@@ -56,6 +58,7 @@ public class InfoController {
     /**
      * 按ID更新系统信息
      */
+    @LogOperation(name = "按ID更新系统信息", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:info:update')")
     @PutMapping("/infos/{id}")
     public R<Void> update(@PathVariable Long id, @Valid @RequestBody Info entity) {
@@ -68,6 +71,7 @@ public class InfoController {
     /**
      * 按ID删除系统信息
      */
+    @LogOperation(name = "按ID删除系统信息", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:info:delete')")
     @DeleteMapping("/infos/{id}")
     public R<Void> delete(@PathVariable Long id) {

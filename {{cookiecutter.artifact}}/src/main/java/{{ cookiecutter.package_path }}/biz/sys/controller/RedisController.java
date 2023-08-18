@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.request.redis.KeySetRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.response.RedisKeyResponse;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -30,6 +31,7 @@ public class RedisController {
      *
      * @param pattern 通配符，默认 *
      */
+    @LogOperation(name = "获取key列表", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:key:list')")
     @GetMapping("/keys")
     public R<Set<String>> list(@RequestParam(defaultValue = "*") String pattern) {
@@ -42,6 +44,7 @@ public class RedisController {
      *
      * @param key key
      */
+    @LogOperation(name = "删除key", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:key:delete')")
     @DeleteMapping("/keys/{key}")
     public R<String> delete(@PathVariable String key) {
@@ -58,6 +61,7 @@ public class RedisController {
      *
      * @param key key
      */
+    @LogOperation(name = "获取key的值", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:key:get')")
     @GetMapping("/keys/{key}")
     public R<RedisKeyResponse> get(@PathVariable String key) {
@@ -80,6 +84,7 @@ public class RedisController {
     /**
      * 设置key的值
      */
+    @LogOperation(name = "设置key的值", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:key:set')")
     @PostMapping("/keys")
     public R<Void> set(@Valid @RequestBody KeySetRequest request) {
@@ -100,6 +105,7 @@ public class RedisController {
      * @param oldKey 旧key
      * @param newKey 新key
      */
+    @LogOperation(name = "key重命名", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:key:rename')")
     @PutMapping("/keys/{oldKey}/rename/{newKey}")
     public R<Void> rename(@PathVariable String oldKey, @PathVariable String newKey) {
@@ -118,6 +124,7 @@ public class RedisController {
      * @param key     key
      * @param seconds 过期时间，单位秒
      */
+    @LogOperation(name = "设置过期时间", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:key:expire')")
     @PutMapping("/keys/{key}/expire/{seconds}")
     public R<Void> expire(@PathVariable String key, @PathVariable Long seconds) {

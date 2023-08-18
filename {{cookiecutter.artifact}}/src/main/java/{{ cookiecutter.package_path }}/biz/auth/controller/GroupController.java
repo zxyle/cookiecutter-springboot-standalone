@@ -39,6 +39,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 用户组查询
      */
+    @LogOperation(name = "用户组查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:list')")
     @GetMapping("/groups")
     public R<PageVO<GroupResponse>> list(@Valid ListAuthRequest request) {
@@ -59,6 +60,7 @@ public class GroupController extends AuthBaseController {
      *
      * @param rootId 根节点ID
      */
+    @LogOperation(name = "获取用户组树状结构", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:tree')")
     @GetMapping("/groups/tree")
     public R<List<Tree<Long>>> tree(@RequestParam(defaultValue = "1") Long rootId) {
@@ -78,6 +80,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 创建用户组
      */
+    @LogOperation(name = "创建用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:add')")
     @PostMapping("/groups")
     public R<Group> add(@Valid @RequestBody AddGroupRequest request) {
@@ -100,7 +103,7 @@ public class GroupController extends AuthBaseController {
      *
      * @param groupId 用户组ID
      */
-    @LogOperation("按ID查询用户组")
+    @LogOperation(name = "按ID查询用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}")
     public R<GroupResponse> get(@PathVariable Long groupId) {
@@ -117,7 +120,7 @@ public class GroupController extends AuthBaseController {
      *
      * @param groupId 用户组ID
      */
-    @LogOperation("按ID更新用户组")
+    @LogOperation(name = "按ID更新用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PutMapping("/groups/{groupId}")
     public R<Group> update(@PathVariable Long groupId, @Valid @RequestBody UpdateAuthRequest request) {
@@ -145,7 +148,7 @@ public class GroupController extends AuthBaseController {
      *
      * @param groupId 用户组ID
      */
-    @LogOperation("按ID删除用户组")
+    @LogOperation(name = "按ID删除用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:delete')")
     @DeleteMapping("/groups/{groupId}")
     public R<Void> delete(@PathVariable Long groupId) {
@@ -165,6 +168,7 @@ public class GroupController extends AuthBaseController {
     /**
      * 移动用户组
      */
+    @LogOperation(name = "移动用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:migrate')")
     @PostMapping("/groups/migrate")
     public R<Void> migrate(@Valid @RequestBody MigrateGroupRequest request) {

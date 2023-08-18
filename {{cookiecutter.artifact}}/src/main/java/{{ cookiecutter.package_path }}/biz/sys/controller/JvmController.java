@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import cn.hutool.system.SystemUtil;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.response.JvmResponse;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class JvmController {
     /**
      * 获取JVM信息
      */
+    @LogOperation(name = "获取JVM信息", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:jvm:get')")
     @GetMapping("/jvm")
     public R<JvmResponse> get() {

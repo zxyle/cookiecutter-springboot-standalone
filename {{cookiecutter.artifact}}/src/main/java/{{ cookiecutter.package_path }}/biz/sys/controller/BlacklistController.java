@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Blacklist;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IBlacklistService;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
@@ -31,6 +32,7 @@ public class BlacklistController {
     /**
      * 黑名单列表分页查询
      */
+    @LogOperation(name = "黑名单列表分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:blacklist:list')")
     @GetMapping("/blacklists")
     public R<PageVO<Blacklist>> list(@Valid PaginationRequest request) {
@@ -48,6 +50,7 @@ public class BlacklistController {
     /**
      * 新增黑名单
      */
+    @LogOperation(name = "新增黑名单", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:blacklist:add')")
     @PostMapping("/blacklists")
     public R<Blacklist> add(@Valid @RequestBody Blacklist entity) {
@@ -58,6 +61,7 @@ public class BlacklistController {
     /**
      * 按ID删除黑名单
      */
+    @LogOperation(name = "按ID删除黑名单", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:blacklist:delete')")
     @DeleteMapping("/blacklists/{id}")
     public R<Void> delete(@PathVariable Long id) {

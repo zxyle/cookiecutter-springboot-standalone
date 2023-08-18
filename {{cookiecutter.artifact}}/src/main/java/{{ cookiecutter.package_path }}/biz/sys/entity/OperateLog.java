@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import {{ cookiecutter.basePackage }}.common.entity.LiteEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Data
 @TableName("sys_operate_log")
 @EqualsAndHashCode(callSuper = true)
-public class OperateLog extends BaseEntity {
+public class OperateLog extends LiteEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,18 +33,53 @@ public class OperateLog extends BaseEntity {
     private Long userId;
 
     /**
-     * 操作类型
+     * 业务模块
      */
-    private String operationType;
+    private String biz;
+
+    /**
+     * 操作名称
+     */
+    private String operationName;
 
     /**
      * 操作对象ID
      */
-    private Long objectId;
+    private String request;
+
+    /**
+     * 请求来源IP
+     */
+    private String ip;
+
+    /**
+     * 请求路径
+     */
+    private String path;
+
+    /**
+     * 请求方法
+     */
+    private String method;
+
+    /**
+     * 操作是否成功
+     */
+    private boolean success;
+
+    /**
+     * 链路追踪ID
+     */
+    private String traceId;
 
     /**
      * 操作结果
      */
-    private String result;
+    private String response;
+
+    /**
+     * 操作耗时
+     */
+    private Long measured;
 
 }

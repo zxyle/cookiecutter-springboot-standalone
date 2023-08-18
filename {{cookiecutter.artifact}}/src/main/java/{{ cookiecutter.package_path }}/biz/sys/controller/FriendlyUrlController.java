@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.FriendlyUrl;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFriendlyUrlService;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -45,6 +46,7 @@ public class FriendlyUrlController {
     /**
      * 添加友链
      */
+    @LogOperation(name = "添加友链", biz = "sys")
     @CacheEvict(cacheNames = "UrlCache", allEntries = true)
     @PreAuthorize("@ck.hasPermit('sys:friendly:add')")
     @PostMapping("/urls")
@@ -58,6 +60,7 @@ public class FriendlyUrlController {
      *
      * @param id 友链ID
      */
+    @LogOperation(name = "删除友链", biz = "sys")
     @CacheEvict(cacheNames = "UrlCache", allEntries = true)
     @PreAuthorize("@ck.hasPermit('sys:friendly:delete')")
     @DeleteMapping("/urls/{id}")
@@ -75,6 +78,7 @@ public class FriendlyUrlController {
      * @param entity 友链实体
      * @return 友链实体
      */
+    @LogOperation(name = "更新友链", biz = "sys")
     @CacheEvict(cacheNames = "UrlCache", allEntries = true)
     @PreAuthorize("@ck.hasPermit('sys:friendly:update')")
     @PutMapping("/urls/{id}")

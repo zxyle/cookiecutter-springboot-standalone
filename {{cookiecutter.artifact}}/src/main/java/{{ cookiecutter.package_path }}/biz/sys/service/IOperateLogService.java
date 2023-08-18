@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
 
@@ -13,16 +12,8 @@ import {{ cookiecutter.basePackage }}.biz.sys.entity.OperateLog;
 public interface IOperateLogService extends IService<OperateLog> {
 
     /**
-     * 按ID查询
+     * 异步保存操作日志
      */
-    OperateLog queryById(Long id);
-
-    /**
-     * 分页查询
-     */
-    IPage<OperateLog> pageQuery(IPage<OperateLog> page);
-
-    // 异步保存操作日志
     void saveLog(OperateLog log);
 
 }

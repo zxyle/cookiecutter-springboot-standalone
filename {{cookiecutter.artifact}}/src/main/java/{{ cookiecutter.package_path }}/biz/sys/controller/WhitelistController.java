@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import {{ cookiecutter.basePackage }}.biz.auth.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Whitelist;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
@@ -31,6 +32,7 @@ public class WhitelistController {
     /**
      * 白名单列表分页查询
      */
+    @LogOperation(name = "白名单列表分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:whitelist:list')")
     @GetMapping("/whitelists")
     public R<PageVO<Whitelist>> list(@Valid PaginationRequest request) {
@@ -48,6 +50,7 @@ public class WhitelistController {
     /**
      * 新增IP白名单
      */
+    @LogOperation(name = "新增IP白名单", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:whitelist:add')")
     @PostMapping("/whitelists")
     public R<Whitelist> add(@Valid @RequestBody Whitelist entity) {
@@ -59,6 +62,7 @@ public class WhitelistController {
     /**
      * 按ID查询IP白名单
      */
+    @LogOperation(name = "按ID查询IP白名单", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:whitelist:get')")
     @GetMapping("/whitelists/{id}")
     public R<Whitelist> get(@PathVariable Long id) {
@@ -68,6 +72,7 @@ public class WhitelistController {
     /**
      * 按ID更新IP白名单
      */
+    @LogOperation(name = "按ID更新IP白名单", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:whitelist:update')")
     @PutMapping("/whitelists/{id}")
     public R<Void> update(@PathVariable Long id, @Valid @RequestBody Whitelist entity) {
@@ -79,6 +84,7 @@ public class WhitelistController {
     /**
      * 按ID删除IP白名单
      */
+    @LogOperation(name = "按ID删除IP白名单", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:whitelist:delete')")
     @DeleteMapping("/whitelists/{id}")
     public R<Void> delete(@PathVariable Long id) {
