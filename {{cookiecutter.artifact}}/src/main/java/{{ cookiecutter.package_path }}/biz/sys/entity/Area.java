@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import {{ cookiecutter.basePackage }}.common.entity.LiteEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.Range;
 @Data
 @TableName("sys_area")
 @EqualsAndHashCode(callSuper = true)
-public class Area extends BaseEntity {
+public class Area extends LiteEntity {
 
     private static final long serialVersionUID = 1L;
 

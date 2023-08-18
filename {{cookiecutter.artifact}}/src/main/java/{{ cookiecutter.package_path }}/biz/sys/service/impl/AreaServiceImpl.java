@@ -27,7 +27,7 @@ public class AreaServiceImpl extends ServiceImpl<AreaMapper, Area> implements IA
      */
     @Cacheable(key = "#code", unless = "#result == null")
     @Override
-    public Area getAreaByCode(String code) {
+    public Area findAreaByCode(String code) {
         QueryWrapper<Area> wrapper = new QueryWrapper<>();
         wrapper.select("code, name, parent_id, level");
         wrapper.eq(StringUtils.isNotBlank(code), "code", code);

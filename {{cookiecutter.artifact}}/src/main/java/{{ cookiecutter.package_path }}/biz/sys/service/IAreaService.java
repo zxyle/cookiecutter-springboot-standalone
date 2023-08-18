@@ -16,6 +16,6 @@ public interface IAreaService extends IService<Area> {
      *
      * @param code 行政区编码
      */
-    Area getAreaByCode(String code);
+    Area findAreaByCode(String code);
 
 }

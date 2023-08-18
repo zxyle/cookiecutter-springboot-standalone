@@ -7,12 +7,9 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `sys_area`;
 CREATE TABLE `sys_area` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `code` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '行政区编码',
   `name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '行政区名称',
   `parent_id` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '上级编码',
-  `postcode` char(6) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '邮政编码',
   `level` tinyint NOT NULL COMMENT '级别',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_level` (`level`) USING BTREE
