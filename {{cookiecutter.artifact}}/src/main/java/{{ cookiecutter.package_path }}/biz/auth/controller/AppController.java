@@ -89,8 +89,8 @@ public class AppController extends AuthBaseController {
     @LogOperation(name = "按ID查询应用", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:get')")
     @GetMapping("/apps/{id}")
-    public R<App> get(@PathVariable Long id) {
-        App result = thisService.queryById(id);
+    public R<App> get(@PathVariable Integer id) {
+        App result = thisService.findById(id);
         if (result != null) result.setAppSecret(null);
         return result == null ? R.fail("应用不存在") : R.ok(result);
     }
@@ -101,7 +101,7 @@ public class AppController extends AuthBaseController {
     @LogOperation(name = "按ID更新应用", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:update')")
     @PutMapping("/apps/{id}")
-    public R<App> update(@Valid @RequestBody UpdateAppRequest request, @PathVariable Long id) {
+    public R<App> update(@Valid @RequestBody UpdateAppRequest request, @PathVariable Integer id) {
         App entity = new App();
         BeanUtils.copyProperties(request, entity);
         entity.setId(id);
@@ -116,7 +116,7 @@ public class AppController extends AuthBaseController {
     @LogOperation(name = "按ID删除应用", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:delete')")
     @DeleteMapping("/apps/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         boolean deleted = thisService.deleteById(id);
         return deleted ? R.ok("删除应用成功") : R.fail("删除应用失败");
     }
@@ -129,8 +129,8 @@ public class AppController extends AuthBaseController {
     @LogOperation(name = "重新生成密钥", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:update')")
     @GetMapping("/apps/{id}/regenerateSecret")
-    public R<App> regenerateSecret(@PathVariable Long id) {
-        App app = thisService.queryById(id);
+    public R<App> regenerateSecret(@PathVariable Integer id) {
+        App app = thisService.findById(id);
         if (app == null) return R.fail("应用不存在");
 
         app.setAppSecret(IdUtil.fastSimpleUUID());
@@ -145,8 +145,8 @@ public class AppController extends AuthBaseController {
      */
     @LogOperation(name = "应用上架", biz = "auth")
     @GetMapping("/apps/{id}/publish")
-    public R<Void> publish(@PathVariable Long id) {
-        App app = thisService.queryById(id);
+    public R<Void> publish(@PathVariable Integer id) {
+        App app = thisService.findById(id);
         if (app == null) return R.fail("应用不存在");
         if (app.getStatus() == 1) return R.fail("应用已上架");
 
@@ -162,8 +162,8 @@ public class AppController extends AuthBaseController {
      */
     @LogOperation(name = "应用下架", biz = "auth")
     @GetMapping("/apps/{id}/revoke")
-    public R<Void> revoke(@PathVariable Long id) {
-        App app = thisService.queryById(id);
+    public R<Void> revoke(@PathVariable Integer id) {
+        App app = thisService.findById(id);
         if (app == null) return R.fail("应用不存在");
         if (app.getStatus() == 0) return R.fail("应用已下架");
 
@@ -180,9 +180,9 @@ public class AppController extends AuthBaseController {
      */
     @LogOperation(name = "应用跳转", biz = "auth")
     @GetMapping("/apps/{id}/redirect")
-    public R<RedirectResponse> redirect(@PathVariable Long id) {
+    public R<RedirectResponse> redirect(@PathVariable Integer id) {
         // 根据appId查询应用
-        App app = thisService.queryById(id);
+        App app = thisService.findById(id);
         if (app == null) return R.fail("应用不存在");
         if (app.getStatus() == 0) return R.fail("应用已下架");
 
@@ -227,8 +227,8 @@ public class AppController extends AuthBaseController {
         String md5Hex = DigestUtils.md5Hex(appKey + appSecret + body + timestamp);
         if (!md5Hex.equalsIgnoreCase(sign)) return R.fail("签名错误");
 
-        Long userId = Long.valueOf(split[1]);
-        User user = userService.queryById(userId);
+        Integer userId = Integer.valueOf(split[1]);
+        User user = userService.findById(userId);
         return R.ok(user);
     }
 

@@ -56,7 +56,7 @@ public class ReleaseController {
     @LogOperation(name = "按ID查询发布版本", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:release:get')")
     @GetMapping("/releases/{id}")
-    public R<Release> get(@PathVariable Long id) {
+    public R<Release> get(@PathVariable Integer id) {
         Release entity = thisService.getById(id);
         return entity == null ? R.fail("版本不存在") : R.ok(entity);
     }
@@ -67,7 +67,7 @@ public class ReleaseController {
     @LogOperation(name = "按ID更新发布版本", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:release:update')")
     @PutMapping("/releases/{id}")
-    public R<Void> update(@Valid @RequestBody Release entity, @PathVariable Long id) {
+    public R<Void> update(@Valid @RequestBody Release entity, @PathVariable Integer id) {
         entity.setId(id);
         boolean updated = thisService.updateById(entity);
         return updated ? R.ok("更新发布版本成功") : R.fail("更新发布版本失败");
@@ -79,7 +79,7 @@ public class ReleaseController {
     @LogOperation(name = "按ID删除发布版本", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:release:delete')")
     @DeleteMapping("/releases/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         boolean removed = thisService.removeById(id);
         return removed ? R.ok("删除发布版本成功") : R.fail("删除发布版本失败");
     }

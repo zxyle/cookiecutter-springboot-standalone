@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Verification;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.VerificationMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IVerificationService;
@@ -24,17 +23,8 @@ public class VerificationServiceImpl extends ServiceImpl<VerificationMapper, Ver
      */
     @Cacheable(cacheNames = "VerificationCache", key = "#id", unless = "#result == null")
     @Override
-    public Verification queryById(Long id) {
+    public Verification findById(Long id) {
         return getById(id);
-    }
-
-    /**
-     * 分页查询
-     */
-    @Cacheable(cacheNames = "VerificationCache", key = "#p.getCurrent()+#p.getSize()")
-    @Override
-    public IPage<Verification> pageQuery(IPage<Verification> p) {
-        return page(p);
     }
 
 }

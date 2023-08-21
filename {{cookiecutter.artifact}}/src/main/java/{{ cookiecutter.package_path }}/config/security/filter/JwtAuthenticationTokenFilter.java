@@ -74,7 +74,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         // 获取权限信息封装到Authentication中
         permissions = Arrays.asList(value.split(AuthConst.DELIMITER));
         Integer expireDays = setting.get("pwd.expire-days").getIntValue();
-        LoginUser loginUser = new LoginUser(permissions, userService.queryById(Long.valueOf(userId)), expireDays);
+        LoginUser loginUser = new LoginUser(permissions, userService.findById(Integer.valueOf(userId)), expireDays);
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);

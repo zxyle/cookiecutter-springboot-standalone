@@ -20,7 +20,7 @@ public interface IUserPermissionService extends IService<UserPermission> {
      * @param userId       用户ID
      * @param permissionId 权限ID
      */
-    boolean deleteRelation(Long userId, Long permissionId);
+    boolean deleteRelation(Integer userId, Integer permissionId);
 
     /**
      * 查询映射关系
@@ -28,7 +28,7 @@ public interface IUserPermissionService extends IService<UserPermission> {
      * @param userId       用户ID
      * @param permissionId 权限ID
      */
-    List<UserPermission> queryRelation(Long userId, Long permissionId);
+    List<UserPermission> queryRelation(Integer userId, Integer permissionId);
 
     /**
      * 统计映射关系
@@ -36,7 +36,7 @@ public interface IUserPermissionService extends IService<UserPermission> {
      * @param userId       用户ID
      * @param permissionId 权限ID
      */
-    Integer countRelation(Long userId, Long permissionId);
+    Integer countRelation(Integer userId, Integer permissionId);
 
     /**
      * 创建映射关系
@@ -44,7 +44,7 @@ public interface IUserPermissionService extends IService<UserPermission> {
      * @param userId       用户ID
      * @param permissionId 权限ID
      */
-    boolean createRelation(Long userId, Long permissionId);
+    boolean createRelation(Integer userId, Integer permissionId);
 
     /**
      * 更新映射关系
@@ -52,13 +52,13 @@ public interface IUserPermissionService extends IService<UserPermission> {
      * @param userId        用户ID
      * @param permissionIds 权限ID列表
      */
-    void updateRelation(Long userId, List<Long> permissionIds);
+    void updateRelation(Integer userId, List<Integer> permissionIds);
 
     /**
      * 查询用户直接拥有的权限代码列表
      *
      * @param userId 用户ID
      */
-    List<Permission> findPermissionsByUserId(Long userId);
+    List<Permission> findPermissionsByUserId(Integer userId);
 
 }

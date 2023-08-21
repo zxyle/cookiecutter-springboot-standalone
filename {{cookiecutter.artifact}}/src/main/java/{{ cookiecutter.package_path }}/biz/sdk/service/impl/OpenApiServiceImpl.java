@@ -29,7 +29,7 @@ public class OpenApiServiceImpl extends ServiceImpl<OpenApiMapper, OpenApi> impl
      */
     @Cacheable(cacheNames = "OpenApiCache", key = "#id", unless = "#result == null")
     @Override
-    public OpenApi queryById(Long id) {
+    public OpenApi findById(Integer id) {
         return getById(id);
     }
 
@@ -48,7 +48,7 @@ public class OpenApiServiceImpl extends ServiceImpl<OpenApiMapper, OpenApi> impl
      */
     @CacheEvict(cacheNames = "OpenApiCache", key = "#id")
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         removeById(id);
     }
 

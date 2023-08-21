@@ -34,7 +34,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
      */
     @Cacheable(key = "#id", unless = "#result == null")
     @Override
-    public ${entity} queryById(Long id) {
+    public ${entity} findById(Integer id) {
         return getById(id);
     }
 
@@ -53,7 +53,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
      */
      @CacheEvict(key = "#id")
      @Override
-     public boolean deleteById(Long id) {
+     public boolean deleteById(Integer id) {
          return removeById(id);
      }
 

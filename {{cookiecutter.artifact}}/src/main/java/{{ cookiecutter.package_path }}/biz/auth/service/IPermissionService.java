@@ -19,7 +19,7 @@ public interface IPermissionService extends IService<Permission> {
      *
      * @param userId 用户ID
      */
-    List<Permission> getAllPermissions(Long userId, List<Long> groupIds);
+    List<Permission> getAllPermissions(Integer userId, List<Integer> groupIds);
 
     /**
      * 新增权限
@@ -33,28 +33,28 @@ public interface IPermissionService extends IService<Permission> {
      *
      * @param permissionId 权限ID
      */
-    boolean delete(Long permissionId);
+    boolean delete(Integer permissionId);
 
     /**
      * 查询用户所有权限码和用户所有角色码
      *
      * @param userId 用户ID
      */
-    List<String> getSecurityPermissions(Long userId);
+    List<String> getSecurityPermissions(Integer userId);
 
     /**
      * 异步重新将新的权限码和角色码加载到redis中
      *
      * @param userId 用户ID
      */
-    void refreshPermissions(Long userId);
+    void refreshPermissions(Integer userId);
 
     /**
      * 获取持有该权限的用户
      *
      * @param code 权限码
      */
-    List<Long> holdPermission(String code);
+    List<Integer> holdPermission(String code);
 
     /**
      * 获取权限树
@@ -70,7 +70,7 @@ public interface IPermissionService extends IService<Permission> {
      * @param permissionId 权限ID
      * @return true:正在被使用 false:未被使用
      */
-    boolean isAlreadyUsed(Long permissionId);
+    boolean isAlreadyUsed(Integer permissionId);
 
     /**
      * 递归获取所有子权限
@@ -78,5 +78,5 @@ public interface IPermissionService extends IService<Permission> {
      * @param permissions 完整权限列表
      * @param rootId      根节点ID
      */
-    List<Permission> getAllChildren(List<Permission> permissions, Long rootId);
+    List<Permission> getAllChildren(List<Permission> permissions, Integer rootId);
 }

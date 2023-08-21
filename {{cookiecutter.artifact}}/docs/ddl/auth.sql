@@ -6,11 +6,11 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_group`;
 CREATE TABLE `auth_group` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `name` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '用户组名称',
-  `parent_id` bigint unsigned NOT NULL COMMENT '上级用户组ID',
+  `parent_id` int unsigned NOT NULL COMMENT '上级用户组ID',
   `description` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '描述信息',
   `sort` smallint unsigned NOT NULL DEFAULT '1' COMMENT '显示顺序',
   PRIMARY KEY (`id`) USING BTREE,
@@ -30,9 +30,9 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_group_permission`;
 CREATE TABLE `auth_group_permission` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
-  `permission_id` bigint unsigned NOT NULL COMMENT '权限ID',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `group_id` int unsigned NOT NULL COMMENT '用户组ID',
+  `permission_id` int unsigned NOT NULL COMMENT '权限ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_group_id_permission_id` (`group_id`,`permission_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组权限';
@@ -42,9 +42,9 @@ CREATE TABLE `auth_group_permission` (
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_group_role`;
 CREATE TABLE `auth_group_role` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
-  `role_id` bigint unsigned NOT NULL COMMENT '角色ID',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `group_id` int unsigned NOT NULL COMMENT '用户组ID',
+  `role_id` int unsigned NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_group_id_role_id` (`group_id`,`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组角色关联';
@@ -54,10 +54,10 @@ CREATE TABLE `auth_group_role` (
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_password_history`;
 CREATE TABLE `auth_password_history` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
+  `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `kind` enum('initial','reset','forget','change') CHARACTER SET utf8mb4 NOT NULL COMMENT '密码修改类型： 初始密码、重置密码、找回密码、修改密码',
   `edited_by` enum('user','admin') CHARACTER SET utf8mb4 NOT NULL COMMENT '修改人',
   `after_pwd` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '修改后密码',
@@ -72,13 +72,13 @@ CREATE TABLE `auth_password_history` (
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_permission`;
 CREATE TABLE `auth_permission` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '权限名称',
   `code` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '权限代码',
   `description` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '描述信息',
-  `parent_id` bigint unsigned NOT NULL DEFAULT '1' COMMENT '父级权限ID',
+  `parent_id` int unsigned NOT NULL DEFAULT '1' COMMENT '父级权限ID',
   `kind` tinyint unsigned NOT NULL COMMENT '权限类型（1：页面/路由，2：接口/功能 3：按钮/组件）',
   `path` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '页面路由（用于前端控制）',
   `sort` smallint unsigned NOT NULL DEFAULT '1' COMMENT '显示顺序',
@@ -231,10 +231,10 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_profile`;
 CREATE TABLE `auth_profile` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
+  `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `birthday` date DEFAULT NULL COMMENT '出生日期',
   `age` tinyint unsigned DEFAULT NULL COMMENT '年龄',
   `gender` enum('男','女') CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '性别',
@@ -271,7 +271,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_role`;
 CREATE TABLE `auth_role` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `name` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '角色名称',
@@ -299,9 +299,9 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_role_permission`;
 CREATE TABLE `auth_role_permission` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `role_id` bigint unsigned NOT NULL COMMENT '角色id',
-  `permission_id` bigint unsigned NOT NULL COMMENT '权限id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `role_id` int unsigned NOT NULL COMMENT '角色id',
+  `permission_id` int unsigned NOT NULL COMMENT '权限id',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_role_id_permission_id` (`role_id`,`permission_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色权限';
@@ -362,9 +362,9 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_user_group`;
 CREATE TABLE `auth_user_group` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
-  `group_id` bigint unsigned NOT NULL COMMENT '用户组ID',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `user_id` int unsigned NOT NULL COMMENT '用户ID',
+  `group_id` int unsigned NOT NULL COMMENT '用户组ID',
   `admin` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否是该组管理员',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE
@@ -383,9 +383,9 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_user_permission`;
 CREATE TABLE `auth_user_permission` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
-  `permission_id` bigint unsigned NOT NULL COMMENT '权限ID',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `user_id` int unsigned NOT NULL COMMENT '用户ID',
+  `permission_id` int unsigned NOT NULL COMMENT '权限ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_permission_id` (`user_id`,`permission_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-权限关联';
@@ -402,9 +402,9 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_user_role`;
 CREATE TABLE `auth_user_role` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `user_id` bigint NOT NULL COMMENT '用户ID',
-  `role_id` bigint NOT NULL COMMENT '角色ID',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `user_id` int NOT NULL COMMENT '用户ID',
+  `role_id` int NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_role_id` (`user_id`,`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户和角色关联表';
@@ -423,11 +423,11 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_answer`;
 CREATE TABLE `auth_answer` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `question_id` bigint unsigned NOT NULL COMMENT '安全问题ID',
-  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
+  `question_id` int unsigned NOT NULL COMMENT '安全问题ID',
+  `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `secret` char(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '安全问题答案md5',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_id` (`user_id`,`question_id`) USING BTREE
@@ -439,7 +439,7 @@ CREATE TABLE `auth_answer` (
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_question`;
 CREATE TABLE `auth_question` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `ask` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '安全问题',
@@ -477,7 +477,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_app`;
 CREATE TABLE `auth_app` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '应用名称',
@@ -497,10 +497,10 @@ CREATE TABLE `auth_app` (
 -- ----------------------------
 DROP TABLE IF EXISTS `auth_totp`;
 CREATE TABLE `auth_totp` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime(6) NOT NULL COMMENT '创建时间',
   `update_time` datetime(6) NOT NULL COMMENT '更新时间',
-  `user_id` bigint unsigned NOT NULL COMMENT '用户ID',
+  `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `secret` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密钥',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_id` (`user_id`) USING BTREE

@@ -61,7 +61,7 @@ public class InfoController {
     @LogOperation(name = "按ID更新系统信息", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:info:update')")
     @PutMapping("/infos/{id}")
-    public R<Void> update(@PathVariable Long id, @Valid @RequestBody Info entity) {
+    public R<Void> update(@PathVariable Integer id, @Valid @RequestBody Info entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
         return success ? R.ok("更新系统信息成功") : R.fail("更新系统信息失败");
@@ -74,7 +74,7 @@ public class InfoController {
     @LogOperation(name = "按ID删除系统信息", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:info:delete')")
     @DeleteMapping("/infos/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除系统信息成功") : R.fail("删除系统信息失败");
     }

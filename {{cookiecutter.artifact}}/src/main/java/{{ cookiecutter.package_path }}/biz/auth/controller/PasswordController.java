@@ -123,7 +123,7 @@ public class PasswordController extends AuthBaseController {
      */
     @PostMapping("/forget/question")
     public R<Void> forgetByQuestion(@Valid @RequestBody ForgetByQuestionRequest request) {
-        User user = userService.queryByAccount(request.getAccount());
+        User user = userService.findByAccount(request.getAccount());
         if (null == user) return R.fail("找回密码失败，用户不存在");
 
         // 校验密保问题
@@ -131,13 +131,13 @@ public class PasswordController extends AuthBaseController {
         AnswerRequest answerRequest = answers.get(0);
 
         // 判断密保问题是否与随机生成的密保问题一致
-        Long questionId = answerRequest.getQuestionId();
+        Integer questionId = answerRequest.getQuestionId();
         String s = stringRedisTemplate.opsForValue().get("question:" + user.getId());
         if (StringUtils.isBlank(s) || !Long.valueOf(s).equals(questionId)) return R.fail("找回密码失败，密保问题不存在");
         stringRedisTemplate.delete("question:" + user.getId());
 
         // 判断密保问题答案是否正确
-        Answer answer = answerService.queryByUserId(user.getId(), questionId);
+        Answer answer = answerService.findByUserId(user.getId(), questionId);
         if (null == answer) return R.fail("找回密码失败，密保问题不存在");
         if (!DigestUtil.md5Hex(answerRequest.getAnswer().trim()).equalsIgnoreCase(answer.getSecret())) {
             return R.fail("找回密码失败，密保问题答案错误");
@@ -165,7 +165,7 @@ public class PasswordController extends AuthBaseController {
         }
 
         // 考虑新密码来源 1.前端用户传入 2.后端随机生成 3.系统配置(需以明文保存，不安全)
-        Long userId = request.getUserId();
+        Integer userId = request.getUserId();
         String rawPassword = request.getPassword();
         rawPassword = StringUtils.isBlank(rawPassword) ?
                 CaptchaUtil.randCode(setting.get("pwd.min-length").getIntValue(), setting.get("pwd.chars").getStr()) : rawPassword;

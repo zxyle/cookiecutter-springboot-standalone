@@ -21,15 +21,15 @@ import java.util.List;
 public interface UserGroupMapper extends BaseMapper<UserGroup> {
 
     // 查询用户组下所有用户
-    List<User> listUsers(Long groupId);
+    List<User> listUsers(Integer groupId);
 
     // 查询用户所属的用户组
-    List<Group> listGroups(Long userId);
+    List<Group> listGroups(Integer userId);
 
     /**
      * 分页查询用户所属的用户组
      */
-    IPage<Group> page(IPage<Group> page, Long userId, PaginationRequest request);
+    IPage<Group> page(IPage<Group> page, Integer userId, PaginationRequest request);
 
     /**
      * 分页查询用户组下的用户
@@ -38,7 +38,7 @@ public interface UserGroupMapper extends BaseMapper<UserGroup> {
      * @param groupId 用户组ID
      * @param request 请求对象
      */
-    IPage<User> pageUser(IPage<User> page, Long groupId, ListAuthRequest request);
+    IPage<User> pageUser(IPage<User> page, Integer groupId, ListAuthRequest request);
 
 }
 

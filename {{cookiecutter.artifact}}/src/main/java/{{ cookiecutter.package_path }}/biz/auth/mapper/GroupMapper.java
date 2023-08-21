@@ -18,6 +18,6 @@ public interface GroupMapper extends BaseMapper<Group> {
      *
      * @param parentId 父ID
      */
-    Integer selectMaxSort(Long parentId);
+    Integer selectMaxSort(Integer parentId);
 
 }

@@ -25,7 +25,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
      * @return 是否已经被使用 true:已经被使用 false:未被使用
      */
     @Override
-    public boolean isAlreadyUsed(Long questionId) {
+    public boolean isAlreadyUsed(Integer questionId) {
         QueryWrapper<Answer> wrapper = new QueryWrapper<>();
         wrapper.eq("question_id", questionId);
         int count = count(wrapper);
@@ -40,7 +40,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
      * @return 安全问题答案
      */
     @Override
-    public Answer queryByUserId(Long userId, Long questionId) {
+    public Answer findByUserId(Integer userId, Integer questionId) {
         QueryWrapper<Answer> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
         wrapper.eq("question_id", questionId);

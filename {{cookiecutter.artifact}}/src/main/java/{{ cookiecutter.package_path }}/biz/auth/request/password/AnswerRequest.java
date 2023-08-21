@@ -19,7 +19,7 @@ public class AnswerRequest {
      */
     @Positive(message = "问题id必须为正整数")
     @NotNull(message = "问题id不能为空")
-    private Long questionId;
+    private Integer questionId;
 
     /**
      * 答案

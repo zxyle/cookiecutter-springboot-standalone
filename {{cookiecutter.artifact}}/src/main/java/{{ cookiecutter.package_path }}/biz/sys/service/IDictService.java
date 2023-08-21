@@ -28,7 +28,7 @@ public interface IDictService extends IService<Dict> {
     /**
      * 删除字典条目
      */
-    boolean deleteDict(String dictType, Long id);
+    boolean deleteDict(String dictType, Integer id);
 
     /**
      * 更新字典条目

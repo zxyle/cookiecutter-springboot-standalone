@@ -40,7 +40,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
             @CacheEvict(key = "'roles:' +#userId")
     })
     @Override
-    public boolean deleteRelation(Long userId, Long roleId) {
+    public boolean deleteRelation(Integer userId, Integer roleId) {
         if (countRelation(userId, roleId) == 0) return true;
 
         return remove(buildWrapper(userId, roleId));
@@ -54,7 +54,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      */
     @Cacheable(key = "#userId + ':' + #roleId", unless = "#result == null")
     @Override
-    public List<UserRole> queryRelation(Long userId, Long roleId) {
+    public List<UserRole> queryRelation(Integer userId, Integer roleId) {
         QueryWrapper<UserRole> wrapper = buildWrapper(userId, roleId);
         wrapper.select("user_id", "role_id");
         return list(wrapper);
@@ -67,7 +67,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      * @param roleId 角色ID
      */
     @Override
-    public Integer countRelation(Long userId, Long roleId) {
+    public Integer countRelation(Integer userId, Integer roleId) {
         return count(buildWrapper(userId, roleId));
     }
 
@@ -83,7 +83,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
             @CacheEvict(key = "'roles:' + #userId")
     })
     @Override
-    public boolean createRelation(Long userId, Long roleId) {
+    public boolean createRelation(Integer userId, Integer roleId) {
         if (countRelation(userId, roleId) > 0) return true;
 
         return save(new UserRole(userId, roleId));
@@ -97,22 +97,22 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      */
     @Transactional
     @Override
-    public void updateRelation(Long userId, List<Long> roleIds) {
+    public void updateRelation(Integer userId, List<Integer> roleIds) {
         if (CollectionUtils.isEmpty(roleIds) || userId == null || userId == 0L) {
             return;
         }
 
         remove(buildWrapper(userId, null));
-        for (Long roleId : roleIds) {
+        for (Integer roleId : roleIds) {
             createRelation(userId, roleId);
         }
     }
 
     // 构建wrapper
-    private QueryWrapper<UserRole> buildWrapper(Long userId, Long roleId) {
+    private QueryWrapper<UserRole> buildWrapper(Integer userId, Integer roleId) {
         QueryWrapper<UserRole> wrapper = new QueryWrapper<>();
-        wrapper.eq(userId != null && userId != 0L, "user_id", userId);
-        wrapper.eq(roleId != null && roleId != 0L, "role_id", roleId);
+        wrapper.eq(userId != null && userId != 0, "user_id", userId);
+        wrapper.eq(roleId != null && roleId != 0, "role_id", roleId);
         return wrapper;
     }
 
@@ -123,7 +123,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
      */
     @Cacheable(key = "'roles:' + #userId", unless = "#result == null")
     @Override
-    public List<Role> findRolesByUserId(Long userId) {
+    public List<Role> findRolesByUserId(Integer userId) {
         return baseMapper.findRolesByUserId(userId);
     }
 }

@@ -20,7 +20,7 @@ public interface IRolePermissionService extends IService<RolePermission> {
      * @param roleId       角色ID
      * @param permissionId 权限ID
      */
-    boolean deleteRelation(Long roleId, Long permissionId);
+    boolean deleteRelation(Integer roleId, Integer permissionId);
 
     /**
      * 查询映射关系
@@ -28,7 +28,7 @@ public interface IRolePermissionService extends IService<RolePermission> {
      * @param roleId       角色ID
      * @param permissionId 权限ID
      */
-    List<RolePermission> queryRelation(Long roleId, Long permissionId);
+    List<RolePermission> queryRelation(Integer roleId, Integer permissionId);
 
     /**
      * 统计映射关系
@@ -36,7 +36,7 @@ public interface IRolePermissionService extends IService<RolePermission> {
      * @param roleId       角色ID
      * @param permissionId 权限ID
      */
-    Integer countRelation(Long roleId, Long permissionId);
+    Integer countRelation(Integer roleId, Integer permissionId);
 
     /**
      * 创建映射关系
@@ -44,7 +44,7 @@ public interface IRolePermissionService extends IService<RolePermission> {
      * @param roleId       角色ID
      * @param permissionId 权限ID
      */
-    boolean createRelation(Long roleId, Long permissionId);
+    boolean createRelation(Integer roleId, Integer permissionId);
 
     /**
      * 更新映射关系
@@ -52,13 +52,13 @@ public interface IRolePermissionService extends IService<RolePermission> {
      * @param roleId        角色ID
      * @param permissionIds 权限ID列表
      */
-    boolean updateRelation(Long roleId, List<Long> permissionIds);
+    boolean updateRelation(Integer roleId, List<Integer> permissionIds);
 
     /**
      * 查询角色所拥有的权限列表
      *
      * @param roleId 角色ID
      */
-    List<Permission> findPermissionsByRoleId(Long roleId);
+    List<Permission> findPermissionsByRoleId(Integer roleId);
 
 }

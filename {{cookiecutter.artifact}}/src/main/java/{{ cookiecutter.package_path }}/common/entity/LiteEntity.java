@@ -23,6 +23,6 @@ public class LiteEntity implements Serializable {
      * 主键ID
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Integer id;
 
 }

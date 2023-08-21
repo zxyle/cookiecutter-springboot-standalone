@@ -87,7 +87,7 @@ public class OperateAspect {
         return result;
     }
 
-    private Long getUserId() {
+    private Integer getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         return loginUser.getUser().getId();

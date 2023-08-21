@@ -21,19 +21,19 @@ public class UserGroup extends LiteEntity {
     /**
      * 用户ID
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 用户组ID
      */
-    private Long groupId;
+    private Integer groupId;
 
     /**
      * 是否是该组管理员
      */
     private Integer admin;
 
-    public UserGroup(Long userId, Long groupId) {
+    public UserGroup(Integer userId, Integer groupId) {
         this.userId = userId;
         this.groupId = groupId;
     }

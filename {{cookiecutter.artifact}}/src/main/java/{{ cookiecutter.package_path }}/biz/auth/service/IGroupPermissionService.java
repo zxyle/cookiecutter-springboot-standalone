@@ -17,7 +17,7 @@ public interface IGroupPermissionService extends IService<GroupPermission> {
     /**
      * 查询用户组拥有的权限列表
      */
-    List<Permission> findPermissionsByGroupId(Long groupId);
+    List<Permission> findPermissionsByGroupId(Integer groupId);
 
     /**
      * 删除映射关系
@@ -25,7 +25,7 @@ public interface IGroupPermissionService extends IService<GroupPermission> {
      * @param groupId      用户组ID
      * @param permissionId 权限ID
      */
-    boolean deleteRelation(Long groupId, Long permissionId);
+    boolean deleteRelation(Integer groupId, Integer permissionId);
 
     /**
      * 查询映射关系
@@ -33,7 +33,7 @@ public interface IGroupPermissionService extends IService<GroupPermission> {
      * @param groupId      用户组ID
      * @param permissionId 权限ID
      */
-    List<GroupPermission> queryRelation(Long groupId, Long permissionId);
+    List<GroupPermission> queryRelation(Integer groupId, Integer permissionId);
 
     /**
      * 统计映射关系
@@ -41,7 +41,7 @@ public interface IGroupPermissionService extends IService<GroupPermission> {
      * @param groupId      用户组ID
      * @param permissionId 权限ID
      */
-    Integer countRelation(Long groupId, Long permissionId);
+    Integer countRelation(Integer groupId, Integer permissionId);
 
     /**
      * 创建映射关系
@@ -49,7 +49,7 @@ public interface IGroupPermissionService extends IService<GroupPermission> {
      * @param groupId      用户组ID
      * @param permissionId 权限ID
      */
-    boolean createRelation(Long groupId, Long permissionId);
+    boolean createRelation(Integer groupId, Integer permissionId);
 
     /**
      * 更新映射关系
@@ -57,6 +57,6 @@ public interface IGroupPermissionService extends IService<GroupPermission> {
      * @param groupId       用户组ID
      * @param permissionIds 权限ID列表
      */
-    void updateRelation(Long groupId, List<Long> permissionIds);
+    void updateRelation(Integer groupId, List<Integer> permissionIds);
 
 }

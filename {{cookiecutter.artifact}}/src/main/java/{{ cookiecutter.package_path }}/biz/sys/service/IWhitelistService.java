@@ -16,7 +16,7 @@ public interface IWhitelistService extends IService<Whitelist> {
     /**
      * 按ID查询
      */
-    Whitelist queryById(Long id);
+    Whitelist findById(Integer id);
 
     /**
      * 获取有效的白名单

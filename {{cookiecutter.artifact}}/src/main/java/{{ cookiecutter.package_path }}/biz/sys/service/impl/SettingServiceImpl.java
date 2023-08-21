@@ -31,7 +31,7 @@ public class SettingServiceImpl extends ServiceImpl<SettingMapper, Setting> impl
      */
     @Cacheable(cacheNames = "SettingCache", key = "#id", unless = "#result == null")
     @Override
-    public Setting queryById(Long id) {
+    public Setting findById(Integer id) {
         return getById(id);
     }
 

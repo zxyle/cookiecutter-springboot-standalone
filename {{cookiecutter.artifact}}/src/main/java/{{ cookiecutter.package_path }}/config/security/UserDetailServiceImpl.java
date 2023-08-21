@@ -34,14 +34,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {
         // 根据账号查询用户信息
-        User user = userService.queryByAccount(account);
+        User user = userService.findByAccount(account);
 
         // 如果没有查询到对应用户
         if (null == user) {
             throw new UsernameNotFoundException("用户名或密码错误");
         }
 
-        long userId = user.getId();
+        int userId = user.getId();
 
         // 查询用户所有权限码和用户所有角色码
         List<String> permissions = permissionService.getSecurityPermissions(userId);

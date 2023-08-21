@@ -28,6 +28,6 @@ public interface IPasswordHistoryService extends IService<PasswordHistory> {
      * @param userId 用户ID
      * @return true: 清除成功; false: 清除失败
      */
-    boolean clear(Long userId);
+    boolean clear(Integer userId);
 
 }

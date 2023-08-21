@@ -21,7 +21,7 @@ public class MigrateGroupRequest {
      */
     @Positive(message = "目标用户组ID必须为正整数")
     @NotNull(message = "目标用户组ID不能为空")
-    private Long parentId;
+    private Integer parentId;
 
     /**
      * 当前用户组ID
@@ -30,6 +30,6 @@ public class MigrateGroupRequest {
      */
     @Positive(message = "当前用户组ID必须为正整数")
     @NotNull(message = "当前用户组ID不能为空")
-    private Long currentId;
+    private Integer currentId;
 
 }

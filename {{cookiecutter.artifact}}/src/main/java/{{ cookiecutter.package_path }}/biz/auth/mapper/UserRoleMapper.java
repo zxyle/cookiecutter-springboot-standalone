@@ -19,10 +19,10 @@ import java.util.List;
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
     // 根据用户ID 查询该用户所拥有的角色信息
-    List<Role> findRolesByUserId(Long userId);
+    List<Role> findRolesByUserId(Integer userId);
 
     /**
      * 分页查询用户直接拥有的角色
      */
-    IPage<Role> page(IPage<Role> page, Long userId, PaginationRequest request);
+    IPage<Role> page(IPage<Role> page, Integer userId, PaginationRequest request);
 }

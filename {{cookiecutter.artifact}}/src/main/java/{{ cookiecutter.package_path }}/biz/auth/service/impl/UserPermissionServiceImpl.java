@@ -40,7 +40,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
             @CacheEvict(key = "'permissions:' + #userId"),
     })
     @Override
-    public boolean deleteRelation(Long userId, Long permissionId) {
+    public boolean deleteRelation(Integer userId, Integer permissionId) {
         if (countRelation(userId, permissionId) == 0) return true;
 
         return remove(buildWrapper(userId, permissionId));
@@ -54,7 +54,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      */
     @Cacheable(key = "#userId + ':' + #permissionId", unless = "#result == null")
     @Override
-    public List<UserPermission> queryRelation(Long userId, Long permissionId) {
+    public List<UserPermission> queryRelation(Integer userId, Integer permissionId) {
         QueryWrapper<UserPermission> wrapper = buildWrapper(userId, permissionId);
         wrapper.select("user_id", "permission_id");
         return list(wrapper);
@@ -67,7 +67,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      * @param permissionId 权限ID
      */
     @Override
-    public Integer countRelation(Long userId, Long permissionId) {
+    public Integer countRelation(Integer userId, Integer permissionId) {
         return count(buildWrapper(userId, permissionId));
     }
 
@@ -83,7 +83,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
             @CacheEvict(key = "'permissions:'+#userId")
     })
     @Override
-    public boolean createRelation(Long userId, Long permissionId) {
+    public boolean createRelation(Integer userId, Integer permissionId) {
         if (countRelation(userId, permissionId) > 0) return true;
 
         return save(new UserPermission(userId, permissionId));
@@ -97,7 +97,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      */
     @Transactional
     @Override
-    public void updateRelation(Long userId, List<Long> permissionIds) {
+    public void updateRelation(Integer userId, List<Integer> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || userId == null || userId == 0L) {
             return;
         }
@@ -105,16 +105,16 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
         // 删除旧的关联关系
         remove(buildWrapper(userId, null));
         // 创建新的关联关系
-        for (Long permissionId : permissionIds) {
+        for (Integer permissionId : permissionIds) {
             createRelation(userId, permissionId);
         }
     }
 
     // 构建wrapper
-    private QueryWrapper<UserPermission> buildWrapper(Long userId, Long permissionId) {
+    private QueryWrapper<UserPermission> buildWrapper(Integer userId, Integer permissionId) {
         QueryWrapper<UserPermission> wrapper = new QueryWrapper<>();
-        wrapper.eq(userId != null && userId != 0L, "user_id", userId);
-        wrapper.eq(permissionId != null && permissionId != 0L, "permission_id", permissionId);
+        wrapper.eq(userId != null && userId != 0, "user_id", userId);
+        wrapper.eq(permissionId != null && permissionId != 0, "permission_id", permissionId);
         return wrapper;
     }
 
@@ -125,7 +125,7 @@ public class UserPermissionServiceImpl extends ServiceImpl<UserPermissionMapper,
      */
     @Cacheable(key = "'permissions:' + #userId", unless = "#result == null")
     @Override
-    public List<Permission> findPermissionsByUserId(Long userId) {
+    public List<Permission> findPermissionsByUserId(Integer userId) {
         return baseMapper.findPermissionsByUserId(userId);
     }
 }

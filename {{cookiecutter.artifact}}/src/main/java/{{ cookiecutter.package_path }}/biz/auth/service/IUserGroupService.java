@@ -21,7 +21,7 @@ public interface IUserGroupService extends IService<UserGroup> {
      * @param userId  用户ID
      * @param groupId 用户组ID
      */
-    boolean deleteRelation(Long userId, Long groupId);
+    boolean deleteRelation(Integer userId, Integer groupId);
 
     /**
      * 查询映射关系
@@ -29,7 +29,7 @@ public interface IUserGroupService extends IService<UserGroup> {
      * @param userId  用户ID
      * @param groupId 用户组ID
      */
-    List<UserGroup> queryRelation(Long userId, Long groupId);
+    List<UserGroup> queryRelation(Integer userId, Integer groupId);
 
     /**
      * 统计映射关系
@@ -37,7 +37,7 @@ public interface IUserGroupService extends IService<UserGroup> {
      * @param userId  用户ID
      * @param groupId 用户组ID
      */
-    Integer countRelation(Long userId, Long groupId);
+    Integer countRelation(Integer userId, Integer groupId);
 
     /**
      * 创建映射关系
@@ -45,7 +45,7 @@ public interface IUserGroupService extends IService<UserGroup> {
      * @param userId  用户ID
      * @param groupId 用户组ID
      */
-    boolean createRelation(Long userId, Long groupId);
+    boolean createRelation(Integer userId, Integer groupId);
 
     /**
      * 更新映射关系
@@ -53,20 +53,20 @@ public interface IUserGroupService extends IService<UserGroup> {
      * @param userId   用户ID
      * @param groupIds 用户组ID列表
      */
-    void updateRelation(Long userId, List<Long> groupIds);
+    void updateRelation(Integer userId, List<Integer> groupIds);
 
     /**
      * 查询用户所属的用户组
      *
      * @param userId 用户ID
      */
-    List<Group> findGroupsByUserId(Long userId);
+    List<Group> findGroupsByUserId(Integer userId);
 
     /**
      * 查询用户组下的用户
      *
      * @param groupId 用户组ID
      */
-    List<User> findUsersByGroupId(Long groupId);
+    List<User> findUsersByGroupId(Integer groupId);
 
 }

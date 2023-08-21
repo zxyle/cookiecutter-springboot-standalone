@@ -74,7 +74,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @return 数量
      */
     @Override
-    public Integer count(Long parentId, String name) {
+    public Integer count(Integer parentId, String name) {
         QueryWrapper<Group> wrapper = new QueryWrapper<>();
         wrapper.eq("parent_id", parentId);
         wrapper.eq(StringUtils.isNotBlank(name), "name", name);
@@ -86,7 +86,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      */
     @Cacheable(cacheNames = "subGroupsCache", key = "#rootGroupId", unless = "#result == null")
     @Override
-    public List<Long> getSubGroups(Long rootGroupId) {
+    public List<Integer> getSubGroups(Integer rootGroupId) {
         List<Group> groups = getAllChildren(null, rootGroupId);
         return groups.stream().map(LiteEntity::getId).distinct().collect(Collectors.toList());
     }
@@ -99,10 +99,10 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     @CacheEvict(key = "#groupId")
     @Transactional
     @Override
-    public boolean delete(Long groupId) {
-        boolean s1 = groupPermissionService.deleteRelation(groupId, 0L);
-        boolean s2 = groupRoleService.deleteRelation(groupId, 0L);
-        boolean s3 = userGroupService.deleteRelation(0L, groupId);
+    public boolean delete(Integer groupId) {
+        boolean s1 = groupPermissionService.deleteRelation(groupId, 0);
+        boolean s2 = groupRoleService.deleteRelation(groupId, 0);
+        boolean s3 = userGroupService.deleteRelation(0, groupId);
         boolean s4 = removeById(groupId);
         return (s1 && s2) && (s3 && s4);
     }
@@ -113,7 +113,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @param rootId 根节点ID
      */
     @Override
-    public List<Tree<Long>> getTree(Long rootId) {
+    public List<Tree<Integer>> getTree(Integer rootId) {
         // 查询所有数据
         QueryWrapper<Group> wrapper = new QueryWrapper<>();
         wrapper.select("id", "parent_id", "name", "sort");
@@ -139,7 +139,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @param groupId 根节点ID
      */
     @Override
-    public List<Group> getAllChildren(List<Group> groups, Long groupId) {
+    public List<Group> getAllChildren(List<Group> groups, Integer groupId) {
         if (CollectionUtils.isEmpty(groups)){
             QueryWrapper<Group> wrapper = new QueryWrapper<>();
             wrapper.select("id", "parent_id");
@@ -162,7 +162,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     }
 
     @Override
-    public boolean isAllowed(Long actionUserId, Long acceptUserId, Long acceptGroupId) {
+    public boolean isAllowed(Integer actionUserId, Integer acceptUserId, Integer acceptGroupId) {
         // 查询当前用户有管理员权限的用户组
         QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
         wrapper.select("user_id, group_id");
@@ -183,7 +183,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         }
 
         // 去重
-        List<Long> allGroupIds = allGroups.stream()
+        List<Integer> allGroupIds = allGroups.stream()
                 .map(Group::getId).distinct().collect(Collectors.toList());
 
         if (acceptUserId != null) {
@@ -216,7 +216,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @param permissionIds 权限ID
      */
     @Override
-    public void updateRelation(Long groupId, List<Long> roleIds, List<Long> permissionIds) {
+    public void updateRelation(Integer groupId, List<Integer> roleIds, List<Integer> permissionIds) {
         groupPermissionService.updateRelation(groupId, permissionIds);
         groupRoleService.updateRelation(groupId, roleIds);
     }
@@ -254,8 +254,8 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      * @param groupId 用户组ID
      */
     @Override
-    public boolean isAlreadyUsed(Long groupId) {
-        if (userGroupService.countRelation(0L, groupId) > 0) {
+    public boolean isAlreadyUsed(Integer groupId) {
+        if (userGroupService.countRelation(0, groupId) > 0) {
             return true;
         }
 
@@ -267,7 +267,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
      */
     @Cacheable(key = "#id", unless = "#result == null")
     @Override
-    public Group queryById(Long id) {
+    public Group findById(Integer id) {
         return getById(id);
     }
 }

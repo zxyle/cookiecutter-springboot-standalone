@@ -20,7 +20,7 @@ public interface IUserRoleService extends IService<UserRole> {
      * @param userId 用户ID
      * @param roleId 角色ID
      */
-    boolean deleteRelation(Long userId, Long roleId);
+    boolean deleteRelation(Integer userId, Integer roleId);
 
     /**
      * 查询映射关系
@@ -28,7 +28,7 @@ public interface IUserRoleService extends IService<UserRole> {
      * @param userId 用户ID
      * @param roleId 角色ID
      */
-    List<UserRole> queryRelation(Long userId, Long roleId);
+    List<UserRole> queryRelation(Integer userId, Integer roleId);
 
     /**
      * 统计映射关系
@@ -36,7 +36,7 @@ public interface IUserRoleService extends IService<UserRole> {
      * @param userId 用户ID
      * @param roleId 角色ID
      */
-    Integer countRelation(Long userId, Long roleId);
+    Integer countRelation(Integer userId, Integer roleId);
 
     /**
      * 创建映射关系
@@ -44,7 +44,7 @@ public interface IUserRoleService extends IService<UserRole> {
      * @param userId 用户ID
      * @param roleId 角色ID
      */
-    boolean createRelation(Long userId, Long roleId);
+    boolean createRelation(Integer userId, Integer roleId);
 
     /**
      * 更新用户角色关系
@@ -52,13 +52,13 @@ public interface IUserRoleService extends IService<UserRole> {
      * @param userId  用户ID
      * @param roleIds 角色ID列表
      */
-    void updateRelation(Long userId, List<Long> roleIds);
+    void updateRelation(Integer userId, List<Integer> roleIds);
 
     /**
      * 查询用户所拥有的角色信息
      *
      * @param userId 用户ID
      */
-    List<Role> findRolesByUserId(Long userId);
+    List<Role> findRolesByUserId(Integer userId);
 
 }

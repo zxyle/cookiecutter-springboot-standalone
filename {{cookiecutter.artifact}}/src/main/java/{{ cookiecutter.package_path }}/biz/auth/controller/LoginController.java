@@ -120,7 +120,7 @@ public class LoginController extends AuthBaseController {
         String userId = stringRedisTemplate.opsForValue().get(key);
         if (userId == null) return R.fail("二维码已过期，请刷新页面重试");
 
-        User user = userService.queryById(Long.valueOf(userId));
+        User user = userService.findById(Integer.valueOf(userId));
         if (user == null) return R.fail("用户不存在");
 
         LoginResponse response = new LoginResponse(user);
@@ -133,10 +133,10 @@ public class LoginController extends AuthBaseController {
      */
     @PostMapping("/login/totp")
     public R<Void> totpLogin(@Valid @RequestBody CodeLoginRequest request) {
-        User user = userService.queryByAccount(request.getAccount());
+        User user = userService.findByAccount(request.getAccount());
         if (user == null) return R.fail("用户不存在");
 
-        Totp totp = totpService.queryByUserId(getUserId());
+        Totp totp = totpService.findByUserId(getUserId());
         if (totp == null) return R.fail("用户未设置TOTP");
 
         if (!Authenticator.valid(totp.getSecret(), request.getCode())) return R.fail("验证码错误，请重新输入");

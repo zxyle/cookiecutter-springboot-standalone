@@ -51,7 +51,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements ID
      */
     @CacheEvict(key = "#dictType")
     @Override
-    public boolean deleteDict(String dictType, Long id) {
+    public boolean deleteDict(String dictType, Integer id) {
         return removeById(id);
     }
 

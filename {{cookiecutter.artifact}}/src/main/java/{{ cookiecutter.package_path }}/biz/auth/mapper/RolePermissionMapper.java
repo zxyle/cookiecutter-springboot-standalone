@@ -19,16 +19,16 @@ import java.util.List;
 public interface RolePermissionMapper extends BaseMapper<RolePermission> {
 
     // 查询角色所拥有的权限列表
-    List<Permission> findPermissionsByRoleId(Long roleId);
+    List<Permission> findPermissionsByRoleId(Integer roleId);
 
     /**
      * 根据角色ID列表查询权限列表
      */
-    List<Permission> findPermissionsByRoleIds(List<Long> roleIds);
+    List<Permission> findPermissionsByRoleIds(List<Integer> roleIds);
 
     /**
      * 分页查询角色拥有的权限
      */
-    IPage<Permission> page(IPage<Permission> page, Long roleId, PaginationRequest request);
+    IPage<Permission> page(IPage<Permission> page, Integer roleId, PaginationRequest request);
 
 }

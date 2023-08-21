@@ -41,7 +41,7 @@ public class GroupRoleController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}/roles")
-    public R<PageVO<Role>> pageRole(@PathVariable Long groupId, @Valid PaginationRequest request) {
+    public R<PageVO<Role>> pageRole(@PathVariable Integer groupId, @Valid PaginationRequest request) {
         IPage<Role> page = PageRequestUtil.checkForMp(request);
         IPage<Role> pageVo = thisMapper.page(page, groupId, request);
         return PageRequestUtil.extractFromMp(pageVo);
@@ -55,10 +55,10 @@ public class GroupRoleController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/roles")
-    public R<Void> add(@PathVariable Long groupId, @Valid @RequestBody GroupRole entity) {
+    public R<Void> add(@PathVariable Integer groupId, @Valid @RequestBody GroupRole entity) {
         boolean success = thisService.createRelation(groupId, entity.getRoleId());
         if (success) {
-            List<Long> users = getUsersByGroup(groupId);
+            List<Integer> users = getUsersByGroup(groupId);
             users.forEach(permissionService::refreshPermissions);
             return R.ok("用户组新增角色成功");
         }
@@ -73,10 +73,10 @@ public class GroupRoleController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @DeleteMapping("/groups/{groupId}/roles/{roleId}")
-    public R<Void> delete(@PathVariable Long groupId, @PathVariable Long roleId) {
+    public R<Void> delete(@PathVariable Integer groupId, @PathVariable Integer roleId) {
         boolean success = thisService.deleteRelation(groupId, roleId);
         if (success) {
-            List<Long> users = getUsersByGroup(groupId);
+            List<Integer> users = getUsersByGroup(groupId);
             users.forEach(permissionService::refreshPermissions);
             return R.ok("用户组移除角色成功");
         }
@@ -90,8 +90,8 @@ public class GroupRoleController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/roles/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Long groupId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(roleId -> thisService.deleteRelation(groupId, roleId));
 
@@ -105,8 +105,8 @@ public class GroupRoleController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/roles/batch-add")
-    public R<Void> createBatch(@PathVariable Long groupId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> createBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(roleId -> thisService.createRelation(groupId, roleId));
 

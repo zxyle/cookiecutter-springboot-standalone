@@ -23,11 +23,11 @@ public interface UserPermissionMapper extends BaseMapper<UserPermission> {
      *
      * @param userId 用户ID
      */
-    List<Permission> findPermissionsByUserId(Long userId);
+    List<Permission> findPermissionsByUserId(Integer userId);
 
     /**
      * 分页查询用户直接拥有的权限
      */
-    IPage<Permission> page(IPage<Permission> page, Long userId, PaginationRequest request);
+    IPage<Permission> page(IPage<Permission> page, Integer userId, PaginationRequest request);
 
 }

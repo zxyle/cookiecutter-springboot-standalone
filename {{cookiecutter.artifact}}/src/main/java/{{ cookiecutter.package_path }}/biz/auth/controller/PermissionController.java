@@ -96,12 +96,12 @@ public class PermissionController extends AuthBaseController {
     @LogOperation(name = "按ID更新权限", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:permission:update')")
     @PutMapping("/permissions/{permissionId}")
-    public R<Void> update(@Valid @RequestBody Permission entity, @PathVariable Long permissionId) {
+    public R<Void> update(@Valid @RequestBody Permission entity, @PathVariable Integer permissionId) {
         Permission permission = thisService.getById(permissionId);
         entity.setId(permissionId);
         boolean success = thisService.updateById(entity);
         if (success) {
-            List<Long> userIds = thisService.holdPermission(permission.getCode());
+            List<Integer> userIds = thisService.holdPermission(permission.getCode());
             userIds.forEach(thisService::refreshPermissions);
             return R.ok("更新权限成功");
         }
@@ -116,7 +116,7 @@ public class PermissionController extends AuthBaseController {
     @LogOperation(name = "按ID删除权限", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:permission:delete')")
     @DeleteMapping("/permissions/{permissionId}")
-    public R<Void> delete(@PathVariable Long permissionId) {
+    public R<Void> delete(@PathVariable Integer permissionId) {
         if (thisService.isAlreadyUsed(permissionId)) {
             return R.fail("删除失败，该权限正在使用");
         }
@@ -125,7 +125,7 @@ public class PermissionController extends AuthBaseController {
         boolean success = thisService.delete(permissionId);
         if (success) {
             // 所有持有该权限的用户，都刷新权限
-            List<Long> userIds = thisService.holdPermission(permission.getCode());
+            List<Integer> userIds = thisService.holdPermission(permission.getCode());
             userIds.forEach(thisService::refreshPermissions);
             return R.ok("删除权限成功");
         }

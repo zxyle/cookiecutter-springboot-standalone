@@ -25,5 +25,5 @@ public interface LoginService {
      * @param userId 用户id
      * @return 是否成功
      */
-    boolean logout(Long userId);
+    boolean logout(Integer userId);
 }

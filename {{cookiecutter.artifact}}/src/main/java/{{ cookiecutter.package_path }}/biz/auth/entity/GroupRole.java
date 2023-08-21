@@ -24,16 +24,16 @@ public class GroupRole extends LiteEntity {
     /**
      * 用户组ID
      */
-    private Long groupId;
+    private Integer groupId;
 
     /**
      * 角色ID
      */
     @Positive(message = "角色ID必须为正数")
     @NotNull(message = "角色ID不能为空")
-    private Long roleId;
+    private Integer roleId;
 
-    public GroupRole(Long groupId, Long roleId) {
+    public GroupRole(Integer groupId, Integer roleId) {
         this.groupId = groupId;
         this.roleId = roleId;
     }

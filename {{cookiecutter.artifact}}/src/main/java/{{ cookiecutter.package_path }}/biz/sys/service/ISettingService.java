@@ -15,7 +15,7 @@ public interface ISettingService extends IService<Setting> {
     /**
      * 按ID查询
      */
-    Setting queryById(Long id);
+    Setting findById(Integer id);
 
     /**
      * 按名称查询设置项

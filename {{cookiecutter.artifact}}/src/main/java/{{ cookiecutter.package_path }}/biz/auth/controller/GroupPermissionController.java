@@ -41,7 +41,7 @@ public class GroupPermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}/permissions")
-    public R<PageVO<Permission>> list(@Valid PaginationRequest request, @PathVariable Long groupId) {
+    public R<PageVO<Permission>> list(@Valid PaginationRequest request, @PathVariable Integer groupId) {
         IPage<Permission> page = PageRequestUtil.checkForMp(request);
         IPage<Permission> list = thisMapper.page(page, groupId, request);
         return PageRequestUtil.extractFromMp(list);
@@ -55,10 +55,10 @@ public class GroupPermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/permissions")
-    public R<Void> add(@PathVariable Long groupId, @Valid @RequestBody GroupPermission entity) {
+    public R<Void> add(@PathVariable Integer groupId, @Valid @RequestBody GroupPermission entity) {
         boolean success = thisService.createRelation(groupId, entity.getPermissionId());
         if (success) {
-            List<Long> users = getUsersByGroup(groupId);
+            List<Integer> users = getUsersByGroup(groupId);
             users.forEach(permissionService::refreshPermissions);
             return R.ok("用户组新增权限成功");
         }
@@ -73,10 +73,10 @@ public class GroupPermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @DeleteMapping("/groups/{groupId}/permissions/{permissionId}")
-    public R<Void> delete(@PathVariable Long permissionId, @PathVariable Long groupId) {
+    public R<Void> delete(@PathVariable Integer permissionId, @PathVariable Integer groupId) {
         boolean success = thisService.deleteRelation(groupId, permissionId);
         if (success) {
-            List<Long> users = getUsersByGroup(groupId);
+            List<Integer> users = getUsersByGroup(groupId);
             users.forEach(permissionService::refreshPermissions);
             return R.ok("移除用户组拥有的权限成功");
         }
@@ -90,8 +90,8 @@ public class GroupPermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/permissions/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Long groupId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(groupId, permissionId));
 
@@ -105,8 +105,8 @@ public class GroupPermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/permissions/batch-add")
-    public R<Void> createBatch(@PathVariable Long groupId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> createBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.createRelation(groupId, permissionId));
 

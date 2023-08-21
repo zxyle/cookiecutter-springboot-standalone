@@ -41,12 +41,12 @@ public class AdminAddUserRequest {
     /**
      * 角色列表
      */
-    private List<@Positive @NotNull Long> roleIds;
+    private List<@Positive @NotNull Integer> roleIds;
 
     /**
      * 用户组ID
      */
-    private List<@Positive @NotNull Long> groupIds;
+    private List<@Positive @NotNull Integer> groupIds;
 
     /**
      * 是否需要修改密码

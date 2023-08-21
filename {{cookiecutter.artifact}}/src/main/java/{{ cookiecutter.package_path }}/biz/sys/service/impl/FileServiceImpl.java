@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.File;
 import {{ cookiecutter.basePackage }}.biz.sys.mapper.FileMapper;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IFileService;
@@ -24,17 +23,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, File> implements IF
      */
     @Cacheable(cacheNames = "FileCache", key = "#id", unless = "#result == null")
     @Override
-    public File queryById(Long id) {
+    public File findById(Long id) {
         return getById(id);
-    }
-
-    /**
-     * 分页查询
-     */
-    @Cacheable(cacheNames = "FileCache", key = "#p.getCurrent()+#p.getSize()")
-    @Override
-    public IPage<File> pageQuery(IPage<File> p) {
-        return page(p);
     }
 
 }

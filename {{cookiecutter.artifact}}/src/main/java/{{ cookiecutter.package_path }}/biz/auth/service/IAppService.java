@@ -19,7 +19,7 @@ public interface IAppService extends IService<App> {
     /**
      * 按ID查询（带缓存）
      */
-    App queryById(Long id);
+    App findById(Integer id);
 
     /**
      * 按ID更新（带缓存）
@@ -29,6 +29,6 @@ public interface IAppService extends IService<App> {
     /**
      * 按ID删除（带缓存）
      */
-    boolean deleteById(Long id);
+    boolean deleteById(Integer id);
 
 }

@@ -59,8 +59,8 @@ public class OpenApiController {
      */
     @PreAuthorize("@ck.hasPermit('auth:openApi:get')")
     @GetMapping("/openApis/{id}")
-    public R<OpenApi> get(@PathVariable Long id) {
-        OpenApi entity = thisService.queryById(id);
+    public R<OpenApi> get(@PathVariable Integer id) {
+        OpenApi entity = thisService.findById(id);
         return entity == null ? R.fail("数据不存在") : R.ok(entity);
     }
 
@@ -70,7 +70,7 @@ public class OpenApiController {
      */
     @PreAuthorize("@ck.hasPermit('auth:openApi:update')")
     @PutMapping("/openApis/{id}")
-    public R<Void> update(@Valid @RequestBody OpenApi entity, @PathVariable Long id) {
+    public R<Void> update(@Valid @RequestBody OpenApi entity, @PathVariable Integer id) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
         return success ? R.ok("更新成功") : R.fail("更新失败");
@@ -82,7 +82,7 @@ public class OpenApiController {
      */
     @PreAuthorize("@ck.hasPermit('auth:openApi:delete')")
     @DeleteMapping("/openApis/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除成功") : R.fail("删除失败");
     }

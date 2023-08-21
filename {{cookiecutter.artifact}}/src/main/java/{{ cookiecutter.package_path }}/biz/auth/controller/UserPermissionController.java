@@ -40,7 +40,7 @@ public class UserPermissionController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:get')")
     @GetMapping("/users/{userId}/permissions")
-    public R<PageVO<Permission>> list(@Valid PaginationRequest request, @PathVariable Long userId) {
+    public R<PageVO<Permission>> list(@Valid PaginationRequest request, @PathVariable Integer userId) {
         IPage<Permission> page = PageRequestUtil.checkForMp(request);
         IPage<Permission> list = thisMapper.page(page, userId, request);
         return PageRequestUtil.extractFromMp(list);
@@ -54,7 +54,7 @@ public class UserPermissionController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PostMapping("/users/{userId}/permissions")
-    public R<Void> add(@PathVariable Long userId, @Valid @RequestBody UserPermission entity) {
+    public R<Void> add(@PathVariable Integer userId, @Valid @RequestBody UserPermission entity) {
         boolean success = thisService.createRelation(userId, entity.getPermissionId());
         if (success) {
             permissionService.refreshPermissions(userId);
@@ -71,7 +71,7 @@ public class UserPermissionController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @DeleteMapping("/users/{userId}/permissions/{permissionId}")
-    public R<Void> delete(@PathVariable Long userId, @PathVariable Long permissionId) {
+    public R<Void> delete(@PathVariable Integer userId, @PathVariable Integer permissionId) {
         boolean success = thisService.deleteRelation(userId, permissionId);
         if (success) {
             permissionService.refreshPermissions(userId);
@@ -87,8 +87,8 @@ public class UserPermissionController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PostMapping("/users/{userId}/permissions/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Long userId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(userId, permissionId));
 
@@ -102,8 +102,8 @@ public class UserPermissionController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PostMapping("/users/{userId}/permissions/batch-add")
-    public R<Void> createBatch(@PathVariable Long userId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.createRelation(userId, permissionId));
 

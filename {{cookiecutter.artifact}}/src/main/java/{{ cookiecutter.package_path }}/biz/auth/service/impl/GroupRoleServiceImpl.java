@@ -40,7 +40,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
             @CacheEvict(key = "'roles:'+#groupId"),
     })
     @Override
-    public boolean deleteRelation(Long groupId, Long roleId) {
+    public boolean deleteRelation(Integer groupId, Integer roleId) {
         if (countRelation(groupId, roleId) == 0) return true;
 
         return remove(buildWrapper(groupId, roleId));
@@ -54,7 +54,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      */
     @Cacheable(key = "#groupId + ':' + #roleId", unless = "#result == null")
     @Override
-    public List<GroupRole> queryRelation(Long groupId, Long roleId) {
+    public List<GroupRole> queryRelation(Integer groupId, Integer roleId) {
         QueryWrapper<GroupRole> wrapper = buildWrapper(groupId, roleId);
         wrapper.select("group_id, role_id");
         return list(wrapper);
@@ -67,7 +67,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      * @param roleId  角色ID
      */
     @Override
-    public Integer countRelation(Long groupId, Long roleId) {
+    public Integer countRelation(Integer groupId, Integer roleId) {
         return count(buildWrapper(groupId, roleId));
     }
 
@@ -83,7 +83,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
             @CacheEvict(key = "'roles:'+#groupId")
     })
     @Override
-    public boolean createRelation(Long groupId, Long roleId) {
+    public boolean createRelation(Integer groupId, Integer roleId) {
         if (countRelation(groupId, roleId) > 0) return true;
 
         return save(new GroupRole(groupId, roleId));
@@ -97,22 +97,22 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      */
     @Transactional
     @Override
-    public void updateRelation(Long groupId, List<Long> roleIds) {
+    public void updateRelation(Integer groupId, List<Integer> roleIds) {
         if (CollectionUtils.isEmpty(roleIds) || groupId == null || groupId == 0L) {
             return;
         }
 
         // 删除旧的关联关系
-        deleteRelation(groupId, 0L);
+        deleteRelation(groupId, 0);
         // 创建新的关联关系
         roleIds.forEach(roleId -> createRelation(groupId, roleId));
     }
 
     // 构建wrapper
-    private QueryWrapper<GroupRole> buildWrapper(Long groupId, Long roleId) {
+    private QueryWrapper<GroupRole> buildWrapper(Integer groupId, Integer roleId) {
         QueryWrapper<GroupRole> wrapper = new QueryWrapper<>();
-        wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
-        wrapper.eq(roleId != null && roleId != 0L, "role_id", roleId);
+        wrapper.eq(groupId != null && groupId != 0, "group_id", groupId);
+        wrapper.eq(roleId != null && roleId != 0, "role_id", roleId);
         return wrapper;
     }
 
@@ -121,7 +121,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      */
     @Cacheable(key = "'roles:'+#groupId", unless = "#result == null")
     @Override
-    public List<Role> findRolesByGroupId(Long groupId) {
+    public List<Role> findRolesByGroupId(Integer groupId) {
         return baseMapper.findRolesByGroupId(groupId);
     }
 
@@ -129,7 +129,7 @@ public class GroupRoleServiceImpl extends ServiceImpl<GroupRoleMapper, GroupRole
      * 根据用户组ID列表查询角色列表
      */
     @Override
-    public List<Role> findRolesByGroupIds(List<Long> groupIds) {
+    public List<Role> findRolesByGroupIds(List<Integer> groupIds) {
         return baseMapper.findRolesByGroupIds(groupIds);
     }
 }

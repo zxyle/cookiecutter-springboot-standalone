@@ -24,7 +24,7 @@ public class Totp extends BaseEntity {
     /**
      * 用户ID
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 密钥

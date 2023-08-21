@@ -35,7 +35,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      */
     @Cacheable(key = "'permissions:' + #groupId", unless = "#result == null")
     @Override
-    public List<Permission> findPermissionsByGroupId(Long groupId) {
+    public List<Permission> findPermissionsByGroupId(Integer groupId) {
         return baseMapper.findPermissionsByGroupId(groupId);
     }
 
@@ -51,7 +51,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
             @CacheEvict(key = "'permissions:' + #groupId")
     })
     @Override
-    public boolean deleteRelation(Long groupId, Long permissionId) {
+    public boolean deleteRelation(Integer groupId, Integer permissionId) {
         if (countRelation(groupId, permissionId) == 0) return true;
 
         return remove(buildWrapper(groupId, permissionId));
@@ -65,7 +65,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      */
     @Cacheable(key = "#groupId + ':' + #permissionId", unless = "#result == null")
     @Override
-    public List<GroupPermission> queryRelation(Long groupId, Long permissionId) {
+    public List<GroupPermission> queryRelation(Integer groupId, Integer permissionId) {
         QueryWrapper<GroupPermission> wrapper = buildWrapper(groupId, permissionId);
         wrapper.select("group_id", "permission_id");
         return list(wrapper);
@@ -78,7 +78,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      * @param permissionId 权限ID
      */
     @Override
-    public Integer countRelation(Long groupId, Long permissionId) {
+    public Integer countRelation(Integer groupId, Integer permissionId) {
         return count(buildWrapper(groupId, permissionId));
     }
 
@@ -94,7 +94,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
             @CacheEvict(key = "'permissions:' + #groupId")
     })
     @Override
-    public boolean createRelation(Long groupId, Long permissionId) {
+    public boolean createRelation(Integer groupId, Integer permissionId) {
         if (countRelation(groupId, permissionId) > 0) return true;
 
         return save(new GroupPermission(groupId, permissionId));
@@ -108,7 +108,7 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
      */
     @Transactional
     @Override
-    public void updateRelation(Long groupId, List<Long> permissionIds) {
+    public void updateRelation(Integer groupId, List<Integer> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || groupId == null || groupId == 0L) {
             return;
         }
@@ -119,10 +119,10 @@ public class GroupPermissionServiceImpl extends ServiceImpl<GroupPermissionMappe
     }
 
     // 构建wrapper
-    private QueryWrapper<GroupPermission> buildWrapper(Long groupId, Long permissionId) {
+    private QueryWrapper<GroupPermission> buildWrapper(Integer groupId, Integer permissionId) {
         QueryWrapper<GroupPermission> wrapper = new QueryWrapper<>();
-        wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
-        wrapper.eq(permissionId != null && permissionId != 0L, "permission_id", permissionId);
+        wrapper.eq(groupId != null && groupId != 0, "group_id", groupId);
+        wrapper.eq(permissionId != null && permissionId != 0, "permission_id", permissionId);
         return wrapper;
     }
 }

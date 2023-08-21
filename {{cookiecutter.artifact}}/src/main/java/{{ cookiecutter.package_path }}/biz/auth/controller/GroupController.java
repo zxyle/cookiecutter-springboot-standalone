@@ -63,7 +63,7 @@ public class GroupController extends AuthBaseController {
     @LogOperation(name = "获取用户组树状结构", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:tree')")
     @GetMapping("/groups/tree")
-    public R<List<Tree<Long>>> tree(@RequestParam(defaultValue = "1") Long rootId) {
+    public R<List<Tree<Integer>>> tree(@RequestParam(defaultValue = "1") Integer rootId) {
         // 查询当前用户，所在用户组作为rootId
         QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", getUserId());
@@ -73,7 +73,7 @@ public class GroupController extends AuthBaseController {
             rootId = list.get(0).getGroupId();
         }
 
-        List<Tree<Long>> tree = groupService.getTree(rootId);
+        List<Tree<Integer>> tree = groupService.getTree(rootId);
         return R.ok(tree);
     }
 
@@ -106,12 +106,12 @@ public class GroupController extends AuthBaseController {
     @LogOperation(name = "按ID查询用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}")
-    public R<GroupResponse> get(@PathVariable Long groupId) {
+    public R<GroupResponse> get(@PathVariable Integer groupId) {
         if (!groupService.isAllowed(getUserId(), null, groupId)) {
             return R.fail("无权限查询该用户组");
         }
 
-        Group group = groupService.queryById(groupId);
+        Group group = groupService.findById(groupId);
         return R.ok(groupService.attachGroupInfo(group, true));
     }
 
@@ -123,13 +123,13 @@ public class GroupController extends AuthBaseController {
     @LogOperation(name = "按ID更新用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PutMapping("/groups/{groupId}")
-    public R<Group> update(@PathVariable Long groupId, @Valid @RequestBody UpdateAuthRequest request) {
+    public R<Group> update(@PathVariable Integer groupId, @Valid @RequestBody UpdateAuthRequest request) {
         if (!groupService.isAllowed(getUserId(), null, groupId)) {
             return R.fail("无权限更新该用户组");
         }
 
         // 判断同级用户组下是否有名称重复
-        Group group = groupService.queryById(groupId);
+        Group group = groupService.findById(groupId);
         Integer count = groupService.count(group.getParentId(), request.getName());
         if (StringUtils.isNotBlank(request.getName()) && count > 0) {
             return R.fail("同级用户组名称不能重复");
@@ -151,7 +151,7 @@ public class GroupController extends AuthBaseController {
     @LogOperation(name = "按ID删除用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:delete')")
     @DeleteMapping("/groups/{groupId}")
-    public R<Void> delete(@PathVariable Long groupId) {
+    public R<Void> delete(@PathVariable Integer groupId) {
         if (!groupService.isAllowed(getUserId(), null, groupId)) {
             return R.fail("无权限删除该用户组");
         }

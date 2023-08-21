@@ -27,7 +27,7 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
      */
     @Cacheable(cacheNames = "FeedbackCache", key = "#id", unless = "#result == null")
     @Override
-    public Feedback queryById(Long id) {
+    public Feedback findById(Integer id) {
         return getById(id);
     }
 
@@ -46,7 +46,7 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
      */
     @CacheEvict(cacheNames = "FeedbackCache", key = "#id")
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         removeById(id);
     }
 

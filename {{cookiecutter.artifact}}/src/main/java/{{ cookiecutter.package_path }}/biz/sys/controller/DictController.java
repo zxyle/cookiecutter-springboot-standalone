@@ -92,7 +92,7 @@ public class DictController {
     @LogOperation(name = "删除字典条目", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:dict:delete')")
     @DeleteMapping("/dicts/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         Dict result = thisService.getById(id);
         if (result == null) return R.fail("删除失败，字典不存在");
 
@@ -105,7 +105,7 @@ public class DictController {
      */
     @LogOperation(name = "更新字典条目", biz = "sys")
     @PutMapping("/dicts/{id}")
-    public R<Void> update(@Valid @RequestBody UpdateDictRequest request, @PathVariable Long id) {
+    public R<Void> update(@Valid @RequestBody UpdateDictRequest request, @PathVariable Integer id) {
         Dict result = thisService.getById(id);
         if (result == null) return R.fail("更新失败，字典不存在");
 

@@ -32,7 +32,7 @@ public class Profile extends BaseEntity {
     /**
      * 用户ID
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 出生日期 yyyy-MM-dd

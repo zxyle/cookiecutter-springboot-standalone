@@ -59,8 +59,8 @@ public class SettingController {
     @LogOperation(name = "按ID查询系统设置", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:setting:get')")
     @GetMapping("/settings/{id}")
-    public R<Setting> get(@PathVariable Long id) {
-        Setting entity = thisService.queryById(id);
+    public R<Setting> get(@PathVariable Integer id) {
+        Setting entity = thisService.findById(id);
         return entity == null ? R.fail("设置不存在") : R.ok(entity);
     }
 
@@ -70,7 +70,7 @@ public class SettingController {
     @LogOperation(name = "按ID更新系统设置", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:setting:update')")
     @PutMapping("/settings/{id}")
-    public R<Void> update(@Valid @RequestBody Setting entity, @PathVariable Long id) {
+    public R<Void> update(@Valid @RequestBody Setting entity, @PathVariable Integer id) {
         entity.setId(id);
         Setting setting = thisService.getById(id);
         String optionValue = entity.getOptionValue();
@@ -84,7 +84,7 @@ public class SettingController {
     @LogOperation(name = "按ID删除系统设置", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:setting:delete')")
     @DeleteMapping("/settings/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除系统设置成功") : R.fail("删除系统设置失败");
     }

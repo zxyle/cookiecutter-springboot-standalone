@@ -24,16 +24,16 @@ public class GroupPermission extends LiteEntity {
     /**
      * 用户组ID
      */
-    private Long groupId;
+    private Integer groupId;
 
     /**
      * 权限ID
      */
     @Positive(message = "权限ID必须为正数")
     @NotNull(message = "权限ID不能为空")
-    private Long permissionId;
+    private Integer permissionId;
 
-    public GroupPermission(Long groupId, Long permissionId) {
+    public GroupPermission(Integer groupId, Integer permissionId) {
         this.groupId = groupId;
         this.permissionId = permissionId;
     }

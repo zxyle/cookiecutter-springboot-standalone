@@ -15,5 +15,5 @@ public class BatchRequest {
     /**
      * ID列表
      */
-    private List<@Positive @NotNull Long> ids;
+    private List<@Positive @NotNull Integer> ids;
 }

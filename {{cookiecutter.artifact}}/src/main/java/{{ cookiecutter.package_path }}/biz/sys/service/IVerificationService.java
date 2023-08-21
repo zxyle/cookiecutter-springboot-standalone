@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.Verification;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -15,11 +14,6 @@ public interface IVerificationService extends IService<Verification> {
     /**
      * 按ID查询
      */
-    Verification queryById(Long id);
-
-    /**
-     * 分页查询
-     */
-    IPage<Verification> pageQuery(IPage<Verification> page);
+    Verification findById(Long id);
 
 }

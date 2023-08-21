@@ -53,7 +53,7 @@ public class LoginServiceImpl implements LoginService {
      * @return 是否成功
      */
     @Override
-    public boolean logout(Long userId) {
+    public boolean logout(Integer userId) {
         // 清除登录信息
         SecurityContextHolder.clearContext();
         // 删除redis中用户权限缓存

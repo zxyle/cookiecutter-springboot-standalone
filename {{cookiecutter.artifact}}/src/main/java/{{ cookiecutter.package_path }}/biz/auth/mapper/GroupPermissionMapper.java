@@ -19,14 +19,14 @@ import java.util.List;
 public interface GroupPermissionMapper extends BaseMapper<GroupPermission> {
 
     // 查询用户组拥有的权限代码列表
-    List<Permission> findPermissionsByGroupId(Long groupId);
+    List<Permission> findPermissionsByGroupId(Integer groupId);
 
     // 查询用户组拥有的权限代码列表
-    List<Permission> findPermissionsByGroupIds(List<Long> groupIds);
+    List<Permission> findPermissionsByGroupIds(List<Integer> groupIds);
 
     /**
      * 分页查询用户组下的权限
      */
-    IPage<Permission> page(IPage<Permission> page, Long groupId, PaginationRequest request);
+    IPage<Permission> page(IPage<Permission> page, Integer groupId, PaginationRequest request);
 
 }

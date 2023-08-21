@@ -16,7 +16,7 @@ public interface IProfileService extends IService<Profile> {
      *
      * @param userId 用户ID
      */
-    Profile queryByUserId(Long userId);
+    Profile findByUserId(Integer userId);
 
 
     /**
@@ -31,6 +31,6 @@ public interface IProfileService extends IService<Profile> {
      *
      * @param userId 用户ID
      */
-    boolean delete(Long userId);
+    boolean delete(Integer userId);
 
 }

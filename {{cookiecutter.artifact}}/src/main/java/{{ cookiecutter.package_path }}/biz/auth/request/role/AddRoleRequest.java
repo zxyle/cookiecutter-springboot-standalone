@@ -51,5 +51,5 @@ public class AddRoleRequest {
     /**
      * 权限id列表
      */
-    private List<@Positive @NotNull Long> permissionIds;
+    private List<@Positive @NotNull Integer> permissionIds;
 }

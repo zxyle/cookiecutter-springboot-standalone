@@ -56,7 +56,7 @@ public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMappe
      *
      * @param userId 用户ID
      */
-    public Integer countHistory(Long userId) {
+    public Integer countHistory(Integer userId) {
         QueryWrapper<PasswordHistory> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
         return count(wrapper);
@@ -68,7 +68,7 @@ public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMappe
      * @param userId      用户ID
      * @param deleteCount 删除数量
      */
-    public boolean removeHistory(Long userId, Integer deleteCount) {
+    public boolean removeHistory(Integer userId, Integer deleteCount) {
         QueryWrapper<PasswordHistory> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
         wrapper.orderByDesc("create_time");
@@ -83,7 +83,7 @@ public class PasswordHistoryServiceImpl extends ServiceImpl<PasswordHistoryMappe
      * @return true: 清除成功; false: 清除失败
      */
     @Override
-    public boolean clear(Long userId) {
+    public boolean clear(Integer userId) {
         return removeHistory(userId, null);
     }
 }

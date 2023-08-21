@@ -38,7 +38,7 @@ public class CheckPermissionService {
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        Long userId = loginUser.getUser().getId();
+        Integer userId = loginUser.getUser().getId();
         String key = AuthConst.KEY_PREFIX + userId;
         String value = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isBlank(value))

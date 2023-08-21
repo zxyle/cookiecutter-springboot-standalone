@@ -11,11 +11,11 @@ public interface ITotpService extends IService<Totp> {
     /**
      * 按用户ID查询（带缓存）
      */
-    Totp queryByUserId(Long userId);
+    Totp findByUserId(Integer userId);
 
     /**
      * 按用户ID删除（带缓存）
      */
-    boolean deleteByUserId(Long userId);
+    boolean deleteByUserId(Integer userId);
 
 }

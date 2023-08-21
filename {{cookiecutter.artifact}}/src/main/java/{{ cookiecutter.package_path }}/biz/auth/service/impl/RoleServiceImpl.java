@@ -42,10 +42,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @CacheEvict(key = "#roleId")
     @Transactional
     @Override
-    public boolean delete(Long roleId) {
-        boolean s1 = groupRoleService.deleteRelation(0L, roleId);
-        boolean s2 = rolePermissionService.deleteRelation(roleId, 0L);
-        boolean s3 = userRoleService.deleteRelation(0L, roleId);
+    public boolean delete(Integer roleId) {
+        boolean s1 = groupRoleService.deleteRelation(0, roleId);
+        boolean s2 = rolePermissionService.deleteRelation(roleId, 0);
+        boolean s3 = userRoleService.deleteRelation(0, roleId);
         boolean s4 = removeById(roleId);
         return (s1 && s2) && (s3 && s4);
     }
@@ -57,7 +57,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
      */
     @Cacheable(key = "#roleId", unless = "#result == null")
     @Override
-    public Role queryById(Long roleId) {
+    public Role findById(Integer roleId) {
         return getById(roleId);
     }
 
@@ -68,7 +68,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
      * @return true 已经被使用 false 未被使用
      */
     @Override
-    public boolean isAlreadyUsed(Long roleId) {
+    public boolean isAlreadyUsed(Integer roleId) {
         if (userRoleService.countRelation(null, roleId) > 0) {
             return true;
         }
@@ -97,7 +97,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     // 更新角色权限关系
     @Override
-    public void updateRelation(Long roleId, List<Long> permissionIds) {
+    public void updateRelation(Integer roleId, List<Integer> permissionIds) {
         rolePermissionService.updateRelation(roleId, permissionIds);
     }
 

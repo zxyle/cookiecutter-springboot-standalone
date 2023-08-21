@@ -24,16 +24,16 @@ public class UserRole extends LiteEntity {
     /**
      * 用户ID
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 角色ID
      */
     @Positive(message = "角色ID必须为正数")
     @NotNull(message = "角色ID不能为空")
-    private Long roleId;
+    private Integer roleId;
 
-    public UserRole(Long userId, Long roleId) {
+    public UserRole(Integer userId, Integer roleId) {
         this.userId = userId;
         this.roleId = roleId;
     }

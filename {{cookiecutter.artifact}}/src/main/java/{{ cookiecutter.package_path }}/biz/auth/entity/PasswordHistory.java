@@ -20,7 +20,7 @@ public class PasswordHistory extends BaseEntity {
     /**
      * 用户ID
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 密码修改类型：初始密码、重置密码、找回密码、修改密码

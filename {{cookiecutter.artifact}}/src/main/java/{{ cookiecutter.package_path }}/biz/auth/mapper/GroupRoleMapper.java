@@ -19,16 +19,16 @@ import java.util.List;
 public interface GroupRoleMapper extends BaseMapper<GroupRole> {
 
     // 查询用户组拥有的角色编码列表
-    List<Role> findRolesByGroupId(Long groupId);
+    List<Role> findRolesByGroupId(Integer groupId);
 
     /**
      * 根据用户组ID列表查询角色列表
      */
-    List<Role> findRolesByGroupIds(List<Long> groupIds);
+    List<Role> findRolesByGroupIds(List<Integer> groupIds);
 
     /**
      * 分页查询用户组下的角色
      */
-    IPage<Role> page(IPage<Role> page, Long groupId, PaginationRequest request);
+    IPage<Role> page(IPage<Role> page, Integer groupId, PaginationRequest request);
 
 }

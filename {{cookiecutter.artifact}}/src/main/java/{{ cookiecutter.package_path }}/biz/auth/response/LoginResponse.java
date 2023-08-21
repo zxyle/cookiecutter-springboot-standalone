@@ -19,7 +19,7 @@ public class LoginResponse {
      *
      * @mock 10
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 用户信息

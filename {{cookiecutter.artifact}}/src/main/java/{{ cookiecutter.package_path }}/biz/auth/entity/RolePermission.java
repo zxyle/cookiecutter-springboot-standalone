@@ -24,16 +24,16 @@ public class RolePermission extends LiteEntity {
     /**
      * 角色ID
      */
-    private Long roleId;
+    private Integer roleId;
 
     /**
      * 权限ID
      */
     @Positive(message = "权限ID必须为正数")
     @NotNull(message = "权限ID不能为空")
-    private Long permissionId;
+    private Integer permissionId;
 
-    public RolePermission(Long roleId, Long permissionId) {
+    public RolePermission(Integer roleId, Integer permissionId) {
         this.roleId = roleId;
         this.permissionId = permissionId;
     }

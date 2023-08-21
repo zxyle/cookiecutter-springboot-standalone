@@ -42,7 +42,7 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
             @CacheEvict(key = "'groups:user' + #userId")
     })
     @Override
-    public boolean deleteRelation(Long userId, Long groupId) {
+    public boolean deleteRelation(Integer userId, Integer groupId) {
         if (countRelation(userId, groupId) == 0) return true;
 
         return remove(buildWrapper(userId, groupId));
@@ -56,7 +56,7 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      */
     @Cacheable(key = "#userId + ':' + #groupId", unless = "#result == null")
     @Override
-    public List<UserGroup> queryRelation(Long userId, Long groupId) {
+    public List<UserGroup> queryRelation(Integer userId, Integer groupId) {
         QueryWrapper<UserGroup> wrapper = buildWrapper(userId, groupId);
         wrapper.select("user_id", "group_id");
         return list(wrapper);
@@ -69,7 +69,7 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      * @param groupId 用户组ID
      */
     @Override
-    public Integer countRelation(Long userId, Long groupId) {
+    public Integer countRelation(Integer userId, Integer groupId) {
         return count(buildWrapper(userId, groupId));
     }
 
@@ -86,7 +86,7 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
             @CacheEvict(key = "'groups:user' + #userId")
     })
     @Override
-    public boolean createRelation(Long userId, Long groupId) {
+    public boolean createRelation(Integer userId, Integer groupId) {
         if (countRelation(userId, groupId) > 0) return true;
 
         return save(new UserGroup(userId, groupId));
@@ -100,22 +100,22 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      */
     @Transactional
     @Override
-    public void updateRelation(Long userId, List<Long> groupIds) {
+    public void updateRelation(Integer userId, List<Integer> groupIds) {
         if (CollectionUtils.isEmpty(groupIds) || userId == null || userId == 0L) {
             return;
         }
 
         remove(buildWrapper(userId, null));
-        for (Long groupId : groupIds) {
+        for (Integer groupId : groupIds) {
             createRelation(userId, groupId);
         }
     }
 
     // 构建wrapper
-    private QueryWrapper<UserGroup> buildWrapper(Long userId, Long groupId) {
+    private QueryWrapper<UserGroup> buildWrapper(Integer userId, Integer groupId) {
         QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
-        wrapper.eq(userId != null && userId != 0L, "user_id", userId);
-        wrapper.eq(groupId != null && groupId != 0L, "group_id", groupId);
+        wrapper.eq(userId != null && userId != 0, "user_id", userId);
+        wrapper.eq(groupId != null && groupId != 0, "group_id", groupId);
         return wrapper;
     }
 
@@ -126,7 +126,7 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      */
     @Cacheable(key = "'groups:user' + #userId", unless = "#result == null")
     @Override
-    public List<Group> findGroupsByUserId(Long userId) {
+    public List<Group> findGroupsByUserId(Integer userId) {
         return baseMapper.listGroups(userId);
     }
 
@@ -137,7 +137,7 @@ public class UserGroupServiceImpl extends ServiceImpl<UserGroupMapper, UserGroup
      */
     @Cacheable(key = "'users:group' + #groupId", unless = "#result == null")
     @Override
-    public List<User> findUsersByGroupId(Long groupId) {
+    public List<User> findUsersByGroupId(Integer groupId) {
         return baseMapper.listUsers(groupId);
     }
 }

@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.sys.entity.File;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -15,11 +14,6 @@ public interface IFileService extends IService<File> {
     /**
      * 按ID查询
      */
-    File queryById(Long id);
-
-    /**
-     * 分页查询
-     */
-    IPage<File> pageQuery(IPage<File> page);
+    File findById(Long id);
 
 }

@@ -16,7 +16,7 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     /**
      * 按ID查询（带缓存）
      */
-    ${entity} queryById(Long id);
+    ${entity} findById(Integer id);
 
     /**
      * 按ID更新（带缓存）
@@ -26,6 +26,6 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
     /**
      * 按ID删除（带缓存）
      */
-    boolean deleteById(Long id);
+    boolean deleteById(Integer id);
 
 }

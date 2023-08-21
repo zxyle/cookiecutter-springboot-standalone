@@ -15,38 +15,38 @@ import java.util.List;
 public interface IUserService extends IService<User> {
 
     // 删除用户及其关联角色、用户组、权限
-    boolean delete(Long userId);
+    boolean delete(Integer userId);
 
     // 禁用用户
-    boolean disable(Long userId);
+    boolean disable(Integer userId);
 
     // 启用用户
-    boolean enable(Long userId);
+    boolean enable(Integer userId);
 
     // 下线用户
-    boolean kick(Long userId);
+    boolean kick(Integer userId);
 
     // 通过账号名查询用户
-    User queryByAccount(String account);
+    User findByAccount(String account);
 
     // 查询用户拥有的角色、用户组、权限
     UserResponse attachUserInfo(User user, boolean full);
 
     // 更新用户关联的角色、用户组、权限
-    void updateRelation(Long userId, List<Long> roleIds, List<Long> groupIds, List<Long> permissionIds);
+    void updateRelation(Integer userId, List<Integer> roleIds, List<Integer> groupIds, List<Integer> permissionIds);
 
     // 创建用户
     User create(String account, String password);
 
     // 获取所有有管理权限用户组成员
-    List<Long> getAllChildren(Long userId);
+    List<Integer> getAllChildren(Integer userId);
 
     // 锁定用户并退出当前登录状态
-    boolean locked(Long userId);
+    boolean locked(Integer userId);
 
     // 解锁用户
-    boolean unlock(Long userId);
+    boolean unlock(Integer userId);
 
     // 带缓存的ID查询
-    User queryById(Long userId);
+    User findById(Integer userId);
 }

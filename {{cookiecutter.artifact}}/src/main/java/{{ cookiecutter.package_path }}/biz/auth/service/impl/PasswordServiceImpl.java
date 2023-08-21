@@ -38,8 +38,8 @@ public class PasswordServiceImpl implements IPasswordService {
      * @return true: 修改成功; false: 修改失败
      */
     @Override
-    public boolean change(Long userId, String newPwd, ChangePasswordEnum policy) {
-        User user = userService.queryById(userId);
+    public boolean change(Integer userId, String newPwd, ChangePasswordEnum policy) {
+        User user = userService.findById(userId);
 
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("pwd", passwordEncoder.encode(newPwd.trim()));

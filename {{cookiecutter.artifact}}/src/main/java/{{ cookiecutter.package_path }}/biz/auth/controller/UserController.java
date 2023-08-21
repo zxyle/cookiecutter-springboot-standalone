@@ -58,7 +58,7 @@ public class UserController extends AuthBaseController {
         }
 
         // 不能将没有权限的用户信息返回
-        List<Long> members = thisService.getAllChildren(getUserId());
+        List<Integer> members = thisService.getAllChildren(getUserId());
         wrapper.in("id", members);
 
         wrapper.eq(request.getEnabled() != null, "enabled", request.getEnabled());
@@ -80,7 +80,7 @@ public class UserController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:user:add')")
     @PostMapping("/users")
     public R<User> add(@Valid @RequestBody AdminAddUserRequest request) {
-        if (thisService.queryByAccount(request.getAccount()) != null) {
+        if (thisService.findByAccount(request.getAccount()) != null) {
             return R.fail("创建失败，用户名被占用");
         }
 
@@ -93,9 +93,9 @@ public class UserController extends AuthBaseController {
             return R.fail("创建用户失败");
         }
 
-        List<Long> roleIds = new ArrayList<>();
+        List<Integer> roleIds = new ArrayList<>();
         if (CollectionUtils.isEmpty(request.getRoleIds())) {
-            Long defaultRole = setting.get("auth.user.default-role").getLongValue();
+            Integer defaultRole = setting.get("auth.user.default-role").getIntValue();
             roleIds.add(defaultRole);
         } else {
             roleIds.addAll(request.getRoleIds());
@@ -113,7 +113,7 @@ public class UserController extends AuthBaseController {
     @LogOperation(name = "更新用户信息", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PutMapping("/users/{userId}")
-    public R<Void> update(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
+    public R<Void> update(@PathVariable Integer userId, @Valid @RequestBody UpdateUserRequest request) {
         if (!groupService.isAllowed(getUserId(), userId, null)) {
             return R.fail("没有权限更新用户");
         }
@@ -132,12 +132,12 @@ public class UserController extends AuthBaseController {
     @LogOperation(name = "按ID查询用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:get')")
     @GetMapping("/users/{userId}")
-    public R<UserResponse> get(@PathVariable Long userId) {
+    public R<UserResponse> get(@PathVariable Integer userId) {
         if (!groupService.isAllowed(getUserId(), userId, null)) {
             return R.fail("没有权限查询该用户");
         }
 
-        User user = thisService.queryById(userId);
+        User user = thisService.findById(userId);
         if (user != null) {
             return R.ok(thisService.attachUserInfo(user, true));
         }
@@ -152,7 +152,7 @@ public class UserController extends AuthBaseController {
     @LogOperation(name = "按ID删除用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:delete')")
     @DeleteMapping("/users/{userId}")
-    public R<Void> delete(@PathVariable Long userId) {
+    public R<Void> delete(@PathVariable Integer userId) {
         if (userId.equals(getUserId())) {
             return R.fail("不能删除自己");
         }
@@ -174,7 +174,7 @@ public class UserController extends AuthBaseController {
     @LogOperation(name = "禁用用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:disable')")
     @PutMapping("/users/{userId}/disable")
-    public R<Void> disable(@PathVariable Long userId) {
+    public R<Void> disable(@PathVariable Integer userId) {
         if (userId.equals(getUserId())) {
             return R.fail("不能禁用自己");
         }
@@ -196,7 +196,7 @@ public class UserController extends AuthBaseController {
     @LogOperation(name = "启用用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:enable')")
     @PutMapping("/users/{userId}/enable")
-    public R<Void> enable(@PathVariable Long userId) {
+    public R<Void> enable(@PathVariable Integer userId) {
         if (!groupService.isAllowed(getUserId(), userId, null)) {
             return R.fail("没有权限启用用户");
         }
@@ -214,7 +214,7 @@ public class UserController extends AuthBaseController {
     @LogOperation(name = "下线用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:kick')")
     @PutMapping("/users/{userId}/kick")
-    public R<Void> kick(@PathVariable Long userId) {
+    public R<Void> kick(@PathVariable Integer userId) {
         if (userId.equals(getUserId())) {
             return R.fail("不能将自己下线");
         }

@@ -37,7 +37,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements IAppS
      */
     @Cacheable(key = "#id", unless = "#result == null")
     @Override
-    public App queryById(Long id) {
+    public App findById(Integer id) {
         return getById(id);
     }
 
@@ -56,7 +56,7 @@ public class AppServiceImpl extends ServiceImpl<AppMapper, App> implements IAppS
      */
     @CacheEvict(key = "#id")
     @Override
-    public boolean deleteById(Long id) {
+    public boolean deleteById(Integer id) {
         return removeById(id);
     }
 

@@ -16,12 +16,12 @@ import java.util.List;
 public interface PermissionMapper extends BaseMapper<Permission> {
 
     // 查询用户所拥有的权限代码列表
-    List<String> findPermissionsByUserId(Long userId);
+    List<String> findPermissionsByUserId(Integer userId);
 
     /**
      * 查询最大排序号
      *
      * @param parentId 父ID
      */
-    Integer selectMaxSort(Long parentId);
+    Integer selectMaxSort(Integer parentId);
 }

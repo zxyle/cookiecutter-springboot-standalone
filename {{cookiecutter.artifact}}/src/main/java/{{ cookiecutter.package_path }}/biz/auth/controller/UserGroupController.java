@@ -44,7 +44,7 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/groups")
-    public R<PageVO<Group>> list(@Valid PaginationRequest request, @PathVariable Long userId) {
+    public R<PageVO<Group>> list(@Valid PaginationRequest request, @PathVariable Integer userId) {
         IPage<Group> page = PageRequestUtil.checkForMp(request);
         IPage<Group> list = thisMapper.page(page, userId, request);
         return PageRequestUtil.extractFromMp(list);
@@ -58,7 +58,7 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/groups")
-    public R<Void> add(@PathVariable Long userId, @Valid @RequestBody UserGroup entity) {
+    public R<Void> add(@PathVariable Integer userId, @Valid @RequestBody UserGroup entity) {
         boolean success = thisService.createRelation(userId, entity.getGroupId());
         if (success) {
             permissionService.refreshPermissions(userId);
@@ -76,7 +76,7 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/users/{userId}/groups/{groupId}")
-    public R<Void> delete(@PathVariable Long userId, @PathVariable Long groupId) {
+    public R<Void> delete(@PathVariable Integer userId, @PathVariable Integer groupId) {
         boolean success = thisService.deleteRelation(userId, groupId);
         if (success) {
             permissionService.refreshPermissions(userId);
@@ -93,7 +93,7 @@ public class UserGroupController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}/users")
-    public R<PageVO<User>> pageUser(@PathVariable Long groupId, @Valid ListAuthRequest request) {
+    public R<PageVO<User>> pageUser(@PathVariable Integer groupId, @Valid ListAuthRequest request) {
         IPage<User> page = PageRequestUtil.checkForMp(request);
         // todo 需支持查询子用户组下的用户
         IPage<User> pageVo = thisMapper.pageUser(page, groupId, request);
@@ -107,8 +107,8 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/groups/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Long userId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(groupId -> thisService.deleteRelation(userId, groupId));
 
@@ -122,8 +122,8 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/groups/batch-add")
-    public R<Void> createBatch(@PathVariable Long userId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(groupId -> thisService.createRelation(userId, groupId));
 

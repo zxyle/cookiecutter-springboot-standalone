@@ -22,7 +22,7 @@ public class TotpServiceImpl extends ServiceImpl<TotpMapper, Totp> implements IT
      */
     @Cacheable(cacheNames = "TotpCache", key = "#userId", unless = "#result == null")
     @Override
-    public Totp queryByUserId(Long userId) {
+    public Totp findByUserId(Integer userId) {
         QueryWrapper<Totp> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
         return getOne(wrapper);
@@ -33,7 +33,7 @@ public class TotpServiceImpl extends ServiceImpl<TotpMapper, Totp> implements IT
      */
     @CacheEvict(cacheNames = "TotpCache", key = "#userId")
     @Override
-    public boolean deleteByUserId(Long userId) {
+    public boolean deleteByUserId(Integer userId) {
         QueryWrapper<Totp> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
         return remove(wrapper);

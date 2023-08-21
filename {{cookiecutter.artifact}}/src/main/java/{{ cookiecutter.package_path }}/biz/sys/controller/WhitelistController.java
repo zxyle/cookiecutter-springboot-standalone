@@ -65,8 +65,8 @@ public class WhitelistController {
     @LogOperation(name = "按ID查询IP白名单", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:whitelist:get')")
     @GetMapping("/whitelists/{id}")
-    public R<Whitelist> get(@PathVariable Long id) {
-        return R.ok(thisService.queryById(id));
+    public R<Whitelist> get(@PathVariable Integer id) {
+        return R.ok(thisService.findById(id));
     }
 
     /**
@@ -75,7 +75,7 @@ public class WhitelistController {
     @LogOperation(name = "按ID更新IP白名单", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:whitelist:update')")
     @PutMapping("/whitelists/{id}")
-    public R<Void> update(@PathVariable Long id, @Valid @RequestBody Whitelist entity) {
+    public R<Void> update(@PathVariable Integer id, @Valid @RequestBody Whitelist entity) {
         entity.setId(id);
         boolean success = thisService.updateById(entity);
         return success ? R.ok("更新白名单成功") : R.fail("更新白名单失败");
@@ -87,7 +87,7 @@ public class WhitelistController {
     @LogOperation(name = "按ID删除IP白名单", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:whitelist:delete')")
     @DeleteMapping("/whitelists/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除白名单成功") : R.fail("删除白名单失败");
     }

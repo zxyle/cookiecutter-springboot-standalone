@@ -24,16 +24,16 @@ public class UserPermission extends LiteEntity {
     /**
      * 用户ID
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 权限ID
      */
     @Positive(message = "权限ID必须为正数")
     @NotNull(message = "权限ID不能为空")
-    private Long permissionId;
+    private Integer permissionId;
 
-    public UserPermission(Long userId, Long permissionId) {
+    public UserPermission(Integer userId, Integer permissionId) {
         this.userId = userId;
         this.permissionId = permissionId;
     }

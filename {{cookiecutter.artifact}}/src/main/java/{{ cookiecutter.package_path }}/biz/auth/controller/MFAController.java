@@ -58,7 +58,7 @@ public class MFAController extends AuthBaseController {
         }
 
         String account = request.getAccount();
-        if (userService.queryByAccount(account) != null) return R.fail("该账号已绑定其他用户");
+        if (userService.findByAccount(account) != null) return R.fail("该账号已绑定其他用户");
 
         // 获取redis中验证码, 校验是否正确
         String key = "code:" + account;
@@ -95,7 +95,7 @@ public class MFAController extends AuthBaseController {
     @LogOperation(name = "绑定TOTP验证器", biz = "auth")
     @GetMapping("/totp/bind")
     public R<Void> bind(@NotBlank String code) {
-        Totp result = totpService.queryByUserId(getUserId());
+        Totp result = totpService.findByUserId(getUserId());
         if (result != null) return R.ok("用户已设置");
 
         String secret = stringRedisTemplate.opsForValue().get("totp:" + getUserId());
@@ -118,7 +118,7 @@ public class MFAController extends AuthBaseController {
     @LogOperation(name = "解绑TOTP验证器", biz = "auth")
     @GetMapping("/totp/unbind")
     public R<Void> unbind(@NotBlank String code) {
-        Totp result = totpService.queryByUserId(getUserId());
+        Totp result = totpService.findByUserId(getUserId());
         if (result == null) return R.ok("用户未设置");
 
         String secret = result.getSecret();

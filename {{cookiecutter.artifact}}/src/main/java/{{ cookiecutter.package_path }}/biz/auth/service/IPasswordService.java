@@ -18,7 +18,7 @@ public interface IPasswordService {
      * @param policy 密码修改策略
      * @return true: 修改成功; false: 修改失败
      */
-    boolean change(Long userId, String newPwd, ChangePasswordEnum policy);
+    boolean change(Integer userId, String newPwd, ChangePasswordEnum policy);
 
 
     /**

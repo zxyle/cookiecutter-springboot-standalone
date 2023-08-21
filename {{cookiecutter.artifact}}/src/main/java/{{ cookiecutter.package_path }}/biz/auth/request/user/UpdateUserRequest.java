@@ -12,15 +12,15 @@ public class UpdateUserRequest {
     /**
      * 角色列表
      */
-    private List<@Positive @NotNull Long> roleIds;
+    private List<@Positive @NotNull Integer> roleIds;
 
     /**
      * 用户组列表
      */
-    private List<@Positive @NotNull Long> groupIds;
+    private List<@Positive @NotNull Integer> groupIds;
 
     /**
      * 权限列表
      */
-    private List<@Positive @NotNull Long> permissionIds;
+    private List<@Positive @NotNull Integer> permissionIds;
 }

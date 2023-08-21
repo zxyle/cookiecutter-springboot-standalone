@@ -20,7 +20,7 @@ public interface IGroupRoleService extends IService<GroupRole> {
      * @param groupId 用户组ID
      * @param roleId  角色ID
      */
-    boolean deleteRelation(Long groupId, Long roleId);
+    boolean deleteRelation(Integer groupId, Integer roleId);
 
     /**
      * 查询映射关系
@@ -28,7 +28,7 @@ public interface IGroupRoleService extends IService<GroupRole> {
      * @param groupId 用户组ID
      * @param roleId  角色ID
      */
-    List<GroupRole> queryRelation(Long groupId, Long roleId);
+    List<GroupRole> queryRelation(Integer groupId, Integer roleId);
 
     /**
      * 统计映射关系
@@ -36,7 +36,7 @@ public interface IGroupRoleService extends IService<GroupRole> {
      * @param groupId 用户组ID
      * @param roleId  角色ID
      */
-    Integer countRelation(Long groupId, Long roleId);
+    Integer countRelation(Integer groupId, Integer roleId);
 
     /**
      * 创建映射关系
@@ -44,7 +44,7 @@ public interface IGroupRoleService extends IService<GroupRole> {
      * @param groupId 用户组ID
      * @param roleId  角色ID
      */
-    boolean createRelation(Long groupId, Long roleId);
+    boolean createRelation(Integer groupId, Integer roleId);
 
     /**
      * 更新映射关系
@@ -52,16 +52,16 @@ public interface IGroupRoleService extends IService<GroupRole> {
      * @param groupId 用户组ID
      * @param roleIds 角色ID列表
      */
-    void updateRelation(Long groupId, List<Long> roleIds);
+    void updateRelation(Integer groupId, List<Integer> roleIds);
 
     /**
      * 根据用户组ID列表查询角色列表
      */
-    List<Role> findRolesByGroupId(Long groupId);
+    List<Role> findRolesByGroupId(Integer groupId);
 
     /**
      * 根据用户组ID列表查询角色列表
      */
-    List<Role> findRolesByGroupIds(List<Long> groupIds);
+    List<Role> findRolesByGroupIds(List<Integer> groupIds);
 
 }

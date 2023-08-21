@@ -41,7 +41,7 @@ public class RolePermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:role:get')")
     @GetMapping("/roles/{roleId}/permissions")
-    public R<PageVO<Permission>> list(@Valid PaginationRequest request, @PathVariable Long roleId) {
+    public R<PageVO<Permission>> list(@Valid PaginationRequest request, @PathVariable Integer roleId) {
         IPage<Permission> page = PageRequestUtil.checkForMp(request);
         IPage<Permission> list = thisMapper.page(page, roleId, request);
         return PageRequestUtil.extractFromMp(list);
@@ -55,10 +55,10 @@ public class RolePermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:role:update')")
     @PostMapping("/roles/{roleId}/permissions")
-    public R<Void> add(@PathVariable Long roleId, @Valid @RequestBody RolePermission entity) {
+    public R<Void> add(@PathVariable Integer roleId, @Valid @RequestBody RolePermission entity) {
         boolean success = thisService.createRelation(roleId, entity.getPermissionId());
         if (success) {
-            List<Long> users = getUsersByRole(roleId);
+            List<Integer> users = getUsersByRole(roleId);
             users.forEach(permissionService::refreshPermissions);
             return R.ok("角色新增权限成功");
         }
@@ -73,10 +73,10 @@ public class RolePermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:role:update')")
     @DeleteMapping("/roles/{roleId}/permissions/{permissionId}")
-    public R<Void> delete(@PathVariable Long permissionId, @PathVariable Long roleId) {
+    public R<Void> delete(@PathVariable Integer permissionId, @PathVariable Integer roleId) {
         boolean success = thisService.deleteRelation(roleId, permissionId);
         if (success) {
-            List<Long> users = getUsersByRole(roleId);
+            List<Integer> users = getUsersByRole(roleId);
             users.forEach(permissionService::refreshPermissions);
             return R.ok("角色移除权限限成功");
         }
@@ -90,8 +90,8 @@ public class RolePermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:role:update')")
     @PostMapping("/roles/{roleId}/permissions/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Long roleId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> deleteBatch(@PathVariable Integer roleId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(roleId, permissionId));
 
@@ -105,8 +105,8 @@ public class RolePermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:role:update')")
     @PostMapping("/roles/{roleId}/permissions/batch-add")
-    public R<Void> createBatch(@PathVariable Long roleId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> createBatch(@PathVariable Integer roleId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.createRelation(roleId, permissionId));
 

@@ -80,8 +80,8 @@ public class FeedbackController {
     @LogOperation(name = "按ID查询意见反馈", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:feedback:get')")
     @GetMapping("/feedbacks/{id}")
-    public R<Feedback> get(@PathVariable Long id) {
-        Feedback entity = thisService.queryById(id);
+    public R<Feedback> get(@PathVariable Integer id) {
+        Feedback entity = thisService.findById(id);
         return entity == null ? R.fail("数据不存在") : R.ok(entity);
     }
 
@@ -91,7 +91,7 @@ public class FeedbackController {
     @LogOperation(name = "按ID更新意见反馈", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:feedback:update')")
     @PutMapping("/feedbacks/{id}")
-    public R<Void> update(@PathVariable Long id, @Valid @RequestBody Feedback entity) {
+    public R<Void> update(@PathVariable Integer id, @Valid @RequestBody Feedback entity) {
         entity.setId(id);
         checkId(id);
         boolean success = thisService.updateById(entity);
@@ -104,12 +104,12 @@ public class FeedbackController {
     @LogOperation(name = "按ID删除意见反馈", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:feedback:delete')")
     @DeleteMapping("/feedbacks/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除意见反馈成功") : R.fail("删除意见反馈失败");
     }
 
-    public void checkId(Long id) {
+    public void checkId(Integer id) {
         Feedback entity = thisService.getById(id);
         if (entity == null) {
             throw new DataNotFoundException("数据不存在: " + id);

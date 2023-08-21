@@ -46,10 +46,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @CacheEvict(key = "#userId")
     @Transactional
     @Override
-    public boolean delete(Long userId) {
-        boolean s1 = userPermissionService.deleteRelation(userId, 0L);
-        boolean s2 = userRoleService.deleteRelation(userId, 0L);
-        boolean s3 = userGroupService.deleteRelation(userId, 0L);
+    public boolean delete(Integer userId) {
+        boolean s1 = userPermissionService.deleteRelation(userId, 0);
+        boolean s2 = userRoleService.deleteRelation(userId, 0);
+        boolean s3 = userGroupService.deleteRelation(userId, 0);
         boolean s4 = removeById(userId);
         boolean s5 = profileService.delete(userId);
         boolean s6 = kick(userId);
@@ -59,7 +59,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 禁用用户
     @Override
-    public boolean disable(Long userId) {
+    public boolean disable(Integer userId) {
         User user = new User();
         user.setId(userId);
         user.setEnabled(AuthConst.DISABLED);
@@ -69,7 +69,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 启用用户
     @Override
-    public boolean enable(Long userId) {
+    public boolean enable(Integer userId) {
         User user = new User();
         user.setId(userId);
         user.setEnabled(AuthConst.ENABLED);
@@ -78,7 +78,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 下线用户
     @Override
-    public boolean kick(Long userId) {
+    public boolean kick(Integer userId) {
         String key = AuthConst.KEY_PREFIX + userId;
         Boolean hasKey = stringRedisTemplate.hasKey(key);
         if (hasKey == null || !hasKey) {
@@ -92,7 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     // 通过账号名查询用户
     @Cacheable(cacheNames = "UserCache", key = "#account", unless = "#result == null")
     @Override
-    public User queryByAccount(String account) {
+    public User findByAccount(String account) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq(AccountUtil.isUsername(account), "username", account);
         wrapper.eq(AccountUtil.isEmail(account), "email", account);
@@ -121,7 +121,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 更新用户关联的角色、用户组、权限
     @Override
-    public void updateRelation(Long userId, List<Long> roleIds, List<Long> groupIds, List<Long> permissionIds) {
+    public void updateRelation(Integer userId, List<Integer> roleIds, List<Integer> groupIds, List<Integer> permissionIds) {
         userRoleService.updateRelation(userId, roleIds);
         userGroupService.updateRelation(userId, groupIds);
         userPermissionService.updateRelation(userId, permissionIds);
@@ -145,7 +145,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 获取所有有管理权限用户组成员
     @Override
-    public List<Long> getAllChildren(Long userId) {
+    public List<Integer> getAllChildren(Integer userId) {
         // 查询用户有管理员权限的用户组
         QueryWrapper<UserGroup> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("user_id, group_id");
@@ -163,7 +163,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 查询用户组下的所有用户
         QueryWrapper<UserGroup> userGroupQueryWrapper = new QueryWrapper<>();
         userGroupQueryWrapper.select("user_id, group_id");
-        List<Long> groupIds = allGroups.stream().distinct().map(Group::getId).collect(Collectors.toList());
+        List<Integer> groupIds = allGroups.stream().distinct().map(Group::getId).collect(Collectors.toList());
         userGroupQueryWrapper.in("group_id", groupIds);
         List<UserGroup> userGroupList = userGroupService.list(userGroupQueryWrapper);
         return userGroupList.stream().map(UserGroup::getUserId).collect(Collectors.toList());
@@ -171,7 +171,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 锁定用户并退出当前登录状态
     @Override
-    public boolean locked(Long userId) {
+    public boolean locked(Integer userId) {
         UpdateWrapper<User> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", userId);
         wrapper.set("locked", AuthConst.LOCKED);
@@ -182,7 +182,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     // 解锁用户
     @Override
-    public boolean unlock(Long userId) {
+    public boolean unlock(Integer userId) {
         UpdateWrapper<User> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", userId);
         wrapper.set("locked", AuthConst.UNLOCKED);
@@ -197,7 +197,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     // 带缓存的ID查询
     @Cacheable(key = "#userId", unless = "#result == null")
     @Override
-    public User queryById(Long userId) {
+    public User findById(Integer userId) {
         return getById(userId);
     }
 }

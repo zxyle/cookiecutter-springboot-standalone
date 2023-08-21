@@ -16,7 +16,7 @@ public interface IFeedbackService extends IService<Feedback> {
     /**
      * 按ID查询（带缓存）
      */
-    Feedback queryById(Long id);
+    Feedback findById(Integer id);
 
     /**
      * 按ID更新（带缓存）
@@ -26,7 +26,7 @@ public interface IFeedbackService extends IService<Feedback> {
     /**
      * 按ID删除（带缓存）
      */
-    void deleteById(Long id);
+    void deleteById(Integer id);
 
     /**
      * 分页查询（带缓存）

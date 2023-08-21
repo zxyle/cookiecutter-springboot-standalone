@@ -26,7 +26,7 @@ public class Group extends BaseEntity {
     /**
      * 上级用户组ID
      */
-    private Long parentId;
+    private Integer parentId;
 
     /**
      * 显示顺序

@@ -33,7 +33,7 @@ public class AddGroupRequest {
      */
     @Positive(message = "用户组ID必须为正整数")
     @NotNull(message = "父级用户组ID不能为空")
-    private Long parentId;
+    private Integer parentId;
 
     /**
      * 排序号
@@ -58,11 +58,11 @@ public class AddGroupRequest {
     /**
      * 权限ID列表
      */
-    private List<@Positive @NotNull Long> permissionIds;
+    private List<@Positive @NotNull Integer> permissionIds;
 
     /**
      * 角色ID列表
      */
-    private List<@Positive @NotNull Long> roleIds;
+    private List<@Positive @NotNull Integer> roleIds;
 
 }

@@ -59,7 +59,7 @@ public class RegisterController {
         }
 
         // 赋予默认角色
-        Long defaultRole = setting.get("auth.user.default-role").getLongValue();
+        Integer defaultRole = setting.get("auth.user.default-role").getIntValue();
         userService.updateRelation(user.getId(), Collections.singletonList(defaultRole), null, null);
 
         // 自动登录
@@ -86,7 +86,7 @@ public class RegisterController {
     @PreAuthorize("@ck.hasPermit('auth:user:check')")
     @GetMapping("/check")
     public R<Boolean> check(@NotBlank String account) {
-        if (userService.queryByAccount(account) == null) {
+        if (userService.findByAccount(account) == null) {
             return R.ok("可以注册");
         }
         return R.fail("账号名已经被占用，请更换账号名重试");
@@ -127,7 +127,7 @@ public class RegisterController {
         }
 
         // 检查账号是否已被占用
-        if (userService.queryByAccount(account) != null) {
+        if (userService.findByAccount(account) != null) {
             return R.fail("账号已被占用");
         }
 

@@ -16,7 +16,7 @@ public interface IOpenApiService extends IService<OpenApi> {
     /**
      * 按ID查询（带缓存）
      */
-    OpenApi queryById(Long id);
+    OpenApi findById(Integer id);
 
     /**
      * 按ID更新（带缓存）
@@ -26,7 +26,7 @@ public interface IOpenApiService extends IService<OpenApi> {
     /**
      * 按ID删除（带缓存）
      */
-    void deleteById(Long id);
+    void deleteById(Integer id);
 
     /**
      * 分页查询（带缓存）

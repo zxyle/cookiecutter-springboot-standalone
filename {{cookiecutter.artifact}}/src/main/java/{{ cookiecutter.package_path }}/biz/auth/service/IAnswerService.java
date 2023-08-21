@@ -17,7 +17,7 @@ public interface IAnswerService extends IService<Answer> {
      * @param questionId 问题ID
      * @return 是否已经被使用 true:已经被使用 false:未被使用
      */
-    boolean isAlreadyUsed(Long questionId);
+    boolean isAlreadyUsed(Integer questionId);
 
     /**
      * 查询用户的安全问题答案
@@ -26,6 +26,6 @@ public interface IAnswerService extends IService<Answer> {
      * @param questionId 问题ID
      * @return 安全问题答案
      */
-    Answer queryByUserId(Long userId, Long questionId);
+    Answer findByUserId(Integer userId, Integer questionId);
 
 }

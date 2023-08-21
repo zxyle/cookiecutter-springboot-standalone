@@ -97,8 +97,8 @@ public class RoleController extends AuthBaseController {
     @LogOperation(name = "按ID查询角色", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:get')")
     @GetMapping("/roles/{roleId}")
-    public R<RoleResponse> get(@PathVariable Long roleId) {
-        Role role = thisService.queryById(roleId);
+    public R<RoleResponse> get(@PathVariable Integer roleId) {
+        Role role = thisService.findById(roleId);
         if (role == null) return R.fail("角色不存在");
 
         // 查询角色对应权限关系
@@ -114,7 +114,7 @@ public class RoleController extends AuthBaseController {
     @LogOperation(name = "按ID更新角色", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:update')")
     @PutMapping("/roles/{roleId}")
-    public R<Void> update(@Valid @RequestBody UpdateRoleRequest request, @PathVariable Long roleId) {
+    public R<Void> update(@Valid @RequestBody UpdateRoleRequest request, @PathVariable Integer roleId) {
         // 更新角色信息
         Role role = new Role();
         BeanUtils.copyProperties(request, role);
@@ -126,7 +126,7 @@ public class RoleController extends AuthBaseController {
             thisService.updateRelation(roleId, request.getPermissionIds());
 
             // 刷新持有该角色的用户权限缓存
-            List<Long> users = getUsersByRole(roleId);
+            List<Integer> users = getUsersByRole(roleId);
             users.forEach(permissionService::refreshPermissions);
         }
         return R.ok("更新角色成功");
@@ -140,7 +140,7 @@ public class RoleController extends AuthBaseController {
     @LogOperation(name = "按ID删除角色", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:delete')")
     @DeleteMapping("/roles/{roleId}")
-    public R<Void> delete(@PathVariable Long roleId) {
+    public R<Void> delete(@PathVariable Integer roleId) {
         if (thisService.isAlreadyUsed(roleId)) {
             return R.fail("该角色正在使用，无法删除");
         }
@@ -148,7 +148,7 @@ public class RoleController extends AuthBaseController {
         boolean success = thisService.delete(roleId);
         if (success) {
             // 刷新持有该角色的用户权限缓存
-            List<Long> users = getUsersByRole(roleId);
+            List<Integer> users = getUsersByRole(roleId);
             users.forEach(permissionService::refreshPermissions);
             return R.ok("删除角色成功");
         }

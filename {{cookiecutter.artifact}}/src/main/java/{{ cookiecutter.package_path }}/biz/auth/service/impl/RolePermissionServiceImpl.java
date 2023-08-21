@@ -39,7 +39,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
             @CacheEvict(key = "null + ':' + #permissionId")
     })
     @Override
-    public boolean deleteRelation(Long roleId, Long permissionId) {
+    public boolean deleteRelation(Integer roleId, Integer permissionId) {
         if (countRelation(roleId, permissionId) == 0) return true;
 
         return remove(buildWrapper(roleId, permissionId));
@@ -53,7 +53,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      */
     @Cacheable(key = "#roleId + ':' + #permissionId", unless = "#result == null")
     @Override
-    public List<RolePermission> queryRelation(Long roleId, Long permissionId) {
+    public List<RolePermission> queryRelation(Integer roleId, Integer permissionId) {
         QueryWrapper<RolePermission> wrapper = buildWrapper(roleId, permissionId);
         wrapper.select("role_id, permission_id");
         return list(wrapper);
@@ -66,7 +66,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      * @param permissionId 权限ID
      */
     @Override
-    public Integer countRelation(Long roleId, Long permissionId) {
+    public Integer countRelation(Integer roleId, Integer permissionId) {
         return count(buildWrapper(roleId, permissionId));
     }
 
@@ -81,7 +81,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
             @CacheEvict(key = "null + ':' + #permissionId")
     })
     @Override
-    public boolean createRelation(Long roleId, Long permissionId) {
+    public boolean createRelation(Integer roleId, Integer permissionId) {
         if (countRelation(roleId, permissionId) > 0) return true;
 
         return save(new RolePermission(roleId, permissionId));
@@ -95,7 +95,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      */
     @Transactional
     @Override
-    public boolean updateRelation(Long roleId, List<Long> permissionIds) {
+    public boolean updateRelation(Integer roleId, List<Integer> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || roleId == null || roleId == 0L) {
             return false;
         }
@@ -110,10 +110,10 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
     }
 
     // 构建wrapper
-    private QueryWrapper<RolePermission> buildWrapper(Long roleId, Long permissionId) {
+    private QueryWrapper<RolePermission> buildWrapper(Integer roleId, Integer permissionId) {
         QueryWrapper<RolePermission> wrapper = new QueryWrapper<>();
-        wrapper.eq(roleId != null && roleId != 0L, "role_id", roleId);
-        wrapper.eq(permissionId != null && permissionId != 0L, "permission_id", permissionId);
+        wrapper.eq(roleId != null && roleId != 0, "role_id", roleId);
+        wrapper.eq(permissionId != null && permissionId != 0, "permission_id", permissionId);
         return wrapper;
     }
 
@@ -123,7 +123,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
      * @param roleId 角色ID
      */
     @Override
-    public List<Permission> findPermissionsByRoleId(Long roleId) {
+    public List<Permission> findPermissionsByRoleId(Integer roleId) {
         return baseMapper.findPermissionsByRoleId(roleId);
     }
 }

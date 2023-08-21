@@ -108,7 +108,7 @@ public class ${table.controllerName} {
     @LogOperation(name = "按ID查询${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:get')")
     @GetMapping("/${table.entityPath}s/{id}")
-    public R<${entity}> get(@PathVariable Long id) {
+    public R<${entity}> get(@PathVariable Integer id) {
         ${entity} entity = thisService.queryById(id);
         return entity == null ? R.fail("${table.comment!}不存在") : R.ok(entity);
     }
@@ -119,7 +119,7 @@ public class ${table.controllerName} {
     @LogOperation(name = "按ID更新${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:update')")
     @PutMapping("/${table.entityPath}s/{id}")
-    public R<Void> update(@Valid @RequestBody ${entity} entity, @PathVariable Long id) {
+    public R<Void> update(@Valid @RequestBody ${entity} entity, @PathVariable Integer id) {
         entity.setId(id);
         ${entity} result = thisService.putById(entity);
         return result != null ? R.ok(result) : R.fail("更新${table.comment!}失败");
@@ -131,7 +131,7 @@ public class ${table.controllerName} {
     @LogOperation(name = "按ID删除${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:delete')")
     @DeleteMapping("/${table.entityPath}s/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         boolean deleted = thisService.deleteById(id);
         return deleted ? R.ok("删除${table.comment!}成功") : R.fail("删除${table.comment!}失败");
     }
@@ -164,7 +164,7 @@ public class ${table.controllerName} {
     @LogOperation(name = "批量删除${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:delete')")
     @DeleteMapping("/${table.entityPath}s/batch-delete")
-    public R<Void> batchDelete(@RequestBody List<Long> ids) {
+    public R<Void> batchDelete(@RequestBody List<Integer> ids) {
         boolean removed = thisService.removeByIds(ids);
         return removed ? R.ok("批量删除${table.comment!}成功") : R.fail("批量删除${table.comment!}失败");
     }

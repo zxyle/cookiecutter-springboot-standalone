@@ -41,7 +41,7 @@ public class UserRoleController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/roles")
-    public R<PageVO<Role>> list(@Valid PaginationRequest request, @PathVariable Long userId) {
+    public R<PageVO<Role>> list(@Valid PaginationRequest request, @PathVariable Integer userId) {
         IPage<Role> page = PageRequestUtil.checkForMp(request);
         IPage<Role> list = thisMapper.page(page, userId, request);
         return PageRequestUtil.extractFromMp(list);
@@ -55,7 +55,7 @@ public class UserRoleController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/roles")
-    public R<Void> add(@Valid @RequestBody UserRole entity, @PathVariable Long userId) {
+    public R<Void> add(@Valid @RequestBody UserRole entity, @PathVariable Integer userId) {
         boolean success = thisService.createRelation(userId, entity.getRoleId());
         if (success) {
             permissionService.refreshPermissions(userId);
@@ -72,7 +72,7 @@ public class UserRoleController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/users/{userId}/roles/{roleId}")
-    public R<Void> delete(@PathVariable Long userId, @PathVariable Long roleId) {
+    public R<Void> delete(@PathVariable Integer userId, @PathVariable Integer roleId) {
         boolean success = thisService.deleteRelation(userId, roleId);
         if (success) {
             permissionService.refreshPermissions(userId);
@@ -88,8 +88,8 @@ public class UserRoleController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/roles/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Long userId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(roleId -> thisService.deleteRelation(userId, roleId));
 
@@ -103,8 +103,8 @@ public class UserRoleController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/roles/batch-add")
-    public R<Void> createBatch(@PathVariable Long userId, @Valid @RequestBody BatchRequest request) {
-        List<Long> ids = request.getIds();
+    public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
+        List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(roleId -> thisService.createRelation(userId, roleId));
 

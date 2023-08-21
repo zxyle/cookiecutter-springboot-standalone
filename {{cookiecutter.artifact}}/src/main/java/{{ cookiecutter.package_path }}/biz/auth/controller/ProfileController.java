@@ -35,8 +35,8 @@ public class ProfileController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:profile:get')")
     @GetMapping("/profile")
     public R<Profile> get() {
-        Long userId = getUserId();
-        return R.ok(thisService.queryByUserId(userId));
+        Integer userId = getUserId();
+        return R.ok(thisService.findByUserId(userId));
     }
 
     /**
@@ -46,7 +46,7 @@ public class ProfileController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:profile:update')")
     @PutMapping("/profile")
     public R<Profile> update(@Valid @RequestBody Profile entity) {
-        Long userId = getUserId();
+        Integer userId = getUserId();
         entity.setUserId(userId);
         Profile profile = thisService.updateProfile(entity);
 

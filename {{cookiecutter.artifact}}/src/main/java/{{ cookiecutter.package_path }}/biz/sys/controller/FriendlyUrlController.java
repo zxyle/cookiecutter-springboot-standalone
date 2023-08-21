@@ -82,7 +82,7 @@ public class FriendlyUrlController {
     @CacheEvict(cacheNames = "UrlCache", allEntries = true)
     @PreAuthorize("@ck.hasPermit('sys:friendly:update')")
     @PutMapping("/urls/{id}")
-    public R<FriendlyUrl> update(@PathVariable Long id, @Valid @RequestBody FriendlyUrl entity) {
+    public R<FriendlyUrl> update(@PathVariable Integer id, @Valid @RequestBody FriendlyUrl entity) {
         entity.setId(id);
         FriendlyUrl result = thisService.getById(id);
         if (result == null) return R.fail("友链不存在");

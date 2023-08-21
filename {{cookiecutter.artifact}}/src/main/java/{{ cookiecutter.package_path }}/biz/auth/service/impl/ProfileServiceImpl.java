@@ -33,7 +33,7 @@ public class ProfileServiceImpl extends ServiceImpl<ProfileMapper, Profile> impl
      */
     @Cacheable(key = "#userId", unless = "#result == null")
     @Override
-    public Profile queryByUserId(Long userId) {
+    public Profile findByUserId(Integer userId) {
         QueryWrapper<Profile> wrapper = new QueryWrapper<>();
         wrapper.eq(USER_ID, userId);
         return getOne(wrapper);
@@ -65,7 +65,7 @@ public class ProfileServiceImpl extends ServiceImpl<ProfileMapper, Profile> impl
      */
     @CacheEvict(key = "#userId")
     @Override
-    public boolean delete(Long userId) {
+    public boolean delete(Integer userId) {
         QueryWrapper<Profile> wrapper = new QueryWrapper<>();
         wrapper.eq(USER_ID, userId);
         if (count(wrapper) == 0)

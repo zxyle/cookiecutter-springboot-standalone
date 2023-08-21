@@ -30,7 +30,7 @@ public class OperateLog extends LiteEntity {
     /**
      * 操作用户ID
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 业务模块

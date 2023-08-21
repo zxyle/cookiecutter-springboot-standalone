@@ -92,7 +92,7 @@ public class QuestionController extends AuthBaseController {
     @LogOperation(name = "按ID删除安全问题", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:question:delete')")
     @DeleteMapping("/questions/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         if (answerService.isAlreadyUsed(id)) {
             return R.fail("该安全问题已经被使用，无法删除");
         }
@@ -151,7 +151,7 @@ public class QuestionController extends AuthBaseController {
 
 
     // 保存用户安全问题答案
-    private boolean saveAnswers(AddAnswerRequest request, Long userId) {
+    private boolean saveAnswers(AddAnswerRequest request, Integer userId) {
         List<Answer> answers = request.getAnswers().stream().map(ans -> {
             Answer answer = new Answer();
             answer.setUserId(userId);

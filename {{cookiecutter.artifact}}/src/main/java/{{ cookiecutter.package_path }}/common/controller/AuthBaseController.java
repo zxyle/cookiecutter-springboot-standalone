@@ -37,7 +37,7 @@ public class AuthBaseController {
     /**
      * 获取当前登录用户ID
      */
-    public Long getUserId() {
+    public Integer getUserId() {
         return getLoggedInUser().getId();
     }
 
@@ -69,9 +69,9 @@ public class AuthBaseController {
     /**
      * 获取当前用户组以及子用户组ID
      */
-    public List<Long> getSubGroupIds() {
-        List<Long> longs = new ArrayList<>();
-        for (Long groupId : getGroupIds()) {
+    public List<Integer> getSubGroupIds() {
+        List<Integer> longs = new ArrayList<>();
+        for (Integer groupId : getGroupIds()) {
             longs.addAll(groupService.getSubGroups(groupId));
         }
         return longs.stream().distinct().collect(Collectors.toList());
@@ -80,8 +80,8 @@ public class AuthBaseController {
     /**
      * 判断该用户组是否是其子用户组
      */
-    public boolean isSubGroup(Long groupId) {
-        List<Long> subGroups = getSubGroupIds();
+    public boolean isSubGroup(Integer groupId) {
+        List<Integer> subGroups = getSubGroupIds();
         return subGroups.contains(groupId);
     }
 
@@ -90,8 +90,8 @@ public class AuthBaseController {
      *
      * @param groupId 用户组ID
      */
-    public List<Long> getUsersByGroup(Long groupId) {
-        List<UserGroup> groups = userGroupService.queryRelation(0L, groupId);
+    public List<Integer> getUsersByGroup(Integer groupId) {
+        List<UserGroup> groups = userGroupService.queryRelation(0, groupId);
         return groups.stream().map(UserGroup::getUserId).collect(Collectors.toList());
     }
 
@@ -101,14 +101,14 @@ public class AuthBaseController {
      * @param roleId 角色ID
      * @return 用户ID列表
      */
-    public List<Long> getUsersByRole(Long roleId) {
-        List<UserRole> roles = userRoleService.queryRelation(0L, roleId);
+    public List<Integer> getUsersByRole(Integer roleId) {
+        List<UserRole> roles = userRoleService.queryRelation(0, roleId);
         return roles.stream().map(UserRole::getUserId).collect(Collectors.toList());
     }
 
     // 查询用户所在用户组Ids
-    public List<Long> getGroupIds() {
-        List<UserGroup> groups = userGroupService.queryRelation(getUserId(), 0L);
+    public List<Integer> getGroupIds() {
+        List<UserGroup> groups = userGroupService.queryRelation(getUserId(), 0);
         return groups.stream().map(UserGroup::getGroupId).collect(Collectors.toList());
     }
 

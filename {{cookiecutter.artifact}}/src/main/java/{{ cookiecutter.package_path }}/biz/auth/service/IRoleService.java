@@ -19,14 +19,14 @@ public interface IRoleService extends IService<Role> {
      *
      * @param roleId 角色ID
      */
-    boolean delete(Long roleId);
+    boolean delete(Integer roleId);
 
     /**
      * 通过ID查询角色
      *
      * @param roleId 角色ID
      */
-    Role queryById(Long roleId);
+    Role findById(Integer roleId);
 
     /**
      * 判断角色是否已经被使用
@@ -34,7 +34,7 @@ public interface IRoleService extends IService<Role> {
      * @param roleId 角色ID
      * @return true 已经被使用 false 未被使用
      */
-    boolean isAlreadyUsed(Long roleId);
+    boolean isAlreadyUsed(Integer roleId);
 
     /**
      * 查询角色对应权限关系
@@ -45,7 +45,7 @@ public interface IRoleService extends IService<Role> {
     RoleResponse attachRoleInfo(Role role, boolean full);
 
     // 更新角色权限关系
-    void updateRelation(Long roleId, List<Long> permissionIds);
+    void updateRelation(Integer roleId, List<Integer> permissionIds);
 
     /**
      * 判断角色名称或者编码是否重复

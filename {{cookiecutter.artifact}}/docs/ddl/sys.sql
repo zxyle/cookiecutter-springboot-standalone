@@ -6,7 +6,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_area`;
 CREATE TABLE `sys_area` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `code` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '行政区编码',
   `name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '行政区名称',
   `parent_id` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '上级编码',
@@ -20,7 +20,7 @@ CREATE TABLE `sys_area` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_blacklist`;
 CREATE TABLE `sys_blacklist` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `ip` varchar(20) CHARACTER SET utf8mb4 NOT NULL COMMENT 'IP',
@@ -35,7 +35,7 @@ CREATE TABLE `sys_blacklist` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE `sys_dict` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `name` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '字典名称',
@@ -528,7 +528,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_feedback`;
 CREATE TABLE `sys_feedback` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `email` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '联系邮箱',
@@ -542,7 +542,7 @@ CREATE TABLE `sys_feedback` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_file`;
 CREATE TABLE `sys_file` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `filename` varchar(255) DEFAULT NULL COMMENT '文件名',
@@ -555,7 +555,7 @@ CREATE TABLE `sys_file` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_friendly_url`;
 CREATE TABLE `sys_friendly_url` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `content` varchar(255) NOT NULL COMMENT '链接文本',
@@ -578,7 +578,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_info`;
 CREATE TABLE `sys_info` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `param_key` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '参数名称',
@@ -612,7 +612,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_login_log`;
 CREATE TABLE `sys_login_log` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `account` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '登录用户名',
@@ -620,7 +620,7 @@ CREATE TABLE `sys_login_log` (
   `ua` varchar(255) DEFAULT NULL COMMENT '浏览器请求头',
   `msg` varchar(255) DEFAULT NULL COMMENT '消息',
   `success` tinyint unsigned DEFAULT '0' COMMENT '1-成功 0-失败',
-  `user_id` bigint unsigned DEFAULT NULL COMMENT '用户id',
+  `user_id` int unsigned DEFAULT NULL COMMENT '用户id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登录日志';
 
@@ -629,10 +629,10 @@ CREATE TABLE `sys_login_log` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_operate_log`;
 CREATE TABLE `sys_operate_log` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `operate_time` datetime NOT NULL COMMENT '操作时间',
   `biz` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '业务模块',
-  `user_id` bigint unsigned NOT NULL COMMENT '操作用户ID',
+  `user_id` int unsigned NOT NULL COMMENT '操作用户ID',
   `operation_name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '操作名称',
   `request` varchar(2048) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '请求体',
   `ip` varchar(20) NOT NULL COMMENT '请求来源IP',
@@ -650,7 +650,7 @@ CREATE TABLE `sys_operate_log` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_release`;
 CREATE TABLE `sys_release` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `version` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '版本号',
@@ -670,7 +670,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_setting`;
 CREATE TABLE `sys_setting` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `option_label` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '选项',
@@ -751,7 +751,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_task`;
 CREATE TABLE `sys_task` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `name` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '定时任务名称',
@@ -764,7 +764,7 @@ CREATE TABLE `sys_task` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_verification`;
 CREATE TABLE `sys_verification` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `kind` enum('email','mobile') CHARACTER SET utf8mb4 NOT NULL COMMENT '验证码类型',
@@ -779,7 +779,7 @@ PRIMARY KEY (`id`)
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_whitelist`;
 CREATE TABLE `sys_whitelist` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `ip` varchar(20) CHARACTER SET utf8mb4 NOT NULL COMMENT 'IP',
@@ -802,7 +802,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `template`;
 CREATE TABLE `template` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -813,7 +813,7 @@ CREATE TABLE `template` (
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_counter`;
 CREATE TABLE `sys_counter` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `biz` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '键',

@@ -31,10 +31,10 @@ public class UpdateAuthRequest extends BaseRequest {
     /**
      * 权限ID列表
      */
-    private List<@Positive @NotNull Long> permissionIds;
+    private List<@Positive @NotNull Integer> permissionIds;
 
     /**
      * 角色ID列表
      */
-    private List<@Positive @NotNull Long> roleIds;
+    private List<@Positive @NotNull Integer> roleIds;
 }

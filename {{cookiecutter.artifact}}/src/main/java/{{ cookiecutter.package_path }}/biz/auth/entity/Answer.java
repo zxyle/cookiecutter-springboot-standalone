@@ -22,12 +22,12 @@ public class Answer extends BaseEntity {
     /**
      * 安全问题ID
      */
-    private Long questionId;
+    private Integer questionId;
 
     /**
      * 用户ID
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 安全问题答案md5

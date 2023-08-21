@@ -29,26 +29,26 @@ public interface IGroupService extends IService<Group> {
      * @param name     用户组名称
      * @return 数量
      */
-    Integer count(Long parentId, String name);
+    Integer count(Integer parentId, String name);
 
     /**
      * 获取该用户组下所有子用户组ID（包括自身）
      */
-    List<Long> getSubGroups(Long rootGroupId);
+    List<Integer> getSubGroups(Integer rootGroupId);
 
     /**
      * 删除用户组及关联关系
      *
      * @param groupId 用户组ID
      */
-    boolean delete(Long groupId);
+    boolean delete(Integer groupId);
 
     /**
      * 获取用户组树
      *
      * @param rootId 根节点ID
      */
-    List<Tree<Long>> getTree(Long rootId);
+    List<Tree<Integer>> getTree(Integer rootId);
 
     /**
      * 获取所有子用户组（包含自身）
@@ -56,7 +56,7 @@ public interface IGroupService extends IService<Group> {
      * @param groups  用户组列表
      * @param groupId 根节点ID
      */
-    List<Group> getAllChildren(List<Group> groups, Long groupId);
+    List<Group> getAllChildren(List<Group> groups, Integer groupId);
 
     /**
      * 判断一个用户是否有对另一个用户或另一个用户组的管理权限
@@ -66,7 +66,7 @@ public interface IGroupService extends IService<Group> {
      * @param acceptGroupId 用户组ID
      * @return true 有权限，false 无权限
      */
-    boolean isAllowed(Long actionUserId, Long acceptUserId, Long acceptGroupId);
+    boolean isAllowed(Integer actionUserId, Integer acceptUserId, Integer acceptGroupId);
 
     /**
      * 更新用户组关联关系
@@ -75,7 +75,7 @@ public interface IGroupService extends IService<Group> {
      * @param roleIds       角色ID
      * @param permissionIds 权限ID
      */
-    void updateRelation(Long groupId, List<Long> roleIds, List<Long> permissionIds);
+    void updateRelation(Integer groupId, List<Integer> roleIds, List<Integer> permissionIds);
 
     /**
      * 获取用户组详细信息
@@ -89,11 +89,11 @@ public interface IGroupService extends IService<Group> {
      *
      * @param groupId 用户组ID
      */
-    boolean isAlreadyUsed(Long groupId);
+    boolean isAlreadyUsed(Integer groupId);
 
     /**
      * 按ID查询（带缓存）
      */
-    Group queryById(Long id);
+    Group findById(Integer id);
 
 }

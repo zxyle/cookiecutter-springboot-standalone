@@ -64,7 +64,7 @@ public class BlacklistController {
     @LogOperation(name = "按ID删除黑名单", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:blacklist:delete')")
     @DeleteMapping("/blacklists/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         boolean success = thisService.removeById(id);
         return success ? R.ok("删除IP黑名单成功") : R.fail("删除IP黑名单失败");
     }

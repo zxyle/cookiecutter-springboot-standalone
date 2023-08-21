@@ -22,7 +22,7 @@ public class ResetPasswordRequest {
      */
     @Positive(message = "用户ID必须为正整数")
     @NotNull(message = "用户ID不能为空")
-    private Long userId;
+    private Integer userId;
 
     /**
      * 新密码（不输入则系统随机生成密码）
