@@ -14,7 +14,6 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +37,6 @@ public class PermissionController extends AuthBaseController {
      */
     @LogOperation(name = "获取权限树", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:permission:tree')")
-    @Secured("ROLE_admin")
     @GetMapping("/permissions/tree")
     public R<List<Tree<Integer>>> tree(@Valid TreePermissionRequest request) {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();

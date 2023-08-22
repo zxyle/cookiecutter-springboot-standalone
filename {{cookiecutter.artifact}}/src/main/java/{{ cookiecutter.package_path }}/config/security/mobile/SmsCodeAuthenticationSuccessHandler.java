@@ -50,7 +50,7 @@ public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSucces
         LoginResponse loginResponse = new LoginResponse(principal.getUser());
         response.setContentType("application/json;charset=UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getOutputStream(), R.ok(loginResponse));
+        objectMapper.writeValue(response.getOutputStream(), R.ok(loginResponse, "登录成功"));
     }
 
     private void recordLog(HttpServletRequest request) {

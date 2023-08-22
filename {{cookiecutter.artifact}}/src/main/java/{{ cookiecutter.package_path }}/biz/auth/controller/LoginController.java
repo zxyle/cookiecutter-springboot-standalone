@@ -58,7 +58,7 @@ public class LoginController extends AuthBaseController {
         LoginResponse response = loginService.login(request.getAccount(), request.getPassword());
 
         afterLogin(response);
-        return R.ok(response);
+        return R.ok(response, "登录成功");
     }
 
 
