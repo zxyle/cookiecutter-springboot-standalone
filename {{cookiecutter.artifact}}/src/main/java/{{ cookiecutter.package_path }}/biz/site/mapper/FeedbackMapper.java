@@ -1,6 +1,6 @@
-package {{ cookiecutter.basePackage }}.biz.sys.mapper;
+package {{ cookiecutter.basePackage }}.biz.site.mapper;
 
-import {{ cookiecutter.basePackage }}.biz.sys.entity.Feedback;
+import {{ cookiecutter.basePackage }}.biz.site.entity.Feedback;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 

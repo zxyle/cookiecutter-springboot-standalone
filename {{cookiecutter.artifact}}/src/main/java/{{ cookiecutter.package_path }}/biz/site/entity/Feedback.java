@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.biz.sys.entity;
+package {{ cookiecutter.basePackage }}.biz.site.entity;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.TableName;
