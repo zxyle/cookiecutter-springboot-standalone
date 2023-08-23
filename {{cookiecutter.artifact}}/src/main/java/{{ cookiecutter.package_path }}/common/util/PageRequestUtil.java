@@ -52,7 +52,7 @@ public final class PageRequestUtil {
      * @return 有效页码大小
      */
     public static Integer checkPageNum(Integer pageNum) {
-        return valid(pageNum) ? PageConst.DEFAULT_CURRENT : pageNum;
+        return isValid(pageNum) ? pageNum : PageConst.DEFAULT_CURRENT;
     }
 
     /**
@@ -62,27 +62,16 @@ public final class PageRequestUtil {
      * @return 有效分页大小
      */
     public static Integer checkPageSize(Integer pageSize) {
-        return checkPageSize(pageSize, PageConst.MAX_PAGE_SIZE);
-    }
-
-    /**
-     * 检查分页大小
-     *
-     * @param pageSize    输入分页大小
-     * @param maxPageSize 自定义最大分页大小
-     * @return 有效分页大小
-     */
-    public static Integer checkPageSize(Integer pageSize, Integer maxPageSize) {
-        return (valid(pageSize) || pageSize >= maxPageSize) ? maxPageSize : pageSize;
+        return (isValid(pageSize) && pageSize < PageConst.MAX_PAGE_SIZE) ?   pageSize:PageConst.MAX_PAGE_SIZE;
     }
 
     /**
      * Integer取值范围检查
      *
      * @param param 参数
-     * @return 是否不在取值范围
+     * @return true: 有效 false: 无效
      */
-    private static boolean valid(Integer param) {
-        return param == null || param <= 0 || param >= Integer.MAX_VALUE;
+    private static boolean isValid(Integer param) {
+        return !(param == null || param <= 0 || param >= Integer.MAX_VALUE);
     }
 }

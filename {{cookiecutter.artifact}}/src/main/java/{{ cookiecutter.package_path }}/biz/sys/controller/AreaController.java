@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import javax.validation.Valid;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class AreaController {
      */
     @GetMapping("/tree")
     @Cacheable(cacheNames = "AreaCache", key = "#request.rootId+#request.level")
-    public R<AntdTree2> tree(AreaRequest request) {
+    public R<AntdTree2> tree(@Valid AreaRequest request) {
         String rootId = request.getRootId();
         Integer level = request.getLevel();
         QueryWrapper<Area> wrapper = new QueryWrapper<>();

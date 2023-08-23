@@ -15,14 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 public class PaginationRequest extends BaseRequest {
 
     private static final String DEFAULT_ORDER = "asc";
-
     private static final String DEFAULT_FIELD = "id";
-
-    private static final Integer DEFAULT_PAGE_NUM = 1;
-
-    private static final Integer DEFAULT_PAGE_SIZE = 10;
-
-    private static final Integer MAX_PAGE_SIZE = 100;
+    private static final int DEFAULT_PAGE_NUM = 1;
+    private static final int DEFAULT_PAGE_SIZE = 10;
+    private static final int MAX_PAGE_SIZE = 100;
 
     /**
      * 分页页码
