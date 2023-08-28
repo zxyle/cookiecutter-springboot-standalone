@@ -1,8 +1,8 @@
 {
   "group": "com.example",
   "artifact": "demo-api",
-  "javaVersion": ["8", "11", "17"],
-  "bootVersion": ["2.7.14", "3.1.2"],
+  "javaVersion": ["8", "11"],
+  "bootVersion": ["2.7.15"],
   "package_path": "{{ cookiecutter.group|replace('.', '/') }}/{{ cookiecutter.artifact.replace('-', '') }}",
   "app_name": "{{ cookiecutter.artifact|title|replace('-', '')|replace('_', '')|replace(' ', '') }}",
   "basePackage": "{{ cookiecutter.group }}.{{ cookiecutter.artifact.replace('-', '') }}",
