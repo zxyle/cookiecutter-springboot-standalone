@@ -105,7 +105,7 @@ public class LogAspect {
         log.info("Around Result: {}", result);
         long end = System.currentTimeMillis();
         loginLog.setMsg(result.getMessage());
-        loginLog.setSuccess(result.isSuccess() ? 1 : 0);
+        loginLog.setSuccess(result.isSuccess());
 
 
         log.debug("{} -> {}, 耗费时间: {}毫秒.", pjp.getTarget().getClass().getSimpleName(), pjp.getSignature().getName(), (end - start));

@@ -48,16 +48,16 @@ public class User extends BaseEntity {
     private String email;
 
     /**
-     * 账号是否锁定 （1-上锁 0-未锁）
+     * 账号是否锁定
      */
     @JsonIgnore
-    private Integer locked;
+    private boolean locked;
 
     /**
-     * 是否超级管理员 (1-是 0-否)
+     * 是否超级管理员
      */
     @JsonIgnore
-    private Integer isSuper;
+    private boolean admin;
 
     /**
      * 账号过期时间
@@ -72,14 +72,14 @@ public class User extends BaseEntity {
     private LocalDateTime pwdChangeTime;
 
     /**
-     * 账号可用 （1-可用 0-禁用）
+     * 账号是否启用
      */
-    private Integer enabled;
+    private boolean enabled;
 
     /**
      * 是否需要修改密码
      */
-    private Integer mustChangePwd;
+    private boolean mustChangePwd;
 
     /**
      * 注册时间

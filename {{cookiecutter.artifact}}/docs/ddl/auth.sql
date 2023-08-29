@@ -335,12 +335,12 @@ CREATE TABLE `auth_user` (
   `email` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '邮箱地址',
   `pwd` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '密码',
   `nickname` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '昵称/名字/真实姓名（只用于展示）',
-  `locked` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '账号是否锁定 （1-上锁 0-未锁）',
-  `is_super` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否为超级管理员',
+  `locked` bit(1) NOT NULL DEFAULT b'0' COMMENT '账号是否锁定',
+  `admin` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否为超级管理员',
   `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
   `pwd_change_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '密码上次修改时间',
-  `enabled` tinyint unsigned NOT NULL DEFAULT '1' COMMENT '账号可用 1-启用 0-禁用',
-  `must_change_pwd` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否需要修改密码',
+  `enabled` bit(1) NOT NULL DEFAULT b'1' COMMENT '账号是否启用',
+  `must_change_pwd` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否需要修改密码',
   `registered_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
   `last_login_time` datetime DEFAULT NULL COMMENT '最后登录时间',
   PRIMARY KEY (`id`) USING BTREE,
@@ -353,8 +353,8 @@ CREATE TABLE `auth_user` (
 -- Records of auth_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `is_super`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', 'admin', '13111111111', 'admin@example.com', 0, 1, '2099-12-31 23:59:59', NOW(), 1);
-INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `is_super`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (2, 'zheng', '$2a$10$veHMsJJZtiFt0jyLOK9hAuKS1yejN1dsD7mGuAJ8rQfK7KUkXslYC', 'zheng', '15012345678', 'zheng@example.com', 0, 0, NULL, NOW(), 1);
+INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `admin`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', 'admin', '13111111111', 'admin@example.com', b'0', b'1', '2099-12-31 23:59:59', NOW(), b'1');
+INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `admin`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (2, 'zheng', '$2a$10$veHMsJJZtiFt0jyLOK9hAuKS1yejN1dsD7mGuAJ8rQfK7KUkXslYC', 'zheng', '15012345678', 'zheng@example.com', b'0', b'0', NULL, NOW(), b'1');
 COMMIT;
 
 -- ----------------------------
@@ -365,7 +365,7 @@ CREATE TABLE `auth_user_group` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `group_id` int unsigned NOT NULL COMMENT '用户组ID',
-  `admin` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否是该组管理员',
+  `admin` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否是该组管理员',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-用户组关联';
@@ -374,8 +374,8 @@ CREATE TABLE `auth_user_group` (
 -- Records of auth_user_group
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `admin`) VALUES (1, 1, 1, 1);
-INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `admin`) VALUES (2, 1, 2, 1);
+INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `admin`) VALUES (1, 1, 1, b'1');
+INSERT INTO `auth_user_group` (`id`, `user_id`, `group_id`, `admin`) VALUES (2, 1, 2, b'1');
 COMMIT;
 
 -- ----------------------------
@@ -486,7 +486,7 @@ CREATE TABLE `auth_app` (
   `app_key` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '应用标识',
   `app_secret` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '应用密钥',
   `redirect_url` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '回调地址',
-  `status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '应用状态：0-禁用，1-启用',
+  `enabled` bit(1) NOT NULL DEFAULT b'0' COMMENT '应用是否启用',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_app_key` (`app_key`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用';

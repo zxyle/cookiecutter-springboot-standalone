@@ -39,7 +39,7 @@ public class SmsCodeAuthenticationFailureHandler implements AuthenticationFailur
         LoginLog loginLog = new LoginLog();
         loginLog.setIp(request.getRemoteAddr());
         loginLog.setUa(request.getHeader("User-Agent"));
-        loginLog.setSuccess(0);
+        loginLog.setSuccess(false);
         loginLog.setAccount(account);
         loginLog.setMsg(exception.getMessage());
         loginLogService.saveLoginLog(loginLog);

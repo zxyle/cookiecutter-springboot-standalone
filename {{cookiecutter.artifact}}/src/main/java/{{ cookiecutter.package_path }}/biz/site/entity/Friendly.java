@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -44,9 +43,8 @@ public class Friendly extends BaseEntity {
     private Integer sort;
 
     /**
-     * 1-启用 0-禁用
+     * 友链是否启用
      */
-    @Range(min = 0, max = 1, message = "状态只能为0或1")
-    private Integer status;
+    private boolean enabled;
 
 }

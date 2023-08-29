@@ -548,7 +548,7 @@ CREATE TABLE `sys_login_log` (
   `ip` varchar(15) DEFAULT NULL COMMENT 'IP地址',
   `ua` varchar(255) DEFAULT NULL COMMENT '浏览器请求头',
   `msg` varchar(255) DEFAULT NULL COMMENT '消息',
-  `success` tinyint unsigned DEFAULT '0' COMMENT '1-成功 0-失败',
+  `success` bit(1) NOT NULL DEFAULT b'0' COMMENT '登录是否成功',
   `user_id` int unsigned DEFAULT NULL COMMENT '用户id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登录日志';
@@ -568,7 +568,7 @@ CREATE TABLE `sys_operate_log` (
   `method` varchar(6) CHARACTER SET utf8mb4 NOT NULL COMMENT 'http方法',
   `path` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '请求路径',
   `response` varchar(1024) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '响应体',
-  `success` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '操作是否成功',
+  `success` bit(1) NOT NULL DEFAULT b'0' COMMENT '操作是否成功',
   `trace_id` char(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '链路追踪ID',
   `measured` smallint unsigned NOT NULL DEFAULT '0' COMMENT '操作耗时(毫秒)',
   PRIMARY KEY (`id`)

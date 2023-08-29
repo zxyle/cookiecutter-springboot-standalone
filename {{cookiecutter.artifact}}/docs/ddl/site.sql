@@ -23,16 +23,16 @@ CREATE TABLE `site_friendly` (
   `content` varchar(255) NOT NULL COMMENT '链接文本',
   `url` varchar(255) NOT NULL COMMENT '链接',
   `sort` tinyint NOT NULL COMMENT '排序',
-  `status` tinyint NOT NULL COMMENT '1-启用 0-禁用',
+  `enabled` bit(1) NOT NULL DEFAULT b'1' COMMENT '友链是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='友情链接';
 -- ----------------------------
 -- Records of site_friendly_url
 -- ----------------------------
 BEGIN;
-INSERT INTO `site_friendly_url` (`content`, `url`, `sort`, `status`) VALUES ('百度', 'https://www.baidu.com', 2, 1);
-INSERT INTO `site_friendly_url` (`content`, `url`, `sort`, `status`) VALUES ('腾讯网', 'https://www.qq.com', 1, 1);
-INSERT INTO `site_friendly_url` (`content`, `url`, `sort`, `status`) VALUES ('淘宝网', 'https://www.taobao.com', 3, 1);
+INSERT INTO `site_friendly` (`content`, `url`, `sort`, `enabled`) VALUES ('百度', 'https://www.baidu.com', 2, b'1');
+INSERT INTO `site_friendly` (`content`, `url`, `sort`, `enabled`) VALUES ('腾讯网', 'https://www.qq.com', 1, b'1');
+INSERT INTO `site_friendly` (`content`, `url`, `sort`, `enabled`) VALUES ('淘宝网', 'https://www.taobao.com', 3, b'1');
 COMMIT;
 
 -- ----------------------------

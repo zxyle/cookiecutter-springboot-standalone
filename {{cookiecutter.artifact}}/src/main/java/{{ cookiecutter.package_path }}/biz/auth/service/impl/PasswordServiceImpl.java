@@ -45,7 +45,7 @@ public class PasswordServiceImpl implements IPasswordService {
         updateWrapper.set("pwd", passwordEncoder.encode(newPwd.trim()));
         updateWrapper.set("pwd_change_time", LocalDateTime.now());
         // 只有用户主动修改密码，页面才不会提示修改初始密码, 才会解除密码过期限制
-        if (user.getMustChangePwd() == 1 && policy.getEditedBy().equals("user")) {
+        if (user.isMustChangePwd() && policy.getEditedBy().equals("user")) {
             updateWrapper.set("must_change_pwd", 0);
             updateWrapper.set("expire_time", null);
         }

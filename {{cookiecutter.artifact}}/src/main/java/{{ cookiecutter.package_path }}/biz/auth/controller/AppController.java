@@ -148,9 +148,9 @@ public class AppController extends AuthBaseController {
     public R<Void> publish(@PathVariable Integer id) {
         App app = thisService.findById(id);
         if (app == null) return R.fail("应用不存在");
-        if (app.getStatus() == 1) return R.fail("应用已上架");
+        if (app.isEnabled()) return R.fail("应用已上架");
 
-        app.setStatus(1);  // 启用
+        app.setEnabled(true);  // 启用
         App result = thisService.putById(app);
         return result != null ? R.ok("应用上架成功") : R.fail("应用上架失败");
     }
@@ -165,9 +165,9 @@ public class AppController extends AuthBaseController {
     public R<Void> revoke(@PathVariable Integer id) {
         App app = thisService.findById(id);
         if (app == null) return R.fail("应用不存在");
-        if (app.getStatus() == 0) return R.fail("应用已下架");
+        if (!app.isEnabled()) return R.fail("应用已下架");
 
-        app.setStatus(0);  // 禁用
+        app.setEnabled(false);  // 禁用
         App result = thisService.putById(app);
         return result != null ? R.ok("应用下架成功") : R.fail("应用下架失败");
     }
@@ -184,7 +184,7 @@ public class AppController extends AuthBaseController {
         // 根据appId查询应用
         App app = thisService.findById(id);
         if (app == null) return R.fail("应用不存在");
-        if (app.getStatus() == 0) return R.fail("应用已下架");
+        if (app.isEnabled()) return R.fail("应用已下架");
 
         // 生成临时授权码, 存入redis, 30秒过期
         String authCode = UUID.randomUUID().toString();

@@ -57,8 +57,8 @@ public class LoginResponse {
     public LoginResponse(User user) {
         this.userId = user.getId();
         this.nickname = user.getNickname();
-        this.admin = user.getIsSuper() == 1;
-        this.mustChangePwd = user.getMustChangePwd() == 1;
+        this.admin = user.isAdmin();
+        this.mustChangePwd = user.isMustChangePwd();
         this.token = JwtUtil.createJWT(userId.toString());
     }
 }

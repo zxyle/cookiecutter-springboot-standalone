@@ -78,7 +78,7 @@ public class LoginUser implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         // 会抛出LockedException 用户帐号已被锁定 异常
-        return user.getLocked().equals(AuthConst.UNLOCKED);
+        return user.isLocked();
     }
 
     /**
@@ -102,7 +102,7 @@ public class LoginUser implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-        return user.getEnabled().equals(AuthConst.ENABLED);
+        return user.isEnabled();
     }
 
 }

@@ -44,8 +44,8 @@ public class LoginLog extends BaseEntity {
     private String msg;
 
     /**
-     * 登录是否成功（1-成功 0-失败）
+     * 登录是否成功
      */
-    private Integer success;
+    private boolean success;
 
 }

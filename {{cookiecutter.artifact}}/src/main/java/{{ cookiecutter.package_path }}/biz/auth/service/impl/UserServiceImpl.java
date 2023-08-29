@@ -62,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public boolean disable(Integer userId) {
         User user = new User();
         user.setId(userId);
-        user.setEnabled(AuthConst.DISABLED);
+        user.setEnabled(false);
         boolean success = updateById(user);
         return success && kick(userId);
     }
@@ -72,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public boolean enable(Integer userId) {
         User user = new User();
         user.setId(userId);
-        user.setEnabled(AuthConst.ENABLED);
+        user.setEnabled(true);
         return updateById(user);
     }
 

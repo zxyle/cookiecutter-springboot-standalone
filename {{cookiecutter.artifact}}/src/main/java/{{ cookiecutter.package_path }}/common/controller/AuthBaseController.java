@@ -53,9 +53,9 @@ public class AuthBaseController {
     /**
      * 是否为平台超级管理员
      */
-    public boolean isSuper() {
+    public boolean isAdmin() {
         User user = getLoggedInUser();
-        return user.getIsSuper().equals(1);
+        return user.isAdmin();
     }
 
     /**

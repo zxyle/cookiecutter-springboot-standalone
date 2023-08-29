@@ -49,8 +49,8 @@ public class App extends BaseEntity {
     private String redirectUrl;
 
     /**
-     * 应用状态：0-禁用，1-启用
+     * 应用是否启用
      */
-    private Integer status;
+    private boolean enabled;
 
 }
