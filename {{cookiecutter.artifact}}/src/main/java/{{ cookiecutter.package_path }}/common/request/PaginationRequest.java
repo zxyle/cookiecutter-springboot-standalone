@@ -11,6 +11,8 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
+
 /**
  * 带分页/排序/时间范围/模糊搜索/文件导出的分页请求对象，所有分页请求对象都应该继承此类
  */

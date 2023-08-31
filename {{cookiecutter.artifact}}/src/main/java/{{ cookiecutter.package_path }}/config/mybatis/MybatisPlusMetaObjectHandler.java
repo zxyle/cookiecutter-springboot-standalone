@@ -8,6 +8,8 @@ import {{ cookiecutter.basePackage }}.common.constant.ProjectConst;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -24,7 +26,7 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
         this.setFieldValByName(CREATE_FIELD, LocalDateTime.now(), metaObject);
         this.setFieldValByName(UPDATE_FIELD, LocalDateTime.now(), metaObject);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null){
+        if (authentication != null) {
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
             this.setFieldValByName("createBy", loginUser.getUser().getId(), metaObject);
             this.setFieldValByName("updateBy", loginUser.getUser().getId(), metaObject);
@@ -36,7 +38,7 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         this.setFieldValByName(UPDATE_FIELD, LocalDateTime.now(), metaObject);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null){
+        if (authentication != null) {
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
             this.setFieldValByName("updateBy", loginUser.getUser().getId(), metaObject);
         }
