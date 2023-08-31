@@ -3,6 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.common.response;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
 /**
  * 分页响应对象
  */
+@Getter
+@Setter
 @ToString
 public class PageVO<T> {
 
@@ -21,25 +25,9 @@ public class PageVO<T> {
     /**
      * 分页总数
      *
-     * @mock 10
+     * @mock 100
      */
-    private Long total;
-
-    public List<T> getList() {
-        return list;
-    }
-
-    public void setList(List<T> list) {
-        this.list = list;
-    }
-
-    public Long getTotal() {
-        return total;
-    }
-
-    public void setTotal(Long total) {
-        this.total = total;
-    }
+    private long total;
 
     public PageVO(List<T> list, Long total) {
         this.list = list;

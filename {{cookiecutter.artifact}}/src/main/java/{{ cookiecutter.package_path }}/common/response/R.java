@@ -17,9 +17,7 @@ import java.io.Serializable;
 public class R<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     private static final String SUCCESS_MSG = "操作成功";
-
     private static final String FAILURE_MSG = "操作失败";
 
 

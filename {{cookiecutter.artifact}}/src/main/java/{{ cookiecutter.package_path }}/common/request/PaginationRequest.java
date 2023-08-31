@@ -3,13 +3,16 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- * 带分页/排序/时间范围/搜索/导出请求对象
+ * 带分页/排序/时间范围/模糊搜索/文件导出的分页请求对象，所有分页请求对象都应该继承此类
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -64,24 +67,30 @@ public class PaginationRequest extends BaseRequest {
     private String field;
 
     /**
-     * 开始时间
+     * 开始时间 yyyy-MM-dd HH:mm:ss
      *
      * @mock 2021-01-01 00:00:00
      */
-    private String startTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime startTime;
 
     /**
-     * 结束时间
+     * 结束时间 yyyy-MM-dd HH:mm:ss
      *
      * @mock 2021-02-01 00:00:00
      */
-    private String endTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endTime;
 
     /**
      * 搜索关键字(支持模糊查询)
+     * 较长的关键词可能会影响查询性能
      *
      * @mock 123
      */
+    @Length(max = 64, message = "搜索关键字长度不能超过64")
     private String keyword;
 
 

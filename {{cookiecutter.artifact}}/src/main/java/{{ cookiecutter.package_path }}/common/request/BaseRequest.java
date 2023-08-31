@@ -3,9 +3,14 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 基础请求
  */
+@Getter
+@Setter
 public class BaseRequest {
 
     /**
@@ -24,28 +29,4 @@ public class BaseRequest {
      * 随机数
      */
     private String nonce;
-
-    public Long getTs() {
-        return ts;
-    }
-
-    public void setTs(Long ts) {
-        this.ts = ts;
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
-    }
-
-    public String getNonce() {
-        return nonce;
-    }
-
-    public void setNonce(String nonce) {
-        this.nonce = nonce;
-    }
 }
