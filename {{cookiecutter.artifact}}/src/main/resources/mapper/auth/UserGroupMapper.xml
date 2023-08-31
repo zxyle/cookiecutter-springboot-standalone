@@ -22,7 +22,7 @@
         LEFT JOIN `auth_group` b
             ON a.`group_id` = b.`id`
         WHERE
-            a.`user_id` = 1
+            a.`user_id` = #{userId}
     </select>
 
     <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.entity.Group">

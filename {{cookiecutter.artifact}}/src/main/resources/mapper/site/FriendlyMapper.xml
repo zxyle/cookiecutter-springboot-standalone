@@ -10,13 +10,13 @@
         <result column="content" property="content" />
         <result column="url" property="url" />
         <result column="sort" property="sort" />
-        <result column="status" property="status" />
+        <result column="enabled" property="enabled" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id,
-        create_time, update_time, content, url, sort, status
+        create_time, update_time, content, url, sort, enabled
     </sql>
 
 </mapper>
