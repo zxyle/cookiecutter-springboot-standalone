@@ -3,8 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.site.entity.Feedback;
 import {{ cookiecutter.basePackage }}.biz.site.mapper.FeedbackMapper;
 import {{ cookiecutter.basePackage }}.biz.site.service.IFeedbackService;
@@ -48,14 +46,6 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
     @Override
     public void deleteById(Integer id) {
         removeById(id);
-    }
-
-    /**
-     * 分页查询（带缓存）
-     */
-    @Override
-    public IPage<Feedback> pageQuery(IPage<Feedback> p, QueryWrapper<Feedback> wrapper) {
-        return page(p, wrapper);
     }
 
 }

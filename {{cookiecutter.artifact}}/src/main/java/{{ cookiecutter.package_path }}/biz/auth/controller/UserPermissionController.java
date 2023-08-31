@@ -13,7 +13,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.service.IUserPermissionService;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -40,10 +39,9 @@ public class UserPermissionController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:get')")
     @GetMapping("/users/{userId}/permissions")
-    public R<PageVO<Permission>> list(@Valid PaginationRequest request, @PathVariable Integer userId) {
-        IPage<Permission> page = PageRequestUtil.checkForMp(request);
-        IPage<Permission> list = thisMapper.page(page, userId, request);
-        return PageRequestUtil.extractFromMp(list);
+    public R<PageVO<Permission>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
+        IPage<Permission> page = thisMapper.page(req.toPageable(), userId, req);
+        return R.page(page);
     }
 
 

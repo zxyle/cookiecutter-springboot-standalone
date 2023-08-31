@@ -12,7 +12,6 @@ import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,16 +34,15 @@ public class BlacklistController {
     @LogOperation(name = "黑名单列表分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:blacklist:list')")
     @GetMapping("/blacklists")
-    public R<PageVO<Blacklist>> list(@Valid PaginationRequest request) {
+    public R<PageVO<Blacklist>> list(@Valid PaginationRequest req) {
         QueryWrapper<Blacklist> wrapper = new QueryWrapper<>();
-        if (StringUtils.isNotBlank(request.getKeyword())) {
-            wrapper.and(w -> w.like("ip", request.getKeyword())
-                    .or().like("remark", request.getKeyword()));
+        if (StringUtils.isNotBlank(req.getKeyword())) {
+            wrapper.and(w -> w.like("ip", req.getKeyword())
+                    .or().like("remark", req.getKeyword()));
         }
 
-        IPage<Blacklist> page = PageRequestUtil.checkForMp(request);
-        IPage<Blacklist> list = thisService.page(page, wrapper);
-        return PageRequestUtil.extractFromMp(list);
+        IPage<Blacklist> page = thisService.page(req.toPageable(), wrapper);
+        return R.page(page);
     }
 
     /**

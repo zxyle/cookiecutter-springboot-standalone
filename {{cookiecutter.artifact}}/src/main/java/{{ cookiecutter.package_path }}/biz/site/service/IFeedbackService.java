@@ -3,8 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import {{ cookiecutter.basePackage }}.biz.site.entity.Feedback;
 
@@ -27,10 +25,5 @@ public interface IFeedbackService extends IService<Feedback> {
      * 按ID删除（带缓存）
      */
     void deleteById(Integer id);
-
-    /**
-     * 分页查询（带缓存）
-     */
-    IPage<Feedback> pageQuery(IPage<Feedback> page, QueryWrapper<Feedback> wrapper);
 
 }

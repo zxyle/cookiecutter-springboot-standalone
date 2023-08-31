@@ -14,7 +14,6 @@ import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.IOperateLogService;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,13 +40,12 @@ public class LogController {
     @LogOperation(name = "登录日志分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:login:list')")
     @GetMapping("/login")
-    public R<PageVO<LoginLog>> list(@Valid LoginLogRequest request) {
+    public R<PageVO<LoginLog>> list(@Valid LoginLogRequest req) {
         QueryWrapper<LoginLog> wrapper = new QueryWrapper<>();
-        wrapper.like(StringUtils.isNotBlank(request.getAccount()), "account", request.getAccount());
-        wrapper.orderBy(true, request.isAsc(), "create_time");
-        IPage<LoginLog> page = PageRequestUtil.checkForMp(request);
-        IPage<LoginLog> list = loginLogService.page(page, wrapper);
-        return PageRequestUtil.extractFromMp(list);
+        wrapper.like(StringUtils.isNotBlank(req.getAccount()), "account", req.getAccount());
+        wrapper.orderBy(true, req.isAsc(), "create_time");
+        IPage<LoginLog> page = loginLogService.page(req.toPageable(), wrapper);
+        return R.page(page);
     }
 
     /**
@@ -56,15 +54,14 @@ public class LogController {
     @LogOperation(name = "操作日志分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:operate:list')")
     @GetMapping("/operate")
-    public R<PageVO<OperateLog>> page(@Valid OperateLogRequest request) {
+    public R<PageVO<OperateLog>> page(@Valid OperateLogRequest req) {
         QueryWrapper<OperateLog> wrapper = new QueryWrapper<>();
-        wrapper.eq(request.getUserId() != null, "user_id", request.getUserId());
-        wrapper.eq(StringUtils.isNotBlank(request.getBiz()), "biz", request.getBiz());
-        wrapper.between(request.getStartTime() != null && request.getEndTime() != null,
-                "operate_time", request.getStartTime(), request.getEndTime());
-        wrapper.orderBy(true, request.isAsc(), "operate_time");
-        IPage<OperateLog> page = PageRequestUtil.checkForMp(request);
-        IPage<OperateLog> list = operateLogService.page(page, wrapper);
-        return PageRequestUtil.extractFromMp(list);
+        wrapper.eq(req.getUserId() != null, "user_id", req.getUserId());
+        wrapper.eq(StringUtils.isNotBlank(req.getBiz()), "biz", req.getBiz());
+        wrapper.between(req.getStartTime() != null && req.getEndTime() != null,
+                "operate_time", req.getStartTime(), req.getEndTime());
+        wrapper.orderBy(true, req.isAsc(), "operate_time");
+        IPage<OperateLog> page = operateLogService.page(req.toPageable(), wrapper);
+        return R.page(page);
     }
 }

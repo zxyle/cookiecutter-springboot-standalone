@@ -11,7 +11,6 @@ import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,13 +32,12 @@ public class OpenApiController {
      */
     @PreAuthorize("@ck.hasPermit('auth:openApi:list')")
     @GetMapping("/openApis")
-    public R<PageVO<OpenApi>> page(@Valid PaginationRequest request) {
+    public R<PageVO<OpenApi>> page(@Valid PaginationRequest req) {
         QueryWrapper<OpenApi> wrapper = new QueryWrapper<>();
-        wrapper.orderBy(EntityUtil.getFields(OpenApi.class).contains(request.getField()),
-                request.isAsc(), request.getField());
-        IPage<OpenApi> page = PageRequestUtil.checkForMp(request);
-        IPage<OpenApi> list = thisService.pageQuery(page, wrapper);
-        return PageRequestUtil.extractFromMp(list);
+        wrapper.orderBy(EntityUtil.getFields(OpenApi.class).contains(req.getField()),
+                req.isAsc(), req.getField());
+        IPage<OpenApi> page = thisService.page(req.toPageable(), wrapper);
+        return R.page(page);
     }
 
 

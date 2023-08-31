@@ -18,7 +18,6 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -46,19 +45,18 @@ public class RoleController extends AuthBaseController {
     @LogOperation(name = "角色列表分页查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:list')")
     @GetMapping("/roles")
-    public R<PageVO<RoleResponse>> list(@Valid ListAuthRequest request) {
+    public R<PageVO<RoleResponse>> list(@Valid ListAuthRequest req) {
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
         wrapper.select("id, name, code, description");
         // 模糊查询
-        if (StringUtils.isNotBlank(request.getKeyword())) {
-            wrapper.and(i -> i.like("name", request.getKeyword())
-                    .or().like("code", request.getKeyword())
-                    .or().like("description", request.getKeyword()));
+        if (StringUtils.isNotBlank(req.getKeyword())) {
+            wrapper.and(i -> i.like("name", req.getKeyword())
+                    .or().like("code", req.getKeyword())
+                    .or().like("description", req.getKeyword()));
         }
-        IPage<Role> page = PageRequestUtil.checkForMp(request);
-        IPage<Role> list = thisService.page(page, wrapper);
+        IPage<Role> list = thisService.page(req.toPageable(), wrapper);
         List<RoleResponse> roles = list.getRecords().stream()
-                .map(role -> thisService.attachRoleInfo(role, request.isFull()))
+                .map(role -> thisService.attachRoleInfo(role, req.isFull()))
                 .collect(Collectors.toList());
         return R.ok(new PageVO<>(roles, list.getTotal()));
     }

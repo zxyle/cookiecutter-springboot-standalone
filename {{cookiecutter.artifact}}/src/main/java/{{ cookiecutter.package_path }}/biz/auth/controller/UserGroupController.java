@@ -16,7 +16,6 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,10 +43,9 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/groups")
-    public R<PageVO<Group>> list(@Valid PaginationRequest request, @PathVariable Integer userId) {
-        IPage<Group> page = PageRequestUtil.checkForMp(request);
-        IPage<Group> list = thisMapper.page(page, userId, request);
-        return PageRequestUtil.extractFromMp(list);
+    public R<PageVO<Group>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
+        IPage<Group> page = thisMapper.page(req.toPageable(), userId, req);
+        return R.page(page);
     }
 
 
@@ -93,11 +91,10 @@ public class UserGroupController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}/users")
-    public R<PageVO<User>> pageUser(@PathVariable Integer groupId, @Valid ListAuthRequest request) {
-        IPage<User> page = PageRequestUtil.checkForMp(request);
+    public R<PageVO<User>> pageUser(@PathVariable Integer groupId, @Valid ListAuthRequest req) {
         // todo 需支持查询子用户组下的用户
-        IPage<User> pageVo = thisMapper.pageUser(page, groupId, request);
-        return PageRequestUtil.extractFromMp(pageVo);
+        IPage<User> list = thisMapper.pageUser(req.toPageable(), groupId, req);
+        return R.page(list);
     }
 
     /**

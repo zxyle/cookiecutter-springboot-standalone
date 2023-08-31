@@ -12,7 +12,6 @@ import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,15 +34,14 @@ public class WhitelistController {
     @LogOperation(name = "白名单列表分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:whitelist:list')")
     @GetMapping("/whitelists")
-    public R<PageVO<Whitelist>> list(@Valid PaginationRequest request) {
+    public R<PageVO<Whitelist>> list(@Valid PaginationRequest req) {
         QueryWrapper<Whitelist> wrapper = new QueryWrapper<>();
-        if (StringUtils.isNotBlank(request.getKeyword())) {
-            wrapper.and(w -> w.like("ip", request.getKeyword())
-                    .or().like("remark", request.getKeyword()));
+        if (StringUtils.isNotBlank(req.getKeyword())) {
+            wrapper.and(w -> w.like("ip", req.getKeyword())
+                    .or().like("remark", req.getKeyword()));
         }
-        IPage<Whitelist> page = PageRequestUtil.checkForMp(request);
-        IPage<Whitelist> list = thisService.page(page, wrapper);
-        return PageRequestUtil.extractFromMp(list);
+        IPage<Whitelist> page = thisService.page(req.toPageable(), wrapper);
+        return R.page(page);
     }
 
 

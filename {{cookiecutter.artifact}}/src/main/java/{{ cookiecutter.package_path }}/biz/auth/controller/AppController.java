@@ -21,7 +21,6 @@ import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,18 +53,17 @@ public class AppController extends AuthBaseController {
     @LogOperation(name = "应用分页查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:list')")
     @GetMapping("/apps")
-    public R<PageVO<App>> page(@Valid PaginationRequest request) {
+    public R<PageVO<App>> page(@Valid PaginationRequest req) {
         QueryWrapper<App> wrapper = new QueryWrapper<>();
-        wrapper.orderBy(EntityUtil.getFields(App.class).contains(request.getField()),
-                request.isAsc(), request.getField());
-        if (StringUtils.isNotBlank(request.getKeyword())) {
-            wrapper.and(i -> i.like("name", request.getKeyword())
-                    .or().like("description", request.getKeyword()));
+        wrapper.orderBy(EntityUtil.getFields(App.class).contains(req.getField()),
+                req.isAsc(), req.getField());
+        if (StringUtils.isNotBlank(req.getKeyword())) {
+            wrapper.and(i -> i.like("name", req.getKeyword())
+                    .or().like("description", req.getKeyword()));
         }
-        IPage<App> page = PageRequestUtil.checkForMp(request);
-        IPage<App> list = thisService.page(page, wrapper);
-        list.getRecords().forEach(app -> app.setAppSecret(null));
-        return PageRequestUtil.extractFromMp(list);
+        IPage<App> page = thisService.page(req.toPageable(), wrapper);
+        page.getRecords().forEach(app -> app.setAppSecret(null));
+        return R.page(page);
     }
 
 

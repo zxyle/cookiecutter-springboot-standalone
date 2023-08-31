@@ -15,7 +15,6 @@ import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -41,26 +40,25 @@ public class FeedbackController {
     @LogOperation(name = "意见反馈列表分页查询", biz = "site")
     @PreAuthorize("@ck.hasPermit('site:feedback:list')")
     @GetMapping("/feedbacks")
-    public R<PageVO<Feedback>> list(@Valid PaginationRequest request, HttpServletResponse response) throws IOException {
+    public R<PageVO<Feedback>> list(@Valid PaginationRequest req, HttpServletResponse response) throws IOException {
         QueryWrapper<Feedback> wrapper = new QueryWrapper<>();
-        wrapper.orderBy(EntityUtil.getFields(Feedback.class).contains(request.getField()),
-                request.isAsc(), request.getField());
-        wrapper.ge(request.getStartTime() != null, "create_time", request.getStartTime());
-        wrapper.le(request.getEndTime() != null, "create_time", request.getEndTime());
-        IPage<Feedback> page = PageRequestUtil.checkForMp(request);
-        IPage<Feedback> list = thisService.pageQuery(page, wrapper);
+        wrapper.orderBy(EntityUtil.getFields(Feedback.class).contains(req.getField()),
+                req.isAsc(), req.getField());
+        wrapper.ge(req.getStartTime() != null, "create_time", req.getStartTime());
+        wrapper.le(req.getEndTime() != null, "create_time", req.getEndTime());
+        IPage<Feedback> page = thisService.page(req.toPageable(), wrapper);
 
         // 数据导出
-        if (request.isExport()) {
+        if (req.isExport()) {
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             String fileName = "意见反馈";
             String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
             response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
             EasyExcelFactory.write(response.getOutputStream(), Feedback.class)
-                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(list.getRecords());
+                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(page.getRecords());
             return null;
         }
-        return PageRequestUtil.extractFromMp(list);
+        return R.page(page);
     }
 
 

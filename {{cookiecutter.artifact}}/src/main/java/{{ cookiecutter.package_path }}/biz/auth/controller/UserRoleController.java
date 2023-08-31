@@ -14,7 +14,6 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -41,10 +40,9 @@ public class UserRoleController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/roles")
-    public R<PageVO<Role>> list(@Valid PaginationRequest request, @PathVariable Integer userId) {
-        IPage<Role> page = PageRequestUtil.checkForMp(request);
-        IPage<Role> list = thisMapper.page(page, userId, request);
-        return PageRequestUtil.extractFromMp(list);
+    public R<PageVO<Role>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
+        IPage<Role> page = thisMapper.page(req.toPageable(), userId, req);
+        return R.page(page);
     }
 
 

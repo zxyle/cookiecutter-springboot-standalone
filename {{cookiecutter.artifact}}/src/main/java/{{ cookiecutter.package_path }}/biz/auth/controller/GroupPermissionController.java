@@ -14,7 +14,6 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -41,10 +40,9 @@ public class GroupPermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}/permissions")
-    public R<PageVO<Permission>> list(@Valid PaginationRequest request, @PathVariable Integer groupId) {
-        IPage<Permission> page = PageRequestUtil.checkForMp(request);
-        IPage<Permission> list = thisMapper.page(page, groupId, request);
-        return PageRequestUtil.extractFromMp(list);
+    public R<PageVO<Permission>> list(@Valid PaginationRequest req, @PathVariable Integer groupId) {
+        IPage<Permission> page = thisMapper.page(req.toPageable(), groupId, req);
+        return R.page(page);
     }
 
 

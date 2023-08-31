@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
@@ -123,6 +124,13 @@ public class PaginationRequest extends BaseRequest {
      */
     public Integer getOffset() {
         return (getPageNum() - 1) * getPageSize();
+    }
+
+    /**
+     * 获取mybatis plus分页对象
+     */
+    public <T> Page<T> toPageable() {
+        return new Page<>(getPageNum(), getPageSize());
     }
 
 }

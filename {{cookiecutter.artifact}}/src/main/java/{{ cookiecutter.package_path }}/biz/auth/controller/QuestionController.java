@@ -19,7 +19,6 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -52,13 +51,12 @@ public class QuestionController extends AuthBaseController {
     @LogOperation(name = "安全问题分页查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:question:list')")
     @GetMapping("/questions")
-    public R<PageVO<Question>> page(@Valid PaginationRequest request) {
+    public R<PageVO<Question>> page(@Valid PaginationRequest req) {
         QueryWrapper<Question> wrapper = new QueryWrapper<>();
         wrapper.select("id", "question");
-        wrapper.like(request.getKeyword() != null, "question", request.getKeyword());
-        IPage<Question> page = PageRequestUtil.checkForMp(request);
-        IPage<Question> list = thisService.page(page, wrapper);
-        return PageRequestUtil.extractFromMp(list);
+        wrapper.like(req.getKeyword() != null, "question", req.getKeyword());
+        IPage<Question> page = thisService.page(req.toPageable(), wrapper);
+        return R.page(page);
     }
 
 

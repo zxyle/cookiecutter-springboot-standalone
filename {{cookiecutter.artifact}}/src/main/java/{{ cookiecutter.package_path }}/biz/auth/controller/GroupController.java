@@ -18,7 +18,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.response.GroupResponse;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -42,17 +41,16 @@ public class GroupController extends AuthBaseController {
     @LogOperation(name = "用户组查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:list')")
     @GetMapping("/groups")
-    public R<PageVO<GroupResponse>> list(@Valid ListAuthRequest request) {
+    public R<PageVO<GroupResponse>> list(@Valid ListAuthRequest req) {
         // 查询当前用户，所在用户组和所能管理的用户组
         QueryWrapper<Group> wrapper = new QueryWrapper<>();
         wrapper.in("id", groupService.getSubGroups(getUserId()));
-        wrapper.like(StringUtils.isNotBlank(request.getKeyword()), "name", request.getKeyword());
-        IPage<Group> page = PageRequestUtil.checkForMp(request);
-        IPage<Group> list = groupService.page(page, wrapper);
-        List<GroupResponse> collect = list.getRecords().stream()
-                .map(group -> groupService.attachGroupInfo(group, request.isFull()))
+        wrapper.like(StringUtils.isNotBlank(req.getKeyword()), "name", req.getKeyword());
+        IPage<Group> page = groupService.page(req.toPageable(), wrapper);
+        List<GroupResponse> collect = page.getRecords().stream()
+                .map(group -> groupService.attachGroupInfo(group, req.isFull()))
                 .collect(Collectors.toList());
-        return R.ok(new PageVO<>(collect, list.getTotal()));
+        return R.ok(new PageVO<>(collect, page.getTotal()));
     }
 
     /**

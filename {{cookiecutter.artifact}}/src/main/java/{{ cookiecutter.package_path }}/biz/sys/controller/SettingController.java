@@ -12,7 +12,6 @@ import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,10 +33,9 @@ public class SettingController {
     @LogOperation(name = "系统设置分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:setting:list')")
     @GetMapping("/settings")
-    public R<PageVO<Setting>> page(@Valid PaginationRequest request) {
-        IPage<Setting> page = PageRequestUtil.checkForMp(request);
-        IPage<Setting> list = thisService.page(page);
-        return PageRequestUtil.extractFromMp(list);
+    public R<PageVO<Setting>> page(@Valid PaginationRequest req) {
+        IPage<Setting> page = thisService.page(req.toPageable());
+        return R.page(page);
     }
 
 

@@ -17,7 +17,6 @@ import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,29 +46,28 @@ public class UserController extends AuthBaseController {
     @LogOperation(name = "分页查询用户列表", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:list')")
     @GetMapping("/users")
-    public R<PageVO<UserResponse>> list(@Valid ListAuthRequest request) {
+    public R<PageVO<UserResponse>> list(@Valid ListAuthRequest req) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.select("id, username, email, mobile, enabled");
-        if (StringUtils.isNotBlank(request.getKeyword())) {
-            wrapper.and(i -> i.like("username", request.getKeyword())
-                    .or().like("email", request.getKeyword())
-                    .or().like("mobile", request.getKeyword())
-                    .or().like("nickname", request.getKeyword()));
+        if (StringUtils.isNotBlank(req.getKeyword())) {
+            wrapper.and(i -> i.like("username", req.getKeyword())
+                    .or().like("email", req.getKeyword())
+                    .or().like("mobile", req.getKeyword())
+                    .or().like("nickname", req.getKeyword()));
         }
 
         // 不能将没有权限的用户信息返回
         List<Integer> members = thisService.getAllChildren(getUserId());
         wrapper.in("id", members);
 
-        wrapper.eq(request.getEnabled() != null, "enabled", request.getEnabled());
-        IPage<User> page = PageRequestUtil.checkForMp(request);
-        IPage<User> list = thisService.page(page, wrapper);
+        wrapper.eq(req.getEnabled() != null, "enabled", req.getEnabled());
+        IPage<User> page = thisService.page(req.toPageable(), wrapper);
 
         // 增加角色和组信息
-        List<UserResponse> userResponses = list.getRecords().stream()
-                .map(user -> thisService.attachUserInfo(user, request.isFull()))
+        List<UserResponse> userResponses = page.getRecords().stream()
+                .map(user -> thisService.attachUserInfo(user, req.isFull()))
                 .collect(Collectors.toList());
-        return R.ok(new PageVO<>(userResponses, list.getTotal()));
+        return R.ok(new PageVO<>(userResponses, page.getTotal()));
     }
 
 

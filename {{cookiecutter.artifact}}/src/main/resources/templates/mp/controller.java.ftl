@@ -9,7 +9,6 @@ import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
-import {{ cookiecutter.basePackage }}.common.util.PageRequestUtil;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,24 +55,23 @@ public class ${table.controllerName} {
     @LogOperation(name = "分页查询${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:list')")
     @GetMapping("/${table.entityPath}s")
-    public R<PageVO<${entity}>> page(@Valid PaginationRequest request, HttpServletResponse servletResponse) throws IOException {
+    public R<PageVO<${entity}>> page(@Valid PaginationRequest req, HttpServletResponse servletResponse) throws IOException {
         QueryWrapper<${entity}> wrapper = new QueryWrapper<>();
-        wrapper.orderBy(EntityUtil.getFields(${entity}.class).contains(request.getField()),
-                request.isAsc(), request.getField());
-        IPage<${entity}> page = PageRequestUtil.checkForMp(request);
-        IPage<${entity}> list = thisService.page(page, wrapper);
+        wrapper.orderBy(EntityUtil.getFields(${entity}.class).contains(req.getField()),
+                req.isAsc(), req.getField());
+        IPage<${entity}> page = thisService.page(req.toPageable(), wrapper);
 
         // 数据导出Excel功能，不需要可以删除
-        if (request.isExport()) {
+        if (req.isExport()) {
             servletResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             String fileName = "${table.comment!}";
             String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
             servletResponse.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
             EasyExcelFactory.write(servletResponse.getOutputStream(), ${entity}.class)
-                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(list.getRecords());
+                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(page.getRecords());
             return null;
         }
-        return PageRequestUtil.extractFromMp(list);
+        return R.page(page);
     }
 
 
@@ -97,8 +95,8 @@ public class ${table.controllerName} {
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:add')")
     @PostMapping("/${table.entityPath}s")
     public R<${entity}> add(@Valid @RequestBody ${entity} entity) {
-        ${entity} entity = thisService.insert(entity);
-        return entity != null ? R.ok(entity) : R.fail("新增${table.comment!}失败");
+        ${entity} result = thisService.insert(entity);
+        return entity != null ? R.ok(result) : R.fail("新增${table.comment!}失败");
     }
 
 
@@ -109,7 +107,7 @@ public class ${table.controllerName} {
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:get')")
     @GetMapping("/${table.entityPath}s/{id}")
     public R<${entity}> get(@PathVariable Integer id) {
-        ${entity} entity = thisService.queryById(id);
+        ${entity} entity = thisService.findById(id);
         return entity == null ? R.fail("${table.comment!}不存在") : R.ok(entity);
     }
 
@@ -119,7 +117,7 @@ public class ${table.controllerName} {
     @LogOperation(name = "按ID更新${table.comment!}", biz = "${package.ModuleName}")
     @PreAuthorize("@ck.hasPermit('${package.ModuleName}:${table.entityPath}:update')")
     @PutMapping("/${table.entityPath}s/{id}")
-    public R<Void> update(@Valid @RequestBody ${entity} entity, @PathVariable Integer id) {
+    public R<${entity}> update(@Valid @RequestBody ${entity} entity, @PathVariable Integer id) {
         entity.setId(id);
         ${entity} result = thisService.putById(entity);
         return result != null ? R.ok(result) : R.fail("更新${table.comment!}失败");

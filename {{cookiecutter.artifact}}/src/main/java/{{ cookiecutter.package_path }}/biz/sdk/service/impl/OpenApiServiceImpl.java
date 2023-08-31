@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.sdk.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.sdk.entity.OpenApi;
 import {{ cookiecutter.basePackage }}.biz.sdk.mapper.OpenApiMapper;
@@ -50,14 +49,6 @@ public class OpenApiServiceImpl extends ServiceImpl<OpenApiMapper, OpenApi> impl
     @Override
     public void deleteById(Integer id) {
         removeById(id);
-    }
-
-    /**
-     * 分页查询（带缓存）
-     */
-    @Override
-    public IPage<OpenApi> pageQuery(IPage<OpenApi> p, QueryWrapper<OpenApi> wrapper) {
-        return page(p, wrapper);
     }
 
     /**
