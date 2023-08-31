@@ -2,4 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.mapper.RoleMapper">
 
+    <select id="findRolesByUserId" resultType="java.lang.String">
+        SELECT ar.`code`
+        FROM auth_role ar
+        JOIN auth_user_role aur ON ar.id = aur.role_id
+        WHERE aur.user_id = #{userId}
+
+        UNION
+
+        SELECT ar.`code`
+        FROM auth_role ar
+        JOIN auth_group_role agr ON ar.id = agr.role_id
+        JOIN auth_user_group aug ON agr.group_id = aug.group_id
+        WHERE aug.user_id = #{userId}
+    </select>
 </mapper>

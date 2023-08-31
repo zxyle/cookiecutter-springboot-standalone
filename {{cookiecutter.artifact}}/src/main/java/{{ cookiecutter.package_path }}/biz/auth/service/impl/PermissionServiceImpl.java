@@ -12,6 +12,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.entity.Role;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.GroupPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.PermissionMapper;
+import {{ cookiecutter.basePackage }}.biz.auth.mapper.RoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.mapper.RolePermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -50,6 +52,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     final RolePermissionMapper rolePermissionMapper;
     final StringRedisTemplate stringRedisTemplate;
     final IGroupRoleService groupRoleService;
+    final RoleMapper roleMapper;
 
     /**
      * 获取用户所有权限名称
@@ -133,6 +136,33 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         List<String> list = new ArrayList<>(allPermissions.size() + roles.size());
         list.addAll(allPermissions.stream().map(Permission::getCode).distinct().collect(Collectors.toList()));
         list.addAll(roles.stream().map(e -> "ROLE_" + e.getCode()).distinct().collect(Collectors.toList()));
+        return list;
+    }
+
+    /**
+     * 查询用户所有权限码和用户所有角色码（V2版本）
+     *
+     * @param userId 用户ID
+     */
+    @Override
+    public List<String> getSecurityPermissions2(Integer userId) {
+        List<Integer> permissionIds = baseMapper.findPermissionIds(userId);
+
+        List<String> roleCodes = roleMapper.findRolesByUserId(userId);
+
+        // 获取子权限
+        List<Permission> permissionList = listAll();
+        List<Permission> children = new ArrayList<>();
+        for (Integer permissionId : permissionIds) {
+            Optional<Permission> optionalPermission = permissionList.stream().filter(p -> p.getId().equals(permissionId)).findFirst();
+            optionalPermission.ifPresent(children::add);
+            children.addAll(getAllChildren(permissionList, permissionId));
+        }
+
+        // 组装权限码和角色码
+        List<String> list = new ArrayList<>(roleCodes.size() + children.size());
+        list.addAll(children.stream().map(Permission::getCode).distinct().collect(Collectors.toList()));
+        list.addAll(roleCodes.stream().map(e -> "ROLE_" + e).distinct().collect(Collectors.toList()));
         return list;
     }
 

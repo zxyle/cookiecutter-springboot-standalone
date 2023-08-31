@@ -43,6 +43,13 @@ public interface IPermissionService extends IService<Permission> {
     List<String> getSecurityPermissions(Integer userId);
 
     /**
+     * 查询用户所有权限码和用户所有角色码（V2版本）
+     *
+     * @param userId 用户ID
+     */
+    List<String> getSecurityPermissions2(Integer userId);
+
+    /**
      * 异步重新将新的权限码和角色码加载到redis中
      *
      * @param userId 用户ID

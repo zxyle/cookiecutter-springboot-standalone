@@ -20,4 +20,30 @@
             `parent_id` = #{parentId}
     </select>
 
+    <select id="findPermissionIds" resultType="java.lang.Integer">
+        SELECT DISTINCT ap.permission_id
+        FROM auth_role_permission ap
+        JOIN auth_user_role aur ON ap.role_id = aur.role_id
+        WHERE aur.user_id = #{userId}
+
+        UNION
+
+        SELECT permission_id FROM auth_user_permission WHERE user_id=#{userId}
+
+        UNION
+
+        SELECT ap.permission_id
+        FROM auth_group_permission ap
+        JOIN auth_user_group aug ON ap.group_id = aug.group_id
+        WHERE aug.user_id = #{userId}
+
+        UNION
+
+        SELECT apr.permission_id
+        FROM auth_role_permission apr
+        JOIN auth_group_role agr ON apr.role_id = agr.role_id
+        JOIN auth_user_group aug ON agr.group_id = aug.group_id
+        WHERE aug.user_id = #{userId}
+    </select>
+
 </mapper>

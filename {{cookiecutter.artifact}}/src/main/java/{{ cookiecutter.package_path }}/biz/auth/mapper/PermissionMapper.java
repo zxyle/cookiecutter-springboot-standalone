@@ -24,4 +24,11 @@ public interface PermissionMapper extends BaseMapper<Permission> {
      * @param parentId 父ID
      */
     Integer selectMaxSort(Integer parentId);
+
+    /**
+     * 获取用户所有权限编码
+     *
+     * @param userId 用户ID
+     */
+    List<Integer> findPermissionIds(Integer userId);
 }

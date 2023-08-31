@@ -44,7 +44,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         int userId = user.getId();
 
         // 查询用户所有权限码和用户所有角色码
-        List<String> permissions = permissionService.getSecurityPermissions(userId);
+        List<String> permissions = permissionService.getSecurityPermissions2(userId);
 
         // 将权限码和角色码存入redis
         String key = AuthConst.KEY_PREFIX + userId;
