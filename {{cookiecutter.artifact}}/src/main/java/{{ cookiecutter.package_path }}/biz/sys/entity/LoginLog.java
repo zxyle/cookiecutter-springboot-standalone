@@ -5,8 +5,11 @@ package {{ cookiecutter.basePackage }}.biz.sys.entity;
 
 import {{ cookiecutter.basePackage }}.common.entity.LiteEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  * 登录日志
@@ -19,9 +22,15 @@ public class LoginLog extends LiteEntity {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 登录时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime loginTime;
+
+    /**
      * 用户ID
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 登录账号

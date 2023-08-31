@@ -542,8 +542,7 @@ CREATE TABLE `sys_file` (
 DROP TABLE IF EXISTS `sys_login_log`;
 CREATE TABLE `sys_login_log` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `login_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登录时间',
   `account` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '登录用户名',
   `ip` varchar(15) DEFAULT NULL COMMENT 'IP地址',
   `ua` varchar(255) DEFAULT NULL COMMENT '浏览器请求头',
@@ -559,7 +558,7 @@ CREATE TABLE `sys_login_log` (
 DROP TABLE IF EXISTS `sys_operate_log`;
 CREATE TABLE `sys_operate_log` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `operate_time` datetime NOT NULL COMMENT '操作时间',
+  `operate_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   `biz` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '业务模块',
   `user_id` int unsigned NOT NULL COMMENT '操作用户ID',
   `operation_name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '操作名称',

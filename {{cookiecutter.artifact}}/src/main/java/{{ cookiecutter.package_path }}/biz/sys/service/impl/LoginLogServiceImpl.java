@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * 登录日志 服务实现类
  */
@@ -25,6 +27,7 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
             loginLog.setUa(StringUtils.substring(loginLog.getUa(), 0, 255));
         }
 
+        loginLog.setLoginTime(LocalDateTime.now());
         this.save(loginLog);
     }
 

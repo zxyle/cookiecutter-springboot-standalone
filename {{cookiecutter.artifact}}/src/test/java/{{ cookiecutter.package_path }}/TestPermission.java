@@ -17,7 +17,7 @@ class TestPermission {
 
     @Test
     void t1() {
-        Long userId = 10L;
+        Integer userId = 10;
         // System.out.println(permissionService.getAllPermissions(userId));
         System.out.println(permissionService.getSecurityPermissions(userId));
     }
