@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.config.security;
 
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -78,7 +77,7 @@ public class LoginUser implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         // 会抛出LockedException 用户帐号已被锁定 异常
-        return user.isLocked();
+        return !user.getLocked();
     }
 
     /**
@@ -102,7 +101,7 @@ public class LoginUser implements UserDetails {
      */
     @Override
     public boolean isEnabled() {
-        return user.isEnabled();
+        return user.getEnabled();
     }
 
 }

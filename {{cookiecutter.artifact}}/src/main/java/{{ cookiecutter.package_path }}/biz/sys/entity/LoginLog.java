@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.entity;
 
-import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import {{ cookiecutter.basePackage }}.common.entity.LiteEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @TableName("sys_login_log")
 @EqualsAndHashCode(callSuper = true)
-public class LoginLog extends BaseEntity {
+public class LoginLog extends LiteEntity {
 
     private static final long serialVersionUID = 1L;
 

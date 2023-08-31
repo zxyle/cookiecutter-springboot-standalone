@@ -51,13 +51,13 @@ public class User extends BaseEntity {
      * 账号是否锁定
      */
     @JsonIgnore
-    private boolean locked;
+    private Boolean locked;
 
     /**
      * 是否超级管理员
      */
     @JsonIgnore
-    private boolean admin;
+    private Boolean admin;
 
     /**
      * 账号过期时间
@@ -74,12 +74,12 @@ public class User extends BaseEntity {
     /**
      * 账号是否启用
      */
-    private boolean enabled;
+    private Boolean enabled;
 
     /**
      * 是否需要修改密码
      */
-    private boolean mustChangePwd;
+    private Boolean mustChangePwd;
 
     /**
      * 注册时间

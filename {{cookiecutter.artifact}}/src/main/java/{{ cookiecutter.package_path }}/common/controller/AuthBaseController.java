@@ -55,7 +55,7 @@ public class AuthBaseController {
      */
     public boolean isAdmin() {
         User user = getLoggedInUser();
-        return user.isAdmin();
+        return user.getAdmin();
     }
 
     /**
