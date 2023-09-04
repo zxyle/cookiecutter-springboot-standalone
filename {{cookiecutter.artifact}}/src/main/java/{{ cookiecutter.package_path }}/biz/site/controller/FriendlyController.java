@@ -25,8 +25,6 @@ import java.util.List;
 @RequestMapping("/site/friendly")
 public class FriendlyController {
 
-    private static final int ENABLE = 1;
-
     final IFriendlyService thisService;
 
     /**
@@ -37,7 +35,7 @@ public class FriendlyController {
     public R<List<Friendly>> list() {
         QueryWrapper<Friendly> wrapper = new QueryWrapper<>();
         wrapper.select("id", "content", "url");
-        wrapper.eq("status", ENABLE);
+        wrapper.eq("enabled", true);
         wrapper.orderByAsc("sort");
         List<Friendly> urls = thisService.list(wrapper);
         return R.ok(urls);

@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
  * 发布版本
  */
 @Data
-@TableName("sys_release")
+@TableName("site_release")
 @EqualsAndHashCode(callSuper = true)
 public class Release extends BaseEntity {
 

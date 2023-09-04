@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
  * 意见反馈
  */
 @Data
-@TableName("sys_feedback")
+@TableName("site_feedback")
 @EqualsAndHashCode(callSuper = true)
 public class Feedback extends BaseEntity {
 

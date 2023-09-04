@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  * 系统信息
  */
 @Data
-@TableName("sys_info")
+@TableName("site_info")
 @EqualsAndHashCode(callSuper = true)
 public class Info extends BaseEntity {
 

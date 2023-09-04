@@ -16,7 +16,7 @@ import javax.validation.constraints.Positive;
  * 友链
  */
 @Data
-@TableName("sys_friendly")
+@TableName("site_friendly")
 @EqualsAndHashCode(callSuper = true)
 public class Friendly extends BaseEntity {
 
