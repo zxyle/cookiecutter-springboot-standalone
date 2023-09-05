@@ -6,8 +6,7 @@ CREATE TABLE `site_feedback` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `email` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '联系邮箱',
-  `tel` varchar(32) DEFAULT NULL COMMENT '联系电话',
+  `contacts` varchar(32) DEFAULT NULL COMMENT '联系方式',
   `description` varchar(2048) DEFAULT NULL COMMENT '详细描述',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='意见反馈';

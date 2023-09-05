@@ -17,16 +17,10 @@ public class Feedback extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 联系邮箱
+     * 联系方式
      */
-    @ExcelProperty("联系邮箱")
-    private String email;
-
-    /**
-     * 联系电话
-     */
-    @ExcelProperty("联系电话")
-    private String tel;
+    @ExcelProperty("联系方式")
+    private String contacts;
 
     /**
      * 详细描述

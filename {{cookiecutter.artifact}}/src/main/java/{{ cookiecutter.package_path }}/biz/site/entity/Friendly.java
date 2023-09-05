@@ -45,6 +45,6 @@ public class Friendly extends BaseEntity {
     /**
      * 友链是否启用
      */
-    private boolean enabled;
+    private Boolean enabled;
 
 }
