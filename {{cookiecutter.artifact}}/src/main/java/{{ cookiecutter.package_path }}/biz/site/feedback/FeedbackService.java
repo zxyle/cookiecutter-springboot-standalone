@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.site.feedback;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,12 +16,13 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "FeedbackCache")
 public class FeedbackService extends ServiceImpl<FeedbackMapper, Feedback>  {
 
     /**
      * 按ID查询（带缓存）
      */
-    @Cacheable(cacheNames = "FeedbackCache", key = "#id", unless = "#result == null")
+    @Cacheable(key = "#id", unless = "#result == null")
     public Feedback findById(Integer id) {
         return getById(id);
     }
@@ -28,7 +30,7 @@ public class FeedbackService extends ServiceImpl<FeedbackMapper, Feedback>  {
     /**
      * 按ID更新（带缓存）
      */
-    @CachePut(cacheNames = "FeedbackCache", key = "#feedback.id")
+    @CachePut(key = "#feedback.id")
     public Feedback putById(Feedback feedback) {
         updateById(feedback);
         return getById(feedback.getId());
@@ -37,7 +39,7 @@ public class FeedbackService extends ServiceImpl<FeedbackMapper, Feedback>  {
     /**
      * 按ID删除（带缓存）
      */
-    @CacheEvict(cacheNames = "FeedbackCache", key = "#id")
+    @CacheEvict(key = "#id")
     public void deleteById(Integer id) {
         removeById(id);
     }

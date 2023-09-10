@@ -16,21 +16,6 @@ CREATE TABLE `sys_area` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='中国行政区划';
 
 -- ----------------------------
--- Table structure for sys_blacklist
--- ----------------------------
-DROP TABLE IF EXISTS `sys_blacklist`;
-CREATE TABLE `sys_blacklist` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
-  `ip` varchar(20) CHARACTER SET utf8mb4 NOT NULL COMMENT 'IP',
-  `end_time` datetime DEFAULT NULL COMMENT '截止日期',
-  `remark` varchar(255) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_ip` (`ip`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='IP黑名单';
-
--- ----------------------------
 -- Table structure for sys_dict
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_dict`;
@@ -649,8 +634,7 @@ INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `descrip
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.about', 'XX公司是一家什么公司', 'java.lang.String', '关于我们', 'XX公司是一家什么公司');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('sms.verification-template', '【%s】验证码：%s，5分钟内有效，为了保障您的账户安全，请勿向他人泄漏验证码信息', 'java.lang.String', '短信验证码模板', '【%s】验证码：%s，5分钟内有效，为了保障您的账户安全，请勿向他人泄漏验证码信息');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('email.verification-template', '邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!', 'java.lang.String', '邮件验证码模板', '邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!');
-INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('blacklist.enable', 'true', 'java.lang.Boolean', 'IP黑名单是否开启', 'true');
-INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('whitelist.enable', 'true', 'java.lang.Boolean', 'IP白名单是否开启', 'true');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('acl.enable', 'true', 'java.lang.Boolean', 'IP访问控制是否开启', 'true');
 COMMIT;
 
 
@@ -683,26 +667,27 @@ PRIMARY KEY (`id`)
 
 
 -- ----------------------------
--- Table structure for sys_whitelist
+-- Table structure for sys_acl
 -- ----------------------------
-DROP TABLE IF EXISTS `sys_whitelist`;
-CREATE TABLE `sys_whitelist` (
+DROP TABLE IF EXISTS `sys_acl`;
+CREATE TABLE `sys_acl` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `ip` varchar(20) CHARACTER SET utf8mb4 NOT NULL COMMENT 'IP',
-  `end_time` datetime DEFAULT NULL COMMENT '截止日期',
-  `remark` varchar(64) DEFAULT NULL COMMENT '备注',
+  `allowed` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否允许访问',
+  `end_time` datetime DEFAULT NULL COMMENT '截止时间',
+  `description` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '描述信息',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_ip` (`ip`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='IP白名单';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='IP访问控制';
 
 -- ----------------------------
--- Records of sys_whitelist
+-- Records of sys_acl
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_whitelist` (`id`, `ip`, `end_time`, `remark`) VALUES (1, 'localhost', NULL, NULL);
-INSERT INTO `sys_whitelist` (`id`, `ip`, `end_time`, `remark`) VALUES (2, '127.0.0.1', NULL, NULL);
+INSERT INTO `sys_acl` (`id`, `ip`, `allowed`, `end_time`, `description`) VALUES (1, '127.0.0.1', b'1', NULL, NULL);
+INSERT INTO `sys_acl` (`id`, `ip`, `allowed`, `end_time`, `description`) VALUES (2, 'localhost', b'1', NULL, NULL);
 COMMIT;
 
 -- ----------------------------

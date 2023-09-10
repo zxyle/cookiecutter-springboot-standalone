@@ -3,11 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.config.security.filter;
 
-import {{ cookiecutter.basePackage }}.biz.sys.acl.BlacklistService;
+import {{ cookiecutter.basePackage }}.biz.sys.acl.Acl;
+import {{ cookiecutter.basePackage }}.biz.sys.acl.AclService;
 import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
-import {{ cookiecutter.basePackage }}.biz.sys.acl.WhitelistService;
 import {{ cookiecutter.basePackage }}.common.util.CidrUtil;
 import {{ cookiecutter.basePackage }}.common.util.ResponseUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,19 +19,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
  * IP黑白名单过滤器
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
-public class IpFilter extends OncePerRequestFilter {
+public class AclFilter extends OncePerRequestFilter {
 
-    final BlacklistService blacklistService;
-    final WhitelistService whitelistService;
+    final AclService aclService;
     final Environment environment;
     final SettingService setting;
 
@@ -38,20 +41,25 @@ public class IpFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (isDev()) {
+        if (isDev()|| !setting.get("acl.enable").isReal()) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        boolean blackEnable = setting.get("blacklist.enable").isReal();
-        boolean whiteEnable = setting.get("whitelist.enable").isReal();
-
         String ip = request.getRemoteAddr();
-        List<String> blacklist = blacklistService.getBlacklist();
-        List<String> whitelist = whitelistService.getWhitelist();
-        if ((blackEnable && CidrUtil.in(ip, blacklist)) ||
-                (whiteEnable && CidrUtil.notIn(ip, whitelist))) {
+        List<Acl> acl = aclService.findAllIp();
 
+        // 过滤掉过期的黑白名单
+        List<String> whitelist = acl.stream().filter(
+                b -> b.getEndTime() == null || LocalDateTime.now().isBefore(b.getEndTime())
+        ).filter(e-> e.getAllowed().equals(true)).map(Acl::getIp).collect(Collectors.toList());
+
+        List<String> blacklist = acl.stream().filter(
+                b -> b.getEndTime() == null || LocalDateTime.now().isBefore(b.getEndTime())
+        ).filter(e-> e.getAllowed().equals(false)).map(Acl::getIp).collect(Collectors.toList());
+
+        if ((CidrUtil.in(ip, whitelist)) || (CidrUtil.notIn(ip, blacklist))) {
+            log.warn("IP: {} is not allowed to access", ip);
             ResponseUtil.forbidden(response);
             return;
         }

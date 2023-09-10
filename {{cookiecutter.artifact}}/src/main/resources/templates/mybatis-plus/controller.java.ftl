@@ -1,6 +1,7 @@
 package ${table.packageName};
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import ${table.basePackageName}.common.aspect.LogOperation;
 import ${table.basePackageName}.common.request.PaginationRequest;
 import ${table.basePackageName}.common.response.PageVO;
 import ${table.basePackageName}.common.response.R;
@@ -27,6 +28,7 @@ public class ${table.className}Controller {
     /**
      * 分页查询
      */
+    @LogOperation(name = "分页查询${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
     @GetMapping("/${table.name}s")
     public R<PageVO<${table.className}>> page(@Valid PaginationRequest request) {
@@ -38,6 +40,7 @@ public class ${table.className}Controller {
      * ${table.comment!}列表查询
      */
     // 当数据量不大时，需要查出全部数据，可以使用此接口，不需要可以删除
+    // @LogOperation(name = "${table.comment!}列表查询", biz = "${table.biz}")
     // @PreAuthorize("@ck.hasPermit('auth:tenant:list')")
     // @GetMapping("/tenants")
     // public R<List<Tenant>> list() {
@@ -48,6 +51,7 @@ public class ${table.className}Controller {
     /**
      * 新增${table.comment!}
      */
+    @LogOperation(name = "新增${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:add')")
     @PostMapping("/${table.name}s")
     public R<${table.className}> add(@Valid @RequestBody ${table.className} entity) {
@@ -59,9 +63,10 @@ public class ${table.className}Controller {
     /**
      * 按ID查询${table.comment!}
      */
+    @LogOperation(name = "按ID查询${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:get')")
     @GetMapping("/${table.name}s/{id}")
-    public R<${table.className}> get(@PathVariable Long id) {
+    public R<${table.className}> get(@PathVariable Integer id) {
         ${table.className} entity = thisService.queryById(id);
         return entity == null ? R.fail("数据不存在") : R.ok(entity);
     }
@@ -69,9 +74,10 @@ public class ${table.className}Controller {
     /**
      * 按ID更新${table.comment!}
      */
+    @LogOperation(name = "按ID更新${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
     @PutMapping("/${table.name}s/{id}")
-    public R<${table.className}> update(@Valid @RequestBody ${table.className} entity, @PathVariable Long id) {
+    public R<${table.className}> update(@Valid @RequestBody ${table.className} entity, @PathVariable Integer id) {
         entity.setId(id);
         ${table.className} result = thisService.putById(entity);
         return result != null ? R.ok(result) : R.fail("更新${table.comment!}失败");
@@ -80,9 +86,10 @@ public class ${table.className}Controller {
     /**
      * 按ID删除${table.comment!}
      */
+    @LogOperation(name = "按ID删除${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
     @DeleteMapping("/${table.name}s/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    public R<Void> delete(@PathVariable Integer id) {
         boolean deleted = thisService.deleteById(id);
         return deleted ? R.ok("删除${table.comment!}成功") : R.fail("删除${table.comment!}失败");
     }
@@ -90,6 +97,7 @@ public class ${table.className}Controller {
     /**
      * 批量新增
      */
+    @LogOperation(name = "批量新增${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:add')")
     @PostMapping("/${table.name}s/batch-create")
     public R<Void> batchCreate(@Valid @RequestBody List<${table.className}> list) {
@@ -100,6 +108,7 @@ public class ${table.className}Controller {
     /**
      * 批量更新
      */
+    @LogOperation(name = "批量更新${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
     @PutMapping("/${table.name}s/batch-update")
     public R<Void> batchUpdate(@Valid @RequestBody List<${table.className}> list) {
@@ -110,9 +119,10 @@ public class ${table.className}Controller {
     /**
      * 批量删除
      */
+    @LogOperation(name = "批量删除${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
     @DeleteMapping("/${table.name}s/batch-delete")
-    public R<Void> batchDelete(@Valid @RequestBody List<Long> ids) {
+    public R<Void> batchDelete(@Valid @RequestBody List<Integer> ids) {
         boolean success = thisService.removeByIds(ids);
         return success ? R.ok("批量删除成功") : R.fail("批量删除失败");
     }

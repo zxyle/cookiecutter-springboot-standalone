@@ -1,5 +1,6 @@
-package ${table.packageName};
+package {{ cookiecutter.basePackage }}.biz.sys.acl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,21 +13,21 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * ${table.comment} 服务类
+ * IP访问控制 服务类
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@CacheConfig(cacheNames = "${table.className}Cache")
-public class ${table.className}Service extends ServiceImpl<${table.className}Mapper, ${table.className}> {
+@CacheConfig(cacheNames = "AclCache")
+public class AclService extends ServiceImpl<AclMapper, Acl> {
 
-    final ${table.className}Mapper thisMapper;
+    final AclMapper thisMapper;
 
     /**
-     * 新增${table.comment}（带缓存）
+     * 新增IP访问控制（带缓存）
      */
     @CachePut(key = "#result.id", unless = "#result == null")
-    public ${table.className} insert(${table.className} entity) {
+    public Acl insert(Acl entity) {
         baseMapper.insert(entity);
         return null;
     }
@@ -35,7 +36,7 @@ public class ${table.className}Service extends ServiceImpl<${table.className}Map
      * 按ID查询（查询结果不为null则缓存）
      */
     @Cacheable(key = "#id", unless = "#result == null")
-    public ${table.className} queryById(Integer id) {
+    public Acl queryById(Integer id) {
         return baseMapper.selectById(id);
     }
 
@@ -52,23 +53,16 @@ public class ${table.className}Service extends ServiceImpl<${table.className}Map
      * 按ID更新（带缓存）
      */
     @CachePut(key = "#entity.id")
-    public ${table.className} putById(${table.className} entity) {
+    public Acl putById(Acl entity) {
         updateById(entity);
         return getById(entity.getId());
     }
 
-    public boolean saveBatch(List<${table.className}> list) {
-        long count = list.stream().map(e -> baseMapper.insert(e)).count();
-        return count == list.size();
-    }
-
-    public boolean updateBatchById(List<${table.className}> list) {
-        return true;
-    }
-
-    public boolean removeByIds(List<Integer> ids) {
-        ids.forEach(this::deleteById);
-        return true;
+    @Cacheable(key = "'all'")
+    public List<Acl> findAllIp() {
+        QueryWrapper<Acl> wrapper = new QueryWrapper<>();
+        wrapper.select("ip", "allowed", "end_time");
+        return list(wrapper);
     }
 
 }

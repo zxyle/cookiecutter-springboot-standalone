@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.config.security;
 
 import {{ cookiecutter.basePackage }}.config.security.filter.AntiSpiderFilter;
-import {{ cookiecutter.basePackage }}.config.security.filter.IpFilter;
+import {{ cookiecutter.basePackage }}.config.security.filter.AclFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.JwtAuthenticationTokenFilter;
 import {{ cookiecutter.basePackage }}.config.security.mobile.SmsSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class SecurityConfiguration {
 
     AntiSpiderFilter antiSpiderFilter;
 
-    IpFilter ipFilter;
+    AclFilter ipFilter;
 
     JwtAuthenticationTokenFilter tokenFilter;
 
@@ -44,7 +44,7 @@ public class SecurityConfiguration {
     SmsSecurityConfigurerAdapter smsSecurityConfigurerAdapter;
 
     public SecurityConfiguration(JwtAuthenticationTokenFilter tokenFilter, AuthenticationEntryPoint authenticationEntryPoint,
-                                 AccessDeniedHandler accessDeniedHandler, AntiSpiderFilter antiSpiderFilter, IpFilter ipFilter) {
+                                 AccessDeniedHandler accessDeniedHandler, AntiSpiderFilter antiSpiderFilter, AclFilter ipFilter) {
         this.tokenFilter = tokenFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
@@ -81,7 +81,7 @@ public class SecurityConfiguration {
         // 添加过滤器
         http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(ipFilter, JwtAuthenticationTokenFilter.class);
-        http.addFilterBefore(antiSpiderFilter, IpFilter.class);
+        http.addFilterBefore(antiSpiderFilter, AclFilter.class);
 
         // 配置异常处理器
         http.exceptionHandling()
