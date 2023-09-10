@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
-import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
+import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

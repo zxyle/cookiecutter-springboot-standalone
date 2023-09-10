@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
-import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
+import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
+import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
@@ -23,7 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class SmsCodeAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-    final ILoginLogService loginLogService;
+    final LoginLogService loginLogService;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {

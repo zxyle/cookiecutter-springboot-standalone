@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.config.security;
 
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
+import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

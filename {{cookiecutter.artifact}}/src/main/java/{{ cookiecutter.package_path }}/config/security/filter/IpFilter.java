@@ -3,9 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.config.security.filter;
 
-import {{ cookiecutter.basePackage }}.biz.sys.service.IBlacklistService;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
-import {{ cookiecutter.basePackage }}.biz.sys.service.IWhitelistService;
+import {{ cookiecutter.basePackage }}.biz.sys.acl.BlacklistService;
+import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
+import {{ cookiecutter.basePackage }}.biz.sys.acl.WhitelistService;
 import {{ cookiecutter.basePackage }}.common.util.CidrUtil;
 import {{ cookiecutter.basePackage }}.common.util.ResponseUtil;
 import org.springframework.core.env.Environment;
@@ -29,10 +29,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IpFilter extends OncePerRequestFilter {
 
-    final IBlacklistService blacklistService;
-    final IWhitelistService whitelistService;
+    final BlacklistService blacklistService;
+    final WhitelistService whitelistService;
     final Environment environment;
-    final ISettingService setting;
+    final SettingService setting;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

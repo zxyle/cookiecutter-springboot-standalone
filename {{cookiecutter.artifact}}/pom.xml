@@ -25,6 +25,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.github.zxyle</groupId>
+            <artifactId>generator</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.bastiaanjansen</groupId>
             <artifactId>otp-java</artifactId>
             <version>2.0.1</version>
@@ -109,12 +115,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.4.1</version>
+            <version>3.5.3.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
@@ -193,6 +194,15 @@
                 <excludes>
                     <exclude>smart-doc.json</exclude>
                 </excludes>
+            </resource>
+            <resource>
+                <!-- xml放在java目录下-->
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <!--<filtering>false</filtering>
+                filtering设为true可替换*.xml、*.properties配置文件中的占位符(${jdbc.url})-->
             </resource>
         </resources>
 

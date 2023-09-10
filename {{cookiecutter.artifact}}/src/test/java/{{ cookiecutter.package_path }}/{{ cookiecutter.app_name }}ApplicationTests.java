@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }};
 
-import {{ cookiecutter.basePackage }}.biz.auth.service.EmailCodeService;
+import {{ cookiecutter.basePackage }}.biz.sys.captcha.EmailCodeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

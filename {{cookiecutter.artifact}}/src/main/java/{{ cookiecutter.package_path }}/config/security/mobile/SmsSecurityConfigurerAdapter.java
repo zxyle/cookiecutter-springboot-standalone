@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
-import {{ cookiecutter.basePackage }}.biz.auth.service.ValidateService;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
+import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
+import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -23,7 +23,7 @@ public class SmsSecurityConfigurerAdapter extends SecurityConfigurerAdapter<Defa
 
     final UserDetailsService userDetailsService;
     final ValidateService validateService;
-    final ILoginLogService loginLogService;
+    final LoginLogService loginLogService;
 
     @Override
     public void configure(HttpSecurity http) {

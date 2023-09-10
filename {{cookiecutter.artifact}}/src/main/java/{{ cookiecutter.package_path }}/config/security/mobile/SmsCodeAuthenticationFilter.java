@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
-import {{ cookiecutter.basePackage }}.biz.auth.request.login.CodeLoginRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.util.AccountUtil;
+import {{ cookiecutter.basePackage }}.biz.auth.login.request.CodeLoginRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.mfa.AccountUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationServiceException;

@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.response;
 
-import {{ cookiecutter.basePackage }}.biz.sys.entity.Setting;
+import {{ cookiecutter.basePackage }}.biz.sys.setting.Setting;
 import lombok.Data;
 
 /**

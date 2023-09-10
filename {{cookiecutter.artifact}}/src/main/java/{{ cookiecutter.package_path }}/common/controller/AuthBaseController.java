@@ -3,13 +3,13 @@
 
 package {{ cookiecutter.basePackage }}.common.controller;
 
-import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserGroup;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.UserRole;
+import {{ cookiecutter.basePackage }}.biz.auth.group.GroupService;
+import {{ cookiecutter.basePackage }}.biz.auth.user.User;
+import {{ cookiecutter.basePackage }}.biz.auth.user.group.UserGroup;
+import {{ cookiecutter.basePackage }}.biz.auth.user.group.UserGroupService;
+import {{ cookiecutter.basePackage }}.biz.auth.user.role.UserRole;
+import {{ cookiecutter.basePackage }}.biz.auth.user.role.UserRoleService;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IGroupService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserGroupService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,13 +26,13 @@ import java.util.stream.Collectors;
 public class AuthBaseController {
 
     @Autowired
-    protected IGroupService groupService;
+    protected GroupService groupService;
 
     @Autowired
-    protected IUserGroupService userGroupService;
+    protected UserGroupService userGroupService;
 
     @Autowired
-    protected IUserRoleService userRoleService;
+    protected UserRoleService userRoleService;
 
     /**
      * 获取当前登录用户ID

@@ -3,11 +3,11 @@
 
 package {{ cookiecutter.basePackage }}.config.security;
 
-import {{ cookiecutter.basePackage }}.biz.auth.constant.AuthConst;
-import {{ cookiecutter.basePackage }}.biz.auth.entity.User;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
-import {{ cookiecutter.basePackage }}.biz.auth.service.IUserService;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
+import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
+import {{ cookiecutter.basePackage }}.biz.auth.permission.PermissionService;
+import {{ cookiecutter.basePackage }}.biz.auth.user.User;
+import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
+import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,10 +26,10 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class UserDetailServiceImpl implements UserDetailsService {
 
-    final IUserService userService;
-    final IPermissionService permissionService;
+    final UserService userService;
+    final PermissionService permissionService;
     final StringRedisTemplate stringRedisTemplate;
-    final ISettingService setting;
+    final SettingService setting;
 
     @Override
     public UserDetails loadUserByUsername(String account) throws UsernameNotFoundException {

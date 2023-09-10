@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.service.impl;
 
 import cn.hutool.http.HttpRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.response.DingTalkResponse;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
+import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
 import {{ cookiecutter.basePackage }}.biz.sys.service.MonitoringAlarmService;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DingTalkAlarmServiceImpl implements MonitoringAlarmService {
 
-    final ISettingService setting;
+    final SettingService setting;
 
     @Override
     public boolean sendAlarm(String msg) {

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.user.group.UserGroupMapper">
+
+    <select id="listUsers" resultType="{{ cookiecutter.basePackage }}.biz.auth.user.User">
+        SELECT
+            b.*
+        FROM `auth_user_group` a
+        LEFT JOIN `auth_user` b
+        ON a.user_id = b.id
+        WHERE a.group_id = #{groupId}
+    </select>
+
+    <select id="listGroups" resultType="{{ cookiecutter.basePackage }}.biz.auth.group.Group">
+        SELECT
+            b.`name`,
+            b.`parent_id`,
+            b.`description`,
+            b.`sort`
+        FROM
+            `auth_user_group` a
+        LEFT JOIN `auth_group` b
+            ON a.`group_id` = b.`id`
+        WHERE
+            a.`user_id` = #{userId}
+    </select>
+
+    <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.group.Group">
+        SELECT
+            b.*
+        FROM ( SELECT group_id FROM auth_user_group WHERE user_id = #{userId} ) a
+        LEFT JOIN auth_group b
+        ON a.group_id = b.id
+        <if test="request != null and request.keyword != null">
+            WHERE b.name LIKE CONCAT('%', #{request.keyword}, '%')
+        </if>
+    </select>
+
+    <select id="pageUser" resultType="{{ cookiecutter.basePackage }}.biz.auth.user.User">
+        SELECT
+            b.id,
+            b.nickname
+        FROM (SELECT user_id FROM auth_user_group WHERE group_id=#{groupId}) a
+        LEFT JOIN auth_user b
+        ON a.user_id=b.id
+        <where>
+            <if test="request != null and request.keyword != null">
+                b.nickname LIKE CONCAT('%', #{request.keyword}, '%')
+            </if>
+            <if test="request != null and request.enabled != null">
+                AND b.enabled = #{request.enabled}
+            </if>
+        </where>
+    </select>
+
+</mapper>

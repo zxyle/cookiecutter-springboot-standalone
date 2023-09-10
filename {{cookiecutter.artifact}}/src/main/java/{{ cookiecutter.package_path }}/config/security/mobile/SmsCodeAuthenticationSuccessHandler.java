@@ -3,10 +3,10 @@
 
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
-import {{ cookiecutter.basePackage }}.biz.auth.response.LoginResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.login.LoginResponse;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
-import {{ cookiecutter.basePackage }}.biz.sys.entity.LoginLog;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ILoginLogService;
+import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
+import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    final ILoginLogService loginLogService;
+    final LoginLogService loginLogService;
     static StringRedisTemplate stringRedisTemplate;
 
     // 解决 @Component 下 @Autowired 注入为null的情况

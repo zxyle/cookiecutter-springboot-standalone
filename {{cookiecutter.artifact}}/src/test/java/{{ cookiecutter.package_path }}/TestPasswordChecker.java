@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }};
 
 import cn.hutool.core.lang.Assert;
-import {{ cookiecutter.basePackage }}.biz.auth.util.PasswordChecker;
+import {{ cookiecutter.basePackage }}.biz.auth.password.PasswordChecker;
 import org.junit.jupiter.api.Test;
 
 class TestPasswordChecker {

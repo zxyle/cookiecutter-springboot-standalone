@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.task;
 
-import {{ cookiecutter.basePackage }}.biz.sys.service.IDictService;
-import {{ cookiecutter.basePackage }}.biz.sys.service.ISettingService;
+import {{ cookiecutter.basePackage }}.biz.sys.dict.DictService;
+import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,8 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 public class LoadDataTask {
 
-    final IDictService dictService;
-    final ISettingService settingService;
+    final DictService dictService;
+    final SettingService settingService;
 
     @PostConstruct
     public void load() {

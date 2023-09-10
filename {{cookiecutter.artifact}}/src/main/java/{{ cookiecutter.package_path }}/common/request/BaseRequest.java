@@ -3,8 +3,14 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import java.util.List;
 
 /**
  * 基础请求
@@ -29,4 +35,31 @@ public class BaseRequest {
      * 随机数
      */
     private String nonce;
+
+    @Data
+    @EqualsAndHashCode(callSuper = false)
+    public static class UpdateAuthRequest extends BaseRequest {
+
+        /**
+         * 权限、角色、用户组名称
+         *
+         * @mock 更新项目
+         */
+        private String name;
+
+        /**
+         * 描述信息
+         */
+        private String description;
+
+        /**
+         * 权限ID列表
+         */
+        private List<@Positive @NotNull Integer> permissionIds;
+
+        /**
+         * 角色ID列表
+         */
+        private List<@Positive @NotNull Integer> roleIds;
+    }
 }

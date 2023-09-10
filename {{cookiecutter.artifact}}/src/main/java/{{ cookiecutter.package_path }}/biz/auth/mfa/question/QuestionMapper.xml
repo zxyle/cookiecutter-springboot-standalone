@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="{{ cookiecutter.basePackage }}.biz.auth.mfa.question.QuestionMapper">
+
+    <select id="findQuestionsByUserId" resultType="{{ cookiecutter.basePackage }}.biz.auth.mfa.question.Question">
+        SELECT
+            id, ask
+        FROM
+            auth_question a
+        INNER JOIN ( SELECT question_id FROM auth_answer WHERE user_id = #{userId} ) b
+        ON a.id = b.question_id
+    </select>
+</mapper>

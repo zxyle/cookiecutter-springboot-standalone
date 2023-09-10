@@ -10,7 +10,11 @@ JAR = {{ cookiecutter.artifact }}-{{ cookiecutter.version }}.jar
 LC_CTYPE := en_US.UTF-8
 
 REDIS_RPM = redis-7.0.12-1.el7.remi.x86_64.rpm
-JDK_RPM = jdk-8u202-linux-x64.rpm
+JDK_RPM = jdk-11.0.17_linux-x64_bin.rpm
+MYSQL_VERSION = 8.0.28-1.el7.x86_64
+MYSQL_RPM = mysql-$(MYSQL_VERSION).rpm-bundle.tar
+
+
 # 默认目标
 deploy: publish
 
@@ -45,6 +49,7 @@ publish: package backup
 	@echo "Deploy success!"
 
 # 初始化前后端运行环境
+# 服务器需要安装rsync, yum install rsync -y
 init: package
 	ssh $(SERVER) "mkdir -p $(BACKEND_DIR)"
 	rsync -avz --progress --delete ./target/lib/ $(SERVER):$(BACKEND_DIR)/lib
@@ -73,19 +78,43 @@ init: package
 
 # 安装JDK
 jdk:
-	scp ~/developer/software/jdk/$(JDK_RPM) $(SERVER):$(BACKEND_DIR)
-	ssh $(SERVER) "rpm -ivh $(BACKEND_DIR)/$(JDK_RPM)"
-	ssh $(SERVER) "rm -rf $(BACKEND_DIR)/$(JDK_RPM)"
+	scp ~/developer/software/jdk/$(JDK_RPM) $(SERVER):/tmp
+	ssh $(SERVER) "rpm -ivh /tmp/$(JDK_RPM)"
+	ssh $(SERVER) "rm -rf /tmp/$(JDK_RPM)"
 	ssh $(SERVER) "java -version"
 	ssh $(SERVER) "javac -version"
 
 # 安装redis
 redis:
-	scp ~/developer/software/redis/$(REDIS_RPM) $(SERVER):$(BACKEND_DIR)
-	ssh $(SERVER) "rpm -ivh $(BACKEND_DIR)/$(REDIS_RPM)"
-	ssh $(SERVER) "rm -rf $(BACKEND_DIR)/$(REDIS_RPM)"
+	scp ~/developer/software/redis/$(REDIS_RPM) $(SERVER):/tmp
+	ssh $(SERVER) "rpm -ivh /tmp/$(REDIS_RPM)"
+	ssh $(SERVER) "rm -rf /tmp/$(REDIS_RPM)"
 	ssh $(SERVER) "redis-server --version"
 	ssh $(SERVER) "systemctl enable redis --now"
+
+# 安装mysql
+mysql:
+	scp ~/developer/software/mysql/$(MYSQL_RPM) $(SERVER):/tmp
+	ssh $(SERVER) "tar -xvf /tmp/$(MYSQL_RPM) -C /tmp"
+	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-client-plugins-$(MYSQL_VERSION).rpm --force --nodeps"
+	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-devel-$(MYSQL_VERSION).rpm --force --nodeps"
+	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-common-$(MYSQL_VERSION).rpm --force --nodeps"
+	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-libs-$(MYSQL_VERSION).rpm --force --nodeps"
+	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-libs-compat-$(MYSQL_VERSION).rpm --force --nodeps"
+	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-client-$(MYSQL_VERSION).rpm --force --nodeps"
+	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-server-$(MYSQL_VERSION).rpm --force --nodeps"
+	ssh $(SERVER) "rm -rf /tmp/mysql-*"
+	ssh $(SERVER) "systemctl enable mysqld --now"
+	ssh $(SERVER) "grep 'password' /var/log/mysqld.log"
+	# 手动登录mysql执行以下sql
+	# mysql -uroot -p 输入上面的密码
+	# ALTER USER 'root'@'localhost' IDENTIFIED BY 'Hr!CyEH22akHghgLk7';
+	# use mysql;
+	# UPDATE mysql.user SET host = '%' WHERE user = 'root';
+	# GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+	# FLUSH PRIVILEGES;
+	# quit;
+
 
 # 安装nginx
 nginx:
@@ -97,7 +126,7 @@ nginx:
 
 # 使用说明
 help:
-	@echo "Usage: make [package|publish|restart|rollback|backup|init|deploy|clean|jdk|redis|nginx]"
+	@echo "Usage: make [package|publish|restart|rollback|backup|init|deploy|clean|jdk|redis|nginx|mysql]"
 
 # 清理
 clean:
@@ -105,4 +134,4 @@ clean:
 	@find . -type d -name "logs" -exec rm -r {} +
 	@echo "Clean success!"
 
-.PHONY: package restart backup rollback publish init help clean jdk redis nginx
+.PHONY: package restart backup rollback publish init help clean jdk redis nginx mysql

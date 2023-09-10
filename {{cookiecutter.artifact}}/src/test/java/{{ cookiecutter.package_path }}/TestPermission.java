@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }};
 
-import {{ cookiecutter.basePackage }}.biz.auth.service.IPermissionService;
+import {{ cookiecutter.basePackage }}.biz.auth.permission.PermissionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class TestPermission {
 
     @Autowired
-    IPermissionService permissionService;
+    PermissionService permissionService;
 
 
     @Test

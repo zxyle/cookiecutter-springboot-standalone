@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement   // 开启事务
-@MapperScan("{{ cookiecutter.basePackage }}.biz.*.mapper")
+@MapperScan(value = {"{{ cookiecutter.basePackage }}.biz.*.*"})
 public class MybatisPlusConfig {
 
     @Bean
