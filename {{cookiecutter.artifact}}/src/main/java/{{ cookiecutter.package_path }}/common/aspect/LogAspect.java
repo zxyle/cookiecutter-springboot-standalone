@@ -78,7 +78,7 @@ public class LogAspect {
 
 
     /**
-     * @Around注解 环绕执行，就是在调用目标方法之前和调用之后，都会执行一定的逻辑
+     * Around注解 环绕执行，就是在调用目标方法之前和调用之后，都会执行一定的逻辑
      */
     @Around("log()")
     public R<LoginResponse> doAround(ProceedingJoinPoint pjp) throws Throwable {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="{{ cookiecutter.basePackage }}.biz.sys.mapper.PartitionMapper">
+<mapper namespace="{{ cookiecutter.basePackage }}.biz.sys.partition.PartitionMapper">
 
     <select id="createPartition">
         ALTER TABLE ${tableName} ADD PARTITION (PARTITION ${partitionName} VALUES LESS THAN (TO_DAYS(#{tomorrow})))

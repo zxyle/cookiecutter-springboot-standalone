@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.verification;
 
-import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import {{ cookiecutter.basePackage }}.common.entity.RecordEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @TableName("sys_verification")
 @EqualsAndHashCode(callSuper = true)
-public class Verification extends BaseEntity {
+public class Verification extends RecordEntity {
 
     private static final long serialVersionUID = 1L;
 

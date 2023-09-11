@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * 角色信息响应
  */
-@EqualsAndHashCode(callSuper = false)
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class RoleResponse extends Role {
 
     /**

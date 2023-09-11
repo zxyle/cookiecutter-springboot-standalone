@@ -658,7 +658,6 @@ DROP TABLE IF EXISTS `sys_verification`;
 CREATE TABLE `sys_verification` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `kind` enum('email','mobile') CHARACTER SET utf8mb4 NOT NULL COMMENT '验证码类型',
   `receiver` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '接收者',
   `content` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '内容',

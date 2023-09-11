@@ -1,7 +1,7 @@
 # cookiecutter-springboot-standalone
 
 ## 项目介绍
-本项目是基于[Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/html/)、Redis、MySql、[MybatisPlus](https://baomidou.com/)、[Spring Security](https://docs.spring.io/spring-security/reference/index.html)等技术实现的后端快速开发脚手架。 
+本项目是基于[Spring Boot](https://docs.spring.io/spring-boot/docs/current/reference/html/)、Redis、MySQL、[Mybatis Plus](https://baomidou.com/)、[Spring Security](https://docs.spring.io/spring-security/reference/index.html)等技术实现的后端快速开发脚手架。 
 适合中小型项目快速搭建，具有提高开发效率，降低开发成本等特点。
 
 

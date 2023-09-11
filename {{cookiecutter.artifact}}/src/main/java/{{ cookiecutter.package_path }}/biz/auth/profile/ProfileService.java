@@ -45,8 +45,13 @@ public class ProfileService extends ServiceImpl<ProfileMapper, Profile> {
         UpdateWrapper<Profile> wrapper = new UpdateWrapper<>();
         wrapper.eq(USER_ID, profile.getUserId());
         // 如果没有数据，则新增
-        boolean success = saveOrUpdate(profile, wrapper);
-        if (success) {
+        if (exists(wrapper)) {
+            save(profile);
+            return profile;
+        }
+
+        boolean updated = update(profile, wrapper);
+        if (updated) {
             // 更新后获取更新后的数据
             return getOne(wrapper);
         }
