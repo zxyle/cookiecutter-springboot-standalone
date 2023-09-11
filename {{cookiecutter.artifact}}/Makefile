@@ -9,10 +9,19 @@ JAR = {{ cookiecutter.artifact }}-{{ cookiecutter.version }}.jar
 
 LC_CTYPE := en_US.UTF-8
 
+DOWNLOAD_DIR = ~/developer/software
 REDIS_RPM = redis-7.0.12-1.el7.remi.x86_64.rpm
+REDIS_TARGET_FILE = $(DOWNLOAD_DIR)/redis/$(REDIS_RPM)
+REDIS_REMOTE_URL = https://mirrors.tuna.tsinghua.edu.cn/remi/enterprise/7/remi/x86_64/$(REDIS_RPM)
+
 JDK_RPM = jdk-8u202-linux-x64.rpm
+JDK_TARGET_FILE = $(DOWNLOAD_DIR)/jdk/$(JDK_RPM)
+JDK_REMOTE_URL = https://repo.huaweicloud.com/java/jdk/8u202-b08/$(JDK_RPM)
+
 MYSQL_VERSION = 8.0.28-1.el7.x86_64
 MYSQL_RPM = mysql-$(MYSQL_VERSION).rpm-bundle.tar
+MYSQL_TARGET_FILE = $(DOWNLOAD_DIR)/mysql/$(MYSQL_RPM)
+MYSQL_REMOTE_URL = https://mirrors.aliyun.com/mysql/MySQL-8.0/$(MYSQL_RPM)
 
 
 # 默认目标
@@ -78,7 +87,14 @@ init: package
 
 # 安装JDK
 jdk:
-	scp ~/developer/software/jdk/$(JDK_RPM) $(SERVER):/tmp
+	@if [ ! -f $(JDK_TARGET_FILE) ]; then \
+		echo "Downloading $(JDK_TARGET_FILE) from $(JDK_REMOTE_URL)"; \
+		mkdir -p $(DOWNLOAD_DIR)/jdk; \
+		wget -O $(JDK_TARGET_FILE) $(JDK_REMOTE_URL); \
+	else \
+		@echo "$(JDK_TARGET_FILE) already exists."; \
+	fi
+	scp $(DOWNLOAD_DIR)/jdk/$(JDK_RPM) $(SERVER):/tmp
 	ssh $(SERVER) "rpm -ivh /tmp/$(JDK_RPM)"
 	ssh $(SERVER) "rm -rf /tmp/$(JDK_RPM)"
 	ssh $(SERVER) "java -version"
@@ -86,7 +102,14 @@ jdk:
 
 # 安装redis
 redis:
-	scp ~/developer/software/redis/$(REDIS_RPM) $(SERVER):/tmp
+	@if [ ! -f $(REDIS_TARGET_FILE) ]; then \
+		echo "Downloading $(REDIS_TARGET_FILE) from $(REDIS_REMOTE_URL)"; \
+		mkdir -p $(REDIS_DOWNLOAD_DIR)/redis; \
+		wget -O $(REDIS_TARGET_FILE) $(REDIS_REMOTE_URL); \
+	else \
+		@echo "$(REDIS_TARGET_FILE) already exists."; \
+	fi
+	scp $(DOWNLOAD_DIR)/redis/$(REDIS_RPM) $(SERVER):/tmp
 	ssh $(SERVER) "rpm -ivh /tmp/$(REDIS_RPM)"
 	ssh $(SERVER) "rm -rf /tmp/$(REDIS_RPM)"
 	ssh $(SERVER) "redis-server --version"
@@ -94,7 +117,14 @@ redis:
 
 # 安装mysql
 mysql:
-	scp ~/developer/software/mysql/$(MYSQL_RPM) $(SERVER):/tmp
+	@if [ ! -f $(MYSQL_TARGET_FILE) ]; then \
+		echo "Downloading $(MYSQL_TARGET_FILE) from $(MYSQL_REMOTE_URL)"; \
+		mkdir -p $(MYSQL_DOWNLOAD_DIR)/redis; \
+		wget -O $(MYSQL_TARGET_FILE) $(MYSQL_REMOTE_URL); \
+	else \
+		@echo "$(MYSQL_TARGET_FILE) already exists."; \
+	fi
+	scp $(DOWNLOAD_DIR)/mysql/$(MYSQL_RPM) $(SERVER):/tmp
 	ssh $(SERVER) "tar -xvf /tmp/$(MYSQL_RPM) -C /tmp"
 	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-client-plugins-$(MYSQL_VERSION).rpm --force --nodeps"
 	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-devel-$(MYSQL_VERSION).rpm --force --nodeps"
