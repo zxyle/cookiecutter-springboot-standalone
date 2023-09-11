@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.biz.sys.monitor;
+package {{ cookiecutter.basePackage }}.biz.sys.redis;
 
 import lombok.Data;
 

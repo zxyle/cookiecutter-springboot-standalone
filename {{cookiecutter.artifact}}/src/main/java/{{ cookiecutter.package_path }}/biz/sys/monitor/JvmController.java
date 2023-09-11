@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.sys.monitor;
 
 import cn.hutool.system.SystemUtil;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
-import {{ cookiecutter.basePackage }}.biz.sys.response.JvmResponse;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;

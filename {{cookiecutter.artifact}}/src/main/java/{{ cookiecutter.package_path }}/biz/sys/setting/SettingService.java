@@ -6,8 +6,8 @@ package {{ cookiecutter.basePackage }}.biz.sys.setting;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import {{ cookiecutter.basePackage }}.biz.sys.response.Item;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "SettingCache")
 public class SettingService extends ServiceImpl<SettingMapper, Setting>  {
 
     private static final String LABEL = "option_label";
@@ -26,7 +27,7 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting>  {
     /**
      * 按ID查询
      */
-    @Cacheable(cacheNames = "SettingCache", key = "#id", unless = "#result == null")
+    @Cacheable(key = "#id", unless = "#result == null")
     public Setting findById(Integer id) {
         return getById(id);
     }
@@ -36,7 +37,7 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting>  {
      *
      * @param label 选项名称
      */
-    @Cacheable(cacheNames = "SettingCache", key = "#label", cacheManager = "neverExpireCacheManager", unless = "#result == null")
+    @Cacheable(key = "#label", cacheManager = "neverExpireCacheManager", unless = "#result == null")
     public Item get(String label) {
         QueryWrapper<Setting> wrapper = new QueryWrapper<>();
         wrapper.select(LABEL, VALUE, "data_type");
@@ -48,7 +49,7 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting>  {
         return null;
     }
 
-    @CachePut(cacheNames = "SettingCache", key = "#label", cacheManager = "neverExpireCacheManager")
+    @CachePut(key = "#label", cacheManager = "neverExpireCacheManager")
     public Item update(String label, String value) {
         UpdateWrapper<Setting> wrapper = new UpdateWrapper<>();
         wrapper.eq(LABEL, label);

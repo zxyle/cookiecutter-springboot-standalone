@@ -1,4 +1,4 @@
-package {{ cookiecutter.basePackage }}.biz.sys.response;
+package {{ cookiecutter.basePackage }}.biz.sys.redis;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

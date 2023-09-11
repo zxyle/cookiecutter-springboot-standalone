@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.sys.setting;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
-import {{ cookiecutter.basePackage }}.biz.sys.response.Item;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;

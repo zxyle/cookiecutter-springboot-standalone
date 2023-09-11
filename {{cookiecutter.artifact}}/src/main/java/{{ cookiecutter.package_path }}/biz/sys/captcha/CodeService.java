@@ -3,6 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.captcha;
 
+import {{ cookiecutter.basePackage }}.biz.sys.captcha.kaptcha.KaptchaServiceImpl;
+import {{ cookiecutter.basePackage }}.biz.sys.captcha.patchca.PatchcaServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
 import com.google.code.kaptcha.Producer;
 import lombok.RequiredArgsConstructor;

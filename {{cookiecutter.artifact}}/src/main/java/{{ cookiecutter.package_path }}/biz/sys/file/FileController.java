@@ -3,8 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.file;
 
-import {{ cookiecutter.basePackage }}.biz.sys.response.UploadData;
-import {{ cookiecutter.basePackage }}.biz.sys.response.UploadResponse;
+import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadData;
+import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadRequest;
+import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadResponse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;

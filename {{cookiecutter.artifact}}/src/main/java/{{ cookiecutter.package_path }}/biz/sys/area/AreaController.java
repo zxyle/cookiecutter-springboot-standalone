@@ -4,10 +4,10 @@
 package {{ cookiecutter.basePackage }}.biz.sys.area;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
+import {{ cookiecutter.basePackage }}.common.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
-import {{ cookiecutter.basePackage }}.biz.sys.response.AreaNode;
+import {{ cookiecutter.basePackage }}.common.response.AreaNode;
 import {{ cookiecutter.basePackage }}.common.util.TreeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;

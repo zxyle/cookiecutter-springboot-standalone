@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.captcha;
 
 import {{ cookiecutter.basePackage }}.biz.auth.mfa.AccountUtil;
-import {{ cookiecutter.basePackage }}.biz.sys.response.CaptchaResponse;
+import {{ cookiecutter.basePackage }}.biz.sys.captcha.sms.ShortMessageService;
 import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;

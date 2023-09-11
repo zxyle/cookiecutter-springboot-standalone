@@ -10,7 +10,7 @@ JAR = {{ cookiecutter.artifact }}-{{ cookiecutter.version }}.jar
 LC_CTYPE := en_US.UTF-8
 
 REDIS_RPM = redis-7.0.12-1.el7.remi.x86_64.rpm
-JDK_RPM = jdk-11.0.17_linux-x64_bin.rpm
+JDK_RPM = jdk-8u202-linux-x64.rpm
 MYSQL_VERSION = 8.0.28-1.el7.x86_64
 MYSQL_RPM = mysql-$(MYSQL_VERSION).rpm-bundle.tar
 

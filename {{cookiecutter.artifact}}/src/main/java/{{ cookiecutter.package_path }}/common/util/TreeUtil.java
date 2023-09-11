@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.common.util;
 
-import {{ cookiecutter.basePackage }}.biz.sys.response.AntdTree2;
-import {{ cookiecutter.basePackage }}.biz.sys.response.TreeNode;
+import {{ cookiecutter.basePackage }}.common.response.AntdTree2;
+import {{ cookiecutter.basePackage }}.common.response.TreeNode;
 import dev.zhengxiang.tool.utils.BoolUtil;
 
 import java.util.ArrayList;
