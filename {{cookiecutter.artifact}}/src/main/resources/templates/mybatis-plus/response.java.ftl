@@ -12,6 +12,6 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ${table.className}Response {
+public class ${className} {
 
 }

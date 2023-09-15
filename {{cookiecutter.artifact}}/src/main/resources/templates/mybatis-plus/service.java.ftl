@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "${table.className}Cache")
-public class ${table.className}Service extends ServiceImpl<${table.className}Mapper, ${table.className}> {
+public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.className}> {
 
     final ${table.className}Mapper thisMapper;
 

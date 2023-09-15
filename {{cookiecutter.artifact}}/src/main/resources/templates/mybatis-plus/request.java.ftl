@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.Length;
 @Setter
 @ToString
 @NoArgsConstructor
-public class ${table.className}Request extends BaseRequest {
+public class ${className} extends BaseRequest {
 
 <#list table.columns as column>
     <#if column.name != "id" && column.name != "create_time" && column.name != "update_time">
@@ -26,13 +26,13 @@ public class ${table.className}Request extends BaseRequest {
     @Length(max = ${column.length}, message = "${column.comment}长度不能超过${column.length}个字符")
     </#if>
     <#if column.nullable>
-        <#if column.dataType == "String">
+        <#if column.javaType == "String">
     @NotBlank(message = "${column.comment}不能为空")
         <#else>
     @NotNull(message = "${column.comment}不能为空")
         </#if>
     </#if>
-    private ${column.dataType} ${column.property};
+    private ${column.javaType} ${column.property};
 
     </#if>
 </#list>

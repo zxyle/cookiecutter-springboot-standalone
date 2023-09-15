@@ -26,7 +26,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.zxyle</groupId>
-            <artifactId>generator</artifactId>
+            <artifactId>codegen</artifactId>
             <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>32.1.1-jre</version>
+            <version>32.1.2-jre</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -124,7 +124,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.12</version>
+            <version>5.8.21</version>
         </dependency>
         <dependency>
             <groupId>p6spy</groupId>
@@ -138,7 +138,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.11.0</version>
+            <version>2.13.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -177,12 +177,12 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.15</version>
+            <version>1.16.0</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
-            <version>3.1.4</version>
+            <version>3.3.2</version>
         </dependency>
     </dependencies>
 

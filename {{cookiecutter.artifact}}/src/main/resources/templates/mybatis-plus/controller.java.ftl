@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/${table.biz}")
 @RequiredArgsConstructor
-public class ${table.className}Controller {
+public class ${className} {
 
     final ${table.className}Mapper thisMapper;
     final ${table.className}Service thisService;
