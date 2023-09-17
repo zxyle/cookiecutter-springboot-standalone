@@ -12,13 +12,13 @@ import javax.validation.constraints.NotNull;
  * 主键ID请求
  */
 @Data
-public class PrimaryKeyRequest {
+public class IdRequest {
 
     /**
      * 主键ID
      */
     @Range(min = 1, message = "ID必须为正整数")
     @NotNull(message = "ID不能为空")
-    private Long id;
+    private Integer id;
 
 }
