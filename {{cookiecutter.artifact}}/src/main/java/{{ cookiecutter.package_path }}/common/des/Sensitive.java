@@ -10,7 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 数据脱敏注解
+ * 数据脱敏注解，用于响应类的属性上
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

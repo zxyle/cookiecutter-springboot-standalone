@@ -20,7 +20,7 @@ public class BatchRequest {
      * 主键ID
      */
     @NotEmpty(message = "ID不能为空")
-    private List<@NotNull @Positive Long> ids;
+    private List<@NotNull @Positive Integer> ids;
 
 }
 

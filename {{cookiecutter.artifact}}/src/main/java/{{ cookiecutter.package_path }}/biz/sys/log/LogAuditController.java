@@ -21,9 +21,9 @@ import javax.validation.Valid;
  * 日志审计
  */
 @RestController
-@RequestMapping("/sys/logs")
 @RequiredArgsConstructor
-public class LogController {
+@RequestMapping("/sys/logs")
+public class LogAuditController {
 
     final LoginLogService loginLogService;
     final OperateLogService operateLogService;

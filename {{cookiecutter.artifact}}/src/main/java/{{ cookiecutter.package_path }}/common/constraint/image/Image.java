@@ -7,7 +7,7 @@ import javax.validation.Constraint;
 import java.lang.annotation.*;
 
 /**
- * 图片校验注解
+ * 图片校验注解，用于校验图片的宽高是否符合要求
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

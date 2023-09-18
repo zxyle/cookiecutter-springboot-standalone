@@ -58,8 +58,11 @@ public class AclService extends ServiceImpl<AclMapper, Acl> {
         return getById(entity.getId());
     }
 
+    /**
+     * 查询所有IP（带缓存）
+     */
     @Cacheable(key = "'all'")
-    public List<Acl> findAllIp() {
+    public List<Acl> findAllIP() {
         QueryWrapper<Acl> wrapper = new QueryWrapper<>();
         wrapper.select("ip", "allowed", "end_time");
         return list(wrapper);

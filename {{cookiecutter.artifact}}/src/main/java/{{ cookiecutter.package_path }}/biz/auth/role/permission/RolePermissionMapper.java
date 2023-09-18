@@ -17,7 +17,9 @@ import java.util.List;
 @Repository
 public interface RolePermissionMapper extends BaseMapper<RolePermission> {
 
-    // 查询角色所拥有的权限列表
+    /**
+     * 查询角色所拥有的权限列表
+     */
     List<Permission> findPermissionsByRoleId(Integer roleId);
 
     /**

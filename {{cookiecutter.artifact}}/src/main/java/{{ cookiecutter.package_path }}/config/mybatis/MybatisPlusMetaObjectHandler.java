@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+/**
+ * MybatisPlus自动填充
+ * 用于自动填充创建时间、更新时间、创建人(如果字段存在)、更新人(如果字段存在)
+ */
 @Component
 public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 

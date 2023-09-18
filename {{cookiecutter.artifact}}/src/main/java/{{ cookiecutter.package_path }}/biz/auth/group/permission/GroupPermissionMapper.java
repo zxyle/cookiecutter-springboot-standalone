@@ -17,10 +17,14 @@ import java.util.List;
 @Repository
 public interface GroupPermissionMapper extends BaseMapper<GroupPermission> {
 
-    // 查询用户组拥有的权限代码列表
+    /**
+     * 查询用户组拥有的权限代码列表
+     */
     List<Permission> findPermissionsByGroupId(Integer groupId);
 
-    // 查询用户组拥有的权限代码列表
+    /**
+     * 查询用户组拥有的权限代码列表
+     */
     List<Permission> findPermissionsByGroupIds(List<Integer> groupIds);
 
     /**

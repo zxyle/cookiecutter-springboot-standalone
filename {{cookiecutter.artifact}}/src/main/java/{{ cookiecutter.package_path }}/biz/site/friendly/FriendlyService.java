@@ -4,12 +4,18 @@
 package {{ cookiecutter.basePackage }}.biz.site.friendly;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 /**
  * 友链 服务实现类
  */
+@Slf4j
 @Service
+@RequiredArgsConstructor
+@CacheConfig(cacheNames = "FriendlyCache")
 public class FriendlyService extends ServiceImpl<FriendlyMapper, Friendly> {
 
 }

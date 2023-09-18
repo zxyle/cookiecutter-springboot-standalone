@@ -19,10 +19,18 @@ import java.util.List;
 @Repository
 public interface UserGroupMapper extends BaseMapper<UserGroup> {
 
-    // 查询用户组下所有用户
+    /**
+     * 查询用户组下所有用户
+     *
+     * @param groupId 用户组ID
+     */
     List<User> listUsers(Integer groupId);
 
-    // 查询用户所属的用户组
+    /**
+     * 查询用户所属的用户组
+     *
+     * @param userId 用户ID
+     */
     List<Group> listGroups(Integer userId);
 
     /**

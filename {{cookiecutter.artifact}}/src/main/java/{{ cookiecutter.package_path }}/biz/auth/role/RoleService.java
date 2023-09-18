@@ -90,7 +90,12 @@ public class RoleService extends ServiceImpl<RoleMapper, Role> {
         return response;
     }
 
-    // 更新角色权限关系
+    /**
+     * 更新角色权限关系
+     *
+     * @param roleId        角色ID
+     * @param permissionIds 权限ID列表
+     */
     public void updateRelation(Integer roleId, List<Integer> permissionIds) {
         rolePermissionService.updateRelation(roleId, permissionIds);
     }

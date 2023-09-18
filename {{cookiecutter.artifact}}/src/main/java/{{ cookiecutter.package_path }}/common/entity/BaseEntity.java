@@ -15,7 +15,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-
+/**
+ * 基础实体类，包含主键ID、创建时间、更新时间
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

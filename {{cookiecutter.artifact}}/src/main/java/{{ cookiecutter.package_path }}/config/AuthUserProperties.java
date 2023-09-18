@@ -43,7 +43,7 @@ public class AuthUserProperties {
     private String defaultPassword;
 
     /**
-     * 认证方式 （password-密码登录、qrcode-扫码登录、code-验证码登录）
+     * 认证方式（password-密码登录、qrcode-扫码登录、code-验证码登录）
      */
     private String verification;
 

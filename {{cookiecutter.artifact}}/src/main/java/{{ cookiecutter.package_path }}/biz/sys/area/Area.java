@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.entity.LiteEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.validator.constraints.Range;
 
 /**
  * 行政区划
@@ -34,18 +33,17 @@ public class Area extends LiteEntity {
     private String name;
 
     /**
-     * 上级编码
+     * 父级行政区编码
      *
      * @mock 330110
      */
     private String parentId;
 
     /**
-     * 行政区级别 （1-国家 2-省级 3-市级 4-县区级 5-镇街级 6-村社级）
+     * 行政区级别（1-国家 2-省级 3-市级 4-县区级 5-镇街级 6-村社级）
      *
      * @mock 5
      */
-    @Range(min = 1, max = 6, message = "行政区级别只能是1-6之间的数字")
     private Integer level;
 
 }

@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -32,6 +33,7 @@ public class Friendly extends BaseEntity {
     /**
      * 链接
      */
+    @URL(message = "链接格式不正确")
     @Length(max = 255, message = "链接不能超过255个字符")
     @NotBlank(message = "链接不能为空")
     private String url;

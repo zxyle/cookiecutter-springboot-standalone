@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * 基础实体类
+ * 基础实体类，只包含主键ID
  */
 @Data
 @AllArgsConstructor

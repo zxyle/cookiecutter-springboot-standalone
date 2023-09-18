@@ -17,7 +17,9 @@ import java.util.List;
 @Repository
 public interface GroupRoleMapper extends BaseMapper<GroupRole> {
 
-    // 查询用户组拥有的角色编码列表
+    /**
+     * 查询用户组拥有的角色编码列表
+     */
     List<Role> findRolesByGroupId(Integer groupId);
 
     /**

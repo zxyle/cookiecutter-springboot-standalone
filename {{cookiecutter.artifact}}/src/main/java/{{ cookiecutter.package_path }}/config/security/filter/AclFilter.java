@@ -47,7 +47,7 @@ public class AclFilter extends OncePerRequestFilter {
         }
 
         String ip = request.getRemoteAddr();
-        List<Acl> acl = aclService.findAllIp();
+        List<Acl> acl = aclService.findAllIP();
 
         // 过滤掉过期的黑白名单
         List<String> whitelist = acl.stream().filter(

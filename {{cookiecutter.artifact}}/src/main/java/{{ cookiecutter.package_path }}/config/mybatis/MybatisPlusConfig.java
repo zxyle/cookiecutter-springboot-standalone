@@ -13,6 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+/**
+ * MybatisPlus配置类
+ */
 @Configuration
 @EnableTransactionManagement   // 开启事务
 @MapperScan(value = {"{{ cookiecutter.basePackage }}.biz.*.*"})
@@ -23,7 +26,7 @@ public class MybatisPlusConfig {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());       // 乐观锁插件
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());            // 防止全表更新与删除
-        interceptor.addInnerInterceptor(pageInterceptor());
+        interceptor.addInnerInterceptor(pageInterceptor());                            // 分页插件
         return interceptor;
     }
 

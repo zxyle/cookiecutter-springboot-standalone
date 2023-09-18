@@ -20,7 +20,7 @@ import static java.util.stream.Collectors.toSet;
 public class UploadFileValidator implements ConstraintValidator<UploadFile, MultipartFile> {
 
     /**
-     * 支持上传的文件后缀
+     * 支持上传的文件扩展名
      */
     private Set<String> allowedExtensions;
 

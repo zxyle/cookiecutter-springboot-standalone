@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.captcha;
 
-import cn.hutool.core.util.IdUtil;
+import java.util.UUID;
 
 public interface CaptchaService {
 
@@ -15,6 +15,6 @@ public interface CaptchaService {
     CaptchaPair generate();
 
     default String getCaptchaId() {
-        return IdUtil.simpleUUID();
+        return UUID.randomUUID().toString().replace("-", "");
     }
 }
