@@ -88,7 +88,7 @@ public class RolePermissionService extends ServiceImpl<RolePermissionMapper, Rol
      */
     @Transactional
     public boolean updateRelation(Integer roleId, List<Integer> permissionIds) {
-        if (CollectionUtils.isEmpty(permissionIds) || roleId == null || roleId == 0L) {
+        if (CollectionUtils.isEmpty(permissionIds) || roleId == null || roleId == 0) {
             return false;
         }
 

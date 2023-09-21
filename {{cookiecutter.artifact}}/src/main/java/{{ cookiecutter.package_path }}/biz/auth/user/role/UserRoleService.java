@@ -90,7 +90,7 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
      */
     @Transactional
     public void updateRelation(Integer userId, List<Integer> roleIds) {
-        if (CollectionUtils.isEmpty(roleIds) || userId == null || userId == 0L) {
+        if (CollectionUtils.isEmpty(roleIds) || userId == null || userId == 0) {
             return;
         }
 

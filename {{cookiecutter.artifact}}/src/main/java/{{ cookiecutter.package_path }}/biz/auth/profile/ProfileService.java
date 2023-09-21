@@ -67,7 +67,7 @@ public class ProfileService extends ServiceImpl<ProfileMapper, Profile> {
     public boolean delete(Integer userId) {
         QueryWrapper<Profile> wrapper = new QueryWrapper<>();
         wrapper.eq(USER_ID, userId);
-        if (count(wrapper) == 0)
+        if (exists(wrapper))
             return true;
 
         return remove(wrapper);

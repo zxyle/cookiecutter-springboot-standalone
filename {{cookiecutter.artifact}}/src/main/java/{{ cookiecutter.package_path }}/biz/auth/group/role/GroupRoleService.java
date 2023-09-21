@@ -34,7 +34,7 @@ public class GroupRoleService extends ServiceImpl<GroupRoleMapper, GroupRole> {
     @Caching(evict = {
             @CacheEvict(key = "#groupId + ':' + null"),
             @CacheEvict(key = "null + ':' + #roleId"),
-            @CacheEvict(key = "'roles:'+#groupId"),
+            @CacheEvict(key = "'roles:' + #groupId"),
     })
     public boolean deleteRelation(Integer groupId, Integer roleId) {
         if (countRelation(groupId, roleId) == 0) return true;
@@ -51,7 +51,7 @@ public class GroupRoleService extends ServiceImpl<GroupRoleMapper, GroupRole> {
     @Cacheable(key = "#groupId + ':' + #roleId", unless = "#result == null")
     public List<GroupRole> queryRelation(Integer groupId, Integer roleId) {
         QueryWrapper<GroupRole> wrapper = buildWrapper(groupId, roleId);
-        wrapper.select("group_id, role_id");
+        wrapper.select("group_id", "role_id");
         return list(wrapper);
     }
 
@@ -90,7 +90,7 @@ public class GroupRoleService extends ServiceImpl<GroupRoleMapper, GroupRole> {
      */
     @Transactional
     public void updateRelation(Integer groupId, List<Integer> roleIds) {
-        if (CollectionUtils.isEmpty(roleIds) || groupId == null || groupId == 0L) {
+        if (CollectionUtils.isEmpty(roleIds) || groupId == null || groupId == 0) {
             return;
         }
 

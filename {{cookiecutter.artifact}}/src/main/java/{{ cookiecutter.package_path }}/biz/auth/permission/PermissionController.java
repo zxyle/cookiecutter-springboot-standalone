@@ -79,7 +79,7 @@ public class PermissionController extends AuthBaseController {
     @LogOperation(name = "按ID查询权限", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:permission:get')")
     @GetMapping("/permissions/{permissionId}")
-    public R<Permission> get(@PathVariable Long permissionId) {
+    public R<Permission> get(@PathVariable Integer permissionId) {
         Permission entity = thisService.getById(permissionId);
         return entity == null ? R.fail("权限不存在") : R.ok(entity);
     }

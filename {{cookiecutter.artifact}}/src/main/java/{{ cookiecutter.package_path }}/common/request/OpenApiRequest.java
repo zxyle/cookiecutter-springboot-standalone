@@ -5,10 +5,6 @@ package {{ cookiecutter.basePackage }}.common.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import java.util.List;
-
 /**
  * 开放接口请求
  */
@@ -31,13 +27,4 @@ public class OpenApiRequest {
      * 应用ID
      */
     private String appId;
-
-    @Data
-    public static class BatchRequest {
-
-        /**
-         * ID列表
-         */
-        private List<@Positive @NotNull Integer> ids;
-    }
 }

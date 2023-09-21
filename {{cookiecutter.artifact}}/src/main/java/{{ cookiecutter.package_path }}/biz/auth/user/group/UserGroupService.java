@@ -93,7 +93,7 @@ public class UserGroupService extends ServiceImpl<UserGroupMapper, UserGroup> {
      */
     @Transactional
     public void updateRelation(Integer userId, List<Integer> groupIds) {
-        if (CollectionUtils.isEmpty(groupIds) || userId == null || userId == 0L) {
+        if (CollectionUtils.isEmpty(groupIds) || userId == null || userId == 0) {
             return;
         }
 

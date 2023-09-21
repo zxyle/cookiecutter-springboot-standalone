@@ -50,7 +50,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
      *
      * @param group 用户组对象
      */
-    @Cacheable(key = "#result.id")
+    @Cacheable(key = "#result.id", unless = "#result == null")
     public Group create(Group group) {
         // 判断同级下, 是否有同名用户组
         if (count(group.getParentId(), group.getName()) > 0) {

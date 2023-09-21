@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.PermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.role.Role;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.request.OpenApiRequest;
+import {{ cookiecutter.basePackage }}.common.request.BatchRequest;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -85,7 +85,7 @@ public class GroupRoleController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/roles/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid @RequestBody OpenApiRequest.BatchRequest request) {
+    public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest request) {
         List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(roleId -> thisService.deleteRelation(groupId, roleId));
@@ -100,7 +100,7 @@ public class GroupRoleController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/roles/batch-add")
-    public R<Void> createBatch(@PathVariable Integer groupId, @Valid @RequestBody OpenApiRequest.BatchRequest request) {
+    public R<Void> createBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest request) {
         List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(roleId -> thisService.createRelation(groupId, roleId));

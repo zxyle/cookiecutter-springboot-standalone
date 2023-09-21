@@ -24,8 +24,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, Answer> {
     public boolean isAlreadyUsed(Integer questionId) {
         QueryWrapper<Answer> wrapper = new QueryWrapper<>();
         wrapper.eq("question_id", questionId);
-        long count = count(wrapper);
-        return count > 0;
+        return exists(wrapper);
     }
 
     /**

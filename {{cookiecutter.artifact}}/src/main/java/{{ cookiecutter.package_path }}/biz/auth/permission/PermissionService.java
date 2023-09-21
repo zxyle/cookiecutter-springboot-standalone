@@ -236,7 +236,7 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
     public boolean isAlreadyUsed(Integer permissionId) {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
         wrapper.eq("parent_id", permissionId);
-        if (count(wrapper) > 0) return true;
+        if (exists(wrapper)) return true;
         Long userPermissions = userPermissionService.countRelation(null, permissionId);
         if (userPermissions > 0) return true;
         Long rolePermissions = rolePermissionService.countRelation(null, permissionId);

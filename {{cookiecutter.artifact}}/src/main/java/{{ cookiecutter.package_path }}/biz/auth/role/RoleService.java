@@ -111,6 +111,6 @@ public class RoleService extends ServiceImpl<RoleMapper, Role> {
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
         wrapper.eq(StringUtils.isNotBlank(name), "name", name)
                 .or().eq(StringUtils.isNotBlank(code), "code", code);
-        return count(wrapper) > 0;
+        return exists(wrapper);
     }
 }

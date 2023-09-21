@@ -9,7 +9,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.permission.PermissionService;
 import {{ cookiecutter.basePackage }}.common.request.auth.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.request.OpenApiRequest;
+import {{ cookiecutter.basePackage }}.common.request.BatchRequest;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -101,7 +101,7 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/groups/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody OpenApiRequest.BatchRequest request) {
+    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
         List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(groupId -> thisService.deleteRelation(userId, groupId));
@@ -116,7 +116,7 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/groups/batch-add")
-    public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody OpenApiRequest.BatchRequest request) {
+    public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
         List<Integer> ids = request.getIds();
         boolean success = ids.stream()
                 .allMatch(groupId -> thisService.createRelation(userId, groupId));

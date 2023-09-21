@@ -90,7 +90,7 @@ public class UserPermissionService extends ServiceImpl<UserPermissionMapper, Use
      */
     @Transactional
     public void updateRelation(Integer userId, List<Integer> permissionIds) {
-        if (CollectionUtils.isEmpty(permissionIds) || userId == null || userId == 0L) {
+        if (CollectionUtils.isEmpty(permissionIds) || userId == null || userId == 0) {
             return;
         }
 

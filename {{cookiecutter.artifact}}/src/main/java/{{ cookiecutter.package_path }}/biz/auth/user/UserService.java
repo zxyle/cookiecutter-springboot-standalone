@@ -168,7 +168,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     public List<Integer> getAllChildren(Integer userId) {
         // 查询用户有管理员权限的用户组
         QueryWrapper<UserGroup> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("user_id, group_id");
+        queryWrapper.select("user_id", "group_id");
         queryWrapper.eq("user_id", userId);
         queryWrapper.eq("admin", AuthConst.ENABLED);
         List<UserGroup> userGroups = userGroupService.list(queryWrapper);
@@ -182,7 +182,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
         // 查询用户组下的所有用户
         QueryWrapper<UserGroup> userGroupQueryWrapper = new QueryWrapper<>();
-        userGroupQueryWrapper.select("user_id, group_id");
+        userGroupQueryWrapper.select("user_id", "group_id");
         List<Integer> groupIds = allGroups.stream().distinct().map(Group::getId).collect(Collectors.toList());
         userGroupQueryWrapper.in("group_id", groupIds);
         List<UserGroup> userGroupList = userGroupService.list(userGroupQueryWrapper);

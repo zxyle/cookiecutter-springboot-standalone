@@ -100,7 +100,7 @@ public class GroupPermissionService extends ServiceImpl<GroupPermissionMapper, G
      */
     @Transactional
     public void updateRelation(Integer groupId, List<Integer> permissionIds) {
-        if (CollectionUtils.isEmpty(permissionIds) || groupId == null || groupId == 0L) {
+        if (CollectionUtils.isEmpty(permissionIds) || groupId == null || groupId == 0) {
             return;
         }
         // 删除旧的关系

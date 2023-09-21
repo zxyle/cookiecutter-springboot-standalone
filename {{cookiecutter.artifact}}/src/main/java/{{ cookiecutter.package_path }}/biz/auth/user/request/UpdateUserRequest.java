@@ -6,6 +6,9 @@ import javax.validation.constraints.Positive;
 
 import java.util.List;
 
+/**
+ * 更新用户请求
+ */
 @Data
 public class UpdateUserRequest {
 
