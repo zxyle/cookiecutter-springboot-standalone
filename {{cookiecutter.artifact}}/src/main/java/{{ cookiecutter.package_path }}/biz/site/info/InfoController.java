@@ -31,7 +31,7 @@ public class InfoController {
     /**
      * 获取系统信息列表
      */
-    @Cacheable(unless = "#result == null || #result.size() == 0")
+    @Cacheable(unless = "#result == null || #result.data.size() == 0")
     @GetMapping("/infos")
     public R<Map<String, String>> list() {
         QueryWrapper<Info> wrapper = new QueryWrapper<>();

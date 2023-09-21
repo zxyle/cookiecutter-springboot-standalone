@@ -34,7 +34,7 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
     @Caching(evict = {
             @CacheEvict(key = "#userId + ':' + null"),
             @CacheEvict(key = "null + ':' + #roleId"),
-            @CacheEvict(key = "'roles:' +#userId")
+            @CacheEvict(key = "'roles:' + #userId")
     })
     public boolean deleteRelation(Integer userId, Integer roleId) {
         if (countRelation(userId, roleId) == 0) return true;

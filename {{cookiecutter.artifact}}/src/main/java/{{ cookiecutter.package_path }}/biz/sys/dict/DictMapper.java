@@ -15,5 +15,5 @@ public interface DictMapper extends BaseMapper<Dict> {
      *
      * @param dictType 字典类型
      */
-    Integer selectMaxSort(String dictType);
+    Integer findMaxSortNum(String dictType);
 }

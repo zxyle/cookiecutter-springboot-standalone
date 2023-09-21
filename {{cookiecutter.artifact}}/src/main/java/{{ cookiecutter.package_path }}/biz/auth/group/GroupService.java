@@ -61,7 +61,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
         // 计算用户组排序
         if (null == group.getSort()) {
             // 排序号 = 最大排序号 + 1
-            Integer maxSort = baseMapper.selectMaxSort(group.getParentId());
+            Integer maxSort = baseMapper.findMaxSortNum(group.getParentId());
             group.setSort(maxSort + 1);
         }
         baseMapper.insert(group);

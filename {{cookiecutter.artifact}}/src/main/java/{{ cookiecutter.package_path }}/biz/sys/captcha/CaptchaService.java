@@ -5,6 +5,9 @@ package {{ cookiecutter.basePackage }}.biz.sys.captcha;
 
 import java.util.UUID;
 
+/**
+ * 图形验证码服务
+ */
 public interface CaptchaService {
 
     /**
@@ -14,6 +17,9 @@ public interface CaptchaService {
      */
     CaptchaPair generate();
 
+    /**
+     * 生成验证码ID
+     */
     default String getCaptchaId() {
         return UUID.randomUUID().toString().replace("-", "");
     }

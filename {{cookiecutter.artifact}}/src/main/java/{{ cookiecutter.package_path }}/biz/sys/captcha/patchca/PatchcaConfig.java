@@ -22,6 +22,9 @@ import org.springframework.stereotype.Component;
 import java.awt.*;
 import java.security.SecureRandom;
 
+/**
+ * Patchca验证码配置
+ */
 @Component
 public class PatchcaConfig {
 

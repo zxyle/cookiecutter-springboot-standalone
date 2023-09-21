@@ -41,9 +41,9 @@ public class ${className} {
      */
     // 当数据量不大时，需要查出全部数据，可以使用此接口，不需要可以删除
     // @LogOperation(name = "${table.comment!}列表查询", biz = "${table.biz}")
-    // @PreAuthorize("@ck.hasPermit('auth:tenant:list')")
-    // @GetMapping("/tenants")
-    // public R<List<Tenant>> list() {
+    // @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
+    // @GetMapping("/${table.name}s")
+    // public R<List<${table.className}>> list() {
     //     return R.ok(thisService.list());
     // }
 

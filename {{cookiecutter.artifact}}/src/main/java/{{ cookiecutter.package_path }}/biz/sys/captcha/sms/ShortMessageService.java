@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.captcha.sms;
 
 /**
- * 短信发送服务
+ * 短信验证码发送服务
  */
 public interface ShortMessageService {
 

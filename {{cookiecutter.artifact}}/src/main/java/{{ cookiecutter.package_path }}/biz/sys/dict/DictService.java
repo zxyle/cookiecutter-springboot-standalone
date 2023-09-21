@@ -43,6 +43,8 @@ public class DictService extends ServiceImpl<DictMapper, Dict> {
 
     /**
      * 删除字典条目
+     *
+     * @param dictType 字典类型，用于清除缓存
      */
     @CacheEvict(key = "#dictType")
     public boolean deleteDict(String dictType, Integer id) {
@@ -59,6 +61,8 @@ public class DictService extends ServiceImpl<DictMapper, Dict> {
 
     /**
      * 删除字典类型
+     *
+     * @param dictType 字典类型
      */
     @CacheEvict(key = "#dictType")
     public boolean deleteByDictType(String dictType) {

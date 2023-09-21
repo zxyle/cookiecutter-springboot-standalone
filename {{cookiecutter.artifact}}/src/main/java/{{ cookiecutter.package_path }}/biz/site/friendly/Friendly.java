@@ -26,7 +26,7 @@ public class Friendly extends BaseEntity {
     /**
      * 链接文本
      */
-    @Length(max = 255, message = "链接文本不能超过255个字符")
+    @Length(max = 32, message = "链接文本不能超过32个字符")
     @NotBlank(message = "链接文本不能为空")
     private String content;
 

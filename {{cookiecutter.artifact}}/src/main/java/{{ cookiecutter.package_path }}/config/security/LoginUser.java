@@ -63,7 +63,6 @@ public class LoginUser implements UserDetails {
      */
     @Override
     public boolean isAccountNonExpired() {
-        // 会抛出 LockedException: 用户帐号已被锁定
         if (user.getExpireTime() == null) {
             return true;
         }

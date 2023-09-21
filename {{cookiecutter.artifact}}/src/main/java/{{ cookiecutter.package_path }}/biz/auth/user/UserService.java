@@ -6,9 +6,9 @@ package {{ cookiecutter.basePackage }}.biz.auth.user;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.group.Group;
 import {{ cookiecutter.basePackage }}.biz.auth.group.GroupService;
+import {{ cookiecutter.basePackage }}.biz.auth.mfa.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.profile.ProfileService;
 import {{ cookiecutter.basePackage }}.biz.auth.role.Role;
@@ -16,8 +16,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.user.group.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.user.group.UserGroupService;
 import {{ cookiecutter.basePackage }}.biz.auth.user.permission.UserPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.user.role.UserRoleService;
-import {{ cookiecutter.basePackage }}.biz.auth.mfa.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.CaptchaUtil;
+import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -47,7 +47,11 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     final GroupService groupService;
     final ProfileService profileService;
 
-    // 删除用户及其关联角色、用户组、权限
+    /**
+     * 删除用户及其关联角色、用户组、权限
+     *
+     * @param userId 用户ID
+     */
     @CacheEvict(key = "#userId")
     @Transactional
     public boolean delete(Integer userId) {
@@ -90,7 +94,11 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return Boolean.TRUE.equals(delete);
     }
 
-    // 通过账号名查询用户
+    /**
+     * 通过账号名查询用户
+     *
+     * @param account 账号
+     */
     @Cacheable(cacheNames = "UserCache", key = "#account", unless = "#result == null")
     public User findByAccount(String account) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -100,7 +108,12 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return getOne(wrapper);
     }
 
-    // 查询用户拥有的角色、用户组、权限
+    /**
+     * 查询用户拥有的角色、用户组、权限
+     *
+     * @param user 用户
+     * @param full 是否查询完整信息
+     */
     public UserResponse attachUserInfo(User user, boolean full) {
         UserResponse userResponse = new UserResponse();
         if (full) {
@@ -118,7 +131,14 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return userResponse;
     }
 
-    // 更新用户关联的角色、用户组、权限
+    /**
+     * 更新用户关联的角色、用户组、权限
+     *
+     * @param userId        用户ID
+     * @param roleIds       角色ID列表
+     * @param groupIds      用户组ID列表
+     * @param permissionIds 权限ID列表
+     */
     public void updateRelation(Integer userId, List<Integer> roleIds, List<Integer> groupIds, List<Integer> permissionIds) {
         userRoleService.updateRelation(userId, roleIds);
         userGroupService.updateRelation(userId, groupIds);
@@ -140,7 +160,11 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return user;
     }
 
-    // 获取所有有管理权限用户组成员
+    /**
+     * 获取所有有管理权限用户组成员
+     *
+     * @param userId 用户ID
+     */
     public List<Integer> getAllChildren(Integer userId) {
         // 查询用户有管理员权限的用户组
         QueryWrapper<UserGroup> queryWrapper = new QueryWrapper<>();
@@ -165,7 +189,11 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return userGroupList.stream().map(UserGroup::getUserId).collect(Collectors.toList());
     }
 
-    // 锁定用户并退出当前登录状态
+    /**
+     * 锁定用户并退出当前登录状态
+     *
+     * @param userId 用户ID
+     */
     public boolean locked(Integer userId) {
         UpdateWrapper<User> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", userId);
@@ -175,7 +203,11 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return update && kick;
     }
 
-    // 解锁用户
+    /**
+     * 解锁用户
+     *
+     * @param userId 用户ID
+     */
     public boolean unlock(Integer userId) {
         UpdateWrapper<User> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", userId);

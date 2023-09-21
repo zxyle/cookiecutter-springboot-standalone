@@ -40,7 +40,7 @@ public class AreaController {
         String rootId = request.getRootId();
         Integer level = request.getLevel();
         QueryWrapper<Area> wrapper = new QueryWrapper<>();
-        wrapper.select("code, name, parent_id, level");
+        wrapper.select("code", "name", "parent_id", "level");
         wrapper.le("level", level);
         String rootName = "中国";
         String rootCode = "0000";

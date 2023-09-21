@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 public class SettingService extends ServiceImpl<SettingMapper, Setting>  {
 
     private static final String LABEL = "option_label";
-
     private static final String VALUE = "option_value";
 
     /**

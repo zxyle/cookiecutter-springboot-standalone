@@ -94,7 +94,7 @@ public class RedisController {
         if (request.getExpire() != null) {
             stringRedisTemplate.expire(request.getName(), request.getExpire(), TimeUnit.SECONDS);
         }
-        return R.ok("设置成功");
+        return R.ok("设置key成功");
     }
 
     /**
@@ -132,10 +132,7 @@ public class RedisController {
         }
 
         Boolean expire = stringRedisTemplate.expire(key, seconds, TimeUnit.SECONDS);
-        if (Boolean.FALSE.equals(expire))
-            return R.fail("设置过期时间失败");
-
-        return R.ok("设置过期时间成功");
+        return Boolean.FALSE.equals(expire) ? R.fail("设置过期时间失败") : R.ok("设置过期时间成功");
     }
 
 }

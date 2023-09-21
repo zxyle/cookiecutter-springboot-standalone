@@ -53,9 +53,7 @@ public class RegisterController {
         // 创建用户
         User user = userService.create(account, encoder.encode(request.getPassword()));
         boolean success = userService.save(user);
-        if (!success) {
-            return R.fail("注册账号失败");
-        }
+        if (!success) return R.fail("注册账号失败");
 
         // 赋予默认角色
         Integer defaultRole = setting.get("auth.user.default-role").getIntValue();

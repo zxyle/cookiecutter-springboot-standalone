@@ -74,7 +74,7 @@ public class UserPermissionService extends ServiceImpl<UserPermissionMapper, Use
     @Caching(evict = {
             @CacheEvict(key = "#userId + ':' + null"),
             @CacheEvict(key = "null + ':' + #permissionId"),
-            @CacheEvict(key = "'permissions:'+#userId")
+            @CacheEvict(key = "'permissions:' + #userId")
     })
     public boolean createRelation(Integer userId, Integer permissionId) {
         if (countRelation(userId, permissionId) > 0) return true;

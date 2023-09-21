@@ -29,6 +29,7 @@ public class SendCodeRequest {
      * @mock 1a38695e74b748ae7b48791f8d81531d
      */
     @NotBlank(message = "验证码ID不能为空")
+    @Length(min = 32, max = 32, message = "验证码ID长度为32个字符")
     private String captchaId;
 
     /**

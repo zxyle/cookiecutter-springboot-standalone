@@ -35,7 +35,7 @@ public final class Authenticator {
     }
 
     /**
-     * 验证
+     * 校验验证码是否正确
      *
      * @param secret 密钥
      * @param code   动态验证码

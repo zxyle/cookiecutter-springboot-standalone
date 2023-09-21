@@ -34,7 +34,7 @@ public class KaptchaServiceImpl implements CaptchaService {
             ImageIO.write(bi, setting.get("captcha.format").getStr(), byteArrayOutputStream);
             return new CaptchaPair(byteArrayOutputStream, code, captchaId);
         } catch (IOException e) {
-            log.error("kaptcha error: ", e);
+            log.error("kaptcha generate error: ", e);
         }
         return null;
     }

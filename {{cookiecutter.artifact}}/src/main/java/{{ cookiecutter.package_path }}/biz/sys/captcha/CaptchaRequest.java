@@ -19,7 +19,7 @@ public class CaptchaRequest {
      * 验证码ID（前端随机产生uuid传入，无中横线）
      */
     @NotBlank(message = "验证码ID不能为空")
-    @Length(min = 32, max = 32, message = "验证码ID长度不能超过36")
+    @Length(min = 32, max = 32, message = "验证码ID长度不能超过32个字符")
     private String captchaId;
 
     /**

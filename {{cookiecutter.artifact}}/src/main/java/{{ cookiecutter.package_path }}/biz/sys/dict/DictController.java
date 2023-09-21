@@ -40,10 +40,10 @@ public class DictController {
         BeanUtils.copyProperties(request, dict);
         // 如果没有传排序字段，则自动排序
         if (request.getDictSort() == null) {
-            dict.setDictSort(thisMapper.selectMaxSort(request.getDictType()) + 1);
+            dict.setDictSort(thisMapper.findMaxSortNum(request.getDictType()) + 1);
         }
         Dict result = thisService.insert(dict);
-        return result != null ? R.ok(result) : R.fail("新增字典失败");
+        return result != null ? R.ok(result) : R.fail("新增字典条目失败");
     }
 
 
@@ -91,7 +91,7 @@ public class DictController {
         if (result == null) return R.fail("删除失败，字典不存在");
 
         boolean success = thisService.deleteDict(result.getDictType(), id);
-        return success ? R.ok("删除字典成功") : R.fail("删除字典失败");
+        return success ? R.ok("删除字典成功") : R.fail("删除字典条目失败");
     }
 
     /**
@@ -101,7 +101,7 @@ public class DictController {
     @PutMapping("/dicts/{id}")
     public R<Void> update(@Valid @RequestBody UpdateDictRequest request, @PathVariable Integer id) {
         Dict result = thisService.getById(id);
-        if (result == null) return R.fail("更新失败，字典不存在");
+        if (result == null) return R.fail("更新失败，字典条目不存在");
 
         Dict dict = new Dict();
         BeanUtils.copyProperties(request, dict);
@@ -109,7 +109,7 @@ public class DictController {
         dict.setDictType(result.getDictType());
 
         boolean success = thisService.updateDict(dict);
-        return success ? R.ok("更新字典成功") : R.fail("更新字典失败");
+        return success ? R.ok("更新字典条目成功") : R.fail("更新字典条目失败");
     }
 
 

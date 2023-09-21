@@ -14,7 +14,11 @@ import java.util.List;
 @Repository
 public interface PermissionMapper extends BaseMapper<Permission> {
 
-    // 查询用户所拥有的权限代码列表
+    /**
+     * 查询用户所拥有的权限代码列表
+     *
+     * @param userId 用户ID
+     */
     List<String> findPermissionsByUserId(Integer userId);
 
     /**

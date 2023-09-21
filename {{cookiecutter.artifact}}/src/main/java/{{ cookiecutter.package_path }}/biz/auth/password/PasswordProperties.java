@@ -43,7 +43,7 @@ public class PasswordProperties {
     /**
      * 密码历史记录数量 0代表不限制
      */
-    private Integer historyCount;
+    private int historyCount;
 
     /**
      * 是否记录历史密码
@@ -51,7 +51,7 @@ public class PasswordProperties {
     private boolean enableHistory;
 
     /**
-     * 能否和旧密码相同
+     * 新密码能否和旧密码相同
      */
     private boolean enableSame;
 

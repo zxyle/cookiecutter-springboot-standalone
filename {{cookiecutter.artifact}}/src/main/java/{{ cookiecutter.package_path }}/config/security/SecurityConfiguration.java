@@ -7,7 +7,7 @@ import {{ cookiecutter.basePackage }}.config.security.filter.AntiSpiderFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.AclFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.JwtAuthenticationTokenFilter;
 import {{ cookiecutter.basePackage }}.config.security.mobile.SmsSecurityConfigurerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,30 +27,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true) // 开启方法级别的权限控制, securedEnabled = true 开启 @Secured 注解过滤权限, prePostEnabled = true 开启 @PreAuthorize 注解过滤权限
 public class SecurityConfiguration {
 
-    AntiSpiderFilter antiSpiderFilter;
-
-    AclFilter ipFilter;
-
-    JwtAuthenticationTokenFilter tokenFilter;
-
-    AuthenticationEntryPoint authenticationEntryPoint;
-
-    AccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    SmsSecurityConfigurerAdapter smsSecurityConfigurerAdapter;
-
-    public SecurityConfiguration(JwtAuthenticationTokenFilter tokenFilter, AuthenticationEntryPoint authenticationEntryPoint,
-                                 AccessDeniedHandler accessDeniedHandler, AntiSpiderFilter antiSpiderFilter, AclFilter ipFilter) {
-        this.tokenFilter = tokenFilter;
-        this.authenticationEntryPoint = authenticationEntryPoint;
-        this.accessDeniedHandler = accessDeniedHandler;
-        this.antiSpiderFilter = antiSpiderFilter;
-        this.ipFilter = ipFilter;
-    }
+    final AntiSpiderFilter antiSpiderFilter;
+    final AclFilter aclFilter;
+    final JwtAuthenticationTokenFilter jwtFilter;
+    final AuthenticationEntryPoint authenticationEntryPoint;
+    final AccessDeniedHandler accessDeniedHandler;
+    final SmsSecurityConfigurerAdapter smsSecurityConfigurerAdapter;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -67,10 +53,9 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
                 .antMatchers("/auth/login/**").anonymous()
-                .antMatchers("/auth/sdk/**", "/sys/dicts/**", "/sys/area/**", "/file/**", "/sys/infos", "/auth/user/register",
+                .antMatchers("/auth/sdk/**", "/sys/dicts/**", "/sys/area/**", "/sys/file/**", "/sys/infos", "/auth/user/register",
                         "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers",
-                        "/getPublicKey", "/auth/user/login/qrcode", "/auth/user/login/scan", "/auth/apps/currentUser"
-                ,"/auth/tenants/**"
+                        "/getPublicKey", "/auth/login/qrcode", "/auth/login/scan", "/auth/apps/currentUser"
                 ).permitAll()
 
                 // 除上述请求 全部需要鉴权认证
@@ -79,8 +64,8 @@ public class SecurityConfiguration {
 
 
         // 添加过滤器
-        http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(ipFilter, JwtAuthenticationTokenFilter.class);
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(aclFilter, JwtAuthenticationTokenFilter.class);
         http.addFilterBefore(antiSpiderFilter, AclFilter.class);
 
         // 配置异常处理器

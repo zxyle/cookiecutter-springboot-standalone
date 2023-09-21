@@ -81,7 +81,7 @@ public class PatchcaServiceImpl implements CaptchaService {
             String code = EncoderHelper.getChallangeAndWriteImage(randomCs(), format, byteArrayOutputStream);
             return new CaptchaPair(byteArrayOutputStream, code, captchaId);
         } catch (IOException e) {
-            log.error("patchca error: ", e);
+            log.error("patchca generate error: ", e);
         }
         return null;
     }

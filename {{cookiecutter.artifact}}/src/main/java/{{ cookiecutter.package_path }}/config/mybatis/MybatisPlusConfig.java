@@ -33,7 +33,7 @@ public class MybatisPlusConfig {
     // 分页插件
     public PaginationInnerInterceptor pageInterceptor() {
         PaginationInnerInterceptor pageInterceptor = new PaginationInnerInterceptor();
-        pageInterceptor.setMaxLimit(500L);// 单页分页条数限制500
+        pageInterceptor.setMaxLimit(500L);     // 单页分页条数限制500
         pageInterceptor.setDbType(DbType.MYSQL);
         return pageInterceptor;
     }
