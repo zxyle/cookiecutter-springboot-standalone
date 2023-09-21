@@ -12,21 +12,21 @@ CREATE TABLE `site_feedback` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='意见反馈';
 
 -- ----------------------------
--- Table structure for site_friendly_url
+-- Table structure for site_friendly
 -- ----------------------------
 DROP TABLE IF EXISTS `site_friendly`;
 CREATE TABLE `site_friendly` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `content` varchar(255) NOT NULL COMMENT '链接文本',
+  `content` varchar(32) NOT NULL COMMENT '链接文本',
   `url` varchar(255) NOT NULL COMMENT '链接',
   `sort` tinyint NOT NULL COMMENT '排序',
   `enabled` bit(1) NOT NULL DEFAULT b'1' COMMENT '友链是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='友情链接';
 -- ----------------------------
--- Records of site_friendly_url
+-- Records of site_friendly
 -- ----------------------------
 BEGIN;
 INSERT INTO `site_friendly` (`content`, `url`, `sort`, `enabled`) VALUES ('百度', 'https://www.baidu.com', 2, b'1');
@@ -85,5 +85,4 @@ CREATE TABLE `site_release` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `site_release` (`version`, `description`) VALUES ('V1.0.0', '第一个版本');
-INSERT INTO `site_release` (`version`, `description`) VALUES ('v1.1.1', '第二版本');
 COMMIT;
