@@ -20,7 +20,7 @@ public class OperateLogRequest extends PaginationRequest {
      * 操作用户ID
      */
     @Positive(message = "用户ID必须是正数")
-    private Long userId;
+    private Integer userId;
 
     /**
      * 业务模块

@@ -5,6 +5,9 @@ package {{ cookiecutter.basePackage }}.biz.sys.file;
 
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * 文件存储服务
+ */
 public interface FileStoreService {
 
     /**

@@ -38,8 +38,8 @@ public class LogAspect {
 
     final LoginLogService loginLogService;
 
-    @Pointcut("execution(* {{ cookiecutter.basePackage }}.biz.auth.login.LoginController.login(..))")
     // 定义切入点表达式
+    @Pointcut("execution(* {{ cookiecutter.basePackage }}.biz.auth.login.LoginController.login(..))")
     public void log() {
     }
 

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 /**
- * 本地文件存储
+ * 本地文件存储实现
  */
 @Service
 public class LocalFileStoreServiceImpl implements FileStoreService {

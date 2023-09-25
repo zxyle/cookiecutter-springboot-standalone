@@ -51,6 +51,6 @@ public class App extends BaseEntity {
     /**
      * 应用是否启用
      */
-    private boolean enabled;
+    private Boolean enabled;
 
 }

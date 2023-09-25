@@ -12,7 +12,7 @@ import javax.validation.constraints.Positive;
 public class TreePermissionRequest {
 
     /**
-     * 权限类型（1：页面/路由，2：接口/功能 3：按钮/组件）
+     * 权限类型（1：页面/路由，2：接口/功能，3：按钮/组件）
      *
      * @mock 1
      */

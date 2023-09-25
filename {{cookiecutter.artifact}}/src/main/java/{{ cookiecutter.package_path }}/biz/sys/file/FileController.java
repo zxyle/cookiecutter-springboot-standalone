@@ -25,8 +25,8 @@ import java.util.List;
  * 文件管理
  */
 @RestController
-@RequestMapping("/sys/file")
 @RequiredArgsConstructor
+@RequestMapping("/sys/file")
 public class FileController {
 
     final FileService fileService;

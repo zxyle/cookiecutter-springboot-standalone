@@ -31,7 +31,7 @@ public class UserGroup extends LiteEntity {
     /**
      * 是否是该组管理员
      */
-    private boolean admin;
+    private Boolean admin;
 
     public UserGroup(Integer userId, Integer groupId) {
         this.userId = userId;

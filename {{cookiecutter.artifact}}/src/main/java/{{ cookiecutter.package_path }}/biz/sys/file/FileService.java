@@ -19,7 +19,7 @@ public class FileService extends ServiceImpl<FileMapper, File> {
      * 按ID查询
      */
     @Cacheable(cacheNames = "FileCache", key = "#id", unless = "#result == null")
-    public File findById(Long id) {
+    public File findById(Integer id) {
         return getById(id);
     }
 

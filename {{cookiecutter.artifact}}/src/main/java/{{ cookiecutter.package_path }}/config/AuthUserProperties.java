@@ -55,7 +55,7 @@ public class AuthUserProperties {
     /**
      * 注册后默认角色ID
      */
-    private Long defaultRole;
+    private Integer defaultRole;
 
     /**
      * 初次登录后是否需修改密码
