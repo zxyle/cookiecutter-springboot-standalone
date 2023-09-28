@@ -7,14 +7,14 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.Permission;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 /**
  * 用户组权限 Mapper 接口
  */
-@Repository
+@Mapper
 public interface GroupPermissionMapper extends BaseMapper<GroupPermission> {
 
     /**

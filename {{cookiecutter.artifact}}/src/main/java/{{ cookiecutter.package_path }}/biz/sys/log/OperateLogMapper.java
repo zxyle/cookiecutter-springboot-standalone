@@ -4,12 +4,12 @@
 package {{ cookiecutter.basePackage }}.biz.sys.log;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 操作日志 Mapper 接口
  */
-@Repository
+@Mapper
 public interface OperateLogMapper extends BaseMapper<OperateLog> {
 
 }

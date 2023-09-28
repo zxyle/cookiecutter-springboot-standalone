@@ -1,13 +1,13 @@
 package {{ cookiecutter.basePackage }}.biz.sys.partition;
 
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 /**
  * 分区表操作 Mapper 接口
  */
-@Repository
+@Mapper
 public interface PartitionMapper {
 
     /**

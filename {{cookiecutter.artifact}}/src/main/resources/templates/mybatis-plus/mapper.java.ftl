@@ -1,12 +1,12 @@
 package ${table.packageName};
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * ${table.comment} 数据访问类
  */
-@Repository
+@Mapper
 public interface ${className} extends BaseMapper<${table.className}> {
 
 }

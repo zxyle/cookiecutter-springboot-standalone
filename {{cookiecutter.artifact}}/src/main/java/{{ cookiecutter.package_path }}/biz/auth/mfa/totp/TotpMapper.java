@@ -4,12 +4,12 @@
 package {{ cookiecutter.basePackage }}.biz.auth.mfa.totp;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * TOTP（基于时间的一次性密码） Mapper 接口
  */
-@Repository
+@Mapper
 public interface TotpMapper extends BaseMapper<Totp> {
 
 }

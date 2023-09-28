@@ -9,14 +9,14 @@ import {{ cookiecutter.basePackage }}.biz.auth.group.Group;
 import {{ cookiecutter.basePackage }}.common.request.auth.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 /**
  * 用户-用户组关联 Mapper 接口
  */
-@Repository
+@Mapper
 public interface UserGroupMapper extends BaseMapper<UserGroup> {
 
     /**
