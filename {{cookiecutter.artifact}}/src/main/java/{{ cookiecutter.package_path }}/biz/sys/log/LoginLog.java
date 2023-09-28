@@ -38,7 +38,7 @@ public class LoginLog extends LiteEntity {
     private String account;
 
     /**
-     * IP地址
+     * 登录IP
      */
     private String ip;
 
@@ -53,7 +53,7 @@ public class LoginLog extends LiteEntity {
     private String msg;
 
     /**
-     * 登录是否成功
+     * 登录状态
      */
     private boolean success;
 

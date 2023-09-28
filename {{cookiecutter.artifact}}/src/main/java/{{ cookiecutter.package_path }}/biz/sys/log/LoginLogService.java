@@ -16,6 +16,11 @@ import java.time.LocalDateTime;
 @Service
 public class LoginLogService extends ServiceImpl<LoginLogMapper, LoginLog> {
 
+    /**
+     * 异步保存登录日志
+     *
+     * @param loginLog 登录日志
+     */
     @Async
     public void saveLoginLog(LoginLog loginLog) {
         // 如果 ua 字段超过255个字符，截取前255个字符, 避免插入数据库失败

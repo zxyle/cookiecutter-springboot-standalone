@@ -529,10 +529,10 @@ CREATE TABLE `sys_login_log` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `login_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登录时间',
   `account` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '登录用户名',
-  `ip` varchar(15) DEFAULT NULL COMMENT 'IP地址',
+  `ip` varchar(15) DEFAULT NULL COMMENT '登录IP',
   `ua` varchar(255) DEFAULT NULL COMMENT '浏览器请求头',
   `msg` varchar(255) DEFAULT NULL COMMENT '消息',
-  `success` bit(1) NOT NULL DEFAULT b'0' COMMENT '登录是否成功',
+  `success` bit(1) NOT NULL DEFAULT b'0' COMMENT '登录状态',
   `user_id` int unsigned DEFAULT NULL COMMENT '用户id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登录日志';

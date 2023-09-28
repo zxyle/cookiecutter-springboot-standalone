@@ -19,7 +19,7 @@ public class OperateLogService extends ServiceImpl<OperateLogMapper, OperateLog>
      * 异步保存操作日志
      */
     @Async
-    public void saveLog(OperateLog log) {
-        this.save(log);
+    public void saveLog(OperateLog operateLog) {
+        this.save(operateLog);
     }
 }

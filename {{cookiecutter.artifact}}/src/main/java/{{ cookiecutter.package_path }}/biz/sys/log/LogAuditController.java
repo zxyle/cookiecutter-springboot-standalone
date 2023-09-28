@@ -37,7 +37,7 @@ public class LogAuditController {
     public R<PageVO<LoginLog>> list(@Valid LoginLogRequest req) {
         QueryWrapper<LoginLog> wrapper = new QueryWrapper<>();
         wrapper.like(StringUtils.isNotBlank(req.getAccount()), "account", req.getAccount());
-        wrapper.orderBy(true, req.isAsc(), "create_time");
+        wrapper.orderBy(true, req.isAsc(), "login_time");
         IPage<LoginLog> page = loginLogService.page(req.toPageable(), wrapper);
         return R.page(page);
     }
