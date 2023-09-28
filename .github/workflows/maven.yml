@@ -35,7 +35,7 @@ jobs:
           ${{ runner.os }}-pip-
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip cookiecutter
+        python -m pip install --upgrade pip cookiecutter jinja2-git
     - name: Test with cookiecutter
       run: |
         cookiecutter --no-input .

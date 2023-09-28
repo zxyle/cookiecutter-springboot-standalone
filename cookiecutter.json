@@ -22,5 +22,5 @@
   "_copy_without_render": [
     "docs/"
   ],
-  "_version": "1.6.0"
+  "_extensions": ["jinja2_git.GitExtension"]
 }
