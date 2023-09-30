@@ -164,4 +164,4 @@ clean:
 	@find . -type d -name "logs" -exec rm -r {} +
 	@echo "Clean success!"
 
-.PHONY: package restart backup rollback publish init help clean jdk redis nginx mysql
+.PHONY: package publish restart rollback backup init deploy clean jdk redis nginx mysql help

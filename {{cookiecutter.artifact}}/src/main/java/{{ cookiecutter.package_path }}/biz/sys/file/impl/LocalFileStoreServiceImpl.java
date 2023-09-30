@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 /**
- * 本地文件存储实现
+ * 本地文件存储实现（这种实现方式并不安全，仅用于测试）
  */
 @Service
 public class LocalFileStoreServiceImpl implements FileStoreService {
@@ -31,7 +31,11 @@ public class LocalFileStoreServiceImpl implements FileStoreService {
     public String upload(MultipartFile file, String objectName) {
         // 将文件保存到本地
         File target = new File(LOCAL_FILE_STORE, objectName);
-        target.getParentFile().mkdirs();
+        File parentFile = target.getParentFile();
+        if (!parentFile.exists()) {
+            parentFile.mkdirs();
+        }
+
         try (FileOutputStream fs = new FileOutputStream(target)) {
             fs.write(file.getBytes());
             return target.getPath();

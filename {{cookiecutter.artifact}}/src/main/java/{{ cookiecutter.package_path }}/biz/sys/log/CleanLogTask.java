@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CleanLogTask {
 
-    // 默认清理30天前的日志
-    private static final int DEFAULT_SAVE_DAYS = 30;
+    // 默认清理一年前的日志
+    private static final int DEFAULT_SAVE_DAYS = 365;
 
     final LoginLogService loginLogService;
     final OperateLogService operateLogService;

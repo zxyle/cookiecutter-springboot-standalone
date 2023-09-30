@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+<#if table.hasBaseController>
+import ${table.baseControllerPath};
+</#if>
 
 import java.util.List;
 
@@ -20,7 +23,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/${table.biz}")
 @RequiredArgsConstructor
+<#if table.hasBaseController>
+public class ${className} extends ${table.baseControllerClassName} {
+<#else>
 public class ${className} {
+</#if>
 
     final ${table.className}Mapper thisMapper;
     final ${table.className}Service thisService;

@@ -1,26 +1,34 @@
 package ${package};
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import ${table.basePackageName}.common.entity.BaseEntity;
 import lombok.*;
 
 <#list table.imports as import>
 import ${import};
 </#list>
+<#if table.hasBaseEntity>
+import ${table.baseEntityPath};
+</#if>
 
 /**
  * ${table.comment}
  */
 @Data
 @TableName("${table.tableName}")
+<#if table.hasBaseEntity>
 @EqualsAndHashCode(callSuper = true)
-public class ${className} extends BaseEntity {
+public class ${className} extends ${table.baseEntityClassName} {
+<#else>
+public class ${className} {
+</#if>
 
 <#list table.columns as column>
+    <#if ignoreColumns?seq_index_of(column.name) == -1>
     /**
      * ${column.comment}
      */
     private ${column.javaType} ${column.property};
+    </#if>
 
 </#list>
 }

@@ -5,7 +5,7 @@ import io.github.zxyle.codegen.Generator;
 import io.github.zxyle.codegen.table.Temp;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -17,7 +17,7 @@ public class CodeGenerator {
         generator.setTemplatePath("src/main/resources/templates/mybatis-plus");
 
         // 需渲染的模板
-        List<Temp> temps = new ArrayList<>(7);
+        List<Temp> temps = new LinkedList<>();
         temps.add(new Temp("controller.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Controller.java"));
         temps.add(new Temp("entity.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}.java"));
         temps.add(new Temp("mapper.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Mapper.java"));
@@ -31,6 +31,9 @@ public class CodeGenerator {
         String pkg = getBasePackage();
         generator.setPkg(pkg);
         generator.setBasePackage(pkg.replace("/", "."));
+        generator.setBaseEntityPath("src/main/java/${pkg}/common/entity/BaseEntity.java");
+        generator.setBaseControllerPath("src/main/java/${pkg}/common/controller/AuthBaseController.java");
+        generator.setIgnoreColumns(new String[]{"id", "create_time", "update_time"});
         generator.run();
     }
 

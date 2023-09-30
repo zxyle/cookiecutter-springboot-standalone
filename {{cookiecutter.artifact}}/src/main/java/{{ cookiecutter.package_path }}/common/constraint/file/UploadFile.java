@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 public @interface UploadFile {
 
     /**
-     * 支持上传的扩展名
+     * 支持上传的扩展名，不需要包含.
      */
     String[] allowedExtensions() default {};
 
