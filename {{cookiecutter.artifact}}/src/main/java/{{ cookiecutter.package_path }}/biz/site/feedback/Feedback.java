@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 意见反馈
@@ -19,12 +22,16 @@ public class Feedback extends BaseEntity {
     /**
      * 联系方式
      */
+    @NotBlank(message = "联系方式不能为空")
+    @Length(max = 32, message = "联系方式长度不能超过32个字符")
     @ExcelProperty("联系方式")
     private String contacts;
 
     /**
      * 详细描述
      */
+    @Length(max = 2048, message = "联系方式长度不能超过2048个字符")
+    @NotBlank(message = "详细描述不能为空")
     @ExcelProperty("详细描述")
     private String description;
 

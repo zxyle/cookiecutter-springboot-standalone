@@ -22,7 +22,7 @@ public class LoginResponse {
     private Integer userId;
 
     /**
-     * 用户信息
+     * 用户资料
      */
     private Profile profile;
 

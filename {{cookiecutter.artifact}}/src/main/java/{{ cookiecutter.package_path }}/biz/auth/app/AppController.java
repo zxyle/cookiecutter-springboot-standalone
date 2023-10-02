@@ -206,9 +206,9 @@ public class AppController extends AuthBaseController {
         if (StringUtils.isAnyBlank(appKey, timestamp, sign)) return R.fail("请求头缺少参数");
 
         // 检查时间戳是否过期，5分钟内有效
-        long time = System.currentTimeMillis();
-        long diff = time - Long.parseLong(timestamp);
-        if (diff > 5 * 60 * 1000) return R.fail("请求已过期");
+        long now = System.currentTimeMillis();
+        long interval = now - Long.parseLong(timestamp);
+        if (interval > 5 * 60 * 1000) return R.fail("请求已过期");
 
         // 检查授权码是否过期
         String key = "authCode:" + request.getAuthCode();

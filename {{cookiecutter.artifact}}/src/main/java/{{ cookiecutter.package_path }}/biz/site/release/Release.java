@@ -23,14 +23,14 @@ public class Release extends BaseEntity {
     /**
      * 版本号
      */
-    @Length(max = 16, message = "版本号长度不能超过16")
+    @Length(max = 16, message = "版本号长度不能超过16个字符")
     @NotBlank(message = "版本号不能为空")
     private String version;
 
     /**
      * 版本描述
      */
-    @Length(max = 1024, message = "版本描述长度不能超过1024")
+    @Length(max = 1024, message = "版本描述长度不能超过1024个字符")
     @NotBlank(message = "版本描述不能为空")
     private String description;
 

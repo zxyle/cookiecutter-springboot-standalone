@@ -92,7 +92,7 @@ public class PaginationRequest extends BaseRequest {
      *
      * @mock 123
      */
-    @Length(max = 64, message = "搜索关键字长度不能超过64")
+    @Length(max = 64, message = "搜索关键字长度不能超过64个字符")
     private String keyword;
 
 
