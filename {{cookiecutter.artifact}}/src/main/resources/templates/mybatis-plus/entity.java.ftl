@@ -23,12 +23,10 @@ public class ${className} {
 </#if>
 
 <#list table.columns as column>
-    <#if ignoreColumns?seq_index_of(column.name) == -1>
     /**
      * ${column.comment}
      */
     private ${column.javaType} ${column.property};
-    </#if>
 
 </#list>
 }
