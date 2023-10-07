@@ -28,7 +28,7 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     @CachePut(key = "#result.id", unless = "#result == null")
     public ${table.className} insert(${table.className} entity) {
         baseMapper.insert(entity);
-        return null;
+        return entity;
     }
 
     /**
@@ -44,8 +44,7 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
      */
     @CacheEvict(key = "#id")
     public boolean deleteById(Integer id) {
-        int i = baseMapper.deleteById(id);
-        return i > 0;
+        return removeById(id);
     }
 
     /**
@@ -58,17 +57,18 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     }
 
     public boolean saveBatch(List<${table.className}> list) {
-        long count = list.stream().map(e -> baseMapper.insert(e)).count();
+        long count = list.stream().map(item -> baseMapper.insert(item)).count();
         return count == list.size();
     }
 
     public boolean updateBatchById(List<${table.className}> list) {
-        return true;
+        long count = list.stream().map(item -> baseMapper.updateById(item)).count();
+        return count == list.size();
     }
 
     public boolean removeByIds(List<Integer> ids) {
-        ids.forEach(this::deleteById);
-        return true;
+        long count = ids.stream().map(item -> baseMapper.deleteById(item)).count();
+        return count == ids.size();
     }
 
 }
