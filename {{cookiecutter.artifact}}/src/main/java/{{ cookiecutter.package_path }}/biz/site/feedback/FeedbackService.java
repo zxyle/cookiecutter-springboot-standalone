@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @CacheConfig(cacheNames = "FeedbackCache")
-public class FeedbackService extends ServiceImpl<FeedbackMapper, Feedback>  {
+public class FeedbackService extends ServiceImpl<FeedbackMapper, Feedback> {
 
     /**
      * 按ID查询（带缓存）
@@ -40,8 +40,8 @@ public class FeedbackService extends ServiceImpl<FeedbackMapper, Feedback>  {
      * 按ID删除（带缓存）
      */
     @CacheEvict(key = "#id")
-    public void deleteById(Integer id) {
-        removeById(id);
+    public boolean deleteById(Integer id) {
+        return removeById(id);
     }
 
 }

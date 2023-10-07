@@ -37,7 +37,7 @@ public class AclService extends ServiceImpl<AclMapper, Acl> {
      */
     @Cacheable(key = "#id", unless = "#result == null")
     public Acl queryById(Integer id) {
-        return baseMapper.selectById(id);
+        return getById(id);
     }
 
     /**
@@ -45,8 +45,7 @@ public class AclService extends ServiceImpl<AclMapper, Acl> {
      */
     @CacheEvict(key = "#id")
     public boolean deleteById(Integer id) {
-        int i = baseMapper.deleteById(id);
-        return i > 0;
+        return removeById(id);
     }
 
     /**

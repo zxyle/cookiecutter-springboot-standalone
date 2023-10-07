@@ -36,7 +36,7 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
      */
     @Cacheable(key = "#id", unless = "#result == null")
     public ${table.className} queryById(Integer id) {
-        return baseMapper.selectById(id);
+        return getById(id);
     }
 
     /**

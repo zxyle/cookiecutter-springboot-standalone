@@ -14,4 +14,11 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ${className} {
 
+<#list table.columns as column>
+    /**
+     * ${column.comment}
+     */
+    private ${column.javaType} ${column.property};
+
+</#list>
 }
