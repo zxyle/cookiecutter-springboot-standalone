@@ -3,7 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.dict;
 
+import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Positive;
@@ -12,7 +14,8 @@ import javax.validation.constraints.Positive;
  * 更新字典请求
  */
 @Data
-public class UpdateDictRequest {
+@EqualsAndHashCode(callSuper = false)
+public class UpdateDictRequest extends BaseRequest {
 
     /**
      * 字典标签

@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.dict;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * 字典数据表 服务实现类
  */
+@Slf4j
 @Service
 @CacheConfig(cacheNames = "DictCache")
 public class DictService extends ServiceImpl<DictMapper, Dict> {
@@ -48,6 +50,7 @@ public class DictService extends ServiceImpl<DictMapper, Dict> {
      */
     @CacheEvict(key = "#dictType")
     public boolean deleteDict(String dictType, Integer id) {
+        log.info("删除字典类型 {} 的字典条目 {}", dictType, id);
         return removeById(id);
     }
 

@@ -11,7 +11,7 @@ import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.user.group.UserGroup;
 import {{ cookiecutter.basePackage }}.common.request.auth.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
+import {{ cookiecutter.basePackage }}.common.request.auth.UpdateAuthRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -117,7 +117,7 @@ public class GroupController extends AuthBaseController {
     @LogOperation(name = "按ID更新用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PutMapping("/groups/{groupId}")
-    public R<Group> update(@PathVariable Integer groupId, @Valid @RequestBody BaseRequest.UpdateAuthRequest request) {
+    public R<Group> update(@PathVariable Integer groupId, @Valid @RequestBody UpdateAuthRequest request) {
         if (!groupService.isAllowed(getUserId(), null, groupId)) {
             return R.fail("无权限更新该用户组");
         }

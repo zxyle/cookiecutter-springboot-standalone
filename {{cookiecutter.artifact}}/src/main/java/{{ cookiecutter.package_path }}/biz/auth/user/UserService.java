@@ -220,9 +220,19 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return update;
     }
 
-    // 带缓存的ID查询
+    /**
+     * 带缓存的ID查询
+     */
     @Cacheable(key = "#userId", unless = "#result == null")
     public User findById(Integer userId) {
         return getById(userId);
+    }
+
+    /**
+     * 带缓存的ID更新
+     */
+    @CacheEvict(key = "#user.id")
+    public boolean putById(User user) {
+        return updateById(user);
     }
 }
