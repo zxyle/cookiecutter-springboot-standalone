@@ -23,7 +23,7 @@ public final class JwtUtil {
     }
 
     // 有效期（单位: 毫秒）
-    private static final Long JWT_TTL = 24 * 60 * 60 * 1000L;  // 一天
+    private static final long JWT_TTL = 24 * 60 * 60 * 1000L;  // 一天
 
     // 设置秘钥明文
     private static final String JWT_KEY = "{{ random_ascii_string(32) }}";
