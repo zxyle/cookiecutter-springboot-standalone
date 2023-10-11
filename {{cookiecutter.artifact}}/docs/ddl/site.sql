@@ -86,3 +86,32 @@ CREATE TABLE `site_release` (
 BEGIN;
 INSERT INTO `site_release` (`version`, `description`) VALUES ('V1.0.0', '第一个版本');
 COMMIT;
+
+-- ----------------------------
+-- Table structure for site_faq
+-- ----------------------------
+DROP TABLE IF EXISTS `site_faq`;
+CREATE TABLE `site_faq` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `question` varchar(255) CHARACTER SET utf8mb4 COLLATE NOT NULL COMMENT '问题',
+  `answer` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '解答',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='常见问题';
+
+-- ----------------------------
+-- Table structure for site_realname
+-- ----------------------------
+CREATE TABLE `site_realname` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `name` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '姓名',
+  `id_type` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '证件类型',
+  `id_num` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '证件号码',
+  `user_id` int unsigned NOT NULL COMMENT '用户id',
+  `status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '认证状态',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_user_id` (`user_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='实名认证';
