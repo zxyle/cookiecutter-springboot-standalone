@@ -18,7 +18,7 @@ import javax.validation.constraints.Positive;
  */
 @Data
 @TableName("site_friendly")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Friendly extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

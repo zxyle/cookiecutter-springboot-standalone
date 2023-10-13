@@ -3,12 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.friendly;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,26 +26,19 @@ public class FriendlyController {
      * 获取友链列表
      */
     @GetMapping("/links")
-    @Cacheable(cacheNames = "FriendlyCache", unless = "#result == null")
     public R<List<Friendly>> list() {
-        QueryWrapper<Friendly> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "content", "url");
-        wrapper.eq("enabled", true);
-        wrapper.orderByAsc("sort");
-        List<Friendly> urls = thisService.list(wrapper);
-        return R.ok(urls);
+        return R.ok(thisService.all());
     }
 
     /**
      * 添加友链
      */
     @LogOperation(name = "添加友链", biz = "site")
-    @CacheEvict(cacheNames = "FriendlyCache", allEntries = true)
     @PreAuthorize("@ck.hasPermit('site:friendly:add')")
     @PostMapping("/links")
     public R<Friendly> add(@Valid @RequestBody Friendly entity) {
-        boolean saved = thisService.save(entity);
-        return saved ? R.ok(entity) : R.fail("新增失败");
+        Friendly result = thisService.insert(entity);
+        return R.ok(result);
     }
 
     /**
@@ -57,14 +47,14 @@ public class FriendlyController {
      * @param id 友链ID
      */
     @LogOperation(name = "删除友链", biz = "site")
-    @CacheEvict(cacheNames = "FriendlyCache", allEntries = true)
     @PreAuthorize("@ck.hasPermit('site:friendly:delete')")
     @DeleteMapping("/links/{id}")
-    public R<Friendly> delete(@PathVariable("id") Long id) {
-        Friendly result = thisService.getById(id);
-        if (result == null) return R.fail("友链不存在");
-        boolean removed = thisService.removeById(id);
-        return removed ? R.ok("删除友链成功") : R.fail("删除友链失败");
+    public R<Void> delete(@PathVariable("id") Integer id) {
+        Friendly friendly = thisService.findById(id);
+        if (friendly == null) return R.fail("删除失败，友链不存在");
+
+        boolean deleted = thisService.deleteById(id);
+        return deleted ? R.ok("删除友链成功") : R.fail("删除友链失败");
     }
 
     /**
@@ -75,15 +65,15 @@ public class FriendlyController {
      * @return 友链实体
      */
     @LogOperation(name = "更新友链", biz = "site")
-    @CacheEvict(cacheNames = "FriendlyCache", allEntries = true)
     @PreAuthorize("@ck.hasPermit('site:friendly:update')")
     @PutMapping("/links/{id}")
     public R<Friendly> update(@PathVariable Integer id, @Valid @RequestBody Friendly entity) {
+        Friendly friendly = thisService.findById(id);
+        if (friendly == null) return R.fail("更新失败，友链不存在");
+
         entity.setId(id);
-        Friendly result = thisService.getById(id);
-        if (result == null) return R.fail("友链不存在");
-        boolean updated = thisService.updateById(entity);
-        return updated ? R.ok(entity) : R.fail("更新友链失败");
+        Friendly result = thisService.putById(entity);
+        return result != null ? R.ok(result) : R.fail("更新友链失败");
     }
 
 }
