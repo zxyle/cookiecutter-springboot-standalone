@@ -36,7 +36,7 @@ public class AclService extends ServiceImpl<AclMapper, Acl> {
      * 按ID查询（查询结果不为null则缓存）
      */
     @Cacheable(key = "#id", unless = "#result == null")
-    public Acl queryById(Integer id) {
+    public Acl findById(Integer id) {
         return getById(id);
     }
 

@@ -55,7 +55,7 @@ public class AclController {
     @PreAuthorize("@ck.hasPermit('sys:acl:get')")
     @GetMapping("/acl/{id}")
     public R<Acl> get(@PathVariable Integer id) {
-        Acl entity = thisService.queryById(id);
+        Acl entity = thisService.findById(id);
         return entity == null ? R.fail("IP访问控制不存在") : R.ok(entity);
     }
 
