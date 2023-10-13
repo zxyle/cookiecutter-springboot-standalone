@@ -28,7 +28,7 @@ public class ProfileService extends ServiceImpl<ProfileMapper, Profile> {
      *
      * @param userId 用户ID
      */
-    @Cacheable(key = "#userId", unless = "#result == null")
+    @Cacheable(key = "#userId")
     public Profile findByUserId(Integer userId) {
         QueryWrapper<Profile> wrapper = new QueryWrapper<>();
         wrapper.eq(USER_ID, userId);
@@ -45,7 +45,7 @@ public class ProfileService extends ServiceImpl<ProfileMapper, Profile> {
         UpdateWrapper<Profile> wrapper = new UpdateWrapper<>();
         wrapper.eq(USER_ID, profile.getUserId());
         // 如果没有数据，则新增
-        if (exists(wrapper)) {
+        if (!exists(wrapper)) {
             save(profile);
             return profile;
         }
@@ -67,7 +67,7 @@ public class ProfileService extends ServiceImpl<ProfileMapper, Profile> {
     public boolean delete(Integer userId) {
         QueryWrapper<Profile> wrapper = new QueryWrapper<>();
         wrapper.eq(USER_ID, userId);
-        if (exists(wrapper))
+        if (!exists(wrapper))
             return true;
 
         return remove(wrapper);
