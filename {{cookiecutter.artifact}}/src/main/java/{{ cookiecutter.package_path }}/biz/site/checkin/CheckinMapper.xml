@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="{{ cookiecutter.basePackage }}.biz.site.checkin.CheckinMapper">
+
+    <select id="calendar" resultType="java.lang.Integer">
+        SELECT
+            DAY(checkin_date)
+        FROM
+            `site_checkin`
+        WHERE
+            user_id = #{userId} AND checkin_date BETWEEN #{startDate} AND #{endDate}
+        ORDER BY
+            checkin_date
+    </select>
+</mapper>

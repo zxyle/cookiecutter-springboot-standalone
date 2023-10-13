@@ -103,6 +103,7 @@ CREATE TABLE `site_faq` (
 -- ----------------------------
 -- Table structure for site_realname
 -- ----------------------------
+DROP TABLE IF EXISTS `site_realname`;
 CREATE TABLE `site_realname` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -115,3 +116,16 @@ CREATE TABLE `site_realname` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='实名认证';
+
+-- ----------------------------
+-- Table structure for site_checkin
+-- ----------------------------
+DROP TABLE IF EXISTS `site_checkin`;
+CREATE TABLE `site_checkin` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `user_id` int unsigned NOT NULL COMMENT '用户ID',
+  `checkin_date` date NOT NULL COMMENT '签到日期',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_user_date` (`user_id`,`checkin_date`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='签到';
