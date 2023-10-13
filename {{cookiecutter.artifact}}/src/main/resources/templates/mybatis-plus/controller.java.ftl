@@ -74,7 +74,7 @@ public class ${className} {
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:get')")
     @GetMapping("/${table.name}s/{id}")
     public R<${table.className}> get(@PathVariable Integer id) {
-        ${table.className} entity = thisService.queryById(id);
+        ${table.className} entity = thisService.findById(id);
         return entity == null ? R.fail("数据不存在") : R.ok(entity);
     }
 

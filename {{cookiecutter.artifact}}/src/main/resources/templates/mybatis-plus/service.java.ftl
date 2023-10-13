@@ -35,7 +35,7 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
      * 按ID查询（查询结果不为null则缓存）
      */
     @Cacheable(key = "#id", unless = "#result == null")
-    public ${table.className} queryById(Integer id) {
+    public ${table.className} findById(Integer id) {
         return getById(id);
     }
 
