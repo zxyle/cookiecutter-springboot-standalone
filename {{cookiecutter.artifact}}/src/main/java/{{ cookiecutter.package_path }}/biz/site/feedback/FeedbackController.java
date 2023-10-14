@@ -90,8 +90,8 @@ public class FeedbackController {
     public R<Void> update(@PathVariable Integer id, @Valid @RequestBody Feedback entity) {
         entity.setId(id);
         checkId(id);
-        boolean success = thisService.updateById(entity);
-        return success ? R.ok("更新意见反馈成功") : R.fail("更新意见反馈失败");
+        boolean updated = thisService.updateById(entity);
+        return updated ? R.ok("更新意见反馈成功") : R.fail("更新意见反馈失败");
     }
 
     /**
@@ -101,8 +101,8 @@ public class FeedbackController {
     @PreAuthorize("@ck.hasPermit('site:feedback:delete')")
     @DeleteMapping("/feedbacks/{id}")
     public R<Void> delete(@PathVariable Integer id) {
-        boolean success = thisService.removeById(id);
-        return success ? R.ok("删除意见反馈成功") : R.fail("删除意见反馈失败");
+        boolean deleted = thisService.deleteById(id);
+        return deleted ? R.ok("删除意见反馈成功") : R.fail("删除意见反馈失败");
     }
 
     public void checkId(Integer id) {
