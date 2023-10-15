@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.Length;
 @Data
 @AllArgsConstructor
 @TableName("auth_totp")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Totp extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

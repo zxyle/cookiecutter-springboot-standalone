@@ -93,18 +93,19 @@ public class MFAController extends AuthBaseController {
     @LogOperation(name = "绑定TOTP验证器", biz = "auth")
     @GetMapping("/totp/bind")
     public R<Void> bind(@NotBlank String code) {
+        String key = "totp:" + getUserId();
         Totp result = totpService.findByUserId(getUserId());
-        if (result != null) return R.ok("用户已设置");
+        if (result != null) return R.ok("用户已绑定");
 
-        String secret = stringRedisTemplate.opsForValue().get("totp:" + getUserId());
+        String secret = stringRedisTemplate.opsForValue().get(key);
         if (secret == null) return R.fail("请先生成随机密钥");
 
         if (!Authenticator.valid(secret, code)) return R.fail("验证码错误，请重新输入");
 
         Totp totp = new Totp(getUserId(), secret);
-        boolean saved = totpService.save(totp);
-        Boolean deleted = stringRedisTemplate.delete("totp:" + getUserId());
-        return (saved && Boolean.TRUE.equals(deleted)) ? R.ok("绑定TOTP成功") : R.fail("绑定TOTP失败");
+        Totp inserted = totpService.insert(totp);
+        Boolean deleted = stringRedisTemplate.delete(key);
+        return (inserted != null && Boolean.TRUE.equals(deleted)) ? R.ok("绑定TOTP成功") : R.fail("绑定TOTP失败");
     }
 
 

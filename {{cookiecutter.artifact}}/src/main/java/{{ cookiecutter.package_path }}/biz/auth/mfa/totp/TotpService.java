@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,18 @@ import org.springframework.stereotype.Service;
 public class TotpService extends ServiceImpl<TotpMapper, Totp> {
 
     /**
-     * 按用户ID查询（查询结果不为null则缓存）
+     * 新增TOTP（带缓存）
      */
-    @Cacheable(key = "#userId", unless = "#result == null")
+    @CachePut(key = "#entity.userId")
+    public Totp insert(Totp entity) {
+        baseMapper.insert(entity);
+        return entity;
+    }
+
+    /**
+     * 按用户ID查询
+     */
+    @Cacheable(key = "#userId")
     public Totp findByUserId(Integer userId) {
         QueryWrapper<Totp> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
