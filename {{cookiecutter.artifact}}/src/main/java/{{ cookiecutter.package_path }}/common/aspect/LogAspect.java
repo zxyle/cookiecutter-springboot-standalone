@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.common.aspect;
 
-import {{ cookiecutter.basePackage }}.biz.auth.login.request.AccountLoginRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.login.AccountLoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.login.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;

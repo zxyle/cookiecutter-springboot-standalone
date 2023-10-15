@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
-import {{ cookiecutter.basePackage }}.biz.auth.login.request.CodeLoginRequest;
+import {{ cookiecutter.basePackage }}.biz.auth.login.CodeLoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.mfa.AccountUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

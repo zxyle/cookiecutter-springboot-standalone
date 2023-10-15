@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,8 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-@CacheConfig(cacheNames = "SettingCache")
-public class SettingService extends ServiceImpl<SettingMapper, Setting>  {
+@CacheConfig(cacheNames = "SettingCache", cacheManager = "neverExpireCacheManager")
+public class SettingService extends ServiceImpl<SettingMapper, Setting> {
 
     private static final String LABEL = "option_label";
     private static final String VALUE = "option_value";
@@ -26,7 +27,7 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting>  {
     /**
      * 按ID查询
      */
-    @Cacheable(key = "#id", unless = "#result == null")
+    @Cacheable(key = "#id")
     public Setting findById(Integer id) {
         return getById(id);
     }
@@ -36,7 +37,7 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting>  {
      *
      * @param label 选项名称
      */
-    @Cacheable(key = "#label", cacheManager = "neverExpireCacheManager", unless = "#result == null")
+    @Cacheable(key = "#label")
     public Item get(String label) {
         QueryWrapper<Setting> wrapper = new QueryWrapper<>();
         wrapper.select(LABEL, VALUE, "data_type");
@@ -48,13 +49,13 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting>  {
         return null;
     }
 
-    @CachePut(key = "#label", cacheManager = "neverExpireCacheManager")
+    @CachePut(key = "#label")
     public Item update(String label, String value) {
         UpdateWrapper<Setting> wrapper = new UpdateWrapper<>();
         wrapper.eq(LABEL, label);
         wrapper.set(VALUE, value);
-        boolean update = update(wrapper);
-        if (update) {
+        boolean updated = update(wrapper);
+        if (updated) {
             QueryWrapper<Setting> wrapper2 = new QueryWrapper<>();
             wrapper2.select(LABEL, VALUE, "data_type");
             wrapper2.eq(LABEL, label);
@@ -62,5 +63,16 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting>  {
             return new Item(one);
         }
         return null;
+    }
+
+    /**
+     * 按ID删除（带缓存）
+     *
+     * @param label 选项名称，用于清除缓存
+     * @param id    选项ID
+     */
+    @CacheEvict(key = "#label")
+    public boolean deleteById(String label, Integer id) {
+        return removeById(id);
     }
 }

@@ -21,7 +21,7 @@ public class VerificationService extends ServiceImpl<VerificationMapper, Verific
      * 按ID查询
      */
     @Cacheable(key = "#id", unless = "#result == null")
-    public Verification findById(Long id) {
+    public Verification findById(Integer id) {
         return getById(id);
     }
 

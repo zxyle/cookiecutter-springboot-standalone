@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * 只有id、create_time字段的实体类
+ * 只有id、create_time字段的实体类，用于给只新增不修改的表继承
  */
 @Data
 @AllArgsConstructor

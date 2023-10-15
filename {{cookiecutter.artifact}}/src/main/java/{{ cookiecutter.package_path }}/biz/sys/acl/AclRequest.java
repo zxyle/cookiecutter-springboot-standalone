@@ -2,8 +2,10 @@ package {{ cookiecutter.basePackage }}.biz.sys.acl;
 
 import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +37,7 @@ public class AclRequest extends BaseRequest {
     /**
      * 截止时间
      */
+    @Future(message = "截止时间不能早于当前时间")
     @NotNull(message = "截止时间不能为空")
     private LocalDateTime endTime;
 

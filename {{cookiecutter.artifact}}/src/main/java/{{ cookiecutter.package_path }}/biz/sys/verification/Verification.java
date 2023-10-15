@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @TableName("sys_verification")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Verification extends RecordEntity {
 
     private static final long serialVersionUID = 1L;

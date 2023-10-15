@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @TableName("sys_acl")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Acl extends BaseEntity {
 
     /**

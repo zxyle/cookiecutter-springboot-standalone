@@ -4,9 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.login;
 
 import cn.hutool.core.util.IdUtil;
-import {{ cookiecutter.basePackage }}.biz.auth.login.request.CodeLoginRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.login.request.AccountLoginRequest;
-import {{ cookiecutter.basePackage }}.biz.auth.login.request.ThirdPartyLoginRequest;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.mfa.totp.Totp;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;

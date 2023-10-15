@@ -40,7 +40,7 @@ public class RedisController {
     /**
      * 删除key
      *
-     * @param key key
+     * @param redis key
      */
     @LogOperation(name = "删除key", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:key:delete')")

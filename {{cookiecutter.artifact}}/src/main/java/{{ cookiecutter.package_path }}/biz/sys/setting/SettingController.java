@@ -66,8 +66,10 @@ public class SettingController {
     @PreAuthorize("@ck.hasPermit('sys:setting:update')")
     @PutMapping("/settings/{id}")
     public R<Void> update(@Valid @RequestBody Setting entity, @PathVariable Integer id) {
+        Setting setting = thisService.findById(id);
+        if (setting == null) return R.fail("设置不存在");
+
         entity.setId(id);
-        Setting setting = thisService.getById(id);
         String optionValue = entity.getOptionValue();
         Item item = thisService.update(setting.getOptionLabel(), optionValue);
         return item != null ? R.ok("更新系统设置成功") : R.fail("更新系统设置失败");
@@ -80,8 +82,11 @@ public class SettingController {
     @PreAuthorize("@ck.hasPermit('sys:setting:delete')")
     @DeleteMapping("/settings/{id}")
     public R<Void> delete(@PathVariable Integer id) {
-        boolean success = thisService.removeById(id);
-        return success ? R.ok("删除系统设置成功") : R.fail("删除系统设置失败");
+        Setting setting = thisService.findById(id);
+        if (setting == null) return R.fail("设置不存在");
+
+        boolean deleted = thisService.deleteById(setting.getOptionLabel(), id);
+        return deleted ? R.ok("删除系统设置成功") : R.fail("删除系统设置失败");
     }
 
 }

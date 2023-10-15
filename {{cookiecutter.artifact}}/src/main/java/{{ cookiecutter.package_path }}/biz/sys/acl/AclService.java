@@ -29,7 +29,7 @@ public class AclService extends ServiceImpl<AclMapper, Acl> {
     @CachePut(key = "#result.id", unless = "#result == null")
     public Acl insert(Acl entity) {
         baseMapper.insert(entity);
-        return null;
+        return entity;
     }
 
     /**
