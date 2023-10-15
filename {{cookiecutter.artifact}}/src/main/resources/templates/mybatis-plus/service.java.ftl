@@ -23,24 +23,24 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     final ${table.className}Mapper thisMapper;
 
     /**
-     * 新增${table.comment}（带缓存）
+     * 新增${table.comment}
      */
-    @CachePut(key = "#result.id", unless = "#result == null")
+    @CachePut(key = "#result.id")
     public ${table.className} insert(${table.className} entity) {
         baseMapper.insert(entity);
         return entity;
     }
 
     /**
-     * 按ID查询（查询结果不为null则缓存）
+     * 按ID查询
      */
-    @Cacheable(key = "#id", unless = "#result == null")
+    @Cacheable(key = "#id")
     public ${table.className} findById(Integer id) {
         return getById(id);
     }
 
     /**
-     * 按ID删除（带缓存）
+     * 按ID删除
      */
     @CacheEvict(key = "#id")
     public boolean deleteById(Integer id) {
@@ -48,7 +48,7 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     }
 
     /**
-     * 按ID更新（带缓存）
+     * 按ID更新
      */
     @CachePut(key = "#entity.id")
     public ${table.className} putById(${table.className} entity) {

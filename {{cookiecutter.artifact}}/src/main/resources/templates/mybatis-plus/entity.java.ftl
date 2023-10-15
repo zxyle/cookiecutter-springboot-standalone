@@ -16,7 +16,7 @@ import ${table.baseEntityPath};
 @Data
 @TableName("${table.tableName}")
 <#if table.hasBaseEntity>
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class ${className} extends ${table.baseEntityClassName} {
 <#else>
 public class ${className} {
