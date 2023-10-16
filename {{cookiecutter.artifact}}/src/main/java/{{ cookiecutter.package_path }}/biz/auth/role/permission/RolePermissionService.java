@@ -50,7 +50,7 @@ public class RolePermissionService extends ServiceImpl<RolePermissionMapper, Rol
     @Cacheable(key = "#roleId + ':' + #permissionId", unless = "#result == null")
     public List<RolePermission> queryRelation(Integer roleId, Integer permissionId) {
         QueryWrapper<RolePermission> wrapper = buildWrapper(roleId, permissionId);
-        wrapper.select("role_id, permission_id");
+        wrapper.select("role_id", "permission_id");
         return list(wrapper);
     }
 

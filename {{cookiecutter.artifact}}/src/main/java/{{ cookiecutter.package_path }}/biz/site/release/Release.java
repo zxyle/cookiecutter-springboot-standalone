@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
  */
 @Data
 @TableName("site_release")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Release extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

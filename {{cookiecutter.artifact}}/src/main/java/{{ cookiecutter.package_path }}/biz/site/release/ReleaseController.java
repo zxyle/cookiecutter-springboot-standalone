@@ -30,7 +30,7 @@ public class ReleaseController {
     @GetMapping("/releases")
     public R<List<Release>> list() {
         QueryWrapper<Release> wrapper = new QueryWrapper<>();
-        wrapper.select("version", "description");
+        wrapper.select("id", "version", "description");
         wrapper.orderByDesc("create_time");
         List<Release> releases = thisService.list(wrapper);
         return R.ok(releases);
@@ -43,8 +43,8 @@ public class ReleaseController {
     @PreAuthorize("@ck.hasPermit('site:release:add')")
     @PostMapping("/releases")
     public R<Release> add(@Valid @RequestBody Release entity) {
-        boolean saved = thisService.save(entity);
-        return saved ? R.ok(entity) : R.fail("新增发布版本失败");
+        Release release = thisService.insert(entity);
+        return release != null ? R.ok(release) : R.fail("新增发布版本失败");
     }
 
 
@@ -55,7 +55,7 @@ public class ReleaseController {
     @PreAuthorize("@ck.hasPermit('site:release:get')")
     @GetMapping("/releases/{id}")
     public R<Release> get(@PathVariable Integer id) {
-        Release entity = thisService.getById(id);
+        Release entity = thisService.findById(id);
         return entity == null ? R.fail("版本不存在") : R.ok(entity);
     }
 
@@ -65,10 +65,10 @@ public class ReleaseController {
     @LogOperation(name = "按ID更新发布版本", biz = "site")
     @PreAuthorize("@ck.hasPermit('site:release:update')")
     @PutMapping("/releases/{id}")
-    public R<Void> update(@Valid @RequestBody Release entity, @PathVariable Integer id) {
+    public R<Release> update(@Valid @RequestBody Release entity, @PathVariable Integer id) {
         entity.setId(id);
-        boolean updated = thisService.updateById(entity);
-        return updated ? R.ok("更新发布版本成功") : R.fail("更新发布版本失败");
+        Release release = thisService.putById(entity);
+        return release != null ? R.ok(release) : R.fail("更新发布版本失败");
     }
 
     /**
@@ -78,8 +78,8 @@ public class ReleaseController {
     @PreAuthorize("@ck.hasPermit('site:release:delete')")
     @DeleteMapping("/releases/{id}")
     public R<Void> delete(@PathVariable Integer id) {
-        boolean removed = thisService.removeById(id);
-        return removed ? R.ok("删除发布版本成功") : R.fail("删除发布版本失败");
+        boolean deleted = thisService.deleteById(id);
+        return deleted ? R.ok("删除发布版本成功") : R.fail("删除发布版本失败");
     }
 
 }
