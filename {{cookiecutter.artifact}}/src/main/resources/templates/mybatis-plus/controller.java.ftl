@@ -1,5 +1,6 @@
 package ${table.packageName};
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${table.basePackageName}.common.aspect.LogOperation;
 import ${table.basePackageName}.common.request.PaginationRequest;
@@ -37,8 +38,10 @@ public class ${className} {
     @LogOperation(name = "分页查询${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
     @GetMapping("/${table.name}s")
-    public R<Page<${table.className}>> page(@Valid PaginationRequest request) {
-        Page<${table.className}> page = thisService.page(request.toPageable());
+    public R<Page<${table.className}>> page(@Valid PaginationRequest req) {
+        QueryWrapper<${table.className}> wrapper = new QueryWrapper<>();
+        // 设置查询条件
+        Page<${table.className}> page = thisService.page(req.toPageable(), wrapper);
         return R.ok(page);
     }
 
