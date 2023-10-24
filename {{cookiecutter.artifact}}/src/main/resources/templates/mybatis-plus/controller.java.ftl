@@ -1,19 +1,24 @@
 package ${table.packageName};
 
+import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${table.basePackageName}.common.aspect.LogOperation;
 import ${table.basePackageName}.common.request.PaginationRequest;
 import ${table.basePackageName}.common.response.R;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 <#if table.hasBaseController>
 import ${table.baseControllerPath};
 </#if>
 
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -31,6 +36,7 @@ public class ${className} {
 
     final ${table.className}Mapper thisMapper;
     final ${table.className}Service thisService;
+    final HttpServletResponse response;
 
     /**
      * 分页查询
@@ -38,10 +44,22 @@ public class ${className} {
     @LogOperation(name = "分页查询${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
     @GetMapping("/${table.name}s")
-    public R<Page<${table.className}>> page(@Valid PaginationRequest req) {
+    public R<Page<${table.className}>> page(@Valid PaginationRequest req) throws IOException {
         QueryWrapper<${table.className}> wrapper = new QueryWrapper<>();
         // 设置查询条件
         Page<${table.className}> page = thisService.page(req.toPageable(), wrapper);
+
+        // 导出功能，不需要可以删除
+        if (req.isExport()) {
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            String fileName = "${table.comment}";
+            String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
+            EasyExcelFactory.write(response.getOutputStream(), ${table.className}.class)
+                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(page.getRecords());
+            return null;
+        }
+
         return R.ok(page);
     }
 
