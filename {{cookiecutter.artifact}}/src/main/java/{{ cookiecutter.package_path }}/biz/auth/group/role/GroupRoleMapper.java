@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.group.role;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.role.Role;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import org.apache.ibatis.annotations.Mapper;
@@ -30,6 +31,6 @@ public interface GroupRoleMapper extends BaseMapper<GroupRole> {
     /**
      * 分页查询用户组下的角色
      */
-    IPage<Role> page(IPage<Role> page, Integer groupId, PaginationRequest request);
+    Page<Role> page(IPage<Role> page, Integer groupId, PaginationRequest request);
 
 }

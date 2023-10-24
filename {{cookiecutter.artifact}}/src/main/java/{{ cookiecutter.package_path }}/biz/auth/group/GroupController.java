@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.group;
 import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.user.group.UserGroup;
@@ -13,7 +14,6 @@ import {{ cookiecutter.basePackage }}.common.request.auth.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.auth.UpdateAuthRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -37,7 +37,7 @@ public class GroupController extends AuthBaseController {
     @LogOperation(name = "用户组查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:list')")
     @GetMapping("/groups")
-    public R<PageVO<GroupResponse>> list(@Valid ListAuthRequest req) {
+    public R<Page<GroupResponse>> list(@Valid ListAuthRequest req) {
         // 查询当前用户，所在用户组和所能管理的用户组
         QueryWrapper<Group> wrapper = new QueryWrapper<>();
         wrapper.in("id", groupService.getSubGroups(getUserId()));
@@ -46,7 +46,10 @@ public class GroupController extends AuthBaseController {
         List<GroupResponse> collect = page.getRecords().stream()
                 .map(group -> groupService.attachGroupInfo(group, req.isFull()))
                 .collect(Collectors.toList());
-        return R.ok(new PageVO<>(collect, page.getTotal()));
+        Page<GroupResponse> responsePage = new Page<>();
+        responsePage.setRecords(collect);
+        responsePage.setTotal(page.getTotal());
+        return R.ok(responsePage);
     }
 
     /**

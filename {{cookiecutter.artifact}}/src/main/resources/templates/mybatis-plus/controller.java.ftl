@@ -3,7 +3,6 @@ package ${table.packageName};
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${table.basePackageName}.common.aspect.LogOperation;
 import ${table.basePackageName}.common.request.PaginationRequest;
-import ${table.basePackageName}.common.response.PageVO;
 import ${table.basePackageName}.common.response.R;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +37,9 @@ public class ${className} {
     @LogOperation(name = "分页查询${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
     @GetMapping("/${table.name}s")
-    public R<PageVO<${table.className}>> page(@Valid PaginationRequest request) {
+    public R<Page<${table.className}>> page(@Valid PaginationRequest request) {
         Page<${table.className}> page = thisService.page(request.toPageable());
-        return R.page(page);
+        return R.ok(page);
     }
 
     /**

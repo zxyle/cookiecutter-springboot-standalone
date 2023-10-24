@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.role.permission;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.Permission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
@@ -30,6 +31,6 @@ public interface RolePermissionMapper extends BaseMapper<RolePermission> {
     /**
      * 分页查询角色拥有的权限
      */
-    IPage<Permission> page(IPage<Permission> page, Integer roleId, PaginationRequest request);
+    Page<Permission> page(IPage<Permission> page, Integer roleId, PaginationRequest request);
 
 }

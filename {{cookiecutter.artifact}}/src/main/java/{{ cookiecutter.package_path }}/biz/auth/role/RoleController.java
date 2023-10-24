@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.role;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.PermissionService;
 import {{ cookiecutter.basePackage }}.common.request.auth.ListAuthRequest;
@@ -14,7 +15,6 @@ import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.validation.Add;
 import {{ cookiecutter.basePackage }}.common.validation.Update;
 import lombok.RequiredArgsConstructor;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -43,7 +43,7 @@ public class RoleController extends AuthBaseController {
     @LogOperation(name = "角色列表分页查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:list')")
     @GetMapping("/roles")
-    public R<PageVO<RoleResponse>> list(@Valid ListAuthRequest req) {
+    public R<Page<RoleResponse>> list(@Valid ListAuthRequest req) {
         QueryWrapper<Role> wrapper = new QueryWrapper<>();
         wrapper.select("id, name, code, description");
         // 模糊查询
@@ -56,7 +56,10 @@ public class RoleController extends AuthBaseController {
         List<RoleResponse> roles = list.getRecords().stream()
                 .map(role -> thisService.attachRoleInfo(role, req.isFull()))
                 .collect(Collectors.toList());
-        return R.ok(new PageVO<>(roles, list.getTotal()));
+        Page<RoleResponse> roleResponsePage = new Page<>();
+        roleResponsePage.setRecords(roles);
+        roleResponsePage.setTotal(list.getTotal());
+        return R.ok(roleResponsePage);
     }
 
 

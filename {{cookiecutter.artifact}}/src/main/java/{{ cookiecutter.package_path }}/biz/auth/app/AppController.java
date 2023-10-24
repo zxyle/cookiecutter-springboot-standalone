@@ -5,13 +5,12 @@ package {{ cookiecutter.basePackage }}.biz.auth.app;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
@@ -50,7 +49,7 @@ public class AppController extends AuthBaseController {
     @LogOperation(name = "应用分页查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:list')")
     @GetMapping("/apps")
-    public R<PageVO<App>> page(@Valid PaginationRequest req) {
+    public R<Page<App>> page(@Valid PaginationRequest req) {
         QueryWrapper<App> wrapper = new QueryWrapper<>();
         wrapper.orderBy(EntityUtil.getFields(App.class).contains(req.getField()),
                 req.isAsc(), req.getField());
@@ -58,9 +57,9 @@ public class AppController extends AuthBaseController {
             wrapper.and(i -> i.like("name", req.getKeyword())
                     .or().like("description", req.getKeyword()));
         }
-        IPage<App> page = thisService.page(req.toPageable(), wrapper);
+        Page<App> page = thisService.page(req.toPageable(), wrapper);
         page.getRecords().forEach(app -> app.setAppSecret(null));
-        return R.page(page);
+        return R.ok(page);
     }
 
 

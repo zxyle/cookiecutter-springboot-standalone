@@ -5,13 +5,13 @@ package {{ cookiecutter.basePackage }}.biz.auth.user;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.user.request.AdminAddUserRequest;
 import {{ cookiecutter.basePackage }}.common.request.auth.ListAuthRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.user.request.UpdateUserRequest;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -43,7 +43,7 @@ public class UserController extends AuthBaseController {
     @LogOperation(name = "分页查询用户列表", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:list')")
     @GetMapping("/users")
-    public R<PageVO<UserResponse>> list(@Valid ListAuthRequest req) {
+    public R<Page<UserResponse>> list(@Valid ListAuthRequest req) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.select("id, username, email, mobile, enabled");
         if (StringUtils.isNotBlank(req.getKeyword())) {
@@ -64,7 +64,10 @@ public class UserController extends AuthBaseController {
         List<UserResponse> userResponses = page.getRecords().stream()
                 .map(user -> thisService.attachUserInfo(user, req.isFull()))
                 .collect(Collectors.toList());
-        return R.ok(new PageVO<>(userResponses, page.getTotal()));
+        Page<UserResponse> responsePage = new Page<>();
+        responsePage.setRecords(userResponses);
+        responsePage.setTotal(page.getTotal());
+        return R.ok(responsePage);
     }
 
 

@@ -3,13 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.group.permission;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.Permission;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.PermissionService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.BatchRequest;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,9 +36,9 @@ public class GroupPermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}/permissions")
-    public R<PageVO<Permission>> list(@Valid PaginationRequest req, @PathVariable Integer groupId) {
-        IPage<Permission> page = thisMapper.page(req.toPageable(), groupId, req);
-        return R.page(page);
+    public R<Page<Permission>> list(@Valid PaginationRequest req, @PathVariable Integer groupId) {
+        Page<Permission> page = thisMapper.page(req.toPageable(), groupId, req);
+        return R.ok(page);
     }
 
 

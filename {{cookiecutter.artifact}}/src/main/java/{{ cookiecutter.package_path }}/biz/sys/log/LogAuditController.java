@@ -4,9 +4,8 @@
 package {{ cookiecutter.basePackage }}.biz.sys.log;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -34,12 +33,12 @@ public class LogAuditController {
     @LogOperation(name = "登录日志分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:login:list')")
     @GetMapping("/login")
-    public R<PageVO<LoginLog>> list(@Valid LoginLogRequest req) {
+    public R<Page<LoginLog>> list(@Valid LoginLogRequest req) {
         QueryWrapper<LoginLog> wrapper = new QueryWrapper<>();
         wrapper.like(StringUtils.isNotBlank(req.getAccount()), "account", req.getAccount());
         wrapper.orderBy(true, req.isAsc(), "login_time");
-        IPage<LoginLog> page = loginLogService.page(req.toPageable(), wrapper);
-        return R.page(page);
+        Page<LoginLog> page = loginLogService.page(req.toPageable(), wrapper);
+        return R.ok(page);
     }
 
     /**
@@ -48,14 +47,14 @@ public class LogAuditController {
     @LogOperation(name = "操作日志分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:operate:list')")
     @GetMapping("/operate")
-    public R<PageVO<OperateLog>> page(@Valid OperateLogRequest req) {
+    public R<Page<OperateLog>> page(@Valid OperateLogRequest req) {
         QueryWrapper<OperateLog> wrapper = new QueryWrapper<>();
         wrapper.eq(req.getUserId() != null, "user_id", req.getUserId());
         wrapper.eq(StringUtils.isNotBlank(req.getBiz()), "biz", req.getBiz());
         wrapper.between(req.getStartTime() != null && req.getEndTime() != null,
                 "operate_time", req.getStartTime(), req.getEndTime());
         wrapper.orderBy(true, req.isAsc(), "operate_time");
-        IPage<OperateLog> page = operateLogService.page(req.toPageable(), wrapper);
-        return R.page(page);
+        Page<OperateLog> page = operateLogService.page(req.toPageable(), wrapper);
+        return R.ok(page);
     }
 }

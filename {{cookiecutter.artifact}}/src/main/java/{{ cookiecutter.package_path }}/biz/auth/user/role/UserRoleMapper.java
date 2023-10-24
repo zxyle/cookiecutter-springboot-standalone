@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.user.role;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.role.Role;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import org.apache.ibatis.annotations.Mapper;
@@ -27,5 +28,5 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
     /**
      * 分页查询用户直接拥有的角色
      */
-    IPage<Role> page(IPage<Role> page, Integer userId, PaginationRequest request);
+    Page<Role> page(IPage<Role> page, Integer userId, PaginationRequest request);
 }

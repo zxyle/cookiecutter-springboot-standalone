@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +34,9 @@ public class RealnameController extends AuthBaseController {
     @LogOperation(name = "分页查询实名认证", biz = "site")
     @PreAuthorize("@ck.hasPermit('site:realname:list')")
     @GetMapping("/realnames")
-    public R<PageVO<Realname>> page(@Valid PaginationRequest request) {
+    public R<Page<Realname>> page(@Valid PaginationRequest request) {
         Page<Realname> page = thisService.page(request.toPageable());
-        return R.page(page);
+        return R.ok(page);
     }
 
 

@@ -3,7 +3,6 @@ package {{ cookiecutter.basePackage }}.biz.sys.verification;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +31,9 @@ public class VerificationController {
     @LogOperation(name = "分页查询验证码发送记录", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:verification:list')")
     @GetMapping("/verifications")
-    public R<PageVO<Verification>> page(@Valid PaginationRequest req) {
+    public R<Page<Verification>> page(@Valid PaginationRequest req) {
         Page<Verification> page = thisService.page(req.toPageable());
-        return R.page(page);
+        return R.ok(page);
     }
 
 }

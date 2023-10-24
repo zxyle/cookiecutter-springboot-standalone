@@ -5,12 +5,11 @@ package {{ cookiecutter.basePackage }}.biz.auth.mfa.question;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.validation.Add;
 import {{ cookiecutter.basePackage }}.common.validation.Update;
@@ -47,12 +46,12 @@ public class QuestionController extends AuthBaseController {
     @LogOperation(name = "安全问题分页查询", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:question:list')")
     @GetMapping("/questions")
-    public R<PageVO<Question>> page(@Valid PaginationRequest req) {
+    public R<Page<Question>> page(@Valid PaginationRequest req) {
         QueryWrapper<Question> wrapper = new QueryWrapper<>();
         wrapper.select("id", "question");
         wrapper.like(req.getKeyword() != null, "question", req.getKeyword());
-        IPage<Question> page = thisService.page(req.toPageable(), wrapper);
-        return R.page(page);
+        Page<Question> page = thisService.page(req.toPageable(), wrapper);
+        return R.ok(page);
     }
 
 

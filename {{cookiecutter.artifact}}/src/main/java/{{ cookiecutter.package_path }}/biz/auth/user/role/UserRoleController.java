@@ -3,13 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.user.role;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.PermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.role.Role;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.BatchRequest;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
@@ -37,9 +36,9 @@ public class UserRoleController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/roles")
-    public R<PageVO<Role>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
-        IPage<Role> page = thisMapper.page(req.toPageable(), userId, req);
-        return R.page(page);
+    public R<Page<Role>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
+        Page<Role> page = thisMapper.page(req.toPageable(), userId, req);
+        return R.ok(page);
     }
 
 

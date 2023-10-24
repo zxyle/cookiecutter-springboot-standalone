@@ -3,10 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.setting;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,9 +29,9 @@ public class SettingController {
     @LogOperation(name = "系统设置分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:setting:list')")
     @GetMapping("/settings")
-    public R<PageVO<Setting>> page(@Valid PaginationRequest req) {
-        IPage<Setting> page = thisService.page(req.toPageable());
-        return R.page(page);
+    public R<Page<Setting>> page(@Valid PaginationRequest req) {
+        Page<Setting> page = thisService.page(req.toPageable());
+        return R.ok(page);
     }
 
 

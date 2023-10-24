@@ -5,11 +5,10 @@ package {{ cookiecutter.basePackage }}.biz.site.feedback;
 
 import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.exception.DataNotFoundException;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
@@ -38,13 +37,13 @@ public class FeedbackController {
     @LogOperation(name = "意见反馈列表分页查询", biz = "site")
     @PreAuthorize("@ck.hasPermit('site:feedback:list')")
     @GetMapping("/feedbacks")
-    public R<PageVO<Feedback>> list(@Valid PaginationRequest req, HttpServletResponse response) throws IOException {
+    public R<Page<Feedback>> list(@Valid PaginationRequest req, HttpServletResponse response) throws IOException {
         QueryWrapper<Feedback> wrapper = new QueryWrapper<>();
         wrapper.orderBy(EntityUtil.getFields(Feedback.class).contains(req.getField()),
                 req.isAsc(), req.getField());
         wrapper.ge(req.getStartTime() != null, "create_time", req.getStartTime());
         wrapper.le(req.getEndTime() != null, "create_time", req.getEndTime());
-        IPage<Feedback> page = thisService.page(req.toPageable(), wrapper);
+        Page<Feedback> page = thisService.page(req.toPageable(), wrapper);
 
         // 数据导出
         if (req.isExport()) {
@@ -56,7 +55,7 @@ public class FeedbackController {
                     .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(page.getRecords());
             return null;
         }
-        return R.page(page);
+        return R.ok(page);
     }
 
 

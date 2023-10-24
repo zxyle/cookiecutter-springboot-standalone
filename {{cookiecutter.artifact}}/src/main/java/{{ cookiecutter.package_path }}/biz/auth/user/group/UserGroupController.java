@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.user.group;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.group.Group;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.PermissionService;
 import {{ cookiecutter.basePackage }}.common.request.auth.ListAuthRequest;
@@ -11,7 +11,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.BatchRequest;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
@@ -40,9 +39,9 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/groups")
-    public R<PageVO<Group>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
-        IPage<Group> page = thisMapper.page(req.toPageable(), userId, req);
-        return R.page(page);
+    public R<Page<Group>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
+        Page<Group> page = thisMapper.page(req.toPageable(), userId, req);
+        return R.ok(page);
     }
 
 
@@ -88,10 +87,10 @@ public class UserGroupController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}/users")
-    public R<PageVO<User>> pageUser(@PathVariable Integer groupId, @Valid ListAuthRequest req) {
+    public R<Page<User>> pageUser(@PathVariable Integer groupId, @Valid ListAuthRequest req) {
         // todo 需支持查询子用户组下的用户
-        IPage<User> list = thisMapper.pageUser(req.toPageable(), groupId, req);
-        return R.page(list);
+        Page<User> list = thisMapper.pageUser(req.toPageable(), groupId, req);
+        return R.ok(list);
     }
 
     /**

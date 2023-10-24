@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.user.permission;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.Permission;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import org.apache.ibatis.annotations.Mapper;
@@ -27,6 +28,6 @@ public interface UserPermissionMapper extends BaseMapper<UserPermission> {
     /**
      * 分页查询用户直接拥有的权限
      */
-    IPage<Permission> page(IPage<Permission> page, Integer userId, PaginationRequest request);
+    Page<Permission> page(IPage<Permission> page, Integer userId, PaginationRequest request);
 
 }

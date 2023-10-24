@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.common.response;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.Data;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
@@ -56,14 +55,6 @@ public class R<T> implements Serializable {
 
     public static <T> R<T> ok(T data) {
         return ok(data, SUCCESS_MSG);
-    }
-
-    /**
-     * 从MyBatis Plus分页对象封装标准响应对象
-     */
-    public static <T> R<PageVO<T>> page(IPage<T> p) {
-        PageVO<T> vo = new PageVO<>(p.getRecords(), p.getTotal());
-        return R.ok(vo);
     }
 
     public static <T> R<T> ok(T data, String message) {

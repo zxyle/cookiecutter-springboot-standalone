@@ -3,7 +3,6 @@ package {{ cookiecutter.basePackage }}.biz.sys.acl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
-import {{ cookiecutter.basePackage }}.common.response.PageVO;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +29,9 @@ public class AclController {
     @LogOperation(name = "IP访问控制分页查询", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:acl:list')")
     @GetMapping("/acl")
-    public R<PageVO<Acl>> page(@Valid PaginationRequest request) {
+    public R<Page<Acl>> page(@Valid PaginationRequest request) {
         Page<Acl> page = thisService.page(request.toPageable());
-        return R.page(page);
+        return R.ok(page);
     }
 
 
