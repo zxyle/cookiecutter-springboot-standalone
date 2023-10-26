@@ -66,6 +66,7 @@ public class ${className} {
                     .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(page.getRecords());
             return null;
         }
+
         </#if>
         return R.ok(page);
     }

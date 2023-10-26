@@ -48,7 +48,7 @@ public class PaginationRequest extends BaseRequest {
     private Integer pageSize;
 
     /**
-     * 是否导出当前页
+     * 是否Excel导出当前页
      *
      * @mock false
      */
