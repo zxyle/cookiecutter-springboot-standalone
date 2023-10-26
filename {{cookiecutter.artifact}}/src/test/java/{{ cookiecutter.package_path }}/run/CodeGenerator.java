@@ -26,6 +26,7 @@ public class CodeGenerator {
         temps.add(new Temp("request.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Request.java"));
         temps.add(new Temp("response.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Response.java"));
         temps.add(new Temp("pageRequest.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}PageRequest.java"));
+        temps.add(new Temp("export.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Export.java"));
         generator.setTemps(temps);
 
         generator.setAbsPath(System.getProperty("user.dir")); // 项目根目录绝对路径
@@ -35,6 +36,7 @@ public class CodeGenerator {
         generator.setBaseEntityPath("src/main/java/${pkg}/common/entity/BaseEntity.java");
         generator.setBaseControllerPath("src/main/java/${pkg}/common/controller/AuthBaseController.java");
         generator.setIgnoreColumns(new String[]{"id", "create_time", "update_time"});
+        generator.setExcel(true); // default false
         generator.run();
     }
 

@@ -9,6 +9,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
+<#list table.imports as import>
+import ${import};
+</#list>
+
 /**
  * ${table.comment} 请求类
  */

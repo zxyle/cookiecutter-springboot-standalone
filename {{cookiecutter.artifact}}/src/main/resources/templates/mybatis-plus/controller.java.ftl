@@ -1,25 +1,28 @@
 package ${table.packageName};
 
-import com.alibaba.excel.EasyExcelFactory;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${table.basePackageName}.common.aspect.LogOperation;
 import ${table.basePackageName}.common.request.PaginationRequest;
 import ${table.basePackageName}.common.response.R;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 <#if table.hasBaseController>
 import ${table.baseControllerPath};
 </#if>
 
-import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.List;
+
+<#if excel>
+import com.alibaba.excel.EasyExcelFactory;
+import java.net.URLEncoder;
+import org.springframework.http.MediaType;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+</#if>
 
 /**
  * ${table.comment}管理
@@ -36,18 +39,22 @@ public class ${className} {
 
     final ${table.className}Mapper thisMapper;
     final ${table.className}Service thisService;
+    <#if excel>
     final HttpServletResponse response;
+    </#if>
 
     /**
      * 分页查询
      */
     @LogOperation(name = "分页查询${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
-    @GetMapping("/${table.name}s")
-    public R<Page<${table.className}>> page(@Valid PaginationRequest req) throws IOException {
+    @GetMapping("${table.endpoint}")
+    public R<Page<${table.className}>> page(@Valid PaginationRequest req) <#if excel>throws IOException</#if> {
         QueryWrapper<${table.className}> wrapper = new QueryWrapper<>();
         // 设置查询条件
+        // wrapper.eq("name", "Tom");
         Page<${table.className}> page = thisService.page(req.toPageable(), wrapper);
+        <#if excel>
 
         // 导出功能，不需要可以删除
         if (req.isExport()) {
@@ -55,11 +62,11 @@ public class ${className} {
             String fileName = "${table.comment}";
             String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
             response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
-            EasyExcelFactory.write(response.getOutputStream(), ${table.className}.class)
+            EasyExcelFactory.write(response.getOutputStream(), ${table.className}Export.class)
                     .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(page.getRecords());
             return null;
         }
-
+        </#if>
         return R.ok(page);
     }
 
@@ -69,7 +76,7 @@ public class ${className} {
     // 当数据量不大时，需要查出全部数据，可以使用此接口，不需要可以删除
     // @LogOperation(name = "${table.comment!}列表查询", biz = "${table.biz}")
     // @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
-    // @GetMapping("/${table.name}s")
+    // @GetMapping("${table.endpoint}")
     // public R<List<${table.className}>> list() {
     //     return R.ok(thisService.list());
     // }
@@ -80,7 +87,7 @@ public class ${className} {
      */
     @LogOperation(name = "新增${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:add')")
-    @PostMapping("/${table.name}s")
+    @PostMapping("${table.endpoint}")
     public R<${table.className}> add(@Valid @RequestBody ${table.className} entity) {
         ${table.className} result = thisService.insert(entity);
         return R.ok(result);
@@ -92,7 +99,7 @@ public class ${className} {
      */
     @LogOperation(name = "按ID查询${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:get')")
-    @GetMapping("/${table.name}s/{id}")
+    @GetMapping("${table.endpoint}/{id}")
     public R<${table.className}> get(@PathVariable Integer id) {
         ${table.className} entity = thisService.findById(id);
         return entity == null ? R.fail("数据不存在") : R.ok(entity);
@@ -103,8 +110,10 @@ public class ${className} {
      */
     @LogOperation(name = "按ID更新${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
-    @PutMapping("/${table.name}s/{id}")
+    @PutMapping("${table.endpoint}/{id}")
     public R<${table.className}> update(@Valid @RequestBody ${table.className} entity, @PathVariable Integer id) {
+        if (thisService.findById(id) == null) return R.fail("更新失败，数据不存在");
+
         entity.setId(id);
         ${table.className} result = thisService.putById(entity);
         return result != null ? R.ok(result) : R.fail("更新${table.comment!}失败");
@@ -115,8 +124,10 @@ public class ${className} {
      */
     @LogOperation(name = "按ID删除${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
-    @DeleteMapping("/${table.name}s/{id}")
+    @DeleteMapping("${table.endpoint}/{id}")
     public R<Void> delete(@PathVariable Integer id) {
+        if (thisService.findById(id) == null) return R.fail("删除失败，数据不存在");
+
         boolean deleted = thisService.deleteById(id);
         return deleted ? R.ok("删除${table.comment!}成功") : R.fail("删除${table.comment!}失败");
     }
@@ -126,7 +137,7 @@ public class ${className} {
      */
     @LogOperation(name = "批量新增${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:add')")
-    @PostMapping("/${table.name}s/batch-create")
+    @PostMapping("${table.endpoint}/batch-create")
     public R<Void> batchCreate(@Valid @RequestBody List<${table.className}> list) {
         boolean success = thisService.saveBatch(list);
         return success ? R.ok("批量新增成功") : R.fail("批量新增失败");
@@ -137,7 +148,7 @@ public class ${className} {
      */
     @LogOperation(name = "批量更新${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
-    @PutMapping("/${table.name}s/batch-update")
+    @PutMapping("${table.endpoint}/batch-update")
     public R<Void> batchUpdate(@Valid @RequestBody List<${table.className}> list) {
         boolean success = thisService.updateBatchById(list);
         return success ? R.ok("批量更新成功") : R.fail("批量更新失败");
@@ -148,7 +159,7 @@ public class ${className} {
      */
     @LogOperation(name = "批量删除${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
-    @DeleteMapping("/${table.name}s/batch-delete")
+    @DeleteMapping("${table.endpoint}/batch-delete")
     public R<Void> batchDelete(@Valid @RequestBody List<Integer> ids) {
         boolean success = thisService.removeByIds(ids);
         return success ? R.ok("批量删除成功") : R.fail("批量删除失败");

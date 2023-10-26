@@ -5,6 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+<#list table.imports as import>
+import ${import};
+</#list>
+
 /**
  * ${table.comment} 响应类
  */
