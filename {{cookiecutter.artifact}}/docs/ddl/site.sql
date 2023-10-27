@@ -95,7 +95,7 @@ CREATE TABLE `site_faq` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `question` varchar(255) CHARACTER SET utf8mb4 COLLATE NOT NULL COMMENT '问题',
+  `question` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '问题',
   `answer` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '解答',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='常见问题';
