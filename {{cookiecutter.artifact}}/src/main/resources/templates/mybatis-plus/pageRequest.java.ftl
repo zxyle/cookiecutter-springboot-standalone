@@ -15,6 +15,10 @@ import ${import};
 
 /**
  * ${table.comment} 分页请求类
+<#if author??>
+ *
+ * @author ${author}
+</#if>
  */
 @Getter
 @Setter

@@ -22,10 +22,17 @@ import java.net.URLEncoder;
 import org.springframework.http.MediaType;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import org.springframework.beans.BeanUtils;
 </#if>
 
 /**
  * ${table.comment}管理
+<#if author??>
+ *
+ * @author ${author}
+</#if>
  */
 @Slf4j
 @RestController
@@ -58,12 +65,19 @@ public class ${className} {
 
         // 导出功能，不需要可以删除
         if (req.isExport()) {
+            List<${table.className}Export> list = IntStream.range(0, page.getRecords().size())
+                    .mapToObj(index -> {
+                        ${table.className}Export export = new ${table.className}Export();
+                        BeanUtils.copyProperties(page.getRecords().get(index), export);
+                        export.setSeq(index + 1);
+                        return export;
+                    }).collect(Collectors.toList());
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             String fileName = "${table.comment}";
             String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
             response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
             EasyExcelFactory.write(response.getOutputStream(), ${table.className}Export.class)
-                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(page.getRecords());
+                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(list);
             return null;
         }
 

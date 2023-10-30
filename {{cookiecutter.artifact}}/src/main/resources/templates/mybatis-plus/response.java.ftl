@@ -11,6 +11,10 @@ import ${import};
 
 /**
  * ${table.comment} 响应类
+<#if author??>
+ *
+ * @author ${author}
+</#if>
  */
 @Getter
 @Setter

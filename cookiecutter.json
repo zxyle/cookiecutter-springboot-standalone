@@ -2,7 +2,7 @@
   "group": "com.example",
   "artifact": "demo-api",
   "javaVersion": ["8", "11"],
-  "bootVersion": ["2.7.16"],
+  "bootVersion": ["2.7.17"],
   "package_path": "{{ cookiecutter.group|replace('.', '/') }}/{{ cookiecutter.artifact.replace('-', '') }}",
   "app_name": "{{ cookiecutter.artifact|title|replace('-', '')|replace('_', '')|replace(' ', '') }}",
   "basePackage": "{{ cookiecutter.group }}.{{ cookiecutter.artifact.replace('-', '') }}",

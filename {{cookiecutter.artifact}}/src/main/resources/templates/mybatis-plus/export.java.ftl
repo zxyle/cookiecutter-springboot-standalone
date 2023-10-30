@@ -14,6 +14,10 @@ import lombok.Data;
 
 /**
  * ${table.comment} Excel数据导出
+<#if author??>
+ *
+ * @author ${author}
+</#if>
  */
 @Data
 public class ${className} {

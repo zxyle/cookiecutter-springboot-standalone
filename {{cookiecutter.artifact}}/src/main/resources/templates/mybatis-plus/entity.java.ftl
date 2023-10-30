@@ -12,6 +12,10 @@ import ${table.baseEntityPath};
 
 /**
  * ${table.comment}
+<#if author??>
+ *
+ * @author ${author}
+</#if>
  */
 @Data
 @TableName("${table.tableName}")

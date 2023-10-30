@@ -27,7 +27,7 @@
         <dependency>
             <groupId>io.github.zxyle</groupId>
             <artifactId>codegen</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -13,6 +13,10 @@ import java.util.List;
 
 /**
  * ${table.comment} 服务类
+<#if author??>
+ *
+ * @author ${author}
+</#if>
  */
 @Slf4j
 @Service
