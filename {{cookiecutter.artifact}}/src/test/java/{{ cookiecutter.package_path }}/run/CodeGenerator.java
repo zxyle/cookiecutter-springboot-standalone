@@ -35,7 +35,7 @@ public class CodeGenerator {
         generator.setBasePackage(pkg.replace("/", "."));
         generator.setBaseEntityPath("src/main/java/${pkg}/common/entity/BaseEntity.java");
         generator.setBaseControllerPath("src/main/java/${pkg}/common/controller/AuthBaseController.java");
-        generator.setIgnoreColumns(new String[]{"id", "create_time", "update_time"});
+        generator.setIgnoreColumns("id", "create_time", "update_time");
         generator.setEnableExcel(false); // default false
         generator.run();
     }
