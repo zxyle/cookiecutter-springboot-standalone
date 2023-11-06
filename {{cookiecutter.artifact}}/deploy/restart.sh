@@ -4,4 +4,4 @@
 systemctl restart {{ cookiecutter.artifact }}
 echo "{{ cookiecutter.artifact }}服务重启完成."
 
-tail -200f logs/log_info.log
+tail -200f logs/app.log

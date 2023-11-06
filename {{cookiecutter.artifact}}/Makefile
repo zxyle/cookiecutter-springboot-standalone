@@ -36,7 +36,7 @@ package:
 restart:
 	ssh $(SERVER) "systemctl restart {{ cookiecutter.artifact }}"
 	# 显示运行日志
-	ssh $(SERVER) "tail -200f $(BACKEND_DIR)/logs/log_info.log"
+	ssh $(SERVER) "tail -200f $(BACKEND_DIR)/logs/app.log"
 
 # 备份jar包到backup目录
 backup:
