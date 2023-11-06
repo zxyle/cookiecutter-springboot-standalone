@@ -4,6 +4,7 @@
 # make publish
 
 # 定义变量
+# 配置免密登录 ssh-copy-id -i ~/.ssh/id_rsa.pub root@localhost
 SERVER = root@127.0.0.1
 DIR = /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact.replace('-api', '-web') }}
 TARGET = dist
