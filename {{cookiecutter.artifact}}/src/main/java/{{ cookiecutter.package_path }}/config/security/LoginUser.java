@@ -15,6 +15,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 登录用户信息
+ */
 @AllArgsConstructor
 public class LoginUser implements UserDetails {
 
@@ -29,7 +32,7 @@ public class LoginUser implements UserDetails {
     private User user;
 
     /**
-     * 密码配置信息
+     * 密码过期时间阈值，单位：天
      */
     private Integer expireDays;
 
@@ -58,8 +61,10 @@ public class LoginUser implements UserDetails {
     }
 
     /**
-     * 判断当前账户是否过期（true-未过期 false-已过期）
+     * 判断当前账户是否过期
      * 报AccountExpiredException: User account has expired
+     *
+     * @return true-未过期 false-已过期
      */
     @Override
     public boolean isAccountNonExpired() {
@@ -71,17 +76,21 @@ public class LoginUser implements UserDetails {
     }
 
     /**
-     * 判断当前账户是否锁定（true-未锁定 false-已锁定）
+     * 判断当前账户是否锁定
+     * 报LockedException 用户帐号已被锁定 异常
+     *
+     * @return true-未锁定 false-已锁定
      */
     @Override
     public boolean isAccountNonLocked() {
-        // 会抛出LockedException 用户帐号已被锁定 异常
         return !user.getLocked();
     }
 
     /**
      * 判断当前密码是否过期, 强制用户修改密码
      * 报 CredentialsExpiredException User credentials have expired
+     *
+     * @return true-未过期 false-已过期
      */
     @Override
     public boolean isCredentialsNonExpired() {
@@ -97,6 +106,8 @@ public class LoginUser implements UserDetails {
     /**
      * 判断当前账户是否可用
      * 报DisabledException: User is disabled
+     *
+     * @return true-可用 false-不可用
      */
     @Override
     public boolean isEnabled() {
