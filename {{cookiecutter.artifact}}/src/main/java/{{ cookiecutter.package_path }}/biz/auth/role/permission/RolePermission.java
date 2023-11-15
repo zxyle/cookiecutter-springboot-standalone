@@ -16,7 +16,7 @@ import javax.validation.constraints.Positive;
  */
 @Data
 @TableName("auth_role_permission")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class RolePermission extends LiteEntity {
 
     private static final long serialVersionUID = 1L;

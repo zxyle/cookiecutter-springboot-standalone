@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @TableName("auth_app")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class App extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

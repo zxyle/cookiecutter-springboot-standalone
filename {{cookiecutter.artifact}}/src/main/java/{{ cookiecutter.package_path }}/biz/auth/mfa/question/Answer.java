@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
  */
 @Data
 @TableName("auth_answer")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Answer extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

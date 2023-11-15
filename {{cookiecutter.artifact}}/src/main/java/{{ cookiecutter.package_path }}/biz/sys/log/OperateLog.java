@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("sys_operate_log")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class OperateLog extends LiteEntity {
 
     private static final long serialVersionUID = 1L;

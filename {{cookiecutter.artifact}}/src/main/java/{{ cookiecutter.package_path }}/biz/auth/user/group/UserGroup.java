@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @TableName("auth_user_group")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class UserGroup extends LiteEntity {
 
     private static final long serialVersionUID = 1L;

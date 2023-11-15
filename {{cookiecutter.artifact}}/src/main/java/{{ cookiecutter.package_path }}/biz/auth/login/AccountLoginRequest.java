@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
  * 使用注册账号(用户名/邮箱/手机号) + 密码方式登录
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class AccountLoginRequest extends BaseRequest {
 
     /**

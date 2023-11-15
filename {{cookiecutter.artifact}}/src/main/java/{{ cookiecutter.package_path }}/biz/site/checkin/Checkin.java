@@ -15,7 +15,7 @@ import java.time.LocalDate;
  */
 @Data
 @TableName("site_checkin")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Checkin extends RecordEntity {
 
     /**

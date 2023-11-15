@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * 带分页/排序/时间范围/模糊搜索/文件导出的分页请求对象，所有分页请求对象都应该继承此类
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class PaginationRequest extends BaseRequest {
 
     private static final String DEFAULT_ORDER = "asc";

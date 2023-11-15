@@ -16,7 +16,7 @@ import javax.validation.constraints.Positive;
  */
 @Data
 @TableName("auth_group_role")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class GroupRole extends LiteEntity {
 
     private static final long serialVersionUID = 1L;

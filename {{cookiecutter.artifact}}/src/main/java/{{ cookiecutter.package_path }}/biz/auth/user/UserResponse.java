@@ -18,7 +18,7 @@ import java.util.List;
  * 用户信息响应
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class UserResponse extends User {
 
     private static final long serialVersionUID = 1L;

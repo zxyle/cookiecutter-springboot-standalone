@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  * 登录日志分页查询请求
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class LoginLogRequest extends PaginationRequest {
 
     /**

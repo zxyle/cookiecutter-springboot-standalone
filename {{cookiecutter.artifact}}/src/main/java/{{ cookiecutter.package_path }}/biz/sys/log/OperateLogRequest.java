@@ -13,7 +13,7 @@ import javax.validation.constraints.Positive;
  * 操作日志分页查询请求
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class OperateLogRequest extends PaginationRequest {
 
     /**

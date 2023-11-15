@@ -17,7 +17,7 @@ import javax.validation.constraints.NotBlank;
  */
 @Data
 @TableName("site_feedback")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Feedback extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

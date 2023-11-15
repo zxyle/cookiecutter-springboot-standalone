@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @TableName("site_realname")
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 public class Realname extends BaseEntity {
 
     /**
