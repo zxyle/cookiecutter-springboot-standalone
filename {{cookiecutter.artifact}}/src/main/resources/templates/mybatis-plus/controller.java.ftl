@@ -60,15 +60,15 @@ public class ${className} {
         QueryWrapper<${table.className}> wrapper = new QueryWrapper<>();
         // 设置查询条件
         // wrapper.eq("name", "Tom");
-        Page<${table.className}> page = thisService.page(req.toPageable(), wrapper);
         <#if excel>
 
         // 导出功能，不需要可以删除
         if (req.isExport()) {
-            List<${table.className}Export> list = IntStream.range(0, page.getRecords().size())
+            List<${table.className}> list = thisService.list(wrapper);
+            List<${table.className}Export> exportList = IntStream.range(0, list.size())
                     .mapToObj(index -> {
                         ${table.className}Export export = new ${table.className}Export();
-                        BeanUtils.copyProperties(page.getRecords().get(index), export);
+                        BeanUtils.copyProperties(list.get(index), export);
                         export.setSeq(index + 1);
                         return export;
                     }).collect(Collectors.toList());
@@ -77,11 +77,12 @@ public class ${className} {
             String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
             response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
             EasyExcelFactory.write(response.getOutputStream(), ${table.className}Export.class)
-                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(list);
+                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(exportList);
             return null;
         }
 
         </#if>
+        Page<${table.className}> page = thisService.page(req.toPageable(), wrapper);
         return R.ok(page);
     }
 
