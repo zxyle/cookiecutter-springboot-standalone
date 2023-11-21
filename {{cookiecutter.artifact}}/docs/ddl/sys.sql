@@ -532,7 +532,7 @@ CREATE TABLE `sys_login_log` (
   `ip` varchar(15) DEFAULT NULL COMMENT '登录IP',
   `ua` varchar(255) DEFAULT NULL COMMENT '浏览器请求头',
   `msg` varchar(255) DEFAULT NULL COMMENT '消息',
-  `success` bit(1) NOT NULL DEFAULT b'0' COMMENT '登录状态',
+  `success` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '登录状态',
   `user_id` int unsigned DEFAULT NULL COMMENT '用户id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登录日志';
@@ -552,7 +552,7 @@ CREATE TABLE `sys_operate_log` (
   `method` varchar(6) CHARACTER SET utf8mb4 NOT NULL COMMENT 'http方法',
   `path` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '请求路径',
   `response` varchar(1024) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '响应体',
-  `success` bit(1) NOT NULL DEFAULT b'0' COMMENT '操作是否成功',
+  `success` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '操作是否成功',
   `trace_id` char(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '链路追踪ID',
   `measured` smallint unsigned NOT NULL DEFAULT '0' COMMENT '操作耗时(毫秒)',
   PRIMARY KEY (`id`)
@@ -674,7 +674,7 @@ CREATE TABLE `sys_acl` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `ip` varchar(20) CHARACTER SET utf8mb4 NOT NULL COMMENT 'IP',
-  `allowed` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否允许访问',
+  `allowed` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否允许访问',
   `end_time` datetime DEFAULT NULL COMMENT '截止时间',
   `description` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '描述信息',
   PRIMARY KEY (`id`),

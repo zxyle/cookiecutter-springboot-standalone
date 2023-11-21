@@ -22,7 +22,7 @@ CREATE TABLE `site_friendly` (
   `content` varchar(32) NOT NULL COMMENT '链接文本',
   `url` varchar(255) NOT NULL COMMENT '链接',
   `sort` tinyint NOT NULL COMMENT '排序',
-  `enabled` bit(1) NOT NULL DEFAULT b'1' COMMENT '友链是否启用',
+  `enabled` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '友链是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='友情链接';
 -- ----------------------------

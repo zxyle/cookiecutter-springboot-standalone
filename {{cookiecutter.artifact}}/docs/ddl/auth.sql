@@ -327,12 +327,12 @@ CREATE TABLE `auth_user` (
   `email` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '邮箱地址',
   `pwd` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '密码',
   `nickname` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '昵称/名字/真实姓名（只用于展示）',
-  `locked` bit(1) NOT NULL DEFAULT b'0' COMMENT '账号是否锁定',
-  `admin` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否为超级管理员',
+  `locked` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '账号是否锁定',
+  `admin` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否为超级管理员',
   `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
   `pwd_change_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '密码上次修改时间',
-  `enabled` bit(1) NOT NULL DEFAULT b'1' COMMENT '账号是否启用',
-  `must_change_pwd` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否需要修改密码',
+  `enabled` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '账号是否启用',
+  `must_change_pwd` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否需要修改密码',
   `registered_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
   `last_login_time` datetime DEFAULT NULL COMMENT '最后登录时间',
   PRIMARY KEY (`id`) USING BTREE,
@@ -357,7 +357,7 @@ CREATE TABLE `auth_user_group` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `group_id` int unsigned NOT NULL COMMENT '用户组ID',
-  `admin` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否是该组管理员',
+  `admin` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否是该组管理员',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-用户组关联';
@@ -478,7 +478,7 @@ CREATE TABLE `auth_app` (
   `app_key` varchar(16) CHARACTER SET utf8mb4 NOT NULL COMMENT '应用标识',
   `app_secret` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '应用密钥',
   `redirect_url` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '回调地址',
-  `enabled` bit(1) NOT NULL DEFAULT b'0' COMMENT '应用是否启用',
+  `enabled` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '应用是否启用',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_app_key` (`app_key`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应用';
