@@ -1,6 +1,6 @@
 # Makefile
 
-# 定义变量, 分别是服务器地址（需要配置免密登陆）、项目部署目录、后端项目目录、前端项目目录、后端jar包名称
+# 定义变量, 分别是服务器地址（需要配置免密登陆）、项目部署目录、后端部署目录、前端部署目录、后端jar包名称
 SERVER = root@127.0.0.1
 BASEDIR = /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}
 BACKEND_DIR = $(BASEDIR)/{{ cookiecutter.artifact }}

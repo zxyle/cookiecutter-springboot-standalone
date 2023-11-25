@@ -29,9 +29,9 @@ CREATE TABLE `site_friendly` (
 -- Records of site_friendly
 -- ----------------------------
 BEGIN;
-INSERT INTO `site_friendly` (`content`, `url`, `sort`, `enabled`) VALUES ('百度', 'https://www.baidu.com', 2, b'1');
-INSERT INTO `site_friendly` (`content`, `url`, `sort`, `enabled`) VALUES ('腾讯网', 'https://www.qq.com', 1, b'1');
-INSERT INTO `site_friendly` (`content`, `url`, `sort`, `enabled`) VALUES ('淘宝网', 'https://www.taobao.com', 3, b'1');
+INSERT INTO `site_friendly` (`content`, `url`, `sort`, `enabled`) VALUES ('百度', 'https://www.baidu.com', 2, 1);
+INSERT INTO `site_friendly` (`content`, `url`, `sort`, `enabled`) VALUES ('腾讯网', 'https://www.qq.com', 1, 1);
+INSERT INTO `site_friendly` (`content`, `url`, `sort`, `enabled`) VALUES ('淘宝网', 'https://www.taobao.com', 3, 1);
 COMMIT;
 
 -- ----------------------------
