@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * 意见反馈管理
@@ -43,18 +44,20 @@ public class FeedbackController {
                 req.isAsc(), req.getField());
         wrapper.ge(req.getStartTime() != null, "create_time", req.getStartTime());
         wrapper.le(req.getEndTime() != null, "create_time", req.getEndTime());
-        Page<Feedback> page = thisService.page(req.toPageable(), wrapper);
 
         // 数据导出
         if (req.isExport()) {
+            List<Feedback> list = thisService.list(wrapper);
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             String fileName = "意见反馈";
             String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
             response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
             EasyExcelFactory.write(response.getOutputStream(), Feedback.class)
-                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(page.getRecords());
+                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(list);
             return null;
         }
+
+        Page<Feedback> page = thisService.page(req.toPageable(), wrapper);
         return R.ok(page);
     }
 

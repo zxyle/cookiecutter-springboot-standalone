@@ -80,16 +80,16 @@ public class GroupController extends AuthBaseController {
     @LogOperation(name = "创建用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:add')")
     @PostMapping("/groups")
-    public R<Group> add(@Valid @RequestBody AddGroupRequest request) {
-        if (!groupService.isAllowed(getUserId(), null, request.getParentId())) {
+    public R<Group> add(@Valid @RequestBody AddGroupRequest req) {
+        if (!groupService.isAllowed(getUserId(), null, req.getParentId())) {
             return R.fail("无权限创建该用户组");
         }
 
         Group group = new Group();
-        BeanUtils.copyProperties(request, group);
+        BeanUtils.copyProperties(req, group);
         Group result = groupService.create(group);
         if (result != null) {
-            groupService.updateRelation(result.getId(), request.getRoleIds(), request.getPermissionIds());
+            groupService.updateRelation(result.getId(), req.getRoleIds(), req.getPermissionIds());
             return R.ok(result);
         }
         return R.fail("创建用户组失败");
@@ -120,23 +120,23 @@ public class GroupController extends AuthBaseController {
     @LogOperation(name = "按ID更新用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PutMapping("/groups/{groupId}")
-    public R<Group> update(@PathVariable Integer groupId, @Valid @RequestBody UpdateAuthRequest request) {
+    public R<Group> update(@PathVariable Integer groupId, @Valid @RequestBody UpdateAuthRequest req) {
         if (!groupService.isAllowed(getUserId(), null, groupId)) {
             return R.fail("无权限更新该用户组");
         }
 
         // 判断同级用户组下是否有名称重复
         Group group = groupService.findById(groupId);
-        Long count = groupService.count(group.getParentId(), request.getName());
-        if (StringUtils.isNotBlank(request.getName()) && count > 0) {
+        Long count = groupService.count(group.getParentId(), req.getName());
+        if (StringUtils.isNotBlank(req.getName()) && count > 0) {
             return R.fail("同级用户组名称不能重复");
         }
 
         Group newGroup = new Group();
-        BeanUtils.copyProperties(request, newGroup);
+        BeanUtils.copyProperties(req, newGroup);
         newGroup.setId(groupId);
         groupService.updateById(newGroup);
-        groupService.updateRelation(groupId, request.getRoleIds(), request.getPermissionIds());
+        groupService.updateRelation(groupId, req.getRoleIds(), req.getPermissionIds());
         return R.ok(groupService.getById(groupId));
     }
 
@@ -168,14 +168,14 @@ public class GroupController extends AuthBaseController {
     @LogOperation(name = "移动用户组", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:group:migrate')")
     @PostMapping("/groups/migrate")
-    public R<Void> migrate(@Valid @RequestBody MigrateGroupRequest request) {
-        if (!isSubGroup(request.getParentId()) || !isSubGroup(request.getCurrentId())) {
+    public R<Void> migrate(@Valid @RequestBody MigrateGroupRequest req) {
+        if (!isSubGroup(req.getParentId()) || !isSubGroup(req.getCurrentId())) {
             return R.fail("无权限移动到该用户组下");
         }
 
         Group group = new Group();
-        group.setId(request.getCurrentId());
-        group.setParentId(request.getParentId());
+        group.setId(req.getCurrentId());
+        group.setParentId(req.getParentId());
         // 需计算新排序
         boolean success = groupService.updateById(group);
         return R.result(success);

@@ -84,8 +84,8 @@ public class RolePermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:role:update')")
     @PostMapping("/roles/{roleId}/permissions/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer roleId, @Valid @RequestBody BatchRequest request) {
-        List<Integer> ids = request.getIds();
+    public R<Void> deleteBatch(@PathVariable Integer roleId, @Valid @RequestBody BatchRequest req) {
+        List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(roleId, permissionId));
 
@@ -99,8 +99,8 @@ public class RolePermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:role:update')")
     @PostMapping("/roles/{roleId}/permissions/batch-add")
-    public R<Void> createBatch(@PathVariable Integer roleId, @Valid @RequestBody BatchRequest request) {
-        List<Integer> ids = request.getIds();
+    public R<Void> createBatch(@PathVariable Integer roleId, @Valid @RequestBody BatchRequest req) {
+        List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.createRelation(roleId, permissionId));
 

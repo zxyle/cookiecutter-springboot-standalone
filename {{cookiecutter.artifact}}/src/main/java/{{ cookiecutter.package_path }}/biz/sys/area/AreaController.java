@@ -35,10 +35,10 @@ public class AreaController {
      * 获取中国行政区划树状结构
      */
     @GetMapping("/tree")
-    @Cacheable(cacheNames = "AreaCache", key = "#request.rootId+#request.level")
-    public R<AntdTree2> tree(@Valid AreaRequest request) {
-        String rootId = request.getRootId();
-        Integer level = request.getLevel();
+    @Cacheable(cacheNames = "AreaCache", key = "#req.rootId+#req.level")
+    public R<AntdTree2> tree(@Valid AreaRequest req) {
+        String rootId = req.getRootId();
+        Integer level = req.getLevel();
         QueryWrapper<Area> wrapper = new QueryWrapper<>();
         wrapper.select("code", "name", "parent_id", "level");
         wrapper.le("level", level);

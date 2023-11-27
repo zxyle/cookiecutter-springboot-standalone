@@ -36,11 +36,11 @@ public class PermissionController extends AuthBaseController {
     @LogOperation(name = "获取权限树", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:permission:tree')")
     @GetMapping("/permissions/tree")
-    public R<List<Tree<Integer>>> tree(@Valid TreePermissionRequest request) {
+    public R<List<Tree<Integer>>> tree(@Valid TreePermissionRequest req) {
         QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        wrapper.eq(request.getKind() != null, "kind", request.getKind());
+        wrapper.eq(req.getKind() != null, "kind", req.getKind());
         List<Permission> list = thisService.list(wrapper);
-        List<Tree<Integer>> tree = thisService.getTree(list, request.getRootPermissionId());
+        List<Tree<Integer>> tree = thisService.getTree(list, req.getRootPermissionId());
         return R.ok(tree);
     }
 
@@ -62,9 +62,9 @@ public class PermissionController extends AuthBaseController {
     @LogOperation(name = "新增权限", biz = "auth")
     @PostMapping("/permissions")
     @PreAuthorize("@ck.hasPermit('auth:permission:add')")
-    public R<Permission> add(@Valid @RequestBody AddPermissionRequest request) {
+    public R<Permission> add(@Valid @RequestBody AddPermissionRequest req) {
         Permission entity = new Permission();
-        BeanUtils.copyProperties(request, entity);
+        BeanUtils.copyProperties(req, entity);
 
         boolean success = thisService.create(entity);
         return success ? R.ok(entity) : R.fail("新增权限失败");

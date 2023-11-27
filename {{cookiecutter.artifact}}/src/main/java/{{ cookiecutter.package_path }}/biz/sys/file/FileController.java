@@ -37,12 +37,12 @@ public class FileController {
      * 文件上传
      */
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UploadResponse upload(@Valid UploadRequest request) {
-        List<String> list = new ArrayList<>(request.getFiles().size());
-        List<MultipartFile> files = request.getFiles();
+    public UploadResponse upload(@Valid UploadRequest req) {
+        List<String> list = new ArrayList<>(req.getFiles().size());
+        List<MultipartFile> files = req.getFiles();
         for (MultipartFile file : files) {
             if (file.isEmpty()) continue;
-            String url = store(file, request.getFolder());
+            String url = store(file, req.getFolder());
             list.add(url);
         }
 

@@ -69,9 +69,9 @@ public class AppController extends AuthBaseController {
     @LogOperation(name = "新增应用", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:add')")
     @PostMapping("/apps")
-    public R<App> add(@Validated(Add.class) @RequestBody AppRequest request) {
+    public R<App> add(@Validated(Add.class) @RequestBody AppRequest req) {
         App entity = new App();
-        BeanUtils.copyProperties(request, entity);
+        BeanUtils.copyProperties(req, entity);
         entity.setAppSecret(IdUtil.fastSimpleUUID());
         App app = thisService.insert(entity);
         return app != null ? R.ok(app) : R.fail("新增应用失败");
@@ -95,9 +95,9 @@ public class AppController extends AuthBaseController {
     @LogOperation(name = "按ID更新应用", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:app:update')")
     @PutMapping("/apps/{id}")
-    public R<App> update(@Validated(Update.class) @RequestBody AppRequest request, @PathVariable Integer id) {
+    public R<App> update(@Validated(Update.class) @RequestBody AppRequest req, @PathVariable Integer id) {
         App entity = new App();
-        BeanUtils.copyProperties(request, entity);
+        BeanUtils.copyProperties(req, entity);
         entity.setId(id);
         App result = thisService.putById(entity);
         if (result != null) result.setAppSecret(null);
@@ -198,7 +198,7 @@ public class AppController extends AuthBaseController {
      */
     @LogOperation(name = "根据临时授权码获取用户详情", biz = "auth")
     @PostMapping("/apps/currentUser")
-    public R<User> check(@Valid @RequestBody CheckRequest request) {
+    public R<User> check(@Valid @RequestBody CheckRequest req) {
         String appKey = servletRequest.getHeader("appKey");
         String timestamp = servletRequest.getHeader("timestamp");
         String sign = servletRequest.getHeader("sign");
@@ -210,13 +210,13 @@ public class AppController extends AuthBaseController {
         if (interval > 5 * 60 * 1000) return R.fail("请求已过期");
 
         // 检查授权码是否过期
-        String key = "authCode:" + request.getAuthCode();
+        String key = "authCode:" + req.getAuthCode();
         String value = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isBlank(value)) return R.fail("授权码已过期");
 
         // 校验签名是否正确
         String[] split = value.split(":");
-        String body = JacksonUtil.serialize(request);
+        String body = JacksonUtil.serialize(req);
         String appSecret = split[0];
         String md5Hex = DigestUtils.md5Hex(appKey + appSecret + body + timestamp);
         if (!md5Hex.equalsIgnoreCase(sign)) return R.fail("签名错误");

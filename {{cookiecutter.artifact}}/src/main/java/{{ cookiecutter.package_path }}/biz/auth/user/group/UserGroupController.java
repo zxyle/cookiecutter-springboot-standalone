@@ -100,8 +100,8 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/groups/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
-        List<Integer> ids = request.getIds();
+    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest req) {
+        List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(groupId -> thisService.deleteRelation(userId, groupId));
 
@@ -115,8 +115,8 @@ public class UserGroupController extends AuthBaseController {
      */
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/groups/batch-add")
-    public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
-        List<Integer> ids = request.getIds();
+    public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest req) {
+        List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(groupId -> thisService.createRelation(userId, groupId));
 

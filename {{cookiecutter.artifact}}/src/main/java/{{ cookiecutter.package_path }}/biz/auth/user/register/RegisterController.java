@@ -45,13 +45,13 @@ public class RegisterController {
      * 用户注册
      */
     @PostMapping("/register")
-    public R<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
-        String account = request.getAccount();
-        R<LoginResponse> r = beforeRegister(request);
+    public R<LoginResponse> register(@Valid @RequestBody RegisterRequest req) {
+        String account = req.getAccount();
+        R<LoginResponse> r = beforeRegister(req);
         if (!r.isSuccess()) return r;
 
         // 创建用户
-        User user = userService.create(account, encoder.encode(request.getPassword()));
+        User user = userService.create(account, encoder.encode(req.getPassword()));
         boolean success = userService.save(user);
         if (!success) return R.fail("注册账号失败");
 
@@ -61,7 +61,7 @@ public class RegisterController {
 
         // 自动登录
         if (setting.get("auth.user.auto-login").isReal()) {
-            LoginResponse loginResponse = loginService.login(account, request.getPassword());
+            LoginResponse loginResponse = loginService.login(account, req.getPassword());
             return R.ok(loginResponse);
         }
         return R.ok("注册账号成功");
@@ -94,18 +94,18 @@ public class RegisterController {
      */
     @GetMapping("/random")
     @PreAuthorize("@ck.hasPermit('auth:user:random')")
-    public R<List<String>> random(@Valid RandomUsernameRequest request) {
+    public R<List<String>> random(@Valid RandomUsernameRequest req) {
         List<String> list = new ArrayList<>();
         // 有待进一步增强该接口
-        list.add(request.getPrefix() + "_001");
+        list.add(req.getPrefix() + "_001");
         return R.ok(list);
     }
 
     /**
      * 用户注册前判断
      */
-    private R<LoginResponse> beforeRegister(RegisterRequest request) {
-        String account = request.getAccount();
+    private R<LoginResponse> beforeRegister(RegisterRequest req) {
+        String account = req.getAccount();
         // 检查是否开放注册
         if (!setting.get("auth.user.open-registration").isReal()) {
             return R.fail("系统未开放注册");
@@ -113,12 +113,12 @@ public class RegisterController {
 
         // 校验验证码是否正确
         if (AccountUtil.isUsername(account)) {
-            if (!codeService.verify(request.getCode(), request.getCaptchaId())) {
+            if (!codeService.verify(req.getCode(), req.getCaptchaId())) {
                 return R.fail("验证码可能错误或过期");
             }
         } else {
             String key = "code:" + account;
-            if (!validateService.validate(key, request.getCode())) {
+            if (!validateService.validate(key, req.getCode())) {
                 return R.fail("验证码可能错误或过期");
             }
         }

@@ -35,12 +35,12 @@ public class DictController {
     @LogOperation(name = "新增字典条目", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:dict:add')")
     @PostMapping("/dicts")
-    public R<Dict> add(@Valid @RequestBody AddDictRequest request) {
+    public R<Dict> add(@Valid @RequestBody AddDictRequest req) {
         Dict dict = new Dict();
-        BeanUtils.copyProperties(request, dict);
+        BeanUtils.copyProperties(req, dict);
         // 如果没有传排序字段，则自动排序
-        if (request.getDictSort() == null) {
-            dict.setDictSort(thisMapper.findMaxSortNum(request.getDictType()) + 1);
+        if (req.getDictSort() == null) {
+            dict.setDictSort(thisMapper.findMaxSortNum(req.getDictType()) + 1);
         }
         Dict result = thisService.insert(dict);
         return result != null ? R.ok(result) : R.fail("新增字典条目失败");
@@ -51,8 +51,8 @@ public class DictController {
      * 按字典类型查询条目
      */
     @GetMapping("/dicts/dictType")
-    public R<Map<String, List<Dict>>> list(@Valid MultiDictTypeRequest request) {
-        String[] types = request.getTypes().split(",");
+    public R<Map<String, List<Dict>>> list(@Valid MultiDictTypeRequest req) {
+        String[] types = req.getTypes().split(",");
         Map<String, List<Dict>> map = new HashMap<>(types.length);
         for (String type : types) {
             List<Dict> dicts = thisService.listDictsByType(type.trim());
@@ -99,12 +99,12 @@ public class DictController {
      */
     @LogOperation(name = "更新字典条目", biz = "sys")
     @PutMapping("/dicts/{id}")
-    public R<Void> update(@Valid @RequestBody UpdateDictRequest request, @PathVariable Integer id) {
+    public R<Void> update(@Valid @RequestBody UpdateDictRequest req, @PathVariable Integer id) {
         Dict result = thisService.getById(id);
         if (result == null) return R.fail("更新失败，字典条目不存在");
 
         Dict dict = new Dict();
-        BeanUtils.copyProperties(request, dict);
+        BeanUtils.copyProperties(req, dict);
         dict.setId(id);
         dict.setDictType(result.getDictType());
 

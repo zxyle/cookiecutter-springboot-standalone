@@ -81,8 +81,8 @@ public class UserPermissionController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PostMapping("/users/{userId}/permissions/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
-        List<Integer> ids = request.getIds();
+    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest req) {
+        List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(userId, permissionId));
 
@@ -96,8 +96,8 @@ public class UserPermissionController {
      */
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PostMapping("/users/{userId}/permissions/batch-add")
-    public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest request) {
-        List<Integer> ids = request.getIds();
+    public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest req) {
+        List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.createRelation(userId, permissionId));
 

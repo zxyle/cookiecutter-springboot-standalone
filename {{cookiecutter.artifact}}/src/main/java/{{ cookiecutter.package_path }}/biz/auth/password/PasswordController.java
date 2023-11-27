@@ -59,16 +59,16 @@ public class PasswordController extends AuthBaseController {
     @LogOperation(name = "使用旧密码方式修改密码", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:password:change')")
     @PostMapping("/change")
-    public R<Void> change(@Valid @RequestBody ChangeByOldRequest request) {
+    public R<Void> change(@Valid @RequestBody ChangeByOldRequest req) {
         User user = getLoggedInUser();
 
-        if (thisService.isRight(request.getOldPassword(), user.getPwd())) {
+        if (thisService.isRight(req.getOldPassword(), user.getPwd())) {
             // 判断新密码是否和旧密码一致
-            if (!setting.get("pwd.enable-same").isReal() && thisService.isRight(request.getNewPassword(), user.getPwd())) {
+            if (!setting.get("pwd.enable-same").isReal() && thisService.isRight(req.getNewPassword(), user.getPwd())) {
                 return R.fail("修改失败，密码不符合规则");
             }
 
-            boolean success = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.CHANGE);
+            boolean success = thisService.change(user.getId(), req.getNewPassword(), ChangePasswordEnum.CHANGE);
             // 退出当前登录状态
             boolean isLoggedOut = loginService.logout(user.getId());
             return R.result(success && isLoggedOut);
@@ -94,10 +94,10 @@ public class PasswordController extends AuthBaseController {
      * 忘记/找回密码（通过短信或邮件验证码方式）
      */
     @PostMapping("/forget/code")
-    public R<Void> forget(@Valid @RequestBody ForgetRequest request) {
-        String account = request.getAccount();
+    public R<Void> forget(@Valid @RequestBody ForgetRequest req) {
+        String account = req.getAccount();
         String key = "code:" + account;
-        if (!validateService.validate(key, request.getCode())) {
+        if (!validateService.validate(key, req.getCode())) {
             return R.fail("找回密码失败，验证码可能已过期或错误");
         }
 
@@ -111,7 +111,7 @@ public class PasswordController extends AuthBaseController {
         }
 
         // 修改密码
-        boolean success = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.FORGET);
+        boolean success = thisService.change(user.getId(), req.getNewPassword(), ChangePasswordEnum.FORGET);
         if (!success) return R.fail("找回密码失败");
         // 用户可能已经在某处登录，退出登录
         loginService.logout(user.getId());
@@ -124,12 +124,12 @@ public class PasswordController extends AuthBaseController {
      * 忘记/找回密码（通过密保问题方式）
      */
     @PostMapping("/forget/question")
-    public R<Void> forgetByQuestion(@Valid @RequestBody ForgetByQuestionRequest request) {
-        User user = userService.findByAccount(request.getAccount());
+    public R<Void> forgetByQuestion(@Valid @RequestBody ForgetByQuestionRequest req) {
+        User user = userService.findByAccount(req.getAccount());
         if (null == user) return R.fail("找回密码失败，用户不存在");
 
         // 校验密保问题
-        List<AddAnswerRequest.AnswerRequest> answers = request.getAnswers();
+        List<AddAnswerRequest.AnswerRequest> answers = req.getAnswers();
         AddAnswerRequest.AnswerRequest answerRequest = answers.get(0);
 
         // 判断密保问题是否与随机生成的密保问题一致
@@ -146,7 +146,7 @@ public class PasswordController extends AuthBaseController {
         }
 
         // 回答正确，修改密码
-        boolean success = thisService.change(user.getId(), request.getNewPassword(), ChangePasswordEnum.FORGET);
+        boolean success = thisService.change(user.getId(), req.getNewPassword(), ChangePasswordEnum.FORGET);
         if (!success) return R.fail("找回密码失败");
         // 用户可能已经在某处登录，退出登录
         loginService.logout(user.getId());
@@ -161,14 +161,14 @@ public class PasswordController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:password:reset')")
     @Secured({"ROLE_admin", "ROLE_group-admin"})
     @PostMapping("/reset")
-    public R<ResetPasswordResponse> reset(@Valid @RequestBody ResetPasswordRequest request) {
-        if (!groupService.isAllowed(getUserId(), request.getUserId(), null)) {
+    public R<ResetPasswordResponse> reset(@Valid @RequestBody ResetPasswordRequest req) {
+        if (!groupService.isAllowed(getUserId(), req.getUserId(), null)) {
             return R.fail("重置密码失败，没有权限");
         }
 
         // 考虑新密码来源 1.前端用户传入 2.后端随机生成 3.系统配置(需以明文保存，不安全)
-        Integer userId = request.getUserId();
-        String rawPassword = request.getPassword();
+        Integer userId = req.getUserId();
+        String rawPassword = req.getPassword();
         rawPassword = StringUtils.isBlank(rawPassword) ?
                 CaptchaUtil.randCode(setting.get("pwd.min-length").getIntValue(), setting.get("pwd.chars").getStr()) : rawPassword;
         boolean success = thisService.change(userId, rawPassword, ChangePasswordEnum.RESET);
@@ -188,13 +188,13 @@ public class PasswordController extends AuthBaseController {
      */
     @LogOperation(name = "初次登录后修改密码", biz = "auth")
     @PostMapping("/init")
-    public R<Void> init(@RequestBody InitPasswordRequest request) {
+    public R<Void> init(@RequestBody InitPasswordRequest req) {
         User user = getLoggedInUser();
 
         // 初次登录，最后登录时间在1分钟内，不需要校验旧密码, 直接修改密码
         Duration duration = Duration.between(user.getLastLoginTime(), LocalDateTime.now());
         if (duration.toMinutes() < 1) {
-            boolean success = thisService.change(user.getId(), request.getPassword(), ChangePasswordEnum.CHANGE);
+            boolean success = thisService.change(user.getId(), req.getPassword(), ChangePasswordEnum.CHANGE);
             return R.result(success);
         }
 
@@ -220,10 +220,10 @@ public class PasswordController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:password:random')")
     @GetMapping("/random")
-    public R<List<String>> random(@Valid RandomRequest request) {
-        List<String> list = new ArrayList<>(request.getCount());
-        for (int i = 0; i < request.getCount(); i++) {
-            String pwd = CaptchaUtil.randCode(request.getLength(), request.getChars());
+    public R<List<String>> random(@Valid RandomRequest req) {
+        List<String> list = new ArrayList<>(req.getCount());
+        for (int i = 0; i < req.getCount(); i++) {
+            String pwd = CaptchaUtil.randCode(req.getLength(), req.getChars());
             list.add(pwd);
         }
         return R.ok(list);

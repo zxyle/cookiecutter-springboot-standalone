@@ -40,7 +40,7 @@ public class RedisController {
     /**
      * 删除key
      *
-     * @param redis key
+     * @param key redis key
      */
     @LogOperation(name = "删除key", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:key:delete')")
@@ -85,14 +85,14 @@ public class RedisController {
     @LogOperation(name = "设置key的值", biz = "sys")
     @PreAuthorize("@ck.hasPermit('sys:key:set')")
     @PostMapping("/keys")
-    public R<Void> set(@Valid @RequestBody KeySetRequest request) {
-        if (!"string".equalsIgnoreCase(request.getType())) {
+    public R<Void> set(@Valid @RequestBody KeySetRequest req) {
+        if (!"string".equalsIgnoreCase(req.getType())) {
             return R.fail("设置失败，目前只支持string类型");
         }
-        stringRedisTemplate.opsForValue().set(request.getName(), request.getValue());
+        stringRedisTemplate.opsForValue().set(req.getName(), req.getValue());
 
-        if (request.getExpire() != null) {
-            stringRedisTemplate.expire(request.getName(), request.getExpire(), TimeUnit.SECONDS);
+        if (req.getExpire() != null) {
+            stringRedisTemplate.expire(req.getName(), req.getExpire(), TimeUnit.SECONDS);
         }
         return R.ok("设置key成功");
     }

@@ -89,8 +89,8 @@ public class CaptchaController {
      * @apiNote 1. 验证码60秒有效期内不再发送 2. 需先校验图形验证码
      */
     @GetMapping("/send")
-    public R<Boolean> send(@Valid SendCodeRequest request, HttpServletRequest servletRequest) {
-        String account = request.getAccount();
+    public R<Boolean> send(@Valid SendCodeRequest req, HttpServletRequest servletRequest) {
+        String account = req.getAccount();
 
         // 验证码60秒有效期内不再发送
         String key = "code:" + account;
@@ -99,7 +99,7 @@ public class CaptchaController {
             return R.ok("验证码仍在有效期内");
         }
 
-        if (!codeService.verify(request.getCode(), request.getCaptchaId())) {
+        if (!codeService.verify(req.getCode(), req.getCaptchaId())) {
             return R.fail("图形验证码错误");
         }
 

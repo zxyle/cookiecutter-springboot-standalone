@@ -69,20 +69,20 @@ public class RoleController extends AuthBaseController {
     @LogOperation(name = "创建角色", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:add')")
     @PostMapping("/roles")
-    public R<Role> add(@Validated(Add.class) @RequestBody RoleRequest request) {
-        if (thisService.isDuplicate(request.getName(), request.getCode())) {
+    public R<Role> add(@Validated(Add.class) @RequestBody RoleRequest req) {
+        if (thisService.isDuplicate(req.getName(), req.getCode())) {
             return R.fail("角色名称或角色代码已重复");
         }
 
         Role role = new Role();
-        BeanUtils.copyProperties(request, role);
+        BeanUtils.copyProperties(req, role);
         if (StringUtils.isBlank(role.getCode())) {
             role.setCode(IdUtil.simpleUUID());
         }
         boolean success = thisService.save(role);
-        if (success && CollectionUtils.isNotEmpty(request.getPermissionIds())) {
+        if (success && CollectionUtils.isNotEmpty(req.getPermissionIds())) {
             // 保存角色权限关系
-            thisService.updateRelation(role.getId(), request.getPermissionIds());
+            thisService.updateRelation(role.getId(), req.getPermissionIds());
         }
         return R.ok(role);
     }
@@ -113,16 +113,16 @@ public class RoleController extends AuthBaseController {
     @LogOperation(name = "按ID更新角色", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:role:update')")
     @PutMapping("/roles/{roleId}")
-    public R<Void> update(@Validated(Update.class) @RequestBody RoleRequest request, @PathVariable Integer roleId) {
+    public R<Void> update(@Validated(Update.class) @RequestBody RoleRequest req, @PathVariable Integer roleId) {
         // 更新角色信息
         Role role = new Role();
-        BeanUtils.copyProperties(request, role);
+        BeanUtils.copyProperties(req, role);
         role.setId(roleId);
         boolean success = thisService.updateById(role);
 
         // 更新角色权限关联关系
-        if (success && CollectionUtils.isNotEmpty(request.getPermissionIds())) {
-            thisService.updateRelation(roleId, request.getPermissionIds());
+        if (success && CollectionUtils.isNotEmpty(req.getPermissionIds())) {
+            thisService.updateRelation(roleId, req.getPermissionIds());
 
             // 刷新持有该角色的用户权限缓存
             List<Integer> users = getUsersByRole(roleId);

@@ -43,24 +43,24 @@ public class MFAController extends AuthBaseController {
      */
     @LogOperation(name = "绑定手机号或邮箱", biz = "auth")
     @PostMapping("/code/bind")
-    public R<Void> codeBind(@Valid @RequestBody BindingRequest request) {
+    public R<Void> codeBind(@Valid @RequestBody BindingRequest req) {
         User user = getLoggedInUser();
 
         // 校验是否已解绑
-        if ((AccountUtil.isEmail(request.getAccount()) && StringUtils.isNotBlank(user.getEmail())) ||
-                (AccountUtil.isMobile(request.getAccount()) && StringUtils.isNotBlank(user.getMobile()))) {
-            String key = "code:" + request.getOldAccount();
-            if (!validateService.validate(key, request.getOldCode())) {
+        if ((AccountUtil.isEmail(req.getAccount()) && StringUtils.isNotBlank(user.getEmail())) ||
+                (AccountUtil.isMobile(req.getAccount()) && StringUtils.isNotBlank(user.getMobile()))) {
+            String key = "code:" + req.getOldAccount();
+            if (!validateService.validate(key, req.getOldCode())) {
                 return R.fail("解绑失败");
             }
         }
 
-        String account = request.getAccount();
+        String account = req.getAccount();
         if (userService.findByAccount(account) != null) return R.fail("该账号已绑定其他用户");
 
         // 获取redis中验证码, 校验是否正确
         String key = "code:" + account;
-        if (!validateService.validate(key, request.getCode())) return R.fail("验证码错误");
+        if (!validateService.validate(key, req.getCode())) return R.fail("验证码错误");
 
         // 更新用户信息
         UpdateWrapper<User> wrapper = new UpdateWrapper<>();

@@ -77,29 +77,29 @@ public class UserController extends AuthBaseController {
     @LogOperation(name = "使用用户名创建用户", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:add')")
     @PostMapping("/users")
-    public R<User> add(@Valid @RequestBody AdminAddUserRequest request) {
-        if (thisService.findByAccount(request.getAccount()) != null) {
+    public R<User> add(@Valid @RequestBody AdminAddUserRequest req) {
+        if (thisService.findByAccount(req.getAccount()) != null) {
             return R.fail("创建失败，用户名被占用");
         }
 
         // 构建用户
-        User user = thisService.create(request.getAccount(), encoder.encode(request.getPassword()));
+        User user = thisService.create(req.getAccount(), encoder.encode(req.getPassword()));
         boolean isReset = setting.get("auth.user.reset").isReal();
-        user.setMustChangePwd(request.isMustChangePwd() && isReset);
+        user.setMustChangePwd(req.isMustChangePwd() && isReset);
         boolean success = thisService.save(user);
         if (!success) {
             return R.fail("创建用户失败");
         }
 
         List<Integer> roleIds = new ArrayList<>();
-        if (CollectionUtils.isEmpty(request.getRoleIds())) {
+        if (CollectionUtils.isEmpty(req.getRoleIds())) {
             Integer defaultRole = setting.get("auth.user.default-role").getIntValue();
             roleIds.add(defaultRole);
         } else {
-            roleIds.addAll(request.getRoleIds());
+            roleIds.addAll(req.getRoleIds());
         }
         // 更新用户角色、用户组关联关系, 防止被授予过高的权限的角色
-        thisService.updateRelation(user.getId(), roleIds, request.getGroupIds(), null);
+        thisService.updateRelation(user.getId(), roleIds, req.getGroupIds(), null);
         return R.ok(user);
     }
 
@@ -111,13 +111,13 @@ public class UserController extends AuthBaseController {
     @LogOperation(name = "更新用户信息", biz = "auth")
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PutMapping("/users/{userId}")
-    public R<Void> update(@PathVariable Integer userId, @Valid @RequestBody UpdateUserRequest request) {
+    public R<Void> update(@PathVariable Integer userId, @Valid @RequestBody UpdateUserRequest req) {
         if (!groupService.isAllowed(getUserId(), userId, null)) {
             return R.fail("没有权限更新用户");
         }
 
         // 需要防止赋予比操作者更高的权限
-        thisService.updateRelation(userId, request.getRoleIds(), request.getGroupIds(), request.getPermissionIds());
+        thisService.updateRelation(userId, req.getRoleIds(), req.getGroupIds(), req.getPermissionIds());
         return R.ok("更新用户成功");
     }
 

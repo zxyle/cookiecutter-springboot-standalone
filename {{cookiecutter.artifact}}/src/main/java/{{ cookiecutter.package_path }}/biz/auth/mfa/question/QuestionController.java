@@ -116,13 +116,13 @@ public class QuestionController extends AuthBaseController {
      */
     @LogOperation(name = "用户设置安全问题", biz = "auth")
     @PostMapping("/answers")
-    public R<Void> add(@Validated(Add.class)  @RequestBody AddAnswerRequest request) {
+    public R<Void> add(@Validated(Add.class)  @RequestBody AddAnswerRequest req) {
         List<Question> questions = thisMapper.findQuestionsByUserId(getUserId());
         if (CollectionUtils.isNotEmpty(questions)) {
             return R.fail("用户已经设置过安全问题");
         }
 
-        boolean success = saveAnswers(request, getUserId());
+        boolean success = saveAnswers(req, getUserId());
         return success ? R.ok("成功设置安全问题") : R.fail("新增安全问题失败");
     }
 
@@ -131,14 +131,14 @@ public class QuestionController extends AuthBaseController {
      */
     @LogOperation(name = "用户修改安全问题", biz = "auth")
     @PutMapping("/answers")
-    public R<Void> update(@Validated(Update.class) @RequestBody AddAnswerRequest request) {
+    public R<Void> update(@Validated(Update.class) @RequestBody AddAnswerRequest req) {
         String key = "code:" + getUserId();
-        if (!validateService.validate(key, request.getCode())) return R.fail("验证码错误");
+        if (!validateService.validate(key, req.getCode())) return R.fail("验证码错误");
 
         QueryWrapper<Answer> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", getUserId());
         boolean removed = answerService.remove(wrapper);
-        boolean saved = saveAnswers(request, getUserId());
+        boolean saved = saveAnswers(req, getUserId());
         return (removed && saved) ? R.ok("成功修改密保问题") : R.fail("修改密保问题失败");
     }
 

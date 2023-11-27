@@ -34,8 +34,8 @@ public class RealnameController extends AuthBaseController {
     @LogOperation(name = "分页查询实名认证", biz = "site")
     @PreAuthorize("@ck.hasPermit('site:realname:list')")
     @GetMapping("/realnames")
-    public R<Page<Realname>> page(@Valid PaginationRequest request) {
-        Page<Realname> page = thisService.page(request.toPageable());
+    public R<Page<Realname>> page(@Valid PaginationRequest req) {
+        Page<Realname> page = thisService.page(req.toPageable());
         return R.ok(page);
     }
 
@@ -46,12 +46,12 @@ public class RealnameController extends AuthBaseController {
     @LogOperation(name = "新增实名认证", biz = "site")
     @PreAuthorize("@ck.hasPermit('site:realname:add')")
     @PostMapping("/realnames")
-    public R<Realname> add(@Valid @RequestBody RealnameRequest request) {
+    public R<Realname> add(@Valid @RequestBody RealnameRequest req) {
         Realname query = thisService.findByUserId(getUserId());
         if (query != null) return R.fail("用户已实名认证");
 
         Realname realname = new Realname();
-        BeanUtils.copyProperties(request, realname);
+        BeanUtils.copyProperties(req, realname);
         realname.setUserId(getUserId());
         realname.setStatus(VerificationStatusEnum.VERIFICATION_IN_PROGRESS);
         Realname result = thisService.insert(realname);

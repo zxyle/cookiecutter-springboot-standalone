@@ -44,12 +44,12 @@ public class LoginController extends AuthBaseController {
      * 方式一：用户名/邮箱/手机号 + 密码登录
      */
     @PostMapping("/login/account")
-    public R<LoginResponse> login(@Valid @RequestBody AccountLoginRequest request, HttpServletRequest servletRequest) {
+    public R<LoginResponse> login(@Valid @RequestBody AccountLoginRequest req, HttpServletRequest servletRequest) {
         log.debug("用户登录：{}", servletRequest.getRequestURI());
-        R<LoginResponse> beforeLoginResponse = beforeLogin(request);
+        R<LoginResponse> beforeLoginResponse = beforeLogin(req);
         if (beforeLoginResponse != null) return beforeLoginResponse;
 
-        LoginResponse response = loginService.login(request.getAccount(), request.getPassword());
+        LoginResponse response = loginService.login(req.getAccount(), req.getPassword());
 
         afterLogin(response);
         return R.ok(response, "登录成功");
@@ -60,9 +60,9 @@ public class LoginController extends AuthBaseController {
      * 方式二：邮箱/手机号 + 验证码登录
      */
     @PostMapping("/login/code")
-    public R<LoginResponse> codeLogin(@Valid @RequestBody CodeLoginRequest request) {
+    public R<LoginResponse> codeLogin(@Valid @RequestBody CodeLoginRequest req) {
         // 登录逻辑直接走Filter即可，无需在这里实现
-        log.debug("account: {}, code: {}", request.getAccount(), request.getCode());
+        log.debug("account: {}, code: {}", req.getAccount(), req.getCode());
         return R.ok(null);
     }
 
@@ -70,8 +70,8 @@ public class LoginController extends AuthBaseController {
      * 方式三：第三方账号登录
      */
     @GetMapping("/login/oauth")
-    public R<LoginResponse> oauthLogin(@Valid ThirdPartyLoginRequest request) {
-        log.info("code: {}, provider: {}", request.getCode(), request.getProvider());
+    public R<LoginResponse> oauthLogin(@Valid ThirdPartyLoginRequest req) {
+        log.info("code: {}, provider: {}", req.getCode(), req.getProvider());
         // 登录逻辑直接走UscCodeAuthenticationFilter即可，无需在这里实现
         // 该接口占位仅为生成接口文档使用
         return R.ok(null);
@@ -126,14 +126,14 @@ public class LoginController extends AuthBaseController {
      * 方式五：使用验证器一次性密码登录
      */
     @PostMapping("/login/totp")
-    public R<Void> totpLogin(@Valid @RequestBody CodeLoginRequest request) {
-        User user = userService.findByAccount(request.getAccount());
+    public R<Void> totpLogin(@Valid @RequestBody CodeLoginRequest req) {
+        User user = userService.findByAccount(req.getAccount());
         if (user == null) return R.fail("用户不存在");
 
         Totp totp = totpService.findByUserId(getUserId());
         if (totp == null) return R.fail("用户未设置TOTP");
 
-        if (!Authenticator.valid(totp.getSecret(), request.getCode())) return R.fail("验证码错误，请重新输入");
+        if (!Authenticator.valid(totp.getSecret(), req.getCode())) return R.fail("验证码错误，请重新输入");
 
         // TODO 登录逻辑
         return R.ok("登录成功");
@@ -152,9 +152,9 @@ public class LoginController extends AuthBaseController {
     /**
      * 登录前条件判断
      */
-    public R<LoginResponse> beforeLogin(AccountLoginRequest request) {
+    public R<LoginResponse> beforeLogin(AccountLoginRequest req) {
         // 验证码校验
-        boolean verify = codeService.verify(request.getCode(), request.getCaptchaId());
+        boolean verify = codeService.verify(req.getCode(), req.getCaptchaId());
         if (!verify) {
             return R.fail("验证码可能错误或过期");
         }

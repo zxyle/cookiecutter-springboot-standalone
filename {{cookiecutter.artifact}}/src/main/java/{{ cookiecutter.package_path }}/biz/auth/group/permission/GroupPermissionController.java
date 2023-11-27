@@ -84,8 +84,8 @@ public class GroupPermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/permissions/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest request) {
-        List<Integer> ids = request.getIds();
+    public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest req) {
+        List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(groupId, permissionId));
 
@@ -99,8 +99,8 @@ public class GroupPermissionController extends AuthBaseController {
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/permissions/batch-add")
-    public R<Void> createBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest request) {
-        List<Integer> ids = request.getIds();
+    public R<Void> createBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest req) {
+        List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.createRelation(groupId, permissionId));
 
