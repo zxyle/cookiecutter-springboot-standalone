@@ -57,6 +57,8 @@ public final class JacksonUtil {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String o;
         try {
+            // 解决无法序列化LocalDateTime问题
+            objectMapper.registerModule(new JavaTimeModule());
             o = objectMapper.writeValueAsString(obj);
             return o;
         } catch (JsonProcessingException e) {
