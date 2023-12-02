@@ -10,9 +10,10 @@
         ALTER TABLE ${tableName} DROP PARTITION ${partitionName}
     </select>
 
-    <select id="checkPartition" resultType="java.lang.Integer">
+    <select id="existsPartition" resultType="java.lang.Boolean">
         SELECT COUNT(*) FROM information_schema.partitions
         WHERE table_name = #{tableName} AND partition_name = #{partitionName}
+        LIMIT 1
     </select>
 
     <select id="listPartitions" resultType="java.lang.String">

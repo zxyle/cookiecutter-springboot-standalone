@@ -32,9 +32,9 @@ public interface PartitionMapper {
      *
      * @param tableName     待检查分区的表名
      * @param partitionName 待检查的分区名 例如：p20210101
-     * @return 0 不存在 1 存在
+     * @return false 不存在 true 存在
      */
-    Integer checkPartition(String tableName, String partitionName);
+    boolean existsPartition(String tableName, String partitionName);
 
     /**
      * 获取表的所有分区名

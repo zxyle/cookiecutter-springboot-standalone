@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 /**
  * IP访问控制
  */
-
 @Data
 @TableName("sys_acl")
 @EqualsAndHashCode(callSuper = false)

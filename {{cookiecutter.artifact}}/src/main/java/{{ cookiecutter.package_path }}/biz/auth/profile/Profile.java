@@ -118,8 +118,8 @@ public class Profile extends BaseEntity {
      *
      * @mock 330100
      */
-    @Length(max = 6, message = "地区长度不能超过6个中英文字符")
-    @Pattern(regexp = "\\d*", message = "地区只能是数字")
+    @Length(max = 6, message = "地区长度不能超过6位数字字符")
+    @Pattern(regexp = "\\d+", message = "地区只能是数字")
     private String region;
 
     /**
