@@ -2,9 +2,9 @@
 
 # 定义变量, 分别是服务器地址（需要配置免密登陆）、项目部署目录、后端部署目录、前端部署目录、后端jar包名称
 SERVER = root@127.0.0.1
-BASEDIR = /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}
-BACKEND_DIR = $(BASEDIR)/{{ cookiecutter.artifact }}
-FRONTEND_DIR = $(BASEDIR)/{{ cookiecutter.artifact.replace('-api', '-web') }}
+APP_DIR = /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}
+BACKEND_DIR = $(APP_DIR)/{{ cookiecutter.artifact }}
+FRONTEND_DIR = $(APP_DIR)/{{ cookiecutter.artifact.replace('-api', '-web') }}
 JAR = {{ cookiecutter.artifact }}-{{ cookiecutter.version }}.jar
 
 LC_CTYPE := en_US.UTF-8
@@ -48,14 +48,14 @@ rollback:
 	ssh $(SERVER) "mv $(BACKEND_DIR)/backup/backup.jar $(BACKEND_DIR)/$(JAR)"
 	restart
 
-# 发布
+# 部署（打包 -> 备份 -> 同步lib包 -> 上传jar包 -> 重启服务 -> 清理）
 publish: package backup
 	# 将lib目录下的依赖jar包同步到服务器
 	rsync -avz --progress --delete ./target/lib/ $(SERVER):$(BACKEND_DIR)/lib
 	scp -rC ./target/*.jar $(SERVER):$(BACKEND_DIR)
 	restart
 	clean
-	@echo "Deploy success!"
+	@echo "Deployed successfully!"
 
 # 初始化前后端运行环境
 # 服务器需要安装rsync, yum install rsync -y
@@ -64,16 +64,12 @@ init: package
 	rsync -avz --progress --delete ./target/lib/ $(SERVER):$(BACKEND_DIR)/lib
 	scp -rvC ./target/*.jar $(SERVER):$(BACKEND_DIR)
 	scp -rvC ./deploy/* $(SERVER):$(BACKEND_DIR)
-	scp -rvC ./src/main/resources/application.properties $(SERVER):$(BACKEND_DIR)/config
-	scp -rvC ./src/main/resources/application-dev.properties $(SERVER):$(BACKEND_DIR)/config
-	scp -rvC ./src/main/resources/application-prod.properties $(SERVER):$(BACKEND_DIR)/config
-	scp -rvC ./src/main/resources/logback-spring.xml $(SERVER):$(BACKEND_DIR)/config
 	scp -rvC ./target/lib $(SERVER):$(BACKEND_DIR)
 	ssh $(SERVER) "rm -rf $(BACKEND_DIR)/deploy.sh $(BACKEND_DIR)/Makefile"
 	ssh $(SERVER) "chmod +x $(BACKEND_DIR)/restart.sh"
 	ssh $(SERVER) "mv $(BACKEND_DIR)/*.service /etc/systemd/system"
 	ssh $(SERVER) "systemctl daemon-reload"
-	ssh $(SERVER) "systemctl enable demo-api --now"
+	ssh $(SERVER) "systemctl enable {{ cookiecutter.artifact }} --now"
 
 	# 前端配置
 	ssh $(SERVER) "mkdir -p $(FRONTEND_DIR)"
@@ -104,12 +100,12 @@ jdk:
 redis:
 	@if [ ! -f $(REDIS_TARGET_FILE) ]; then \
 		echo "Downloading $(REDIS_TARGET_FILE) from $(REDIS_REMOTE_URL)"; \
-		mkdir -p $(REDIS_DOWNLOAD_DIR)/redis; \
+		mkdir -p $(DOWNLOAD_DIR)/redis; \
 		wget -O $(REDIS_TARGET_FILE) $(REDIS_REMOTE_URL); \
 	else \
 		@echo "$(REDIS_TARGET_FILE) already exists."; \
 	fi
-	scp $(DOWNLOAD_DIR)/redis/$(REDIS_RPM) $(SERVER):/tmp
+	scp $(REDIS_TARGET_FILE) $(SERVER):/tmp
 	ssh $(SERVER) "rpm -ivh /tmp/$(REDIS_RPM)"
 	ssh $(SERVER) "rm -rf /tmp/$(REDIS_RPM)"
 	ssh $(SERVER) "redis-server --version"
@@ -119,12 +115,12 @@ redis:
 mysql:
 	@if [ ! -f $(MYSQL_TARGET_FILE) ]; then \
 		echo "Downloading $(MYSQL_TARGET_FILE) from $(MYSQL_REMOTE_URL)"; \
-		mkdir -p $(MYSQL_DOWNLOAD_DIR)/redis; \
+		mkdir -p $(DOWNLOAD_DIR)/mysql; \
 		wget -O $(MYSQL_TARGET_FILE) $(MYSQL_REMOTE_URL); \
 	else \
 		@echo "$(MYSQL_TARGET_FILE) already exists."; \
 	fi
-	scp $(DOWNLOAD_DIR)/mysql/$(MYSQL_RPM) $(SERVER):/tmp
+	scp $(MYSQL_TARGET_FILE) $(SERVER):/tmp
 	ssh $(SERVER) "tar -xvf /tmp/$(MYSQL_RPM) -C /tmp"
 	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-client-plugins-$(MYSQL_VERSION).rpm --force --nodeps"
 	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-devel-$(MYSQL_VERSION).rpm --force --nodeps"

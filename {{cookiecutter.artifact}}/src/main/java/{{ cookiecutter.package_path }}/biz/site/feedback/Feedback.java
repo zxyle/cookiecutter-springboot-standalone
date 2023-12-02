@@ -33,7 +33,7 @@ public class Feedback extends BaseEntity {
     /**
      * 详细描述
      */
-    @Length(max = 2048, message = "联系方式长度不能超过2048个字符")
+    @Length(max = 2048, message = "详细描述长度不能超过2048个字符")
     @NotBlank(message = "详细描述不能为空")
     @ExcelProperty("详细描述")
     private String description;

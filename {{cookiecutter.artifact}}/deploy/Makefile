@@ -5,9 +5,9 @@
 
 # 定义变量
 # 配置免密登录 ssh-copy-id -i ~/.ssh/id_rsa.pub root@localhost
-SERVER = root@127.0.0.1
-BASEDIR = /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}
-DIR = $(BASEDIR)/{{ cookiecutter.artifact.replace('-api', '-web') }}
+SERVER = root@localhost
+APP_DIR = /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}
+DIR = $(APP_DIR)/{{ cookiecutter.artifact.replace('-api', '-web') }}
 TARGET = dist
 
 # 默认目标
@@ -15,6 +15,7 @@ deploy: publish
 
 # 编译前端代码
 build:
+	# yarn build
 	pnpm build
 
 # 备份前端代码
