@@ -150,9 +150,13 @@ nginx:
 	ssh $(SERVER) "nginx -t"
 	ssh $(SERVER) "nginx -s reload"
 
+# 使用docker-compose运行应用
+docker: package
+	docker-compose up -d
+
 # 使用说明
 help:
-	@echo "Usage: make [package|publish|restart|rollback|backup|init|deploy|clean|jdk|redis|nginx|mysql]"
+	@echo "Usage: make [package|publish|restart|rollback|backup|init|deploy|clean|jdk|redis|nginx|mysql|docker]"
 
 # 清理
 clean:
@@ -160,4 +164,4 @@ clean:
 	@find . -type d -name "logs" -exec rm -r {} +
 	@echo "Clean success!"
 
-.PHONY: package publish restart rollback backup init deploy clean jdk redis nginx mysql help
+.PHONY: package publish restart rollback backup init deploy clean jdk redis nginx mysql help docker

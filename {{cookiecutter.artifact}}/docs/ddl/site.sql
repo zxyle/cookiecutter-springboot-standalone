@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for site_feedback
 -- ----------------------------
@@ -129,3 +131,5 @@ CREATE TABLE `site_checkin` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_user_date` (`user_id`,`checkin_date`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='签到';
+
+SET FOREIGN_KEY_CHECKS = 1;

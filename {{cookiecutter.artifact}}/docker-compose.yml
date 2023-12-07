@@ -1,35 +1,68 @@
+# 该文件用于创建一个完整的开发环境，包括数据库、缓存、web服务器等
+# 启动      docker-compose up -d
+# 停止并删除 docker-compose down -v
+# 查看日志   docker-compose logs -f
+
 version: '3'
 services:
   mysql:
+    container_name: mysql
     image: mysql:8
     ports:
       - "3306:3306"
     command:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_0900_ai_ci
-
     environment:
-      MYSQL_ROOT_PASSWORD: {{ random_ascii_string(16) }}
-      # create a database
-      MYSQL_DATABASE: {{ cookiecutter.artifact.replace('-api', '') }}
-      # create a user
-      MYSQL_USER: {{ cookiecutter.artifact }}
-      MYSQL_PASSWORD: {{ random_ascii_string(16) }}
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: app
+      TZ: Asia/Shanghai
+    volumes:
+      - ./docs/ddl/auth.sql:/docker-entrypoint-initdb.d/auth.sql
+      - ./docs/ddl/site.sql:/docker-entrypoint-initdb.d/site.sql
+      - ./docs/ddl/sys.sql:/docker-entrypoint-initdb.d/sdk.sql
+      - ./data/mysql:/var/lib/mysql
 
   redis:
+    container_name: redis
     image: redis:6
     command: --appendonly yes
     ports:
       - "6379:6379"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data/redis:/data
 
   nginx:
     image: nginx:1.21.6
     ports:
-      - "80:80"
+      - "8888:8888"
     depends_on:
       - mysql
       - redis
       - app
+    volumes:
+      - ./deploy/{{ cookiecutter.artifact.replace('-api', '') }}.conf:/etc/nginx/conf.d/{{ cookiecutter.artifact.replace('-api', '') }}.conf
+      # 前端产物文件放在根目录下的 dist 目录中
+      - ./dist:/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact.replace('api', 'web') }}
+      - ./logs/nginx:/var/log/nginx
+    environment:
+      - TZ=Asia/Shanghai
 
   app:
     image: eclipse-temurin:{{ cookiecutter.javaVersion }}
+    volumes:
+      - ./target/{{ cookiecutter.artifact }}-1.0.0.jar:/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}/{{ cookiecutter.artifact }}-1.0.0.jar
+      - ./target/lib:/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}/lib
+      - ./logs/app:/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}/logs
+    working_dir: /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}
+    # java进程需要等待mysql启动20秒后再启动
+    command: /bin/sh -c "sleep 20 && java -Dspring.profiles.active=docker -jar -Dloader.path=lib {{ cookiecutter.artifact }}-1.0.0.jar"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - TZ=Asia/Shanghai

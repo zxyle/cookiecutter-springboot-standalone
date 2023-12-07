@@ -634,7 +634,7 @@ INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `descrip
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('app.about', 'XX公司是一家什么公司', 'java.lang.String', '关于我们', 'XX公司是一家什么公司');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('sms.verification-template', '【%s】验证码：%s，5分钟内有效，为了保障您的账户安全，请勿向他人泄漏验证码信息', 'java.lang.String', '短信验证码模板', '【%s】验证码：%s，5分钟内有效，为了保障您的账户安全，请勿向他人泄漏验证码信息');
 INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('email.verification-template', '邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!', 'java.lang.String', '邮件验证码模板', '邮箱验证码为<b>%s</b>，验证码有效期为%s分钟!');
-INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('acl.enable', 'true', 'java.lang.Boolean', 'IP访问控制是否开启', 'true');
+INSERT INTO `sys_setting` (`option_label`, `option_value`, `data_type`, `description`, `default_value`) VALUES ('acl.enable', 'false', 'java.lang.Boolean', 'IP访问控制是否开启', 'true');
 COMMIT;
 
 -- ----------------------------

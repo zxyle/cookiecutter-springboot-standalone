@@ -62,3 +62,4 @@ build/
 src/main/resources/static/doc/
 
 *.gz
+data/
