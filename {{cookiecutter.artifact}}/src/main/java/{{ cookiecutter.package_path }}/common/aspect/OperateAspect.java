@@ -11,10 +11,12 @@ import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -67,24 +69,34 @@ public class OperateAspect {
         op.setOperationName(operationName);
         op.setUserId(getUserId());
         op.setOperateTime(LocalDateTime.now());
-        if (args.length > 0)
-            op.setRequest(JacksonUtil.serialize(args));
+        if (args.length > 0) {
+            String json = JacksonUtil.serialize(args);
+            op.setRequest(StringUtils.isNotBlank(json) ? json.substring(0, 2048) : "");
+        }
 
         // 调用目标方法
         long startTime = System.currentTimeMillis();
-        Object result = joinPoint.proceed();
+        try {
+            Object result = joinPoint.proceed();
+            // 记录操作结果
+            R<Object> response = (R) result;
+            op.setSuccess(response.isSuccess());
+            op.setTraceId(response.getTraceId());
+            // 如果操作失败，记录失败原因
+            if (!response.isSuccess())
+                op.setResponse(response.getMessage().substring(0, 1024));
 
-        // 记录操作结果
-        op.setMeasured(System.currentTimeMillis() - startTime);
-        R<Object> response = (R) result;
-        op.setSuccess(response.isSuccess());
-        op.setTraceId(response.getTraceId());
-        // 如果操作失败，记录失败原因
-        if (!response.isSuccess())
-            op.setResponse(response.getMessage());
-
-        logService.saveLog(op);
-        return result;
+            return result;
+        } catch (Exception e) {
+            op.setSuccess(false);
+            op.setResponse(e.getMessage().substring(0, 1024));
+            log.error("操作失败: {}", op);
+            throw e;
+        } finally {
+            op.setMeasured(System.currentTimeMillis() - startTime);
+            op.setTraceId(MDC.get("traceId"));
+            logService.saveLog(op);
+        }
     }
 
     private Integer getUserId() {

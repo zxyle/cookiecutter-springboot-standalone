@@ -84,32 +84,32 @@ public class LogAspect {
     public R<LoginResponse> doAround(ProceedingJoinPoint pjp) throws Throwable {
         LoginLog loginLog = new LoginLog();
 
-        log.info("around start");
+        // log.info("around start");
         Object[] values = pjp.getArgs();
         String[] names = ((CodeSignature) pjp.getSignature()).getParameterNames();
         Map<String, Object> map = new HashMap<>(names.length);
         for (int i = 0; i < names.length; i++) {
             map.put(names[i], values[i]);
         }
-        log.info("params map: {}", map);
+        // log.info("params map: {}", map);
         HttpServletRequest servletRequest = (HttpServletRequest) map.get("servletRequest");
-        AccountLoginRequest request = (AccountLoginRequest) map.get("request");
+        AccountLoginRequest request = (AccountLoginRequest) map.get("req");
         String header = servletRequest.getHeader("User-Agent");
-        log.info("UA: {}", header);
+        // log.info("UA: {}", header);
         loginLog.setUa(servletRequest.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setIp(IpUtil.getIpAddr(servletRequest));
         loginLog.setAccount(request.getAccount());
         long start = System.currentTimeMillis();
         // 调用执行目标方法(result为目标方法执行结果)，必须有此行代码才会执行目标调用的方法（等价于@befor+@after），否则只会执行一次之前的（等价于@before）
         R<LoginResponse> result = (R) pjp.proceed();
-        log.info("Around Result: {}", result);
+        // log.info("Around Result: {}", result);
         long end = System.currentTimeMillis();
         loginLog.setMsg(result.getMessage());
         loginLog.setSuccess(result.isSuccess());
 
 
         log.debug("{} -> {}, 耗费时间: {}毫秒.", pjp.getTarget().getClass().getSimpleName(), pjp.getSignature().getName(), (end - start));
-        log.info("耗费时间: {}毫秒", (end - start));
+        log.info("登录耗费时间: {}毫秒", (end - start));
         log.info("log: {}", loginLog);
         loginLogService.saveLoginLog(loginLog);
         return result;

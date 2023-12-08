@@ -53,12 +53,12 @@ services:
   app:
     image: eclipse-temurin:{{ cookiecutter.javaVersion }}
     volumes:
-      - ./target/{{ cookiecutter.artifact }}-1.0.0.jar:/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}/{{ cookiecutter.artifact }}-1.0.0.jar
+      - ./target/{{ cookiecutter.artifact }}-{{ cookiecutter.version }}.jar:/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}/{{ cookiecutter.artifact }}-{{ cookiecutter.version }}.jar
       - ./target/lib:/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}/lib
       - ./logs/app:/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}/logs
     working_dir: /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}
     # java进程需要等待mysql启动20秒后再启动
-    command: /bin/sh -c "sleep 20 && java -Dspring.profiles.active=docker -jar -Dloader.path=lib {{ cookiecutter.artifact }}-1.0.0.jar"
+    command: /bin/sh -c "sleep 20 && java -Dspring.profiles.active=docker -jar -Dloader.path=lib {{ cookiecutter.artifact }}-{{ cookiecutter.version }}.jar"
     ports:
       - "8080:8080"
     depends_on:
@@ -66,3 +66,17 @@ services:
       - redis
     environment:
       - TZ=Asia/Shanghai
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.0
+    ports:
+      - "8889:80"
+    environment:
+      # 允许连接到任意 MySQL 主机
+      - PMA_ARBITRARY=1
+
+  reids:
+    image: redis/redis-stack:latest
+    ports:
+      - "8890:8001"
+      # - "6379:6379"
