@@ -13,7 +13,12 @@ ExecStart=/bin/sh -c '${JAVA_HOME}/java ${JVM_OPTIONS} -jar -Dloader.path=${APP_
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s QUIT $MAINPID
 Restart=always
-RestartSec=10
+# 重启等待的秒数
+RestartSec=20
+# 设置失败重启的次数上限
+StartLimitBurst=10
+# 设置两次启动之间的最小间隔
+StartLimitIntervalSec=30s
 
 [Install]
 WantedBy=multi-user.target

@@ -44,13 +44,14 @@ services:
       - app
     volumes:
       - ./deploy/{{ cookiecutter.artifact.replace('-api', '') }}.conf:/etc/nginx/conf.d/{{ cookiecutter.artifact.replace('-api', '') }}.conf
-      # 前端产物文件放在根目录下的 dist 目录中
+      # 前端产物文件需放在根目录下的 dist 目录中
       - ./dist:/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact.replace('api', 'web') }}
       - ./logs/nginx:/var/log/nginx
     environment:
       - TZ=Asia/Shanghai
 
   app:
+    # JDK环境
     image: eclipse-temurin:{{ cookiecutter.javaVersion }}
     volumes:
       - ./target/{{ cookiecutter.artifact }}-{{ cookiecutter.version }}.jar:/opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact }}/{{ cookiecutter.artifact }}-{{ cookiecutter.version }}.jar
@@ -74,9 +75,12 @@ services:
     environment:
       # 允许连接到任意 MySQL 主机
       - PMA_ARBITRARY=1
+      - TZ=Asia/Shanghai
 
   reids:
     image: redis/redis-stack:latest
     ports:
       - "8890:8001"
       # - "6379:6379"
+    environment:
+      - TZ=Asia/Shanghai
