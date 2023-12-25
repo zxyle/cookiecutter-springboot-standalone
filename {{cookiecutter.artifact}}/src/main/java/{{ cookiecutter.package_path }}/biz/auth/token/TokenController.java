@@ -46,7 +46,6 @@ public class TokenController extends AuthBaseController {
         return response == null ? R.fail("令牌刷新次数过多") : R.ok(response);
     }
 
-
     /**
      * 防止token被过度重复刷新, 记录token刷新次数
      *

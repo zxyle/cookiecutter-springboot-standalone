@@ -108,7 +108,6 @@ public class MFAController extends AuthBaseController {
         return (inserted != null && Boolean.TRUE.equals(deleted)) ? R.ok("绑定TOTP成功") : R.fail("绑定TOTP失败");
     }
 
-
     /**
      * 解绑TOTP验证器
      *

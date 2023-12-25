@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 @CacheConfig(cacheNames = "RealnameCache")
 public class RealnameService extends ServiceImpl<RealnameMapper, Realname> {
 
-
     /**
      * 新增实名认证（带缓存）
      */

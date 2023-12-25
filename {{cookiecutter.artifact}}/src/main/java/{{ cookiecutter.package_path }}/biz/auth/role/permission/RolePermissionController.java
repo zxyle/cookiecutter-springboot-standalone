@@ -41,7 +41,6 @@ public class RolePermissionController extends AuthBaseController {
         return R.ok(page);
     }
 
-
     /**
      * 角色新增权限
      *

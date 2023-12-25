@@ -51,7 +51,6 @@ public class CaptchaController {
         return R.ok(response);
     }
 
-
     /**
      * 生成图形验证码
      */
@@ -67,7 +66,6 @@ public class CaptchaController {
         response.getOutputStream().flush();
         log.info("已生成验证码: {}", captchaPair);
     }
-
 
     /**
      * 校验短信、图形验证码

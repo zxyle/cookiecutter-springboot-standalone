@@ -61,7 +61,6 @@ public class FeedbackController {
         return R.ok(page);
     }
 
-
     /**
      * 新增意见反馈
      */
@@ -70,7 +69,6 @@ public class FeedbackController {
         boolean success = thisService.save(entity);
         return success ? R.ok(entity) : R.fail("新增意见反馈失败");
     }
-
 
     /**
      * 按ID查询意见反馈

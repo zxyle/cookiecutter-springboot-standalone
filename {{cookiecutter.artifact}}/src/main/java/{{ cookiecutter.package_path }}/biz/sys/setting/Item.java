@@ -22,7 +22,6 @@ public class Item {
      */
     private boolean real;
 
-
     public Item(Setting setting) {
         switch (setting.getDataType()) {
             case "long":

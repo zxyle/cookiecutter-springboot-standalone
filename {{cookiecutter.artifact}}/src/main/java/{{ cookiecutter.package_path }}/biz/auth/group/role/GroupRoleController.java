@@ -41,7 +41,6 @@ public class GroupRoleController extends AuthBaseController {
         return R.ok(page);
     }
 
-
     /**
      * 用户组新增角色
      *

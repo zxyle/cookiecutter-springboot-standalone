@@ -55,7 +55,6 @@ public class LoginController extends AuthBaseController {
         return R.ok(response, "登录成功");
     }
 
-
     /**
      * 方式二：邮箱/手机号 + 验证码登录
      */

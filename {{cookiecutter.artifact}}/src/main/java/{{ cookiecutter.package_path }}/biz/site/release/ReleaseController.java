@@ -47,7 +47,6 @@ public class ReleaseController {
         return release != null ? R.ok(release) : R.fail("新增发布版本失败");
     }
 
-
     /**
      * 按ID查询发布版本
      */

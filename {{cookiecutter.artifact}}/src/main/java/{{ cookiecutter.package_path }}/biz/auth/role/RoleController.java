@@ -62,7 +62,6 @@ public class RoleController extends AuthBaseController {
         return R.ok(roleResponsePage);
     }
 
-
     /**
      * 创建角色
      */
@@ -86,7 +85,6 @@ public class RoleController extends AuthBaseController {
         }
         return R.ok(role);
     }
-
 
     /**
      * 按ID查询角色

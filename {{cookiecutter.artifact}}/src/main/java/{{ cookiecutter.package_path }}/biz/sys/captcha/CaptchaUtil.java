@@ -28,7 +28,6 @@ public final class CaptchaUtil {
         return randCode(len, true, true, false, false);
     }
 
-
     public static String randCode(int len, boolean hasUpper, boolean hasLower, boolean hasDigit, boolean hasSpecialChar) {
         String chars = "";
         if (hasUpper) {

@@ -65,7 +65,6 @@ public class InfoController {
         return success ? R.ok("更新系统信息成功") : R.fail("更新系统信息失败");
     }
 
-
     /**
      * 按ID删除系统信息
      */

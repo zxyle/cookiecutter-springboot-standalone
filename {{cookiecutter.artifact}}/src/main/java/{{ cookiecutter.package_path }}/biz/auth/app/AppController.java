@@ -62,7 +62,6 @@ public class AppController extends AuthBaseController {
         return R.ok(page);
     }
 
-
     /**
      * 新增应用
      */
@@ -165,7 +164,6 @@ public class AppController extends AuthBaseController {
         App result = thisService.putById(app);
         return result != null ? R.ok("应用下架成功") : R.fail("应用下架失败");
     }
-
 
     /**
      * 应用跳转

@@ -35,5 +35,4 @@ public class File extends BaseEntity {
      */
     private String url;
 
-
 }

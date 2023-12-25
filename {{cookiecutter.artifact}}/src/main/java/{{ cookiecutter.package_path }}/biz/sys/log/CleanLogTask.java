@@ -25,7 +25,6 @@ public class CleanLogTask {
     final LoginLogService loginLogService;
     final OperateLogService operateLogService;
 
-
     /**
      * 每天3点清理登录日志
      */
@@ -37,7 +36,6 @@ public class CleanLogTask {
                 .lt(LoginLog::getLoginTime, startTime));
         log.info("清理{}之前的登录日志 {}", startTime, removed ? "成功" : "失败");
     }
-
 
     /**
      * 每天4点清理操作日志

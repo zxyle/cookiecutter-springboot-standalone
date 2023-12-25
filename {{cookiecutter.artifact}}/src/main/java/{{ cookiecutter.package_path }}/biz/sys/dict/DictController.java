@@ -28,7 +28,6 @@ public class DictController {
     final DictService thisService;
     final DictMapper thisMapper;
 
-
     /**
      * 新增字典条目
      */
@@ -46,7 +45,6 @@ public class DictController {
         return result != null ? R.ok(result) : R.fail("新增字典条目失败");
     }
 
-
     /**
      * 按字典类型查询条目
      */
@@ -60,7 +58,6 @@ public class DictController {
         }
         return R.ok(map);
     }
-
 
     /**
      * 查询所有字典类型
@@ -78,7 +75,6 @@ public class DictController {
         List<Dict> dicts = thisService.list(wrapper);
         return R.ok(dicts);
     }
-
 
     /**
      * 删除字典条目
@@ -111,7 +107,6 @@ public class DictController {
         boolean success = thisService.updateDict(dict);
         return success ? R.ok("更新字典条目成功") : R.fail("更新字典条目失败");
     }
-
 
     /**
      * 删除字典类型

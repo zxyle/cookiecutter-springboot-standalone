@@ -22,7 +22,6 @@ public enum VerificationStatusEnum {
     VERIFIED(2, "已认证"),
     VERIFICATION_FAILED(3, "认证失败");
 
-
     /**
      * 用于数据库存储的值
      */

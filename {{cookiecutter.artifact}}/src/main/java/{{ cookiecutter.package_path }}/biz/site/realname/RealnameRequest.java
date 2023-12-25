@@ -42,5 +42,4 @@ public class RealnameRequest extends BaseRequest {
     @NotBlank(message = "证件号码不能为空")
     private String idNum;
 
-
 }

@@ -41,7 +41,6 @@ public class GroupPermissionController extends AuthBaseController {
         return R.ok(page);
     }
 
-
     /**
      * 用户组新增权限
      *

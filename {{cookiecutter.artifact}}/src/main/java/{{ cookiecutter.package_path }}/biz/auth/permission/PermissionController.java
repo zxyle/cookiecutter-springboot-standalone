@@ -55,7 +55,6 @@ public class PermissionController extends AuthBaseController {
         return R.ok(permissions);
     }
 
-
     /**
      * 新增权限
      */
@@ -69,7 +68,6 @@ public class PermissionController extends AuthBaseController {
         boolean success = thisService.create(entity);
         return success ? R.ok(entity) : R.fail("新增权限失败");
     }
-
 
     /**
      * 按ID查询权限

@@ -34,7 +34,6 @@ public class SettingController {
         return R.ok(page);
     }
 
-
     /**
      * 新增系统设置
      */
@@ -45,7 +44,6 @@ public class SettingController {
         boolean success = thisService.save(entity);
         return success ? R.ok(entity) : R.fail("新增系统设置失败");
     }
-
 
     /**
      * 按ID查询系统设置

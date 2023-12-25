@@ -54,7 +54,6 @@ public class QuestionController extends AuthBaseController {
         return R.ok(page);
     }
 
-
     /**
      * 查询所有安全问题
      */
@@ -66,7 +65,6 @@ public class QuestionController extends AuthBaseController {
         return R.ok(thisService.list(wrapper));
     }
 
-
     /**
      * 新增安全问题
      */
@@ -77,7 +75,6 @@ public class QuestionController extends AuthBaseController {
         boolean success = thisService.save(entity);
         return success ? R.ok(entity) : R.fail("新增安全问题失败");
     }
-
 
     /**
      * 按ID删除安全问题
@@ -141,7 +138,6 @@ public class QuestionController extends AuthBaseController {
         boolean saved = saveAnswers(req, getUserId());
         return (removed && saved) ? R.ok("成功修改密保问题") : R.fail("修改密保问题失败");
     }
-
 
     // 保存用户安全问题答案
     private boolean saveAnswers(AddAnswerRequest request, Integer userId) {

@@ -119,7 +119,6 @@ public class PasswordController extends AuthBaseController {
         return R.ok("找回密码成功, 请重新登录");
     }
 
-
     /**
      * 忘记/找回密码（通过密保问题方式）
      */
@@ -182,7 +181,6 @@ public class PasswordController extends AuthBaseController {
         return R.fail("重置密码失败");
     }
 
-
     /**
      * 初次登录后修改密码
      */
@@ -201,7 +199,6 @@ public class PasswordController extends AuthBaseController {
         return R.fail("密码修改失败");
     }
 
-
     /**
      * 密码复杂度计算（0-5分）
      *
@@ -213,7 +210,6 @@ public class PasswordController extends AuthBaseController {
         int score = PasswordChecker.checkPasswordComplexity(password);
         return R.ok(new PasswordComplexityResponse(score));
     }
-
 
     /**
      * 生成随机密码

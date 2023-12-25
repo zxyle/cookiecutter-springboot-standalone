@@ -27,7 +27,6 @@ public class CheckinController extends AuthBaseController {
     final CheckinMapper thisMapper;
     final CheckinService thisService;
 
-
     /**
      * 新增签到
      */

@@ -19,7 +19,6 @@ public interface FileStoreService {
      */
     String upload(MultipartFile file, String objectName);
 
-
     /**
      * 删除文件
      * @param objectName 文件名

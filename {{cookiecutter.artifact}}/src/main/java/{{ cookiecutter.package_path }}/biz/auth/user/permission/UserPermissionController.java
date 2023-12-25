@@ -40,7 +40,6 @@ public class UserPermissionController {
         return R.ok(page);
     }
 
-
     /**
      * 用户新增权限
      *

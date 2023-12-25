@@ -37,7 +37,6 @@ public class AclController {
         return R.ok(page);
     }
 
-
     /**
      * 新增IP访问控制
      */
@@ -48,7 +47,6 @@ public class AclController {
         Acl result = thisService.insert(entity);
         return R.ok(result);
     }
-
 
     /**
      * 按ID查询IP访问控制

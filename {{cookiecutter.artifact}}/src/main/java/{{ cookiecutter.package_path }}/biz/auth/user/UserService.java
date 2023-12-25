@@ -64,7 +64,6 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return (s1 && s2) && (s3 && s4) && (s5 && s6);
     }
 
-
     // 禁用用户
     public boolean disable(Integer userId) {
         User user = new User();

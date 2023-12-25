@@ -70,7 +70,6 @@ public class UserController extends AuthBaseController {
         return R.ok(responsePage);
     }
 
-
     /**
      * 使用用户名创建用户
      */
@@ -120,7 +119,6 @@ public class UserController extends AuthBaseController {
         thisService.updateRelation(userId, req.getRoleIds(), req.getGroupIds(), req.getPermissionIds());
         return R.ok("更新用户成功");
     }
-
 
     /**
      * 按ID查询用户
@@ -202,7 +200,6 @@ public class UserController extends AuthBaseController {
         boolean success = thisService.enable(userId);
         return success ? R.ok("已成功启用该用户") : R.fail("启用用户失败");
     }
-
 
     /**
      * 下线用户

@@ -47,7 +47,6 @@ public class ValidateService {
         return true;
     }
 
-
     public String send(String account) {
         String key = "code:" + account;
         // 生成随机数字

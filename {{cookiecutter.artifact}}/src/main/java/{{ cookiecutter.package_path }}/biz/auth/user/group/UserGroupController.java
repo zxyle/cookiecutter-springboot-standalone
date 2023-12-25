@@ -44,7 +44,6 @@ public class UserGroupController extends AuthBaseController {
         return R.ok(page);
     }
 
-
     /**
      * 用户添加到用户组
      *
@@ -60,7 +59,6 @@ public class UserGroupController extends AuthBaseController {
         }
         return R.fail("用户添加到用户组失败");
     }
-
 
     /**
      * 用户移出用户组
@@ -78,7 +76,6 @@ public class UserGroupController extends AuthBaseController {
         }
         return R.fail("用户移出用户组失败");
     }
-
 
     /**
      * 分页查询用户组下的用户

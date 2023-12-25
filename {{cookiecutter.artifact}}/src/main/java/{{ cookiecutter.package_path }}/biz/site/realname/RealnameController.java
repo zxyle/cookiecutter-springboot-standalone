@@ -39,7 +39,6 @@ public class RealnameController extends AuthBaseController {
         return R.ok(page);
     }
 
-
     /**
      * 新增实名认证
      */
@@ -57,7 +56,6 @@ public class RealnameController extends AuthBaseController {
         Realname result = thisService.insert(realname);
         return R.ok(result);
     }
-
 
     /**
      * 查询实名认证状态
