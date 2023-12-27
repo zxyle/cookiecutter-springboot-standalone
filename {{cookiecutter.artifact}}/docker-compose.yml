@@ -22,6 +22,7 @@ services:
       - ./docs/ddl/site.sql:/docker-entrypoint-initdb.d/site.sql
       - ./docs/ddl/sys.sql:/docker-entrypoint-initdb.d/sdk.sql
       - ./data/mysql:/var/lib/mysql
+    restart: on-failure
 
   redis:
     container_name: redis
@@ -33,6 +34,7 @@ services:
       - TZ=Asia/Shanghai
     volumes:
       - ./data/redis:/data
+    restart: on-failure
 
   nginx:
     image: nginx:1.21.6
@@ -49,6 +51,7 @@ services:
       - ./logs/nginx:/var/log/nginx
     environment:
       - TZ=Asia/Shanghai
+    restart: on-failure
 
   app:
     # JDK环境
@@ -67,6 +70,7 @@ services:
       - redis
     environment:
       - TZ=Asia/Shanghai
+    restart: on-failure
 
   phpmyadmin:
     image: phpmyadmin:5.2.0
@@ -76,6 +80,7 @@ services:
       # 允许连接到任意 MySQL 主机
       - PMA_ARBITRARY=1
       - TZ=Asia/Shanghai
+    restart: on-failure
 
   reids:
     image: redis/redis-stack:latest
@@ -84,3 +89,4 @@ services:
       # - "6379:6379"
     environment:
       - TZ=Asia/Shanghai
+    restart: on-failure
