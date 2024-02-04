@@ -3,11 +3,13 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.setting;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,6 +86,34 @@ public class SettingController {
 
         boolean deleted = thisService.deleteById(setting.getOptionLabel(), id);
         return deleted ? R.ok("删除系统设置成功") : R.fail("删除系统设置失败");
+    }
+
+    /**
+     * 恢复默认设置
+     *
+     * @param id          设置ID (二选一)
+     * @param optionLabel 设置名称 (二选一)
+     */
+    @LogOperation(name = "恢复默认设置", biz = "sys")
+    @PreAuthorize("@ck.hasPermit('sys:setting:update')")
+    @PostMapping("/settings/restore")
+    public R<Void> restore(Integer id, String optionLabel) {
+        Setting setting = null;
+        if (id != null) {
+            setting = thisService.findById(id);
+        }
+
+        if (StringUtils.isNotBlank(optionLabel)) {
+            QueryWrapper<Setting> wrapper = new QueryWrapper<>();
+            wrapper.select("option_label", "default_value");
+            wrapper.eq("option_label", optionLabel);
+            setting = thisService.getOne(wrapper);
+        }
+
+        if (setting == null) return R.fail("设置不存在");
+
+        Item item = thisService.update(setting.getOptionLabel(), setting.getDefaultValue());
+        return item != null ? R.ok("恢复默认设置成功") : R.fail("恢复默认设置失败");
     }
 
 }

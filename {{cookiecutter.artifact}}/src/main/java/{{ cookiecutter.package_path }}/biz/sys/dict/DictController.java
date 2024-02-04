@@ -53,7 +53,7 @@ public class DictController {
         String[] types = req.getTypes().split(",");
         Map<String, List<Dict>> map = new HashMap<>(types.length);
         for (String type : types) {
-            List<Dict> dicts = thisService.listDictsByType(type.trim());
+            List<Dict> dicts = thisService.findDictsByType(type.trim());
             map.put(type, dicts);
         }
         return R.ok(map);

@@ -22,7 +22,6 @@ public class CalendarRequest extends BaseRequest {
      */
     private YearMonth yearMonth = YearMonth.now();
 
-
     /**
      * 获取月份第一天
      */

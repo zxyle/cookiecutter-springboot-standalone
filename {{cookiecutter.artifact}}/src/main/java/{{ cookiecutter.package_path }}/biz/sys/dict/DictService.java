@@ -27,7 +27,7 @@ public class DictService extends ServiceImpl<DictMapper, Dict> {
      * @param dictType 字典类型
      */
     @Cacheable(key = "#dictType", unless = "#result == null")
-    public List<Dict> listDictsByType(String dictType) {
+    public List<Dict> findDictsByType(String dictType) {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         wrapper.select("id", "label", "value");
         wrapper.eq("dict_type", dictType);

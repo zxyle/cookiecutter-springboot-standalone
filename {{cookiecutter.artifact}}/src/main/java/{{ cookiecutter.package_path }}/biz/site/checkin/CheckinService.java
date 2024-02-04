@@ -56,8 +56,6 @@ public class CheckinService extends ServiceImpl<CheckinMapper, Checkin> {
         insert(checkin);
     }
 
-
-    // 连续签到天数
-
+    // 连续签到天数计算
 
 }

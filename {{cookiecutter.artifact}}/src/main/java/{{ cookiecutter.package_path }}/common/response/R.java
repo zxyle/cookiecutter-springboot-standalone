@@ -53,6 +53,10 @@ public class R<T> implements Serializable {
      */
     private String traceId;
 
+    public static <T> R<T> ok() {
+        return ok(null, SUCCESS_MSG);
+    }
+
     public static <T> R<T> ok(T data) {
         return ok(data, SUCCESS_MSG);
     }

@@ -49,6 +49,12 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting> {
         return null;
     }
 
+    /**
+     * 更新选项
+     *
+     * @param label 选项名称
+     * @param value 选项新值
+     */
     @CachePut(key = "#label")
     public Item update(String label, String value) {
         UpdateWrapper<Setting> wrapper = new UpdateWrapper<>();

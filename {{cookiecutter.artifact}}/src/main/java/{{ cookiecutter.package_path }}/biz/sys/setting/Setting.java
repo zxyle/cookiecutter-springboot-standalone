@@ -19,26 +19,36 @@ public class Setting extends BaseEntity {
 
     /**
      * 选项
+     *
+     * @mock captcha.on
      */
     private String optionLabel;
 
     /**
      * 选项值
+     *
+     * @mock false
      */
     private String optionValue;
 
     /**
      * 数据类型
+     *
+     * @mock java.lang.Boolean
      */
     private String dataType;
 
     /**
      * 选项描述
+     *
+     * @mock 登录是否开启图形验证码
      */
     private String description;
 
     /**
      * 默认值
+     *
+     * @mock true
      */
     private String defaultValue;
 
