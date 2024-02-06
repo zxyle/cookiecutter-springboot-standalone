@@ -7,10 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
 /**
@@ -77,7 +74,10 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting> {
      * @param label 选项名称，用于清除缓存
      * @param id    选项ID
      */
-    @CacheEvict(key = "#label")
+    @Caching(evict = {
+            @CacheEvict(key = "#label"),
+            @CacheEvict(key = "#id")
+    })
     public boolean deleteById(String label, Integer id) {
         return removeById(id);
     }

@@ -69,7 +69,8 @@ public class DictController {
         QueryWrapper<Dict> wrapper = new QueryWrapper<>();
         wrapper.select("name", "dict_type");
         if (StringUtils.isNotBlank(keyword)) {
-            wrapper.and(i -> i.like("name", keyword).or().like("dict_type", keyword));
+            wrapper.and(i -> i.like("name", keyword)
+                    .or().like("dict_type", keyword));
         }
         wrapper.groupBy("name", "dict_type");
         List<Dict> dicts = thisService.list(wrapper);

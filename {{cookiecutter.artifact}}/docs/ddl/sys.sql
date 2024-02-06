@@ -566,11 +566,11 @@ CREATE TABLE `sys_setting` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `option_label` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '选项',
-  `option_value` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '选项值',
-  `data_type` varchar(32) CHARACTER SET utf8mb4 DEFAULT 'string' COMMENT 'Java数据类型',
-  `description` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '选项描述',
-  `default_value` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '默认值',
+  `option_label` varchar(64) CHARACTER SET utf8mb4 DEFAULT NOT NULL COMMENT '选项',
+  `option_value` varchar(128) CHARACTER SET utf8mb4 DEFAULT NOT NULL COMMENT '选项值',
+  `data_type` varchar(32) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'string' COMMENT 'Java数据类型',
+  `description` varchar(64) CHARACTER SET utf8mb4 DEFAULT NOT NULL COMMENT '选项描述',
+  `default_value` varchar(128) CHARACTER SET utf8mb4 DEFAULT NOT NULL COMMENT '默认值',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_label` (`option_label`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统设置';

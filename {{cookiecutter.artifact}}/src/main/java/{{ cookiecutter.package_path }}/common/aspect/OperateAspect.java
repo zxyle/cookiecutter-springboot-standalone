@@ -71,7 +71,7 @@ public class OperateAspect {
         op.setOperateTime(LocalDateTime.now());
         if (args.length > 0) {
             String json = JacksonUtil.serialize(args);
-            op.setRequest(StringUtils.isNotBlank(json) ? json.substring(0, 2048) : "");
+            op.setRequest(StringUtils.isNotBlank(json) ? StringUtils.substring(json, 0, Math.min(json.length(), 2048)) : "");
         }
 
         // 调用目标方法
@@ -84,12 +84,12 @@ public class OperateAspect {
             op.setTraceId(response.getTraceId());
             // 如果操作失败，记录失败原因
             if (!response.isSuccess())
-                op.setResponse(response.getMessage().substring(0, 1024));
+                op.setResponse(StringUtils.substring(response.getMessage(), 0, Math.min(response.getMessage().length(), 1024)));
 
             return result;
         } catch (Exception e) {
             op.setSuccess(false);
-            op.setResponse(e.getMessage().substring(0, 1024));
+            op.setResponse(StringUtils.substring(e.getMessage(), 0, Math.min(e.getMessage().length(), 1024)));
             log.error("操作失败: {}", op);
             throw e;
         } finally {
