@@ -62,9 +62,9 @@ public class PasswordController extends AuthBaseController {
     public R<Void> change(@Valid @RequestBody ChangeByOldRequest req) {
         User user = getLoggedInUser();
 
-        if (thisService.isRight(req.getOldPassword(), user.getPwd())) {
+        if (thisService.isMatch(req.getOldPassword(), user.getPwd())) {
             // 判断新密码是否和旧密码一致
-            if (!setting.get("pwd.enable-same").isReal() && thisService.isRight(req.getNewPassword(), user.getPwd())) {
+            if (!setting.get("pwd.enable-same").isReal() && thisService.isMatch(req.getNewPassword(), user.getPwd())) {
                 return R.fail("修改失败，密码不符合规则");
             }
 

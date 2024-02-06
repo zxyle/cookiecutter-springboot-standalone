@@ -40,7 +40,7 @@ def replace_content(input_content):
     # 替换掉包名
     after_replace_base_package = input_content.replace(base_package, "{% raw %}{{ cookiecutter.basePackage }}{% endraw %}")
     # 替换掉版本号、作者和生成日期
-    after_replace_version = re.sub("And git commit hash is \w{32}.",
+    after_replace_version = re.sub("And git commit hash is \w{40}.",
                                    "And git commit hash is {% raw %}{% gitcommit %}{% endraw %}.",
                                    after_replace_base_package)
     after_replace_author = re.sub(

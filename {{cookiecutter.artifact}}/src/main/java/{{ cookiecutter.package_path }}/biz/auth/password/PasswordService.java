@@ -57,13 +57,13 @@ public class PasswordService {
     }
 
     /**
-     * 校验密码是否正确
+     * 校验明文密码是否与加密后的密码匹配
      *
-     * @param raw     原始密码
+     * @param raw     明文密码
      * @param encoded 加密后的密码
-     * @return true: 正确; false: 错误
+     * @return true: 匹配; false: 不匹配
      */
-    public boolean isRight(String raw, String encoded) {
+    public boolean isMatch(String raw, String encoded) {
         if (StringUtils.isBlank(raw) || StringUtils.isBlank(encoded))
             return false;
 
