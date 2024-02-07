@@ -20,11 +20,11 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 public class PaginationRequest extends BaseRequest {
 
-    private static final String DEFAULT_ORDER = "asc";
-    private static final String DEFAULT_FIELD = "id";
-    private static final int DEFAULT_PAGE_NUM = 1;
-    private static final int DEFAULT_PAGE_SIZE = 10;
-    private static final int MAX_PAGE_SIZE = 100;
+    private static final String DEFAULT_ORDER = "asc";  // 默认排序方式
+    private static final String DEFAULT_FIELD = "id";   // 默认排序字段
+    private static final int DEFAULT_PAGE_NUM = 1;      // 默认页码
+    private static final int DEFAULT_PAGE_SIZE = 10;    // 默认分页大小
+    private static final int MAX_PAGE_SIZE = 100;       // 最大分页大小，防止恶意请求
 
     /**
      * 分页页码

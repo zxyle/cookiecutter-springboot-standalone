@@ -53,7 +53,7 @@ public class LoginLog extends LiteEntity {
     private String msg;
 
     /**
-     * 登录状态
+     * 登录是否成功
      */
     private boolean success;
 

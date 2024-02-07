@@ -94,8 +94,6 @@ public class LogAspect {
         // log.info("params map: {}", map);
         HttpServletRequest servletRequest = (HttpServletRequest) map.get("servletRequest");
         AccountLoginRequest request = (AccountLoginRequest) map.get("req");
-        String header = servletRequest.getHeader("User-Agent");
-        // log.info("UA: {}", header);
         loginLog.setUa(servletRequest.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setIp(IpUtil.getIpAddr(servletRequest));
         loginLog.setAccount(request.getAccount());
@@ -106,7 +104,6 @@ public class LogAspect {
         long end = System.currentTimeMillis();
         loginLog.setMsg(result.getMessage());
         loginLog.setSuccess(result.isSuccess());
-
 
         log.debug("{} -> {}, 耗费时间: {}毫秒.", pjp.getTarget().getClass().getSimpleName(), pjp.getSignature().getName(), (end - start));
         log.info("登录耗费时间: {}毫秒", (end - start));

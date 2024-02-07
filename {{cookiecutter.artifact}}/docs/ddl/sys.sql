@@ -532,7 +532,7 @@ CREATE TABLE `sys_login_log` (
   `ip` varchar(15) DEFAULT NULL COMMENT '登录IP',
   `ua` varchar(255) DEFAULT NULL COMMENT '浏览器请求头',
   `msg` varchar(255) DEFAULT NULL COMMENT '消息',
-  `success` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '登录状态',
+  `success` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '登录是否成功',
   `user_id` int UNSIGNED DEFAULT NULL COMMENT '用户id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登录日志';

@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,7 @@ public class SmsCodeAuthenticationFailureHandler implements AuthenticationFailur
         String account = (String) request.getAttribute("account");
         LoginLog loginLog = new LoginLog();
         loginLog.setIp(request.getRemoteAddr());
-        loginLog.setUa(request.getHeader("User-Agent"));
+        loginLog.setUa(request.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setSuccess(false);
         loginLog.setAccount(account);
         loginLog.setMsg(exception.getMessage());
