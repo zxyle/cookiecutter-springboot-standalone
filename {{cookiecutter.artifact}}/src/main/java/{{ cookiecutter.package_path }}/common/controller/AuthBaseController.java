@@ -12,11 +12,14 @@ import {{ cookiecutter.basePackage }}.biz.auth.user.role.UserRoleService;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +27,8 @@ import java.util.stream.Collectors;
  */
 @Component
 public class AuthBaseController {
+
+    private static final String ROLE_PREFIX = "ROLE_";
 
     @Autowired
     protected GroupService groupService;
@@ -34,20 +39,23 @@ public class AuthBaseController {
     @Autowired
     protected UserRoleService userRoleService;
 
-    /**
-     * 获取当前登录用户ID
-     */
-    public Integer getUserId() {
-        return getLoggedInUser().getId();
+    public LoginUser getLoginUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (LoginUser) authentication.getPrincipal();
     }
 
     /**
      * 获取当前登录用户信息
      */
     public User getLoggedInUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        return loginUser.getUser();
+        return getLoginUser().getUser();
+    }
+
+    /**
+     * 获取当前登录用户ID
+     */
+    public Integer getUserId() {
+        return getLoggedInUser().getId();
     }
 
     /**
@@ -64,6 +72,53 @@ public class AuthBaseController {
     public String getCurrentUsername() {
         User user = getLoggedInUser();
         return user.getUsername();
+    }
+
+    /**
+     * 获取当前登录用户拥有的角色码
+     */
+    public Set<String> getRoleCodes() {
+        LoginUser loginUser = getLoginUser();
+        if (loginUser == null) return Collections.emptySet(); // 如果登录用户为空，返回空集合
+
+        return loginUser.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(s -> s.startsWith(ROLE_PREFIX))
+                .map(s -> s.substring(ROLE_PREFIX.length())) // 去掉前缀
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * 判断当前登录用户是否拥有指定角色
+     *
+     * @param roleCode 角色码
+     * @return 是否拥有
+     */
+    public boolean hasRole(String roleCode) {
+        return getRoleCodes().contains(roleCode);
+    }
+
+    /**
+     * 获取当前登录用户的权限码
+     */
+    public Set<String> getPermissionCodes() {
+        LoginUser loginUser = getLoginUser();
+        if (loginUser == null) return Collections.emptySet();
+
+        return loginUser.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(s -> !s.startsWith(ROLE_PREFIX))
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * 判断当前登录用户是否拥有指定权限
+     *
+     * @param permissionCode 权限码
+     * @return 是否拥有
+     */
+    public boolean hasPermission(String permissionCode) {
+        return getPermissionCodes().contains(permissionCode);
     }
 
     /**

@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.config.security;
 
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 /**
  * 登录用户信息
  */
+@Data
 @AllArgsConstructor
 public class LoginUser implements UserDetails {
 
@@ -35,14 +37,6 @@ public class LoginUser implements UserDetails {
      * 密码过期时间阈值，单位：天
      */
     private Integer expireDays;
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
 
     // 获取权限列表
     @Override
