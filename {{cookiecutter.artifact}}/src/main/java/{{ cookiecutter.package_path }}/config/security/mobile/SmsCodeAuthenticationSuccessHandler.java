@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -57,7 +58,7 @@ public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSucces
         String account = (String) request.getAttribute("account");
         LoginLog loginLog = new LoginLog();
         loginLog.setIp(request.getRemoteAddr());
-        loginLog.setUa(request.getHeader("User-Agent"));
+        loginLog.setUa(request.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setAccount(account);
         loginLog.setMsg("登录成功");
         loginLog.setSuccess(true);

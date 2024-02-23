@@ -23,8 +23,10 @@ public class LoginLogService extends ServiceImpl<LoginLogMapper, LoginLog> {
      */
     @Async("applicationTaskExecutor")
     public void saveLoginLog(LoginLog loginLog) {
+        if (loginLog == null) return;
+
         // 如果 ua 字段超过255个字符，截取前255个字符, 避免插入数据库失败
-        if (loginLog != null && StringUtils.isNotBlank(loginLog.getUa())) {
+        if (StringUtils.isNotBlank(loginLog.getUa())) {
             loginLog.setUa(StringUtils.substring(loginLog.getUa(), 0, 255));
         }
 
