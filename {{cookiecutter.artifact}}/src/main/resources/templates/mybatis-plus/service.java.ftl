@@ -36,7 +36,7 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     }
 
     /**
-     * 按ID查询
+     * 按ID查询${table.comment}
      */
     @Cacheable(key = "#id")
     public ${table.className} findById(Integer id) {
@@ -44,7 +44,7 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     }
 
     /**
-     * 按ID删除
+     * 按ID删除${table.comment}
      */
     @CacheEvict(key = "#id")
     public boolean deleteById(Integer id) {
@@ -52,7 +52,7 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     }
 
     /**
-     * 按ID更新
+     * 按ID更新${table.comment}
      */
     @CachePut(key = "#entity.id")
     public ${table.className} putById(${table.className} entity) {

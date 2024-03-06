@@ -18,6 +18,7 @@ public class R<T> implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final String SUCCESS_MSG = "操作成功";
     private static final String FAILURE_MSG = "操作失败";
+    private static final String TRACE_ID = "traceId";
 
 
     /**
@@ -67,7 +68,7 @@ public class R<T> implements Serializable {
         response.setMessage(message);
         response.setSuccess(true);
         response.setData(data);
-        response.setTraceId(MDC.get("traceId"));
+        response.setTraceId(MDC.get(TRACE_ID));
         return response;
     }
 
@@ -84,7 +85,7 @@ public class R<T> implements Serializable {
         response.setCode(code);
         response.setMessage(message);
         response.setSuccess(false);
-        response.setTraceId(MDC.get("traceId"));
+        response.setTraceId(MDC.get(TRACE_ID));
         return response;
     }
 

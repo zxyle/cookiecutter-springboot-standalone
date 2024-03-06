@@ -62,7 +62,7 @@ public class ${className} {
         // wrapper.eq("name", "Tom");
         <#if excel>
 
-        // 导出功能，不需要可以删除
+        // Excel导出功能，不需要可以删除
         if (req.isExport()) {
             List<${table.className}> list = thisService.list(wrapper);
             List<${table.className}Export> exportList = IntStream.range(0, list.size())

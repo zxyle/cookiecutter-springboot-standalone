@@ -7,7 +7,7 @@ import javax.validation.Constraint;
 import java.lang.annotation.*;
 
 /**
- * 上传文件校验注解
+ * 这个注解用于校验上传文件的属性，可应用于MultipartFile类型的属性上
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

@@ -17,6 +17,8 @@ public class Item {
 
     private int intValue;
 
+    private double doubleValue;
+
     /**
      * 布尔值
      */
@@ -51,6 +53,14 @@ public class Item {
             case "Boolean":
             case "java.lang.Boolean":
                 this.real = Boolean.parseBoolean(setting.getOptionValue());
+                break;
+            case "double":
+            case "float":
+            case "decimal":
+            case "java.lang.Double":
+            case "java.lang.Float":
+            case "java.math.BigDecimal":
+                this.doubleValue = Double.parseDouble(setting.getOptionValue());
                 break;
             default:
                 throw new IllegalArgumentException("不支持的数据类型：" + setting.getDataType());

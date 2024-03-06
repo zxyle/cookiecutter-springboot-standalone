@@ -37,7 +37,7 @@ public class ${className} extends PaginationRequest {
         <#if column.javaType == "String">
     @NotBlank(message = "${column.comment}不能为空")
         <#else>
-    @NotNull(message = "${column.comment}不能为空")
+    @NotNull(message = "${column.comment}不能为null")
         </#if>
     </#if>
     private ${column.javaType} ${column.property};

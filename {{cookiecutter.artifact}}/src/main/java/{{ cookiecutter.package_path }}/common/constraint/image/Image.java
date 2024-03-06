@@ -7,7 +7,7 @@ import javax.validation.Constraint;
 import java.lang.annotation.*;
 
 /**
- * 图片校验注解，用于校验图片的宽高是否符合要求
+ * 这个注解用于校验上传的图片文件的尺寸是否符合规定，可应用于MultipartFile类型的属性上
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
