@@ -97,7 +97,6 @@ public class ${className} {
     //     return R.ok(thisService.list());
     // }
 
-
     /**
      * 新增${table.comment!}
      */
@@ -108,7 +107,6 @@ public class ${className} {
         ${table.className} result = thisService.insert(entity);
         return R.ok(result);
     }
-
 
     /**
      * 按ID查询${table.comment!}
@@ -149,7 +147,7 @@ public class ${className} {
     }
 
     /**
-     * 批量新增
+     * 批量新增${table.comment!}
      */
     @LogOperation(name = "批量新增${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:add')")
@@ -160,7 +158,7 @@ public class ${className} {
     }
 
     /**
-     * 批量更新
+     * 批量更新${table.comment!}
      */
     @LogOperation(name = "批量更新${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
@@ -171,7 +169,7 @@ public class ${className} {
     }
 
     /**
-     * 批量删除
+     * 批量删除${table.comment!}
      */
     @LogOperation(name = "批量删除${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")

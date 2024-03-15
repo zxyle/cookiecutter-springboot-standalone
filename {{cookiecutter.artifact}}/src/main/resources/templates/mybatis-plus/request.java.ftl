@@ -31,7 +31,7 @@ public class ${className} extends BaseRequest {
      * ${column.comment}
      */
     <#if column.length gt 0>
-    @Length(max = ${column.length}, message = "${column.comment}长度不能超过${column.length}个字符")
+    @Length(max = ${column.length?string("0")}, message = "${column.comment}长度不能超过${column.length?string("0")}个字符")
     </#if>
     <#if !column.nullable>
         <#if column.javaType == "String">
