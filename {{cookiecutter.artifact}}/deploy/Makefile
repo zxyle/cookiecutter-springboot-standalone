@@ -7,7 +7,7 @@
 
 
 # 定义变量
-SERVER = root@localhost
+SERVER = root@[替换成目标服务器IP]
 APP_DIR = /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}
 DIR = $(APP_DIR)/{{ cookiecutter.artifact.replace('-api', '-web') }}
 TARGET = dist
