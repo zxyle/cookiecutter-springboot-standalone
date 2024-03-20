@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.user;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.user.request.AdminAddUserRequest;
 import {{ cookiecutter.basePackage }}.common.request.auth.ListAuthRequest;
@@ -58,7 +57,7 @@ public class UserController extends AuthBaseController {
         wrapper.in("id", members);
 
         wrapper.eq(req.getEnabled() != null, "enabled", req.getEnabled());
-        IPage<User> page = thisService.page(req.toPageable(), wrapper);
+        Page<User> page = thisService.page(req.toPageable(), wrapper);
 
         // 增加角色和组信息
         List<UserResponse> userResponses = page.getRecords().stream()

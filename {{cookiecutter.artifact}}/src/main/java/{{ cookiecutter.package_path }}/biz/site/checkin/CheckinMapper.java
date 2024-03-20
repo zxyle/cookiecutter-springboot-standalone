@@ -17,6 +17,10 @@ public interface CheckinMapper extends BaseMapper<Checkin> {
 
     /**
      * 获取用户某月的签到情况
+     *
+     * @param userId    用户ID
+     * @param startDate 开始日期
+     * @param endDate   结束日期
      */
     List<Integer> calendar(Integer userId, LocalDate startDate, LocalDate endDate);
 

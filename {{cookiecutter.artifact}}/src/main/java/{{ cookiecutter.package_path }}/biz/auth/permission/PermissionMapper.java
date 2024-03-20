@@ -24,7 +24,7 @@ public interface PermissionMapper extends BaseMapper<Permission> {
     /**
      * 查询最大排序号
      *
-     * @param parentId 父ID
+     * @param parentId 父级ID
      */
     Integer findMaxSortByParentId(Integer parentId);
 

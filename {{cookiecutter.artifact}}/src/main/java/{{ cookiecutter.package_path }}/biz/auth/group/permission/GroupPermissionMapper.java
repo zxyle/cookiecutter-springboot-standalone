@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.group.permission;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.Permission;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
@@ -20,17 +19,25 @@ public interface GroupPermissionMapper extends BaseMapper<GroupPermission> {
 
     /**
      * 查询用户组拥有的权限代码列表
+     *
+     * @param groupId 用户组ID
      */
     List<Permission> findPermissionsByGroupId(Integer groupId);
 
     /**
      * 查询用户组拥有的权限代码列表
+     *
+     * @param groupIds 用户组ID列表
      */
     List<Permission> findPermissionsByGroupIds(List<Integer> groupIds);
 
     /**
      * 分页查询用户组下的权限
+     *
+     * @param page    分页对象
+     * @param groupId 用户组ID
+     * @param request 分页请求
      */
-    Page<Permission> page(IPage<Permission> page, Integer groupId, PaginationRequest request);
+    Page<Permission> page(Page<Permission> page, Integer groupId, PaginationRequest request);
 
 }

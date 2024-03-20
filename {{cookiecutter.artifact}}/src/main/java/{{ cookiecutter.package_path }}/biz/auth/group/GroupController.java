@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.auth.group;
 
 import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
@@ -42,7 +41,7 @@ public class GroupController extends AuthBaseController {
         QueryWrapper<Group> wrapper = new QueryWrapper<>();
         wrapper.in("id", groupService.getSubGroups(getUserId()));
         wrapper.like(StringUtils.isNotBlank(req.getKeyword()), "name", req.getKeyword());
-        IPage<Group> page = groupService.page(req.toPageable(), wrapper);
+        Page<Group> page = groupService.page(req.toPageable(), wrapper);
         List<GroupResponse> collect = page.getRecords().stream()
                 .map(group -> groupService.attachGroupInfo(group, req.isFull()))
                 .collect(Collectors.toList());

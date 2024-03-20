@@ -5,7 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.auth.role;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.PermissionService;
@@ -52,7 +51,7 @@ public class RoleController extends AuthBaseController {
                     .or().like("code", req.getKeyword())
                     .or().like("description", req.getKeyword()));
         }
-        IPage<Role> list = thisService.page(req.toPageable(), wrapper);
+        Page<Role> list = thisService.page(req.toPageable(), wrapper);
         List<RoleResponse> roles = list.getRecords().stream()
                 .map(role -> thisService.attachRoleInfo(role, req.isFull()))
                 .collect(Collectors.toList());

@@ -4,7 +4,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.user.group;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.group.Group;
 import {{ cookiecutter.basePackage }}.common.request.auth.ListAuthRequest;
@@ -36,8 +35,12 @@ public interface UserGroupMapper extends BaseMapper<UserGroup> {
 
     /**
      * 分页查询用户所属的用户组
+     *
+     * @param page    分页对象
+     * @param userId  用户ID
+     * @param request 分页请求
      */
-    Page<Group> page(IPage<Group> page, Integer userId, PaginationRequest request);
+    Page<Group> page(Page<Group> page, Integer userId, PaginationRequest request);
 
     /**
      * 分页查询用户组下的用户
@@ -46,7 +49,7 @@ public interface UserGroupMapper extends BaseMapper<UserGroup> {
      * @param groupId 用户组ID
      * @param request 请求对象
      */
-    Page<User> pageUser(IPage<User> page, Integer groupId, ListAuthRequest request);
+    Page<User> pageUser(Page<User> page, Integer groupId, ListAuthRequest request);
 
 }
 
