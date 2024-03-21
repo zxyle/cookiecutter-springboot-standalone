@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 基础请求
+ * 基础请求类
  */
 @Getter
 @Setter

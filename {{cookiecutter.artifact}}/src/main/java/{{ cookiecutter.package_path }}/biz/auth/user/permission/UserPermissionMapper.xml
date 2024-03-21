@@ -4,26 +4,26 @@
 
     <select id="findPermissionsByUserId" resultType="{{ cookiecutter.basePackage }}.biz.auth.permission.Permission">
         SELECT
-            b.id, b.code, b.parent_id
+          b.id, b.code, b.parent_id
         FROM `auth_user_permission` a
         LEFT JOIN `auth_permission` b
         ON a.`permission_id` = b.`id`
         WHERE
-            a.`user_id` = #{userId}
+          a.`user_id` = #{userId}
     </select>
 
     <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.permission.Permission">
         SELECT
-            b.*
+          b.*
         FROM (SELECT permission_id FROM auth_user_permission WHERE user_id=#{userId}) a
         LEFT JOIN auth_permission b
         ON a.permission_id=b.id
         <where>
-            <if test="request != null and request.keyword != null">
-                b.name LIKE CONCAT('%', #{request.keyword}, '%')
-                OR b.code LIKE CONCAT('%', #{request.keyword}, '%')
-                OR b.description LIKE CONCAT('%', #{request.keyword}, '%')
-            </if>
+          <if test="request != null and request.keyword != null">
+            b.name LIKE CONCAT('%', #{request.keyword}, '%')
+            OR b.code LIKE CONCAT('%', #{request.keyword}, '%')
+            OR b.description LIKE CONCAT('%', #{request.keyword}, '%')
+          </if>
         </where>
     </select>
 

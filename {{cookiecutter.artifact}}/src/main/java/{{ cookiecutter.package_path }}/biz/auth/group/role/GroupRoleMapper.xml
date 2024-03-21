@@ -4,7 +4,7 @@
 
     <select id="findRolesByGroupId" resultType="{{ cookiecutter.basePackage }}.biz.auth.role.Role">
         SELECT
-            b.id, b.code
+          b.id, b.code
         FROM `auth_group_role` a
         LEFT JOIN `auth_role` b ON a.role_id = b.id
         WHERE a.group_id = #{groupId}
@@ -12,27 +12,27 @@
 
     <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.role.Role">
         SELECT
-            b.*
+          b.*
         FROM ( SELECT role_id FROM auth_group_role WHERE group_id = #{groupId} ) a
         LEFT JOIN auth_role b
         ON a.role_id = b.id
         <where>
-            <if test="request != null and request.keyword != null">
-                b.name LIKE CONCAT('%', #{request.keyword}, '%')
-                OR b.code LIKE CONCAT('%', #{request.keyword}, '%')
-                OR b.description LIKE CONCAT('%', #{request.keyword}, '%')
-            </if>
+          <if test="request != null and request.keyword != null">
+            b.name LIKE CONCAT('%', #{request.keyword}, '%')
+            OR b.code LIKE CONCAT('%', #{request.keyword}, '%')
+            OR b.description LIKE CONCAT('%', #{request.keyword}, '%')
+          </if>
         </where>
     </select>
 
     <select id="findRolesByGroupIds" resultType="{{ cookiecutter.basePackage }}.biz.auth.role.Role">
         SELECT
-            b.id, b.code
+          b.id, b.code
         FROM `auth_group_role` a
         LEFT JOIN `auth_role` b ON a.role_id = b.id
         WHERE a.group_id IN
         <foreach collection="groupIds" item="groupId" open="(" separator="," close=")">
-            #{groupId}
+          #{groupId}
         </foreach>
     </select>
 

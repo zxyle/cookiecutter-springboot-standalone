@@ -4,11 +4,11 @@
 
     <select id="findMaxSortNum" resultType="java.lang.Integer">
         SELECT
-            IFNULL( MAX( `dict_sort` ), 0 ) AS sort
+          IFNULL( MAX( `dict_sort` ), 0 ) AS sort
         FROM
-            `sys_dict`
+          `sys_dict`
         WHERE
-            `dict_type` = #{dictType}
+          `dict_type` = #{dictType}
     </select>
 
 </mapper>

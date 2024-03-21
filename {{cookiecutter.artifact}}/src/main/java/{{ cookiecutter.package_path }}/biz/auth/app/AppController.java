@@ -51,8 +51,8 @@ public class AppController extends AuthBaseController {
     @GetMapping("/apps")
     public R<Page<App>> page(@Valid PaginationRequest req) {
         QueryWrapper<App> wrapper = new QueryWrapper<>();
-        wrapper.orderBy(EntityUtil.getFields(App.class).contains(req.getField()),
-                req.isAsc(), req.getField());
+        wrapper.orderBy(EntityUtil.getFields(App.class).contains(req.getColumn()),
+                req.isAsc(), req.getColumn());
         if (StringUtils.isNotBlank(req.getKeyword())) {
             wrapper.and(i -> i.like("name", req.getKeyword())
                     .or().like("description", req.getKeyword()));

@@ -4,9 +4,9 @@
 
     <select id="findQuestionsByUserId" resultType="{{ cookiecutter.basePackage }}.biz.auth.mfa.question.Question">
         SELECT
-            id, ask
+          id, ask
         FROM
-            auth_question a
+          auth_question a
         INNER JOIN ( SELECT question_id FROM auth_answer WHERE user_id = #{userId} ) b
         ON a.id = b.question_id
     </select>

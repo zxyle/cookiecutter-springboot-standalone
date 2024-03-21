@@ -3,22 +3,22 @@
 <mapper namespace="{{ cookiecutter.basePackage }}.biz.sys.partition.PartitionMapper">
 
     <select id="createPartition">
-        ALTER TABLE ${tableName} ADD PARTITION (PARTITION ${partitionName} VALUES LESS THAN (TO_DAYS(#{tomorrow})))
+      ALTER TABLE ${tableName} ADD PARTITION (PARTITION ${partitionName} VALUES LESS THAN (TO_DAYS(#{tomorrow})))
     </select>
 
     <select id="dropPartition">
-        ALTER TABLE ${tableName} DROP PARTITION ${partitionName}
+      ALTER TABLE ${tableName} DROP PARTITION ${partitionName}
     </select>
 
     <select id="existsPartition" resultType="java.lang.Boolean">
-        SELECT COUNT(*) FROM information_schema.partitions
-        WHERE table_name = #{tableName} AND partition_name = #{partitionName}
-        LIMIT 1
+      SELECT COUNT(*) FROM information_schema.partitions
+      WHERE table_name = #{tableName} AND partition_name = #{partitionName}
+      LIMIT 1
     </select>
 
     <select id="listPartitions" resultType="java.lang.String">
-        SELECT partition_name FROM information_schema.partitions
-        WHERE table_name = #{tableName}
+      SELECT partition_name FROM information_schema.partitions
+      WHERE table_name = #{tableName}
     </select>
 
 </mapper>

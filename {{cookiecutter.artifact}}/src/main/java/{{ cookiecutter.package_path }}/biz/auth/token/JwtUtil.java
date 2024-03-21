@@ -57,7 +57,7 @@ public final class JwtUtil {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         SecretKey secretKey = generalKey();
         long nowMillis = System.currentTimeMillis();
-        Date now = new Date(nowMillis);
+        // Date now = new Date(nowMillis);
         if (ttlMillis == null) {
             ttlMillis = JwtUtil.JWT_TTL;
         }
@@ -68,10 +68,10 @@ public final class JwtUtil {
                 // .setHeaderParam("key", "value")
                 // PAYLOAD
                 // .claim("key", "value")
-                .setId(uuid)              // 唯一的ID
+                // .setId(uuid)              // 唯一的ID
                 .setSubject(subject)      // 主题  可以是JSON数据
-                .setIssuer("sg")          // 签发者
-                .setIssuedAt(now)         // 签发时间
+                // .setIssuer("sg")          // 签发者
+                // .setIssuedAt(now)         // 签发时间
                 .signWith(signatureAlgorithm, secretKey) // 使用HS256对称加密算法签名, 第二个参数为秘钥
                 .setExpiration(expDate);
     }

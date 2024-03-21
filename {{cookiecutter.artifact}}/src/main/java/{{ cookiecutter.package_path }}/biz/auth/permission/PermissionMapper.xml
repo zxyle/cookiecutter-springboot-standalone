@@ -6,18 +6,18 @@
         SELECT `code`
         FROM `auth_permission`
         WHERE `id` IN (
-            SELECT `permission_id`
-            FROM `auth_role_permission`
-            WHERE `role_id` IN (SELECT `role_id` FROM `auth_user_role` WHERE `user_id` = #{userId}))
+          SELECT `permission_id`
+          FROM `auth_role_permission`
+          WHERE `role_id` IN (SELECT `role_id` FROM `auth_user_role` WHERE `user_id` = #{userId}))
     </select>
 
     <select id="findMaxSortByParentId" resultType="java.lang.Integer">
         SELECT
-            IFNULL( MAX( sort ), 0 ) AS sort
+          IFNULL( MAX( sort ), 0 ) AS sort
         FROM
-            `auth_permission`
+          `auth_permission`
         WHERE
-            `parent_id` = #{parentId}
+          `parent_id` = #{parentId}
     </select>
 
     <select id="findPermissionIds" resultType="java.lang.Integer">

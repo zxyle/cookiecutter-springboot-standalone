@@ -4,7 +4,7 @@
 
     <select id="listUsers" resultType="{{ cookiecutter.basePackage }}.biz.auth.user.User">
         SELECT
-            b.*
+          b.*
         FROM `auth_user_group` a
         LEFT JOIN `auth_user` b
         ON a.user_id = b.id
@@ -13,43 +13,43 @@
 
     <select id="listGroups" resultType="{{ cookiecutter.basePackage }}.biz.auth.group.Group">
         SELECT
-            b.`name`,
-            b.`parent_id`,
-            b.`description`,
-            b.`sort`
+          b.`name`,
+          b.`parent_id`,
+          b.`description`,
+          b.`sort`
         FROM
-            `auth_user_group` a
+          `auth_user_group` a
         LEFT JOIN `auth_group` b
-            ON a.`group_id` = b.`id`
+        ON a.`group_id` = b.`id`
         WHERE
-            a.`user_id` = #{userId}
+          a.`user_id` = #{userId}
     </select>
 
     <select id="page" resultType="{{ cookiecutter.basePackage }}.biz.auth.group.Group">
         SELECT
-            b.*
+          b.*
         FROM ( SELECT group_id FROM auth_user_group WHERE user_id = #{userId} ) a
         LEFT JOIN auth_group b
         ON a.group_id = b.id
         <if test="request != null and request.keyword != null">
-            WHERE b.name LIKE CONCAT('%', #{request.keyword}, '%')
+          WHERE b.name LIKE CONCAT('%', #{request.keyword}, '%')
         </if>
     </select>
 
     <select id="pageUser" resultType="{{ cookiecutter.basePackage }}.biz.auth.user.User">
         SELECT
-            b.id,
-            b.nickname
+          b.id,
+          b.nickname
         FROM (SELECT user_id FROM auth_user_group WHERE group_id=#{groupId}) a
         LEFT JOIN auth_user b
         ON a.user_id=b.id
         <where>
-            <if test="request != null and request.keyword != null">
-                b.nickname LIKE CONCAT('%', #{request.keyword}, '%')
-            </if>
-            <if test="request != null and request.enabled != null">
-                AND b.enabled = #{request.enabled}
-            </if>
+          <if test="request != null and request.keyword != null">
+            b.nickname LIKE CONCAT('%', #{request.keyword}, '%')
+          </if>
+          <if test="request != null and request.enabled != null">
+            AND b.enabled = #{request.enabled}
+          </if>
         </where>
     </select>
 

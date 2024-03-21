@@ -40,8 +40,8 @@ public class FeedbackController {
     @GetMapping("/feedbacks")
     public R<Page<Feedback>> list(@Valid PaginationRequest req, HttpServletResponse response) throws IOException {
         QueryWrapper<Feedback> wrapper = new QueryWrapper<>();
-        wrapper.orderBy(EntityUtil.getFields(Feedback.class).contains(req.getField()),
-                req.isAsc(), req.getField());
+        wrapper.orderBy(EntityUtil.getFields(Feedback.class).contains(req.getColumn()),
+                req.isAsc(), req.getColumn());
         wrapper.ge(req.getStartTime() != null, "create_time", req.getStartTime());
         wrapper.le(req.getEndTime() != null, "create_time", req.getEndTime());
 

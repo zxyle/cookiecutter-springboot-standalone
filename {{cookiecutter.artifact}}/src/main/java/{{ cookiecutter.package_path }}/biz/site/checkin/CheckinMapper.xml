@@ -4,12 +4,12 @@
 
     <select id="calendar" resultType="java.lang.Integer">
         SELECT
-            DAY(checkin_date)
+          DAY(checkin_date)
         FROM
-            `site_checkin`
+          `site_checkin`
         WHERE
-            user_id = #{userId} AND checkin_date BETWEEN #{startDate} AND #{endDate}
+          user_id = #{userId} AND checkin_date BETWEEN #{startDate} AND #{endDate}
         ORDER BY
-            checkin_date
+          checkin_date
     </select>
 </mapper>

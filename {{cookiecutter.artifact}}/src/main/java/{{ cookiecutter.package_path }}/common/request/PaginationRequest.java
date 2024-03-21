@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.AssertTrue;
 import java.time.LocalDateTime;
 
 /**
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 public class PaginationRequest extends BaseRequest {
 
     private static final String DEFAULT_ORDER = "asc";  // 默认排序方式
-    private static final String DEFAULT_FIELD = "id";   // 默认排序字段
+    private static final String DEFAULT_COLUMN = "id";  // 默认排序字段
     private static final int DEFAULT_PAGE_NUM = 1;      // 默认页码
     private static final int DEFAULT_PAGE_SIZE = 10;    // 默认分页大小
     private static final int MAX_PAGE_SIZE = 100;       // 最大分页大小，防止恶意请求
@@ -66,7 +67,7 @@ public class PaginationRequest extends BaseRequest {
      *
      * @mock id
      */
-    private String field;
+    private String column;
 
     /**
      * 开始时间 yyyy-MM-dd HH:mm:ss
@@ -110,8 +111,8 @@ public class PaginationRequest extends BaseRequest {
         return StringUtils.isNotBlank(order) && !order.equalsIgnoreCase(DEFAULT_ORDER);
     }
 
-    public String getField() {
-        return StringUtils.isNotBlank(field) ? field : DEFAULT_FIELD;
+    public String getColumn() {
+        return StringUtils.isNotBlank(column) ? column : DEFAULT_COLUMN;
     }
 
     /**
@@ -142,6 +143,14 @@ public class PaginationRequest extends BaseRequest {
      */
     public <T> Page<T> toPageable() {
         return new Page<>(getPageNum(), getPageSize());
+    }
+
+    /**
+     * 校验结束时间是否晚于开始时间
+     */
+    @AssertTrue(message = "结束时间必须晚于开始时间")
+    private boolean isEndTimeValid() {
+        return startTime == null || endTime == null || !endTime.isBefore(startTime);
     }
 
 }
