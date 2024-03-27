@@ -88,7 +88,7 @@ jdk:
 		mkdir -p $(DOWNLOAD_DIR)/jdk; \
 		wget -O $(JDK_TARGET_FILE) $(JDK_REMOTE_URL); \
 	else \
-		@echo "$(JDK_TARGET_FILE) already exists."; \
+		echo "$(JDK_TARGET_FILE) already exists."; \
 	fi
 	scp $(DOWNLOAD_DIR)/jdk/$(JDK_RPM) $(SERVER):/tmp
 	ssh $(SERVER) "rpm -ivh /tmp/$(JDK_RPM)"
@@ -103,7 +103,7 @@ redis:
 		mkdir -p $(DOWNLOAD_DIR)/redis; \
 		wget -O $(REDIS_TARGET_FILE) $(REDIS_REMOTE_URL); \
 	else \
-		@echo "$(REDIS_TARGET_FILE) already exists."; \
+		echo "$(REDIS_TARGET_FILE) already exists."; \
 	fi
 	scp $(REDIS_TARGET_FILE) $(SERVER):/tmp
 	ssh $(SERVER) "rpm -ivh /tmp/$(REDIS_RPM)"
@@ -118,7 +118,7 @@ mysql:
 		mkdir -p $(DOWNLOAD_DIR)/mysql; \
 		wget -O $(MYSQL_TARGET_FILE) $(MYSQL_REMOTE_URL); \
 	else \
-		@echo "$(MYSQL_TARGET_FILE) already exists."; \
+		echo "$(MYSQL_TARGET_FILE) already exists."; \
 	fi
 	scp $(MYSQL_TARGET_FILE) $(SERVER):/tmp
 	ssh $(SERVER) "tar -xvf /tmp/$(MYSQL_RPM) -C /tmp"

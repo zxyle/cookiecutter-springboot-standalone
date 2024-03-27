@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
  */
 public final class PasswordChecker {
 
+    private static final int MIN_LENGTH = 8;
+
     private PasswordChecker() {
     }
 
@@ -52,7 +54,7 @@ public final class PasswordChecker {
         }
 
         // Check for length
-        if (password.length() >= 8) {
+        if (password.length() >= MIN_LENGTH) {
             score++;
         }
 

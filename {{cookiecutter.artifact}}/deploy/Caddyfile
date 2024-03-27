@@ -1,0 +1,40 @@
+example.com {
+    root * /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact.replace('-api', '-web') }}
+
+    encode gzip
+
+    # 不显示Server header
+    header {
+        -Server
+    }
+
+    # 后端接口地址
+    @api {
+        path /api*
+    }
+    reverse_proxy @api http://127.0.0.1:8080 {
+        header_up Host {http.request.host}
+        header_up X-Real-Ip {http.request.remote}
+        header_up X-Forwarded-For {http.request.remote}
+        header_up Connection ""
+    }
+
+    # 前端静态文件
+    @frontend {
+        not path /api*
+    }
+    file_server @frontend
+
+    # 静态资源缓存
+    @static {
+        path_regexp \.(webp|gif|jpg|jpeg|png|css|js|ico|svg|ttf|eot|woff)$
+    }
+    header @static Cache-Control "public, immutable"
+    encode @static gzip
+
+    # redirect server error pages to the static page /50x.html
+    handle_errors {
+        rewrite * /50x.html
+        file_server
+    }
+}

@@ -3,12 +3,14 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.file;
 
+import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadData;
 import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadResponse;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.MediaType;
@@ -87,7 +89,9 @@ public class FileController {
      * @param folder 上传到指定目录
      */
     private String store(MultipartFile file, String folder) {
-        String objectName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
+        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+        String objectName = IdUtil.fastSimpleUUID() + "." + extension;
+        // String objectName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
         if (StringUtils.isNotBlank(folder)) {
             objectName = folder + "/" + objectName;
         }
