@@ -1,40 +1,31 @@
 example.com {
-    root * /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact.replace('-api', '-web') }}
+	redir https://www.example.com{uri} permanent
+}
 
-    encode gzip
+www.example.com {
+	encode gzip
+	handle /api/* {
+		reverse_proxy 127.0.0.1:8080
+	}
 
-    # 不显示Server header
-    header {
-        -Server
-    }
+	header {
+		-Server
+	}
 
-    # 后端接口地址
-    @api {
-        path /api*
-    }
-    reverse_proxy @api http://127.0.0.1:8080 {
-        header_up Host {http.request.host}
-        header_up X-Real-Ip {http.request.remote}
-        header_up X-Forwarded-For {http.request.remote}
-        header_up Connection ""
-    }
+	handle {
+		root * /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}/{{ cookiecutter.artifact.replace('-api', '-web') }}
+		try_files {path} /index.html
+		file_server
+	}
 
-    # 前端静态文件
-    @frontend {
-        not path /api*
-    }
-    file_server @frontend
+	# 优化静态资源缓存 30天
+	@static {
+		path_regexp \.(webp|gif|jpg|jpeg|png|ico|svg|css|js|ttf|eot|woff|woff2|otf|mp4|webm|ogg|mp3|wav|pdf)$
+	}
+	header @static Cache-Control "public, max-age=2592000, immutable"
 
-    # 静态资源缓存
-    @static {
-        path_regexp \.(webp|gif|jpg|jpeg|png|ico|svg|css|js|ttf|eot|woff|woff2|otf|mp4|webm|ogg|mp3|wav|pdf)$
-    }
-    header @static Cache-Control "public, max-age=31536000, immutable"
-    encode @static gzip
-
-    # redirect server error pages to the static page /50x.html
-    handle_errors {
-        rewrite * /50x.html
-        file_server
-    }
+    # TODO 需要进一步优化 如压缩 保留天数等
+	log {
+		output file /opt/webapps/sensor/access.log
+	}
 }
