@@ -5,7 +5,7 @@ import io.github.zxyle.codegen.Generator;
 import io.github.zxyle.codegen.table.Temp;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,16 +17,17 @@ public class CodeGenerator {
         generator.setTemplatePath("src/main/resources/templates/mybatis-plus");
 
         // 需渲染的模板
-        List<Temp> temps = new LinkedList<>();
-        temps.add(new Temp("controller.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Controller.java"));
-        temps.add(new Temp("entity.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}.java"));
-        temps.add(new Temp("mapper.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Mapper.java"));
-        temps.add(new Temp("mapper.xml.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Mapper.xml"));
-        temps.add(new Temp("service.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Service.java"));
-        temps.add(new Temp("request.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Request.java"));
-        temps.add(new Temp("response.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Response.java"));
-        temps.add(new Temp("pageRequest.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}PageRequest.java"));
-        temps.add(new Temp("export.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Export.java"));
+        List<Temp> temps = Arrays.asList(
+                new Temp("controller.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Controller.java"),
+                new Temp("entity.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}.java"),
+                new Temp("mapper.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Mapper.java"),
+                new Temp("mapper.xml.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Mapper.xml"),
+                new Temp("service.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Service.java"),
+                new Temp("request.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Request.java"),
+                new Temp("response.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Response.java"),
+                new Temp("pageRequest.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}PageRequest.java"),
+                new Temp("export.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Export.java")
+        );
         generator.setTemps(temps);
 
         generator.setAbsPath(System.getProperty("user.dir")); // 项目根目录绝对路径

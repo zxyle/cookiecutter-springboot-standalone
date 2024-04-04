@@ -3,9 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.password;
 
+import lombok.Getter;
+
 /**
  * 密码修改策略枚举
  */
+@Getter
 public enum ChangePasswordEnum {
 
     /**
@@ -43,11 +46,4 @@ public enum ChangePasswordEnum {
         this.editedBy = editedBy;
     }
 
-    public String getKind() {
-        return kind;
-    }
-
-    public String getEditedBy() {
-        return editedBy;
-    }
 }

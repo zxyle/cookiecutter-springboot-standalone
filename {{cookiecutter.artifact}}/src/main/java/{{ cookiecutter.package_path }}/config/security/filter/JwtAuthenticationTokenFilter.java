@@ -9,6 +9,7 @@ import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.auth.token.JwtUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,7 @@ import java.util.List;
 /**
  * JWT 过滤器
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -58,11 +60,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             Claims claims = JwtUtil.parseJWT(token);
             userId = claims.getSubject();
         } catch (Exception ignored) {
+            log.error("解析JWT失败: {}", token);
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 从redis中获取用户权限信息(根据放在jwt的用户id)
+        // 从redis中获取用户权限信息(根据jwt里存在的用户id)
         String key = AuthConst.KEY_PREFIX + userId;
         List<String> permissions;
         String value = stringRedisTemplate.opsForValue().get(key);

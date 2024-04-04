@@ -7,6 +7,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.login.CodeLoginRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.mfa.AccountUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -23,21 +25,22 @@ import java.io.InputStreamReader;
 /**
  * 验证码登录过滤器
  */
+@Slf4j
 public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     public SmsCodeAuthenticationFilter() {
         // 处理的验证码登录请求处理url
-        super(new AntPathRequestMatcher("/auth/user/login/code", "POST"));
+        super(new AntPathRequestMatcher("/auth/user/login/code", HttpMethod.POST.name()));
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
-        if (!request.getMethod().equals("POST")) {
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException, IOException {
+        if (!req.getMethod().equals(HttpMethod.POST.name())) {
+            throw new AuthenticationServiceException("不支持的Http方法: {}" + req.getMethod());
         }
 
         // 从请求body中获取手机号或邮箱和验证码
-        CodeLoginRequest loginRequest = obtainCodeLoginRequest(request);
+        CodeLoginRequest loginRequest = obtainCodeLoginRequest(req);
         String account = loginRequest.getAccount();
         String code = loginRequest.getCode();
 
@@ -54,20 +57,20 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
         }
 
         account = account.trim();
-        request.setAttribute("account", account);
+        req.setAttribute("account", account);
         // 创建SmsCodeAuthenticationToken(未认证)
         SmsCodeAuthenticationToken authRequest = new SmsCodeAuthenticationToken(account, code);
 
         // 设置用户信息
-        setDetails(request, authRequest);
+        setDetails(req, authRequest);
         // 返回Authentication实例
         return this.getAuthenticationManager().authenticate(authRequest);
     }
 
 
-    protected CodeLoginRequest obtainCodeLoginRequest(HttpServletRequest request) throws JsonProcessingException {
+    protected CodeLoginRequest obtainCodeLoginRequest(HttpServletRequest req) throws JsonProcessingException {
         StringBuilder stringBuilder = new StringBuilder();
-        try (InputStream inputStream = request.getInputStream();
+        try (InputStream inputStream = req.getInputStream();
              BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
             char[] charBuffer = new char[128];
             int bytesRead;
@@ -76,7 +79,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
             }
 
         } catch (IOException e) {
-            // 处理异常
+            log.error("读取请求body失败", e);
         }
 
         String requestBody = stringBuilder.toString();

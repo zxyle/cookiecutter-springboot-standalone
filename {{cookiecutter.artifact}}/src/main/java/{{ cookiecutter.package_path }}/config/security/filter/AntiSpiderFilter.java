@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.common.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import lombok.RequiredArgsConstructor;
@@ -80,7 +81,7 @@ public class AntiSpiderFilter extends OncePerRequestFilter {
             return;
         }
 
-        String userAgent = request.getHeader("User-Agent");
+        String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
         if (StringUtils.isBlank(userAgent) || KEYWORDS.stream().anyMatch(userAgent::contains)) {
             ResponseUtil.forbidden(response);
             log.info("拦截爬虫请求: {}", userAgent);

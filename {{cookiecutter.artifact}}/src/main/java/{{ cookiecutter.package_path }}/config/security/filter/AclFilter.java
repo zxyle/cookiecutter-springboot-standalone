@@ -59,7 +59,7 @@ public class AclFilter extends OncePerRequestFilter {
         ).filter(e-> e.getAllowed().equals(false)).map(Acl::getIp).collect(Collectors.toList());
 
         if ((CidrUtil.in(ip, whitelist)) || (CidrUtil.notIn(ip, blacklist))) {
-            log.warn("IP: {} is not allowed to access", ip);
+            log.error("不允许的ip访问: {}", ip);
             ResponseUtil.forbidden(response);
             return;
         }

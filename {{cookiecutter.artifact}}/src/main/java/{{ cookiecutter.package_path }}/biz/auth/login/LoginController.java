@@ -61,7 +61,7 @@ public class LoginController extends AuthBaseController {
     @PostMapping("/login/code")
     public R<LoginResponse> codeLogin(@Valid @RequestBody CodeLoginRequest req) {
         // 登录逻辑直接走Filter即可，无需在这里实现
-        log.debug("account: {}, code: {}", req.getAccount(), req.getCode());
+        log.debug("验证码登录, account: {}, code: {}", req.getAccount(), req.getCode());
         return R.ok(null);
     }
 
@@ -70,7 +70,7 @@ public class LoginController extends AuthBaseController {
      */
     @GetMapping("/login/oauth")
     public R<LoginResponse> oauthLogin(@Valid ThirdPartyLoginRequest req) {
-        log.info("code: {}, provider: {}", req.getCode(), req.getProvider());
+        log.info("三方账号登录, code: {}, provider: {}", req.getCode(), req.getProvider());
         // 登录逻辑直接走UscCodeAuthenticationFilter即可，无需在这里实现
         // 该接口占位仅为生成接口文档使用
         return R.ok(null);
@@ -96,7 +96,7 @@ public class LoginController extends AuthBaseController {
         User user = getLoggedInUser();
         String key = "scan:" + code;
         stringRedisTemplate.opsForValue().set(key, user.getId().toString(), 10, TimeUnit.MINUTES);
-        return R.ok("确认成功");
+        return R.ok("确认扫码成功");
     }
 
     /**
