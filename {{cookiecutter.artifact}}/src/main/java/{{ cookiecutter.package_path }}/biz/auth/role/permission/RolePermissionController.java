@@ -37,7 +37,7 @@ public class RolePermissionController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:role:get')")
     @GetMapping("/roles/{roleId}/permissions")
     public R<Page<Permission>> list(@Valid PaginationRequest req, @PathVariable Integer roleId) {
-        Page<Permission> page = thisMapper.page(req.toPageable(Permission.class), roleId, req);
+        Page<Permission> page = thisMapper.page(req.toPageable(), roleId, req);
         return R.ok(page);
     }
 

@@ -40,7 +40,7 @@ public class UserGroupController extends AuthBaseController {
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/groups")
     public R<Page<Group>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
-        Page<Group> page = thisMapper.page(req.toPageable(Group.class), userId, req);
+        Page<Group> page = thisMapper.page(req.toPageable(), userId, req);
         return R.ok(page);
     }
 
@@ -86,7 +86,7 @@ public class UserGroupController extends AuthBaseController {
     @GetMapping("/groups/{groupId}/users")
     public R<Page<User>> pageUser(@PathVariable Integer groupId, @Valid ListAuthRequest req) {
         // todo 需支持查询子用户组下的用户
-        Page<User> list = thisMapper.pageUser(req.toPageable(User.class), groupId, req);
+        Page<User> list = thisMapper.pageUser(req.toPageable(), groupId, req);
         return R.ok(list);
     }
 

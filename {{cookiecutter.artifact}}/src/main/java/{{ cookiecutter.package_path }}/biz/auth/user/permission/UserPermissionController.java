@@ -36,7 +36,7 @@ public class UserPermissionController {
     @PreAuthorize("@ck.hasPermit('auth:user:get')")
     @GetMapping("/users/{userId}/permissions")
     public R<Page<Permission>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
-        Page<Permission> page = thisMapper.page(req.toPageable(Permission.class), userId, req);
+        Page<Permission> page = thisMapper.page(req.toPageable(), userId, req);
         return R.ok(page);
     }
 

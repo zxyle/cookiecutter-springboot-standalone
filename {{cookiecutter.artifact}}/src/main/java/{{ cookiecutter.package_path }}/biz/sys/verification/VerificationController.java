@@ -32,7 +32,7 @@ public class VerificationController {
     @PreAuthorize("@ck.hasPermit('sys:verification:list')")
     @GetMapping("/verifications")
     public R<Page<Verification>> page(@Valid PaginationRequest req) {
-        Page<Verification> page = thisService.page(req.toPageable(Verification.class));
+        Page<Verification> page = thisService.page(req.toPageable());
         return R.ok(page);
     }
 

@@ -33,7 +33,7 @@ public class AclController {
     @PreAuthorize("@ck.hasPermit('sys:acl:list')")
     @GetMapping("/acl")
     public R<Page<Acl>> page(@Valid PaginationRequest req) {
-        Page<Acl> page = thisService.page(req.toPageable(Acl.class));
+        Page<Acl> page = thisService.page(req.toPageable());
         return R.ok(page);
     }
 
