@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.role;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.group.role.GroupRoleService;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.Permission;
@@ -108,9 +108,9 @@ public class RoleService extends ServiceImpl<RoleMapper, Role> {
      * @return true 重复 false 不重复
      */
     public boolean isDuplicate(String name, String code) {
-        QueryWrapper<Role> wrapper = new QueryWrapper<>();
-        wrapper.eq(StringUtils.isNotBlank(name), "name", name)
-                .or().eq(StringUtils.isNotBlank(code), "code", code);
+        LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(StringUtils.isNotBlank(name), Role::getName, name)
+                .or().eq(StringUtils.isNotBlank(code), Role::getCode, code);
         return exists(wrapper);
     }
 }

@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.info;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +34,8 @@ public class InfoController {
     @Cacheable(unless = "#result == null || #result.data.size() == 0")
     @GetMapping("/infos")
     public R<Map<String, String>> list() {
-        QueryWrapper<Info> wrapper = new QueryWrapper<>();
-        wrapper.select("param_key", "param_value");
+        LambdaQueryWrapper<Info> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Info::getParamKey, Info::getParamValue);
         List<Info> params = thisService.list(wrapper);
         Map<String, String> map = new HashMap<>(params.size());
         params.forEach(info -> map.put(info.getParamKey(), info.getParamValue()));

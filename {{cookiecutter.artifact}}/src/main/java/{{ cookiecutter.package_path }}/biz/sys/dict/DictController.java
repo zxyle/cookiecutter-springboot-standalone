@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.dict;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
@@ -66,13 +66,13 @@ public class DictController {
      */
     @GetMapping("/dicts/dictTypes")
     public R<List<Dict>> allTypes(String keyword) {
-        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
-        wrapper.select("name", "dict_type");
+        LambdaQueryWrapper<Dict> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Dict::getName, Dict::getDictType);
         if (StringUtils.isNotBlank(keyword)) {
-            wrapper.and(i -> i.like("name", keyword)
-                    .or().like("dict_type", keyword));
+            wrapper.and(i -> i.like(Dict::getName, keyword)
+                    .or().like(Dict::getDictType, keyword));
         }
-        wrapper.groupBy("name", "dict_type");
+        wrapper.groupBy(Dict::getName, Dict::getDictType);
         List<Dict> dicts = thisService.list(wrapper);
         return R.ok(dicts);
     }

@@ -4,14 +4,13 @@
 package {{ cookiecutter.basePackage }}.biz.site.feedback;
 
 import com.alibaba.excel.EasyExcelFactory;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.exception.DataNotFoundException;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
-import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -39,14 +38,13 @@ public class FeedbackController {
     @PreAuthorize("@ck.hasPermit('site:feedback:list')")
     @GetMapping("/feedbacks")
     public R<Page<Feedback>> list(@Valid PaginationRequest req, HttpServletResponse response) throws IOException {
-        QueryWrapper<Feedback> wrapper = new QueryWrapper<>();
-        wrapper.orderBy(EntityUtil.getFields(Feedback.class).contains(req.getColumn()),
-                req.isAsc(), req.getColumn());
-        wrapper.ge(req.getStartTime() != null, "create_time", req.getStartTime());
-        wrapper.le(req.getEndTime() != null, "create_time", req.getEndTime());
+        LambdaQueryWrapper<Feedback> wrapper = new LambdaQueryWrapper<>();
+        wrapper.ge(req.getStartTime() != null, Feedback::getCreateTime, req.getStartTime());
+        wrapper.le(req.getEndTime() != null, Feedback::getCreateTime, req.getEndTime());
 
         // 数据导出
         if (req.isExport()) {
+            // wrapper.last("limit 10000"); // 过多的数据导出会造成系统卡顿
             List<Feedback> list = thisService.list(wrapper);
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             String fileName = "意见反馈";
@@ -57,7 +55,7 @@ public class FeedbackController {
             return null;
         }
 
-        Page<Feedback> page = thisService.page(req.toPageable(), wrapper);
+        Page<Feedback> page = thisService.page(req.toPageable(Feedback.class), wrapper);
         return R.ok(page);
     }
 

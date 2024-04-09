@@ -35,7 +35,7 @@ public class RealnameController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('site:realname:list')")
     @GetMapping("/realnames")
     public R<Page<Realname>> page(@Valid PaginationRequest req) {
-        Page<Realname> page = thisService.page(req.toPageable());
+        Page<Realname> page = thisService.page(req.toPageable(Realname.class));
         return R.ok(page);
     }
 

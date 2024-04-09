@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.group;
 
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.group.permission.GroupPermissionService;
@@ -76,9 +76,9 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
      * @return 数量
      */
     public Long count(Integer parentId, String name) {
-        QueryWrapper<Group> wrapper = new QueryWrapper<>();
-        wrapper.eq("parent_id", parentId);
-        wrapper.eq(StringUtils.isNotBlank(name), "name", name);
+        LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Group::getParentId, parentId);
+        wrapper.eq(StringUtils.isNotBlank(name), Group::getName, name);
         return baseMapper.selectCount(wrapper);
     }
 
@@ -113,9 +113,9 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
      */
     public List<Tree<Integer>> getTree(Integer rootId) {
         // 查询所有数据
-        QueryWrapper<Group> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "parent_id", "name", "sort");
-        wrapper.eq("parent_id", rootId);
+        LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Group::getId, Group::getParentId, Group::getName, Group::getSort);
+        wrapper.eq(Group::getParentId, rootId);
         List<Group> list = list(wrapper);
 
         TreeNodeConfig config = new TreeNodeConfig();
@@ -138,8 +138,8 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
      */
     public List<Group> getAllChildren(List<Group> groups, Integer groupId) {
         if (CollectionUtils.isEmpty(groups)){
-            QueryWrapper<Group> wrapper = new QueryWrapper<>();
-            wrapper.select("id", "parent_id");
+            LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
+            wrapper.select(Group::getId, Group::getParentId);
             groups = list(wrapper);
         }
 
@@ -160,18 +160,18 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
 
     public boolean isAllowed(Integer actionUserId, Integer acceptUserId, Integer acceptGroupId) {
         // 查询当前用户有管理员权限的用户组
-        QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
-        wrapper.select("user_id, group_id");
-        wrapper.eq("user_id", actionUserId);
-        wrapper.eq("admin", AuthConst.ENABLED);
+        LambdaQueryWrapper<UserGroup> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(UserGroup::getUserId, UserGroup::getGroupId);
+        wrapper.eq(UserGroup::getUserId, actionUserId);
+        wrapper.eq(UserGroup::getAdmin, AuthConst.ENABLED);
         List<UserGroup> userGroups = userGroupService.list(wrapper);
         if (CollectionUtils.isEmpty(userGroups)) {
             return false;
         }
 
         List<Group> allGroups = new ArrayList<>();
-        QueryWrapper<Group> wrapper1 = new QueryWrapper<>();
-        wrapper1.select("id", "parent_id");
+        LambdaQueryWrapper<Group> wrapper1 = new LambdaQueryWrapper<>();
+        wrapper1.select(Group::getId, Group::getParentId);
         List<Group> groups = list(wrapper1);
         // 获取所有子用户组
         for (UserGroup userGroup : userGroups) {

@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.checkin;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +43,9 @@ public class CheckinService extends ServiceImpl<CheckinMapper, Checkin> {
     }
 
     public boolean hasCheckin(Integer userId, LocalDate date) {
-        QueryWrapper<Checkin> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
-        wrapper.eq("checkin_date", date);
+        LambdaQueryWrapper<Checkin> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Checkin::getUserId, userId);
+        wrapper.eq(Checkin::getCheckinDate, date);
         return exists(wrapper);
     }
 

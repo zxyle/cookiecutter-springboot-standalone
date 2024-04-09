@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.permission;
 
 import cn.hutool.core.lang.tree.Tree;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.request.AddPermissionRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.request.TreePermissionRequest;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
@@ -37,8 +37,8 @@ public class PermissionController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:permission:tree')")
     @GetMapping("/permissions/tree")
     public R<List<Tree<Integer>>> tree(@Valid TreePermissionRequest req) {
-        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        wrapper.eq(req.getKind() != null, "kind", req.getKind());
+        LambdaQueryWrapper<Permission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(req.getKind() != null, Permission::getKind, req.getKind());
         List<Permission> list = thisService.list(wrapper);
         List<Tree<Integer>> tree = thisService.getTree(list, req.getRootPermissionId());
         return R.ok(tree);

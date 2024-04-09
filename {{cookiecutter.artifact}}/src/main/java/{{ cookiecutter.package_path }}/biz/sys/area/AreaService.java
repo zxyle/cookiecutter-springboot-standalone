@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.area;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -24,9 +24,9 @@ public class AreaService extends ServiceImpl<AreaMapper, Area> {
      */
     @Cacheable(key = "#code", unless = "#result == null")
     public Area findAreaByCode(String code) {
-        QueryWrapper<Area> wrapper = new QueryWrapper<>();
-        wrapper.select("code, name, parent_id, level");
-        wrapper.eq(StringUtils.isNotBlank(code), "code", code);
+        LambdaQueryWrapper<Area> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Area::getCode, Area::getName, Area::getParentId, Area::getLevel);
+        wrapper.eq(StringUtils.isNotBlank(code), Area::getCode, code);
         return getOne(wrapper);
     }
 }

@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.group;
 
 import cn.hutool.core.lang.tree.Tree;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
@@ -38,10 +38,10 @@ public class GroupController extends AuthBaseController {
     @GetMapping("/groups")
     public R<Page<GroupResponse>> list(@Valid ListAuthRequest req) {
         // 查询当前用户，所在用户组和所能管理的用户组
-        QueryWrapper<Group> wrapper = new QueryWrapper<>();
-        wrapper.in("id", groupService.getSubGroups(getUserId()));
-        wrapper.like(StringUtils.isNotBlank(req.getKeyword()), "name", req.getKeyword());
-        Page<Group> page = groupService.page(req.toPageable(), wrapper);
+        LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(Group::getId, groupService.getSubGroups(getUserId()));
+        wrapper.like(StringUtils.isNotBlank(req.getKeyword()), Group::getName, req.getKeyword());
+        Page<Group> page = groupService.page(req.toPageable(Group.class), wrapper);
         List<GroupResponse> collect = page.getRecords().stream()
                 .map(group -> groupService.attachGroupInfo(group, req.isFull()))
                 .collect(Collectors.toList());
@@ -61,9 +61,9 @@ public class GroupController extends AuthBaseController {
     @GetMapping("/groups/tree")
     public R<List<Tree<Integer>>> tree(@RequestParam(defaultValue = "1") Integer rootId) {
         // 查询当前用户，所在用户组作为rootId
-        QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", getUserId());
-        wrapper.eq("admin", AuthConst.ENABLED);
+        LambdaQueryWrapper<UserGroup> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserGroup::getUserId, getUserId());
+        wrapper.eq(UserGroup::getAdmin, AuthConst.ENABLED);
         List<UserGroup> list = userGroupService.list(wrapper);
         if (CollectionUtils.isNotEmpty(list)) {
             rootId = list.get(0).getGroupId();

@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.role;
 
 import cn.hutool.core.util.IdUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.PermissionService;
@@ -43,15 +43,15 @@ public class RoleController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:role:list')")
     @GetMapping("/roles")
     public R<Page<RoleResponse>> list(@Valid ListAuthRequest req) {
-        QueryWrapper<Role> wrapper = new QueryWrapper<>();
-        wrapper.select("id, name, code, description");
+        LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Role::getId, Role::getName, Role::getCode, Role::getDescription);
         // 模糊查询
         if (StringUtils.isNotBlank(req.getKeyword())) {
-            wrapper.and(i -> i.like("name", req.getKeyword())
-                    .or().like("code", req.getKeyword())
-                    .or().like("description", req.getKeyword()));
+            wrapper.and(i -> i.like(Role::getName, req.getKeyword())
+                    .or().like(Role::getCode, req.getKeyword())
+                    .or().like(Role::getDescription, req.getKeyword()));
         }
-        Page<Role> list = thisService.page(req.toPageable(), wrapper);
+        Page<Role> list = thisService.page(req.toPageable(Role.class), wrapper);
         List<RoleResponse> roles = list.getRecords().stream()
                 .map(role -> thisService.attachRoleInfo(role, req.isFull()))
                 .collect(Collectors.toList());

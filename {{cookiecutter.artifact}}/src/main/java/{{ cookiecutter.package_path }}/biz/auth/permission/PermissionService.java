@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.permission;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
 import cn.hutool.core.lang.tree.TreeUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
 import {{ cookiecutter.basePackage }}.biz.auth.group.permission.GroupPermissionService;
 import {{ cookiecutter.basePackage }}.biz.auth.group.role.GroupRoleService;
@@ -17,7 +18,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.user.group.UserGroup;
 import {{ cookiecutter.basePackage }}.biz.auth.group.permission.GroupPermissionMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.role.RoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.role.permission.RolePermissionMapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.user.role.UserRoleService;
 import lombok.RequiredArgsConstructor;
@@ -233,8 +233,8 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
      * @return true:正在被使用 false:未被使用
      */
     public boolean isAlreadyUsed(Integer permissionId) {
-        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        wrapper.eq("parent_id", permissionId);
+        LambdaQueryWrapper<Permission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Permission::getParentId, permissionId);
         if (exists(wrapper)) return true;
         Long userPermissions = userPermissionService.countRelation(null, permissionId);
         if (userPermissions > 0) return true;
@@ -262,8 +262,8 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
     }
 
     public List<Permission> listAll() {
-        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "code", "parent_id");
+        LambdaQueryWrapper<Permission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Permission::getId, Permission::getCode, Permission::getParentId);
         return list(wrapper);
     }
 }

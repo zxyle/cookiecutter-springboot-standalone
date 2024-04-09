@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.sys.acl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,8 +62,8 @@ public class AclService extends ServiceImpl<AclMapper, Acl> {
      */
     @Cacheable(key = "'all'")
     public List<Acl> findAllIP() {
-        QueryWrapper<Acl> wrapper = new QueryWrapper<>();
-        wrapper.select("ip", "allowed", "end_time");
+        LambdaQueryWrapper<Acl> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Acl::getIp, Acl::getAllowed, Acl::getEndTime);
         return list(wrapper);
     }
 

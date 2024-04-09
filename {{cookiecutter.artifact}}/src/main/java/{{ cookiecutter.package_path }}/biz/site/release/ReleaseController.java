@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.release;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +29,9 @@ public class ReleaseController {
     @PreAuthorize("@ck.hasPermit('site:release:list')")
     @GetMapping("/releases")
     public R<List<Release>> list() {
-        QueryWrapper<Release> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "version", "description");
-        wrapper.orderByDesc("create_time");
+        LambdaQueryWrapper<Release> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Release::getId, Release::getVersion, Release::getDescription);
+        wrapper.orderByDesc(Release::getCreateTime);
         List<Release> releases = thisService.list(wrapper);
         return R.ok(releases);
     }

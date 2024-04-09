@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.user;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.user.request.AdminAddUserRequest;
 import {{ cookiecutter.basePackage }}.common.request.auth.ListAuthRequest;
@@ -43,21 +43,21 @@ public class UserController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:user:list')")
     @GetMapping("/users")
     public R<Page<UserResponse>> list(@Valid ListAuthRequest req) {
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.select("id, username, email, mobile, enabled");
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(User::getId, User::getUsername, User::getEmail, User::getMobile, User::getEnabled);
         if (StringUtils.isNotBlank(req.getKeyword())) {
-            wrapper.and(i -> i.like("username", req.getKeyword())
-                    .or().like("email", req.getKeyword())
-                    .or().like("mobile", req.getKeyword())
-                    .or().like("nickname", req.getKeyword()));
+            wrapper.and(i -> i.like(User::getUsername, req.getKeyword())
+                    .or().like(User::getEmail, req.getKeyword())
+                    .or().like(User::getMobile, req.getKeyword())
+                    .or().like(User::getNickname, req.getKeyword()));
         }
 
         // 不能将没有权限的用户信息返回
         List<Integer> members = thisService.getAllChildren(getUserId());
-        wrapper.in("id", members);
+        wrapper.in(User::getId, members);
 
-        wrapper.eq(req.getEnabled() != null, "enabled", req.getEnabled());
-        Page<User> page = thisService.page(req.toPageable(), wrapper);
+        wrapper.eq(req.getEnabled() != null, User::getEnabled, req.getEnabled());
+        Page<User> page = thisService.page(req.toPageable(User.class), wrapper);
 
         // 增加角色和组信息
         List<UserResponse> userResponses = page.getRecords().stream()

@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.password.history;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.biz.auth.password.ChangePasswordEnum;
@@ -53,8 +53,8 @@ public class PasswordHistoryService extends ServiceImpl<PasswordHistoryMapper, P
      * @param userId 用户ID
      */
     public Long countHistory(Integer userId) {
-        QueryWrapper<PasswordHistory> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
+        LambdaQueryWrapper<PasswordHistory> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(PasswordHistory::getUserId, userId);
         return count(wrapper);
     }
 
@@ -65,9 +65,9 @@ public class PasswordHistoryService extends ServiceImpl<PasswordHistoryMapper, P
      * @param deleteCount 删除数量
      */
     public boolean removeHistory(Integer userId, Long deleteCount) {
-        QueryWrapper<PasswordHistory> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
-        wrapper.orderByDesc("create_time");
+        LambdaQueryWrapper<PasswordHistory> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(PasswordHistory::getUserId, userId);
+        wrapper.orderByDesc(PasswordHistory::getCreateTime);
         wrapper.last(deleteCount != null, "limit " + deleteCount);
         return remove(wrapper);
     }

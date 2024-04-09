@@ -1,6 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.mfa.totp;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
@@ -31,8 +31,8 @@ public class TotpService extends ServiceImpl<TotpMapper, Totp> {
      */
     @Cacheable(key = "#userId")
     public Totp findByUserId(Integer userId) {
-        QueryWrapper<Totp> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
+        LambdaQueryWrapper<Totp> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Totp::getUserId, userId);
         return getOne(wrapper);
     }
 
@@ -41,8 +41,8 @@ public class TotpService extends ServiceImpl<TotpMapper, Totp> {
      */
     @CacheEvict(key = "#userId")
     public boolean deleteByUserId(Integer userId) {
-        QueryWrapper<Totp> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
+        LambdaQueryWrapper<Totp> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Totp::getUserId, userId);
         return remove(wrapper);
     }
 

@@ -1,6 +1,6 @@
 package ${table.packageName};
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${table.basePackageName}.common.aspect.LogOperation;
 import ${table.basePackageName}.common.request.PaginationRequest;
@@ -57,13 +57,14 @@ public class ${className} {
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
     @GetMapping("${table.endpoint}")
     public R<Page<${table.className}>> page(@Valid PaginationRequest req) <#if excel>throws IOException</#if> {
-        QueryWrapper<${table.className}> wrapper = new QueryWrapper<>();
+        LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
         // 设置查询条件
         // wrapper.eq("name", "Tom");
         <#if excel>
 
         // Excel导出功能，不需要可以删除
         if (req.isExport()) {
+            // wrapper.last("limit 10000"); // 过多的数据导出会造成系统卡顿，建议设置限制条数
             List<${table.className}> list = thisService.list(wrapper);
             List<${table.className}Export> exportList = IntStream.range(0, list.size())
                     .mapToObj(index -> {
@@ -82,7 +83,7 @@ public class ${className} {
         }
 
         </#if>
-        Page<${table.className}> page = thisService.page(req.toPageable(), wrapper);
+        Page<${table.className}> page = thisService.page(req.toPageable(${table.className}.class), wrapper);
         return R.ok(page);
     }
 

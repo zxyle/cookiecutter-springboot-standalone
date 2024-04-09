@@ -3,19 +3,31 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.validator.constraints.Length;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import {{ cookiecutter.basePackage }}.common.request.sort.Sortable;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Pattern;
+import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * 带分页/排序/时间范围/模糊搜索/文件导出的分页请求对象，所有分页请求对象都应该继承此类
+ * 带分页/多字段排序/时间范围/模糊搜索/文件导出的分页请求对象，所有分页请求对象都应该继承此类
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -26,16 +38,24 @@ public class PaginationRequest extends BaseRequest {
     private static final int DEFAULT_PAGE_NUM = 1;      // 默认页码
     private static final int DEFAULT_PAGE_SIZE = 10;    // 默认分页大小
     private static final int MAX_PAGE_SIZE = 100;       // 最大分页大小，防止恶意请求
+    private static final List<String> DEFAULT_COLUMNS = Arrays.asList("id", "create_time", "update_time");
 
     /**
-     * 分页页码
+     * 分页页码，三选一
      *
      * @mock 1
      */
     private Integer pageNum;
 
     /**
-     * 分页页码，兼容pageNum
+     * 分页页码，三选一
+     *
+     * @mock 1
+     */
+    private Integer pageNo;
+
+    /**
+     * 分页页码，三选一
      *
      * @mock 1
      */
@@ -49,25 +69,19 @@ public class PaginationRequest extends BaseRequest {
     private Integer pageSize;
 
     /**
-     * 是否Excel导出当前页
+     * 是否导出Excel
      *
      * @mock false
      */
     private boolean export;
 
     /**
-     * 排序方式 asc/desc
+     * 多字段排序, 格式为：字段名:排序方式
      *
-     * @mock asc
+     * @mock name:asc,age:desc
      */
-    private String order;
-
-    /**
-     * 排序字段
-     *
-     * @mock id
-     */
-    private String column;
+    @Pattern(regexp = "^[a-zA-Z:,]+$", message = "排序字段格式错误，只能包含英文字母、冒号、逗号")
+    private String sort;
 
     /**
      * 开始时间 yyyy-MM-dd HH:mm:ss
@@ -77,6 +91,24 @@ public class PaginationRequest extends BaseRequest {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startTime;
+
+    /**
+     * 开始日期 yyyy-MM-dd
+     *
+     * @mock 2021-01-01
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate startDate;
+
+    /**
+     * 结束日期 yyyy-MM-dd
+     *
+     * @mock 2021-02-01
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDate;
 
     /**
      * 结束时间 yyyy-MM-dd HH:mm:ss
@@ -98,29 +130,14 @@ public class PaginationRequest extends BaseRequest {
 
 
     /**
-     * 是否正序排序
-     */
-    public boolean isAsc() {
-        return StringUtils.isNotBlank(order) && order.equalsIgnoreCase(DEFAULT_ORDER);
-    }
-
-    /**
-     * 是否倒序排序
-     */
-    public boolean isDesc() {
-        return StringUtils.isNotBlank(order) && !order.equalsIgnoreCase(DEFAULT_ORDER);
-    }
-
-    public String getColumn() {
-        return StringUtils.isNotBlank(column) ? column : DEFAULT_COLUMN;
-    }
-
-    /**
      * 获取合法页码
      */
     public Integer getPageNum() {
-        Integer num = (current == null) ? pageNum : current;
-        return (num == null || num < 1 || num >= Integer.MAX_VALUE) ? DEFAULT_PAGE_NUM : num;
+        return Stream.of(current, pageNum, pageNo)
+                .filter(Objects::nonNull)
+                .filter(num -> num >= 1 && num < Integer.MAX_VALUE)
+                .findFirst()
+                .orElse(DEFAULT_PAGE_NUM);
     }
 
     /**
@@ -140,9 +157,50 @@ public class PaginationRequest extends BaseRequest {
 
     /**
      * 获取mybatis plus分页对象
+     *
+     * @param clazz 分页请求类
      */
-    public <T> Page<T> toPageable() {
-        return new Page<>(getPageNum(), getPageSize());
+    public <T> Page<T> toPageable(Class<?> clazz) {
+        Page<T> page = new Page<>(getPageNum(), getPageSize());
+
+        if (StringUtils.isBlank(sort)) return page;
+
+        // 排序字段处理
+        List<String> columns = getColumns(clazz);
+        List<OrderItem> orderItems = new ArrayList<>(Arrays.stream(sort.split(","))
+                .map(str -> str.split(":"))
+                .map(split -> createOrderItem(split[0], split.length == 1 ||
+                        StringUtils.equalsIgnoreCase(split[1], DEFAULT_ORDER)))
+                .filter(orderItem -> columns.contains(orderItem.getColumn()))  // 过滤掉不存在或不支持排序的字段
+                .collect(Collectors.toMap(OrderItem::getColumn, o -> o, (o1, o2) -> o1))  // 去重
+                .values());
+
+        page.addOrder(orderItems);
+        return page;
+    }
+
+    private static OrderItem createOrderItem(String fieldName, boolean isAsc) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setColumn(StrUtil.toUnderlineCase(fieldName));
+        orderItem.setAsc(isAsc);
+        return orderItem;
+    }
+
+    /**
+     * 获取实体类的所有属性
+     *
+     * @param clazz 实体类
+     */
+    public static List<String> getColumns(Class<?> clazz) {
+        // Sortable("asc|desc") 设置允许的排序号
+        // Sortable fieldAnnotation = field.getAnnotation(Sortable.class);
+        List<String> columns = new ArrayList<>(DEFAULT_COLUMNS);
+        columns.addAll(Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Sortable.class))
+                .map(Field::getName)
+                .map(StrUtil::toUnderlineCase)
+                .collect(Collectors.toList()));
+        return columns;
     }
 
     /**
@@ -151,6 +209,11 @@ public class PaginationRequest extends BaseRequest {
     @AssertTrue(message = "结束时间必须晚于开始时间")
     private boolean isEndTimeValid() {
         return startTime == null || endTime == null || !endTime.isBefore(startTime);
+    }
+
+    @AssertTrue(message = "结束日期必须晚于开始日期")
+    private boolean isEndDateValid() {
+        return startDate == null || endDate == null || !endDate.isBefore(startDate);
     }
 
 }

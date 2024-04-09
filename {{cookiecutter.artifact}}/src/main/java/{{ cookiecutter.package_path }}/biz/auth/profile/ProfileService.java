@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.profile;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 @CacheConfig(cacheNames = "ProfileCache")
 public class ProfileService extends ServiceImpl<ProfileMapper, Profile> {
 
-    private static final String USER_ID = "user_id";
-
     /**
      * 按ID查询资料
      *
@@ -30,8 +28,8 @@ public class ProfileService extends ServiceImpl<ProfileMapper, Profile> {
      */
     @Cacheable(key = "#userId")
     public Profile findByUserId(Integer userId) {
-        QueryWrapper<Profile> wrapper = new QueryWrapper<>();
-        wrapper.eq(USER_ID, userId);
+        LambdaQueryWrapper<Profile> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Profile::getUserId, userId);
         return getOne(wrapper);
     }
 
@@ -42,8 +40,8 @@ public class ProfileService extends ServiceImpl<ProfileMapper, Profile> {
      */
     @CachePut(key = "#profile.userId")
     public Profile updateProfile(Profile profile) {
-        UpdateWrapper<Profile> wrapper = new UpdateWrapper<>();
-        wrapper.eq(USER_ID, profile.getUserId());
+        LambdaUpdateWrapper<Profile> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Profile::getUserId, profile.getUserId());
         // 如果没有数据，则新增
         if (!exists(wrapper)) {
             save(profile);
@@ -65,8 +63,8 @@ public class ProfileService extends ServiceImpl<ProfileMapper, Profile> {
      */
     @CacheEvict(key = "#userId")
     public boolean delete(Integer userId) {
-        QueryWrapper<Profile> wrapper = new QueryWrapper<>();
-        wrapper.eq(USER_ID, userId);
+        LambdaQueryWrapper<Profile> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Profile::getUserId, userId);
         if (!exists(wrapper))
             return true;
 

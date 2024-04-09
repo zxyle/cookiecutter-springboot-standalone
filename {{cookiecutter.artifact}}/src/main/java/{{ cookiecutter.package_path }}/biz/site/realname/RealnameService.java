@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.realname;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +35,8 @@ public class RealnameService extends ServiceImpl<RealnameMapper, Realname> {
      */
     @Cacheable(key = "#userId", unless = "#result == null")
     public Realname findByUserId(Integer userId) {
-        QueryWrapper<Realname> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
+        LambdaQueryWrapper<Realname> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Realname::getUserId, userId);
         return getOne(wrapper);
     }
 

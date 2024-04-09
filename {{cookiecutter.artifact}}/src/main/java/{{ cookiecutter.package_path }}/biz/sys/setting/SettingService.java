@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.setting;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.*;
@@ -17,9 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 @CacheConfig(cacheNames = "SettingCache", cacheManager = "neverExpireCacheManager")
 public class SettingService extends ServiceImpl<SettingMapper, Setting> {
-
-    private static final String LABEL = "option_label";
-    private static final String VALUE = "option_value";
 
     /**
      * 按ID查询
@@ -36,9 +33,9 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting> {
      */
     @Cacheable(key = "#label")
     public Item get(String label) {
-        QueryWrapper<Setting> wrapper = new QueryWrapper<>();
-        wrapper.select(LABEL, VALUE, "data_type");
-        wrapper.eq(LABEL, label);
+        LambdaQueryWrapper<Setting> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Setting::getOptionLabel, Setting::getOptionValue, Setting::getDataType);
+        wrapper.eq(Setting::getOptionLabel, label);
         Setting one = getOne(wrapper);
         if (one != null) {
             return new Item(one);
@@ -54,14 +51,14 @@ public class SettingService extends ServiceImpl<SettingMapper, Setting> {
      */
     @CachePut(key = "#label")
     public Item update(String label, String value) {
-        UpdateWrapper<Setting> wrapper = new UpdateWrapper<>();
-        wrapper.eq(LABEL, label);
-        wrapper.set(VALUE, value);
+        LambdaUpdateWrapper<Setting> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Setting::getOptionLabel, label);
+        wrapper.set(Setting::getOptionValue, value);
         boolean updated = update(wrapper);
         if (updated) {
-            QueryWrapper<Setting> wrapper2 = new QueryWrapper<>();
-            wrapper2.select(LABEL, VALUE, "data_type");
-            wrapper2.eq(LABEL, label);
+            LambdaQueryWrapper<Setting> wrapper2 = new LambdaQueryWrapper<>();
+            wrapper2.select(Setting::getOptionLabel, Setting::getOptionValue, Setting::getDataType);
+            wrapper2.eq(Setting::getOptionLabel, label);
             Setting one = getOne(wrapper2);
             return new Item(one);
         }

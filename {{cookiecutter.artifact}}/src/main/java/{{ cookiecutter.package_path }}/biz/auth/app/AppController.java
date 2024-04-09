@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.app;
 
 import cn.hutool.core.util.IdUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
@@ -12,7 +12,6 @@ import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
-import {{ cookiecutter.basePackage }}.common.util.EntityUtil;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
 import {{ cookiecutter.basePackage }}.common.validation.Add;
 import {{ cookiecutter.basePackage }}.common.validation.Update;
@@ -50,14 +49,12 @@ public class AppController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:app:list')")
     @GetMapping("/apps")
     public R<Page<App>> page(@Valid PaginationRequest req) {
-        QueryWrapper<App> wrapper = new QueryWrapper<>();
-        wrapper.orderBy(EntityUtil.getFields(App.class).contains(req.getColumn()),
-                req.isAsc(), req.getColumn());
+        LambdaQueryWrapper<App> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotBlank(req.getKeyword())) {
-            wrapper.and(i -> i.like("name", req.getKeyword())
-                    .or().like("description", req.getKeyword()));
+            wrapper.and(i -> i.like(App::getName, req.getKeyword())
+                    .or().like(App::getDescription, req.getKeyword()));
         }
-        Page<App> page = thisService.page(req.toPageable(), wrapper);
+        Page<App> page = thisService.page(req.toPageable(App.class), wrapper);
         page.getRecords().forEach(app -> app.setAppSecret(null));
         return R.ok(page);
     }

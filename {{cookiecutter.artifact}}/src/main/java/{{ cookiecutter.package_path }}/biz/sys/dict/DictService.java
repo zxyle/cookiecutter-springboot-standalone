@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.dict;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
@@ -28,9 +28,9 @@ public class DictService extends ServiceImpl<DictMapper, Dict> {
      */
     @Cacheable(key = "#dictType", unless = "#result == null")
     public List<Dict> findDictsByType(String dictType) {
-        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "label", "value");
-        wrapper.eq("dict_type", dictType);
+        LambdaQueryWrapper<Dict> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Dict::getId, Dict::getLabel, Dict::getValue);
+        wrapper.eq(Dict::getDictType, dictType);
         return list(wrapper);
     }
 
@@ -69,8 +69,8 @@ public class DictService extends ServiceImpl<DictMapper, Dict> {
      */
     @CacheEvict(key = "#dictType")
     public boolean deleteByDictType(String dictType) {
-        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
-        wrapper.eq("dict_type", dictType);
+        LambdaQueryWrapper<Dict> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Dict::getDictType, dictType);
         return remove(wrapper);
     }
 }

@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.user;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.group.Group;
 import {{ cookiecutter.basePackage }}.biz.auth.group.GroupService;
@@ -100,10 +100,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      */
     @Cacheable(cacheNames = "UserCache", key = "#account", unless = "#result == null")
     public User findByAccount(String account) {
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq(AccountUtil.isUsername(account), "username", account);
-        wrapper.eq(AccountUtil.isEmail(account), "email", account);
-        wrapper.eq(AccountUtil.isMobile(account), "mobile", account);
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AccountUtil.isUsername(account), User::getUsername, account);
+        wrapper.eq(AccountUtil.isEmail(account), User::getEmail, account);
+        wrapper.eq(AccountUtil.isMobile(account), User::getMobile, account);
         return getOne(wrapper);
     }
 
@@ -166,10 +166,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      */
     public List<Integer> getAllChildren(Integer userId) {
         // 查询用户有管理员权限的用户组
-        QueryWrapper<UserGroup> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("user_id", "group_id");
-        queryWrapper.eq("user_id", userId);
-        queryWrapper.eq("admin", AuthConst.ENABLED);
+        LambdaQueryWrapper<UserGroup> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(UserGroup::getUserId, UserGroup::getGroupId);
+        queryWrapper.eq(UserGroup::getUserId, userId);
+        queryWrapper.eq(UserGroup::getAdmin, AuthConst.ENABLED);
         List<UserGroup> userGroups = userGroupService.list(queryWrapper);
 
         // 查询用户组的所有子用户组
@@ -180,10 +180,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         }
 
         // 查询用户组下的所有用户
-        QueryWrapper<UserGroup> userGroupQueryWrapper = new QueryWrapper<>();
-        userGroupQueryWrapper.select("user_id", "group_id");
+        LambdaQueryWrapper<UserGroup> userGroupQueryWrapper = new LambdaQueryWrapper<>();
+        userGroupQueryWrapper.select(UserGroup::getUserId, UserGroup::getGroupId);
         List<Integer> groupIds = allGroups.stream().distinct().map(Group::getId).collect(Collectors.toList());
-        userGroupQueryWrapper.in("group_id", groupIds);
+        userGroupQueryWrapper.in(UserGroup::getGroupId, groupIds);
         List<UserGroup> userGroupList = userGroupService.list(userGroupQueryWrapper);
         return userGroupList.stream().map(UserGroup::getUserId).collect(Collectors.toList());
     }
@@ -194,9 +194,9 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      * @param userId 用户ID
      */
     public boolean locked(Integer userId) {
-        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
-        wrapper.eq("id", userId);
-        wrapper.set("locked", AuthConst.LOCKED);
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(User::getId, userId);
+        wrapper.set(User::getLocked, AuthConst.LOCKED);
         boolean update = update(wrapper);
         boolean kick = kick(userId);
         return update && kick;
@@ -208,9 +208,9 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      * @param userId 用户ID
      */
     public boolean unlock(Integer userId) {
-        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
-        wrapper.eq("id", userId);
-        wrapper.set("locked", AuthConst.UNLOCKED);
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(User::getId, userId);
+        wrapper.set(User::getLocked, AuthConst.UNLOCKED);
         boolean update = update(wrapper);
 
         String key = "pwd:change:" + userId;

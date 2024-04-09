@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.role.permission;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.Permission;
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +49,8 @@ public class RolePermissionService extends ServiceImpl<RolePermissionMapper, Rol
      */
     @Cacheable(key = "#roleId + ':' + #permissionId", unless = "#result == null")
     public List<RolePermission> queryRelation(Integer roleId, Integer permissionId) {
-        QueryWrapper<RolePermission> wrapper = buildWrapper(roleId, permissionId);
-        wrapper.select("role_id", "permission_id");
+        LambdaQueryWrapper<RolePermission> wrapper = buildWrapper(roleId, permissionId);
+        wrapper.select(RolePermission::getRoleId, RolePermission::getPermissionId);
         return list(wrapper);
     }
 
@@ -102,10 +102,10 @@ public class RolePermissionService extends ServiceImpl<RolePermissionMapper, Rol
     }
 
     // 构建wrapper
-    private QueryWrapper<RolePermission> buildWrapper(Integer roleId, Integer permissionId) {
-        QueryWrapper<RolePermission> wrapper = new QueryWrapper<>();
-        wrapper.eq(roleId != null && roleId != 0, "role_id", roleId);
-        wrapper.eq(permissionId != null && permissionId != 0, "permission_id", permissionId);
+    private LambdaQueryWrapper<RolePermission> buildWrapper(Integer roleId, Integer permissionId) {
+        LambdaQueryWrapper<RolePermission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(roleId != null && roleId != 0, RolePermission::getRoleId, roleId);
+        wrapper.eq(permissionId != null && permissionId != 0, RolePermission::getPermissionId, permissionId);
         return wrapper;
     }
 

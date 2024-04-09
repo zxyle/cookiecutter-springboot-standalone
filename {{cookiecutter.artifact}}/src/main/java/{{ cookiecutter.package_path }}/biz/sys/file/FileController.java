@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.sys.file;
 
 import cn.hutool.core.util.IdUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadData;
 import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadRequest;
 import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadResponse;
@@ -62,8 +62,8 @@ public class FileController {
     // @Secured(value = "ROLE_admin")
     @GetMapping("/download")
     public R<File> download(String filename) {
-        QueryWrapper<File> wrapper = new QueryWrapper<>();
-        wrapper.eq("filename", filename);
+        LambdaQueryWrapper<File> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(File::getFilename, filename);
         File one = fileService.getOne(wrapper);
         String key = String.format("%s:%s", "download", one.getId());
         stringRedisTemplate.opsForValue().increment(key);

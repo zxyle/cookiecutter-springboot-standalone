@@ -37,7 +37,7 @@ public class GroupRoleController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}/roles")
     public R<Page<Role>> pageRole(@PathVariable Integer groupId, @Valid PaginationRequest req) {
-        Page<Role> page = thisMapper.page(req.toPageable(), groupId, req);
+        Page<Role> page = thisMapper.page(req.toPageable(Role.class), groupId, req);
         return R.ok(page);
     }
 

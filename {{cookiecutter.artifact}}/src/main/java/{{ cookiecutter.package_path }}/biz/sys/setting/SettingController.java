@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.setting;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
@@ -32,7 +32,7 @@ public class SettingController {
     @PreAuthorize("@ck.hasPermit('sys:setting:list')")
     @GetMapping("/settings")
     public R<Page<Setting>> page(@Valid PaginationRequest req) {
-        Page<Setting> page = thisService.page(req.toPageable());
+        Page<Setting> page = thisService.page(req.toPageable(Setting.class));
         return R.ok(page);
     }
 
@@ -104,9 +104,9 @@ public class SettingController {
         }
 
         if (StringUtils.isNotBlank(optionLabel)) {
-            QueryWrapper<Setting> wrapper = new QueryWrapper<>();
-            wrapper.select("option_label", "default_value");
-            wrapper.eq("option_label", optionLabel);
+            LambdaQueryWrapper<Setting> wrapper = new LambdaQueryWrapper<>();
+            wrapper.select(Setting::getOptionLabel, Setting::getDefaultValue);
+            wrapper.eq(Setting::getOptionLabel, optionLabel);
             setting = thisService.getOne(wrapper);
         }
 

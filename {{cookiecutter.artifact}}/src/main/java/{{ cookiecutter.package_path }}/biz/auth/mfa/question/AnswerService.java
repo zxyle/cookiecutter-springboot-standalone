@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.mfa.question;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,8 +22,8 @@ public class AnswerService extends ServiceImpl<AnswerMapper, Answer> {
      * @return 是否已经被使用 true:已经被使用 false:未被使用
      */
     public boolean isAlreadyUsed(Integer questionId) {
-        QueryWrapper<Answer> wrapper = new QueryWrapper<>();
-        wrapper.eq("question_id", questionId);
+        LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Answer::getQuestionId, questionId);
         return exists(wrapper);
     }
 
@@ -35,9 +35,9 @@ public class AnswerService extends ServiceImpl<AnswerMapper, Answer> {
      * @return 安全问题答案
      */
     public Answer findByUserId(Integer userId, Integer questionId) {
-        QueryWrapper<Answer> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", userId);
-        wrapper.eq("question_id", questionId);
+        LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Answer::getUserId, userId);
+        wrapper.eq(Answer::getQuestionId, questionId);
         return getOne(wrapper);
     }
 }

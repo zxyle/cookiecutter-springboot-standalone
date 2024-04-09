@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.friendly;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,10 +62,10 @@ public class FriendlyService extends ServiceImpl<FriendlyMapper, Friendly> {
      */
     @Cacheable(key = "'list'")
     public List<Friendly> all() {
-        QueryWrapper<Friendly> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "content", "url");
-        wrapper.eq("enabled", true);
-        wrapper.orderByAsc("sort");
+        LambdaQueryWrapper<Friendly> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Friendly::getId, Friendly::getContent, Friendly::getUrl);
+        wrapper.eq(Friendly::getEnabled, true);
+        wrapper.orderByAsc(Friendly::getSort);
         return list(wrapper);
     }
 

@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.log;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -34,10 +34,9 @@ public class LogAuditController {
     @PreAuthorize("@ck.hasPermit('sys:login:list')")
     @GetMapping("/login")
     public R<Page<LoginLog>> list(@Valid LoginLogRequest req) {
-        QueryWrapper<LoginLog> wrapper = new QueryWrapper<>();
-        wrapper.like(StringUtils.isNotBlank(req.getAccount()), "account", req.getAccount());
-        wrapper.orderBy(true, req.isAsc(), "login_time");
-        Page<LoginLog> page = loginLogService.page(req.toPageable(), wrapper);
+        LambdaQueryWrapper<LoginLog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotBlank(req.getAccount()), LoginLog::getAccount, req.getAccount());
+        Page<LoginLog> page = loginLogService.page(req.toPageable(LoginLog.class), wrapper);
         return R.ok(page);
     }
 
@@ -48,13 +47,12 @@ public class LogAuditController {
     @PreAuthorize("@ck.hasPermit('sys:operate:list')")
     @GetMapping("/operate")
     public R<Page<OperateLog>> page(@Valid OperateLogRequest req) {
-        QueryWrapper<OperateLog> wrapper = new QueryWrapper<>();
-        wrapper.eq(req.getUserId() != null, "user_id", req.getUserId());
-        wrapper.eq(StringUtils.isNotBlank(req.getBiz()), "biz", req.getBiz());
+        LambdaQueryWrapper<OperateLog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(req.getUserId() != null, OperateLog::getUserId, req.getUserId());
+        wrapper.eq(StringUtils.isNotBlank(req.getBiz()), OperateLog::getBiz, req.getBiz());
         wrapper.between(req.getStartTime() != null && req.getEndTime() != null,
-                "operate_time", req.getStartTime(), req.getEndTime());
-        wrapper.orderBy(true, req.isAsc(), "operate_time");
-        Page<OperateLog> page = operateLogService.page(req.toPageable(), wrapper);
+                OperateLog::getOperateTime, req.getStartTime(), req.getEndTime());
+        Page<OperateLog> page = operateLogService.page(req.toPageable(OperateLog.class), wrapper);
         return R.ok(page);
     }
 }

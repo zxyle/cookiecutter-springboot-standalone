@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.area;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import {{ cookiecutter.basePackage }}.common.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
@@ -39,14 +39,14 @@ public class AreaController {
     public R<AntdTree2> tree(@Valid AreaRequest req) {
         String rootId = req.getRootId();
         Integer level = req.getLevel();
-        QueryWrapper<Area> wrapper = new QueryWrapper<>();
-        wrapper.select("code", "name", "parent_id", "level");
-        wrapper.le("level", level);
+        LambdaQueryWrapper<Area> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Area::getCode, Area::getName, Area::getParentId, Area::getLevel);
+        wrapper.le(Area::getLevel, level);
         String rootName = "中国";
         String rootCode = "0000";
         Integer rootLevel = 1;
         if (!rootId.equals("0000")) {
-            wrapper.likeRight("code", rootId);
+            wrapper.likeRight(Area::getCode, rootId);
             Area rootArea = thisService.findAreaByCode(rootId);
             rootName = rootArea.getName();
             rootCode = rootArea.getCode();

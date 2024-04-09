@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.password;
 
 import cn.hutool.crypto.digest.DigestUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.mfa.question.AddAnswerRequest;
 import {{ cookiecutter.basePackage }}.biz.auth.password.request.*;
 import {{ cookiecutter.basePackage }}.biz.auth.password.response.PasswordComplexityResponse;
@@ -102,9 +102,9 @@ public class PasswordController extends AuthBaseController {
         }
 
         // 获取用户ID
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq(AccountUtil.isEmail(account), "email", account);
-        wrapper.eq(AccountUtil.isMobile(account), "mobile", account);
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(AccountUtil.isEmail(account), User::getEmail, account);
+        wrapper.eq(AccountUtil.isMobile(account), User::getMobile, account);
         User user = userService.getOne(wrapper);
         if (null == user) {
             return R.fail("找回密码失败，用户不存在");

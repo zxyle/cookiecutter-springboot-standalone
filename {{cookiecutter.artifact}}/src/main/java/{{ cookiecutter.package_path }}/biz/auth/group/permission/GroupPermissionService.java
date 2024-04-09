@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.group.permission;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.permission.Permission;
 import lombok.RequiredArgsConstructor;
@@ -60,8 +60,8 @@ public class GroupPermissionService extends ServiceImpl<GroupPermissionMapper, G
      */
     @Cacheable(key = "#groupId + ':' + #permissionId", unless = "#result == null")
     public List<GroupPermission> queryRelation(Integer groupId, Integer permissionId) {
-        QueryWrapper<GroupPermission> wrapper = buildWrapper(groupId, permissionId);
-        wrapper.select("group_id", "permission_id");
+        LambdaQueryWrapper<GroupPermission> wrapper = buildWrapper(groupId, permissionId);
+        wrapper.select(GroupPermission::getGroupId, GroupPermission::getPermissionId);
         return list(wrapper);
     }
 
@@ -110,10 +110,10 @@ public class GroupPermissionService extends ServiceImpl<GroupPermissionMapper, G
     }
 
     // 构建wrapper
-    private QueryWrapper<GroupPermission> buildWrapper(Integer groupId, Integer permissionId) {
-        QueryWrapper<GroupPermission> wrapper = new QueryWrapper<>();
-        wrapper.eq(groupId != null && groupId != 0, "group_id", groupId);
-        wrapper.eq(permissionId != null && permissionId != 0, "permission_id", permissionId);
+    private LambdaQueryWrapper<GroupPermission> buildWrapper(Integer groupId, Integer permissionId) {
+        LambdaQueryWrapper<GroupPermission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(groupId != null && groupId != 0, GroupPermission::getGroupId, groupId);
+        wrapper.eq(permissionId != null && permissionId != 0, GroupPermission::getPermissionId, permissionId);
         return wrapper;
     }
 }

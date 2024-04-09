@@ -3,9 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.user.group;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.group.Group;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -52,8 +52,8 @@ public class UserGroupService extends ServiceImpl<UserGroupMapper, UserGroup> {
      */
     @Cacheable(key = "#userId + ':' + #groupId", unless = "#result == null")
     public List<UserGroup> queryRelation(Integer userId, Integer groupId) {
-        QueryWrapper<UserGroup> wrapper = buildWrapper(userId, groupId);
-        wrapper.select("user_id", "group_id");
+        LambdaQueryWrapper<UserGroup> wrapper = buildWrapper(userId, groupId);
+        wrapper.select(UserGroup::getUserId, UserGroup::getGroupId);
         return list(wrapper);
     }
 
@@ -104,10 +104,10 @@ public class UserGroupService extends ServiceImpl<UserGroupMapper, UserGroup> {
     }
 
     // 构建wrapper
-    private QueryWrapper<UserGroup> buildWrapper(Integer userId, Integer groupId) {
-        QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
-        wrapper.eq(userId != null && userId != 0, "user_id", userId);
-        wrapper.eq(groupId != null && groupId != 0, "group_id", groupId);
+    private LambdaQueryWrapper<UserGroup> buildWrapper(Integer userId, Integer groupId) {
+        LambdaQueryWrapper<UserGroup> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(userId != null && userId != 0, UserGroup::getUserId, userId);
+        wrapper.eq(groupId != null && groupId != 0, UserGroup::getGroupId, groupId);
         return wrapper;
     }
 

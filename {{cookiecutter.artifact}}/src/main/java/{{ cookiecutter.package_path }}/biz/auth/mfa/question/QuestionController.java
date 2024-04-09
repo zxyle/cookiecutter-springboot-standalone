@@ -4,10 +4,10 @@
 package {{ cookiecutter.basePackage }}.biz.auth.mfa.question;
 
 import cn.hutool.crypto.digest.DigestUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
+import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -47,10 +47,10 @@ public class QuestionController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:question:list')")
     @GetMapping("/questions")
     public R<Page<Question>> page(@Valid PaginationRequest req) {
-        QueryWrapper<Question> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "question");
-        wrapper.like(req.getKeyword() != null, "question", req.getKeyword());
-        Page<Question> page = thisService.page(req.toPageable(), wrapper);
+        LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Question::getId, Question::getAsk);
+        wrapper.like(req.getKeyword() != null, Question::getAsk, req.getKeyword());
+        Page<Question> page = thisService.page(req.toPageable(Question.class), wrapper);
         return R.ok(page);
     }
 
@@ -60,8 +60,8 @@ public class QuestionController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:question:list')")
     @GetMapping("/questions/list")
     public R<List<Question>> list() {
-        QueryWrapper<Question> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "question");
+        LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Question::getId, Question::getAsk);
         return R.ok(thisService.list(wrapper));
     }
 
@@ -113,7 +113,7 @@ public class QuestionController extends AuthBaseController {
      */
     @LogOperation(name = "用户设置安全问题", biz = "auth")
     @PostMapping("/answers")
-    public R<Void> add(@Validated(Add.class)  @RequestBody AddAnswerRequest req) {
+    public R<Void> add(@Validated(Add.class) @RequestBody AddAnswerRequest req) {
         List<Question> questions = thisMapper.findQuestionsByUserId(getUserId());
         if (CollectionUtils.isNotEmpty(questions)) {
             return R.fail("用户已经设置过安全问题");
@@ -132,8 +132,8 @@ public class QuestionController extends AuthBaseController {
         String key = "code:" + getUserId();
         if (!validateService.validate(key, req.getCode())) return R.fail("验证码错误");
 
-        QueryWrapper<Answer> wrapper = new QueryWrapper<>();
-        wrapper.eq("user_id", getUserId());
+        LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Answer::getUserId, getUserId());
         boolean removed = answerService.remove(wrapper);
         boolean saved = saveAnswers(req, getUserId());
         return (removed && saved) ? R.ok("成功修改密保问题") : R.fail("修改密保问题失败");
