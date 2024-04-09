@@ -54,7 +54,7 @@ public class AppController extends AuthBaseController {
             wrapper.and(i -> i.like(App::getName, req.getKeyword())
                     .or().like(App::getDescription, req.getKeyword()));
         }
-        Page<App> page = thisService.page(req.toPageable(App.class), wrapper);
+        Page<App> page = thisService.page(req.toPageable(), wrapper);
         page.getRecords().forEach(app -> app.setAppSecret(null));
         return R.ok(page);
     }

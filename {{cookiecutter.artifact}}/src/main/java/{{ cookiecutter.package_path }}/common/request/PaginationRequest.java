@@ -19,10 +19,8 @@ import javax.validation.constraints.Pattern;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,6 +37,7 @@ public class PaginationRequest extends BaseRequest {
     private static final int DEFAULT_PAGE_SIZE = 10;    // 默认分页大小
     private static final int MAX_PAGE_SIZE = 100;       // 最大分页大小，防止恶意请求
     private static final List<String> DEFAULT_COLUMNS = Arrays.asList("id", "create_time", "update_time");
+    private static final Map<Class<?>, List<String>> COLUMN_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 分页页码，三选一
@@ -157,16 +156,14 @@ public class PaginationRequest extends BaseRequest {
 
     /**
      * 获取mybatis plus分页对象
-     *
-     * @param clazz 分页请求类
      */
-    public <T> Page<T> toPageable(Class<?> clazz) {
+    public <T> Page<T> toPageable() {
         Page<T> page = new Page<>(getPageNum(), getPageSize());
 
         if (StringUtils.isBlank(sort)) return page;
 
         // 排序字段处理
-        List<String> columns = getColumns(clazz);
+        List<String> columns = COLUMN_CACHE.computeIfAbsent(this.getClass(), this::getColumns);
         List<OrderItem> orderItems = new ArrayList<>(Arrays.stream(sort.split(","))
                 .map(str -> str.split(":"))
                 .map(split -> createOrderItem(split[0], split.length == 1 ||
@@ -191,7 +188,7 @@ public class PaginationRequest extends BaseRequest {
      *
      * @param clazz 实体类
      */
-    public static List<String> getColumns(Class<?> clazz) {
+    public List<String> getColumns(Class<?> clazz) {
         // Sortable("asc|desc") 设置允许的排序号
         // Sortable fieldAnnotation = field.getAnnotation(Sortable.class);
         List<String> columns = new ArrayList<>(DEFAULT_COLUMNS);

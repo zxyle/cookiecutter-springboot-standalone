@@ -50,7 +50,7 @@ public class QuestionController extends AuthBaseController {
         LambdaQueryWrapper<Question> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(Question::getId, Question::getAsk);
         wrapper.like(req.getKeyword() != null, Question::getAsk, req.getKeyword());
-        Page<Question> page = thisService.page(req.toPageable(Question.class), wrapper);
+        Page<Question> page = thisService.page(req.toPageable(), wrapper);
         return R.ok(page);
     }
 

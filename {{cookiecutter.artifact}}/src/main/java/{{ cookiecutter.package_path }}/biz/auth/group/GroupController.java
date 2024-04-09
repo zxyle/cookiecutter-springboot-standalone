@@ -41,7 +41,7 @@ public class GroupController extends AuthBaseController {
         LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(Group::getId, groupService.getSubGroups(getUserId()));
         wrapper.like(StringUtils.isNotBlank(req.getKeyword()), Group::getName, req.getKeyword());
-        Page<Group> page = groupService.page(req.toPageable(Group.class), wrapper);
+        Page<Group> page = groupService.page(req.toPageable(), wrapper);
         List<GroupResponse> collect = page.getRecords().stream()
                 .map(group -> groupService.attachGroupInfo(group, req.isFull()))
                 .collect(Collectors.toList());

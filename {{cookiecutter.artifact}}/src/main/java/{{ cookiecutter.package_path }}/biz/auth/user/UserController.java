@@ -57,7 +57,7 @@ public class UserController extends AuthBaseController {
         wrapper.in(User::getId, members);
 
         wrapper.eq(req.getEnabled() != null, User::getEnabled, req.getEnabled());
-        Page<User> page = thisService.page(req.toPageable(User.class), wrapper);
+        Page<User> page = thisService.page(req.toPageable(), wrapper);
 
         // 增加角色和组信息
         List<UserResponse> userResponses = page.getRecords().stream()

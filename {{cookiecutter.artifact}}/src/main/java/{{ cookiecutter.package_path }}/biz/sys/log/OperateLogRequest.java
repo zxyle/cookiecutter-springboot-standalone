@@ -4,10 +4,13 @@
 package {{ cookiecutter.basePackage }}.biz.sys.log;
 
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
+import {{ cookiecutter.basePackage }}.common.request.sort.Sortable;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Positive;
+import java.time.LocalDateTime;
 
 /**
  * 操作日志分页查询请求
@@ -26,4 +29,11 @@ public class OperateLogRequest extends PaginationRequest {
      * 业务模块
      */
     private String biz;
+
+    /**
+     * 操作时间
+     */
+    @Sortable
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime operateTime;
 }

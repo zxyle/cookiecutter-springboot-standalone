@@ -36,7 +36,7 @@ public class LogAuditController {
     public R<Page<LoginLog>> list(@Valid LoginLogRequest req) {
         LambdaQueryWrapper<LoginLog> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotBlank(req.getAccount()), LoginLog::getAccount, req.getAccount());
-        Page<LoginLog> page = loginLogService.page(req.toPageable(LoginLog.class), wrapper);
+        Page<LoginLog> page = loginLogService.page(req.toPageable(), wrapper);
         return R.ok(page);
     }
 
@@ -52,7 +52,7 @@ public class LogAuditController {
         wrapper.eq(StringUtils.isNotBlank(req.getBiz()), OperateLog::getBiz, req.getBiz());
         wrapper.between(req.getStartTime() != null && req.getEndTime() != null,
                 OperateLog::getOperateTime, req.getStartTime(), req.getEndTime());
-        Page<OperateLog> page = operateLogService.page(req.toPageable(OperateLog.class), wrapper);
+        Page<OperateLog> page = operateLogService.page(req.toPageable(), wrapper);
         return R.ok(page);
     }
 }
