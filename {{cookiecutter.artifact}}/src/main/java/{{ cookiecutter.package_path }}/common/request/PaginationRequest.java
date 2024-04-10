@@ -92,6 +92,15 @@ public class PaginationRequest extends BaseRequest {
     private LocalDateTime startTime;
 
     /**
+     * 结束时间 yyyy-MM-dd HH:mm:ss
+     *
+     * @mock 2021-02-01 00:00:00
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime endTime;
+
+    /**
      * 开始日期 yyyy-MM-dd
      *
      * @mock 2021-01-01
@@ -108,15 +117,6 @@ public class PaginationRequest extends BaseRequest {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
-
-    /**
-     * 结束时间 yyyy-MM-dd HH:mm:ss
-     *
-     * @mock 2021-02-01 00:00:00
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime endTime;
 
     /**
      * 搜索关键字(支持模糊查询)
@@ -155,7 +155,7 @@ public class PaginationRequest extends BaseRequest {
     }
 
     /**
-     * 获取mybatis plus分页对象
+     * 获取mybatis plus翻页对象
      */
     public <T> Page<T> toPageable() {
         Page<T> page = new Page<>(getPageNum(), getPageSize());
