@@ -109,6 +109,7 @@ redis:
 	ssh $(SERVER) "rpm -ivh /tmp/$(REDIS_RPM)"
 	ssh $(SERVER) "rm -rf /tmp/$(REDIS_RPM)"
 	ssh $(SERVER) "redis-server --version"
+	ssh $(SERVER) "echo 'requirepass RGCqg&fju#Q6xypF' >> /etc/redis.conf"
 	ssh $(SERVER) "systemctl enable redis --now"
 
 # 安装mysql
@@ -121,6 +122,7 @@ mysql:
 		echo "$(MYSQL_TARGET_FILE) already exists."; \
 	fi
 	scp $(MYSQL_TARGET_FILE) $(SERVER):/tmp
+	scp $(SERVER) "yum install libaio* -y"
 	ssh $(SERVER) "tar -xvf /tmp/$(MYSQL_RPM) -C /tmp"
 	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-client-plugins-$(MYSQL_VERSION).rpm --force --nodeps"
 	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-devel-$(MYSQL_VERSION).rpm --force --nodeps"
@@ -140,7 +142,6 @@ mysql:
 	# GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
 	# FLUSH PRIVILEGES;
 	# quit;
-
 
 # 安装nginx
 nginx:
