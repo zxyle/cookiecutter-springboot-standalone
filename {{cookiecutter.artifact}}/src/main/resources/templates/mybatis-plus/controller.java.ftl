@@ -59,7 +59,7 @@ public class ${className} {
     public R<Page<${table.className}>> page(@Valid PaginationRequest req) <#if excel>throws IOException</#if> {
         LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
         // 设置查询条件
-        // wrapper.eq("name", "Tom");
+        // wrapper.eq(${table.className}::getId, 1);
         <#if excel>
 
         // Excel导出功能，不需要可以删除
@@ -95,7 +95,9 @@ public class ${className} {
     // @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
     // @GetMapping("${table.endpoint}")
     // public R<List<${table.className}>> list() {
-    //     return R.ok(thisService.list());
+    //     LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
+    //     // 补充查询条件
+    //     return R.ok(thisService.list(wrapper));
     // }
 
     /**
@@ -117,7 +119,7 @@ public class ${className} {
     @GetMapping("${table.endpoint}/{id}")
     public R<${table.className}> get(@PathVariable Integer id) {
         ${table.className} entity = thisService.findById(id);
-        return entity == null ? R.fail("数据不存在") : R.ok(entity);
+        return entity == null ? R.fail("${table.comment!}不存在") : R.ok(entity);
     }
 
     /**
@@ -127,7 +129,7 @@ public class ${className} {
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
     @PutMapping("${table.endpoint}/{id}")
     public R<${table.className}> update(@Valid @RequestBody ${table.className} entity, @PathVariable Integer id) {
-        if (thisService.findById(id) == null) return R.fail("更新失败，数据不存在");
+        if (thisService.findById(id) == null) return R.fail("更新失败，${table.comment!}数据不存在");
 
         entity.setId(id);
         ${table.className} result = thisService.putById(entity);
@@ -141,7 +143,7 @@ public class ${className} {
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
     @DeleteMapping("${table.endpoint}/{id}")
     public R<Void> delete(@PathVariable Integer id) {
-        if (thisService.findById(id) == null) return R.fail("删除失败，数据不存在");
+        if (thisService.findById(id) == null) return R.fail("删除失败，${table.comment!}数据不存在");
 
         boolean deleted = thisService.deleteById(id);
         return deleted ? R.ok("删除${table.comment!}成功") : R.fail("删除${table.comment!}失败");

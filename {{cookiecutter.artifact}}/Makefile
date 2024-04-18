@@ -1,6 +1,7 @@
 # Makefile
 
 # 定义变量, 分别是服务器地址（需要配置免密登陆）、项目部署目录、后端部署目录、前端部署目录、后端jar包名称
+# 配置免密登陆: ssh-copy-id -i ~/.ssh/id_rsa.pub root@127.0.0.1
 SERVER = root@127.0.0.1
 APP_DIR = /opt/webapps/{{ cookiecutter.artifact.replace('-api', '') }}
 BACKEND_DIR = $(APP_DIR)/{{ cookiecutter.artifact }}
