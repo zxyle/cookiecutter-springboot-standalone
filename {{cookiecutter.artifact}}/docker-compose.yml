@@ -15,7 +15,7 @@ services:
       --collation-server=utf8mb4_0900_ai_ci
     environment:
       MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: app
+      MYSQL_DATABASE: {{ cookiecutter.artifact.replace('-api', '') }}
       TZ: Asia/Shanghai
     volumes:
       - ./docs/ddl/auth.sql:/docker-entrypoint-initdb.d/auth.sql

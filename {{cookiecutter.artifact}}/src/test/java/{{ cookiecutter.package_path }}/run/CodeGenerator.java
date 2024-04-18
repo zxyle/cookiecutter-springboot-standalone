@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class CodeGenerator {
     public static void main(String[] args) throws IOException, TemplateException {
-        Generator generator = new Generator("jdbc:mysql://localhost:3306/app", "app", "root", "123456");
+        Generator generator = new Generator("jdbc:mysql://localhost:3306/{{ cookiecutter.artifact.replace('-api', '') }}", "{{ cookiecutter.artifact.replace('-api', '') }}", "root", "123456");
         generator.setTemplatePath("src/main/resources/templates/mybatis-plus");
 
         // 需渲染的模板
