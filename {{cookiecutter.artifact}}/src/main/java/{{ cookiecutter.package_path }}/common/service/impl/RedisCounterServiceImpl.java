@@ -14,8 +14,8 @@ import javax.annotation.Resource;
 /**
  * Redis统计服务实现类
  */
-@ConditionalOnClass(StringRedisTemplate.class)
 @Service
+@ConditionalOnClass(StringRedisTemplate.class)
 public class RedisCounterServiceImpl implements CounterService {
 
     private static final String FORMAT = "%s:%s";

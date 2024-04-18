@@ -20,6 +20,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.role.RoleMapper;
 import {{ cookiecutter.basePackage }}.biz.auth.role.permission.RolePermissionMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.user.role.UserRoleService;
+import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -156,7 +157,7 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
         // 组装权限码和角色码
         List<String> list = new ArrayList<>(roleCodes.size() + children.size());
         list.addAll(children.stream().map(Permission::getCode).distinct().collect(Collectors.toList()));
-        list.addAll(roleCodes.stream().map(e -> "ROLE_" + e).distinct().collect(Collectors.toList()));
+        list.addAll(roleCodes.stream().map(e -> AuthBaseController.ROLE_PREFIX + e).distinct().collect(Collectors.toList()));
         return list;
     }
 

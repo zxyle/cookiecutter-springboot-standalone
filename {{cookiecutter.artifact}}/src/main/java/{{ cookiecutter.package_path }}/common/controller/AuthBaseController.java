@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Component
 public class AuthBaseController {
 
-    private static final String ROLE_PREFIX = "ROLE_";
+    public static final String ROLE_PREFIX = "ROLE_";
 
     @Autowired
     protected GroupService groupService;
@@ -161,7 +161,9 @@ public class AuthBaseController {
         return roles.stream().map(UserRole::getUserId).collect(Collectors.toList());
     }
 
-    // 查询用户所在用户组Ids
+    /**
+     * 查询用户所在用户组Id
+     */
     public List<Integer> getGroupIds() {
         List<UserGroup> groups = userGroupService.queryRelation(getUserId(), 0);
         return groups.stream().map(UserGroup::getGroupId).collect(Collectors.toList());
