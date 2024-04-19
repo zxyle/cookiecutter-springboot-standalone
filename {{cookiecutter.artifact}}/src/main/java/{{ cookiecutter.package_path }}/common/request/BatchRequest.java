@@ -5,9 +5,9 @@ package {{ cookiecutter.basePackage }}.common.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.NotEmpty;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import java.util.List;
 
 /**

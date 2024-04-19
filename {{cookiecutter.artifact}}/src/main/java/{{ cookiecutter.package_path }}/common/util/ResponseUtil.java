@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.common.util;
 
 import org.springframework.http.HttpStatus;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+import {{ cookiecutter.namespace }}.servlet.ServletOutputStream;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public final class ResponseUtil {

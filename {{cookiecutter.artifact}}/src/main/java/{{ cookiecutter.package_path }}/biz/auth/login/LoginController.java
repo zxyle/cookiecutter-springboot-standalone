@@ -19,9 +19,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
+import {{ cookiecutter.namespace }}.validation.Valid;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 

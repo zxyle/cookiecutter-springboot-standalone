@@ -7,10 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import {{ cookiecutter.namespace }}.servlet.FilterChain;
+import {{ cookiecutter.namespace }}.servlet.ServletException;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

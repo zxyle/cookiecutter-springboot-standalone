@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 /**

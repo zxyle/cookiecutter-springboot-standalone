@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.common.constraint.file;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import {{ cookiecutter.namespace }}.validation.ConstraintValidator;
+import {{ cookiecutter.namespace }}.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;

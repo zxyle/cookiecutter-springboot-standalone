@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.user.register;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
 /**
  * 用户注册请求

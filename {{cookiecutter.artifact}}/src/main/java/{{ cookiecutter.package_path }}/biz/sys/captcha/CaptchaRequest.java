@@ -6,8 +6,8 @@ package {{ cookiecutter.basePackage }}.biz.sys.captcha;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 
 /**
  * 验证码请求，解决前端无法获取captchaId的问题

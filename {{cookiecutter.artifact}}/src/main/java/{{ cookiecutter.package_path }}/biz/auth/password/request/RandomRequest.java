@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.biz.auth.password.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.DecimalMin;
+import {{ cookiecutter.namespace }}.validation.constraints.AssertTrue;
+import {{ cookiecutter.namespace }}.validation.constraints.DecimalMin;
 
 /**
  * 生成随机密码请求

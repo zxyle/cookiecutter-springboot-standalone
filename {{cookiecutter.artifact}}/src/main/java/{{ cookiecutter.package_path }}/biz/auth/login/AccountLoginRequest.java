@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
 /**
  * 使用注册账号(用户名/邮箱/手机号) + 密码方式登录

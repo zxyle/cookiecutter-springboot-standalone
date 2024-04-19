@@ -28,6 +28,7 @@ class TestEncrypt {
         Assert.assertTrue(content.equals(decrypt));
     }
 
+    {% if cookiecutter.bootVersion.split('.')[0] == '2' -%}
     // 其他密码HASH方法
     @Test
     void salt() {
@@ -46,4 +47,5 @@ class TestEncrypt {
         Assert.assertTrue(bCryptPasswordEncoder.matches("123456", bcr1));
         Assert.assertTrue(bCryptPasswordEncoder.matches("123456", bcr2));
     }
+    {% endif -%}
 }

@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.biz.auth.group;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 /**
  * 迁移用户组请求

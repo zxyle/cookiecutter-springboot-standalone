@@ -6,8 +6,8 @@ package {{ cookiecutter.basePackage }}.biz.auth.user.request;
 import {{ cookiecutter.basePackage }}.common.constant.RegexConst;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
 
 /**
  * 随机用户名请求

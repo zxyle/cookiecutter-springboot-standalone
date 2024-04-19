@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
 
 /**
  * 时间戳拦截器

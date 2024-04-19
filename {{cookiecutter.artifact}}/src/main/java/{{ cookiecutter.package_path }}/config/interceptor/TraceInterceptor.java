@@ -7,8 +7,8 @@ import cn.hutool.core.util.IdUtil;
 import org.slf4j.MDC;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
 
 /**
  * 请求追踪拦截器

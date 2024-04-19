@@ -6,8 +6,8 @@ package {{ cookiecutter.basePackage }}.common.constraint.image;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import {{ cookiecutter.namespace }}.validation.ConstraintValidator;
+import {{ cookiecutter.namespace }}.validation.ConstraintValidatorContext;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 

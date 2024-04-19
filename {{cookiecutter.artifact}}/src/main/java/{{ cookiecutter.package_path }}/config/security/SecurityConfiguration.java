@@ -2,7 +2,7 @@
 // And git commit hash is {% gitcommit %}.
 
 package {{ cookiecutter.basePackage }}.config.security;
-
+{% if cookiecutter.bootVersion.split('.')[0] == '2' -%}
 import {{ cookiecutter.basePackage }}.config.security.filter.AntiSpiderFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.AclFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.JwtAuthenticationTokenFilter;
@@ -85,3 +85,94 @@ public class SecurityConfiguration {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
+{% else %}
+import {{ cookiecutter.basePackage }}.config.security.filter.AclFilter;
+import {{ cookiecutter.basePackage }}.config.security.filter.AntiSpiderFilter;
+import {{ cookiecutter.basePackage }}.config.security.filter.JwtAuthenticationTokenFilter;
+import {{ cookiecutter.basePackage }}.config.security.mobile.SmsSecurityConfigurerAdapter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+/**
+ * Spring Security配置
+ */
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+@EnableMethodSecurity(securedEnabled = true)
+// 开启方法级别的权限控制, securedEnabled = true 开启 @Secured 注解过滤权限,
+// prePostEnabled = true 开启 @PreAuthorize 注解过滤权限
+public class SecurityConfiguration {
+
+    final AntiSpiderFilter antiSpiderFilter;
+    final AclFilter aclFilter;
+    final JwtAuthenticationTokenFilter jwtFilter;
+    final AuthenticationEntryPoint authenticationEntryPoint;
+    final AccessDeniedHandler accessDeniedHandler;
+    final SmsSecurityConfigurerAdapter smsSecurityConfigurerAdapter;
+    final UserDetailsService userDetailsService;
+
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                // 对于登录接口 允许匿名访问
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/auth/login/**").anonymous()
+                        .requestMatchers("/auth/sdk/**", "/sys/dicts/**", "/sys/area/**", "/sys/file/**", "/sys/infos", "/auth/user/register",
+                                "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers",
+                                "/getPublicKey").permitAll()// 除上述请求 全部需要鉴权认证
+                        // 访问actuator信息 需要添加"/actuator/**"
+                        .anyRequest().authenticated())
+                // 不通过session获取securityContext
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                // 添加过滤器
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
+                // 配置异常处理器
+                .exceptionHandling(exceptions -> exceptions
+                        // 配置认证失败处理器
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        // 配置授权失败处理器
+                        .accessDeniedHandler(accessDeniedHandler))
+                 .with(smsSecurityConfigurerAdapter, customizer -> {});
+
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+}
+{% endif %}

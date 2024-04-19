@@ -7,8 +7,8 @@ import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Past;
 import java.time.LocalDate;
 
 /**

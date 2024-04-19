@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.common.request.auth;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.Data;

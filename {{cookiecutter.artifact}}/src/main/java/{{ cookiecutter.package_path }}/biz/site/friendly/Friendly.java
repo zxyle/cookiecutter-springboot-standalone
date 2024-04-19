@@ -10,8 +10,8 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 /**
  * 友链

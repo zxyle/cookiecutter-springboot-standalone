@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import {{ cookiecutter.namespace }}.annotation.Resource;
 
 /**
  * Redis统计服务实现类

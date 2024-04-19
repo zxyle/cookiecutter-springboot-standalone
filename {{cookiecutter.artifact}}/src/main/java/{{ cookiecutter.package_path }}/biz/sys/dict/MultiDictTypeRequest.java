@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.biz.sys.dict;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
 
 
 /**

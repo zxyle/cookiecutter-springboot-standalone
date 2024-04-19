@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import {{ cookiecutter.namespace }}.validation.Valid;
 
 /**
  * 系统设置管理

@@ -9,7 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.HashMap;

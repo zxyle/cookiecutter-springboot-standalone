@@ -10,8 +10,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 
 /**
  * 实名认证 请求类

@@ -24,8 +24,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
+import {{ cookiecutter.namespace }}.validation.Valid;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 

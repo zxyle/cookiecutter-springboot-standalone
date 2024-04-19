@@ -14,8 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Pattern;
+import {{ cookiecutter.namespace }}.validation.constraints.AssertTrue;
+import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

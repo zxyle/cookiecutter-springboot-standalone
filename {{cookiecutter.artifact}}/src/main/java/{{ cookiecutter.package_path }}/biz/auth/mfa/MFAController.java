@@ -19,8 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.Valid;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import java.util.concurrent.TimeUnit;
 
 /**

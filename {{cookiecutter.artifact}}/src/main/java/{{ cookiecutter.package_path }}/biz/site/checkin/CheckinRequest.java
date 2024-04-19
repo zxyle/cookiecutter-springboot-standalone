@@ -4,8 +4,8 @@
 package {{ cookiecutter.basePackage }}.biz.site.checkin;
 
 import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

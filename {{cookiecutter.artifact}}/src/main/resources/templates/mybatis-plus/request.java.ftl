@@ -1,8 +1,8 @@
 package ${table.packageName};
 
 import ${table.basePackageName}.common.request.BaseRequest;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

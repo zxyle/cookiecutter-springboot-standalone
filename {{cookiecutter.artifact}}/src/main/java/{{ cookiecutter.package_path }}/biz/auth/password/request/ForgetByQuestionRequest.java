@@ -8,8 +8,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.mfa.question.AddAnswerRequest;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.Valid;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import java.util.List;
 
 /**

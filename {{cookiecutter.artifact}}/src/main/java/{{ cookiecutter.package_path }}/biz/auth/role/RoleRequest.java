@@ -8,10 +8,10 @@ import {{ cookiecutter.basePackage }}.common.validation.Update;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Null;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import java.util.List;
 
 /**

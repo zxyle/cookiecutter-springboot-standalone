@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.login;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
 /**
  * 邮箱或手机号 + 验证码登录请求

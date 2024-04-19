@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 

@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.captcha;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
 /**
  * 发送短信或邮件验证码

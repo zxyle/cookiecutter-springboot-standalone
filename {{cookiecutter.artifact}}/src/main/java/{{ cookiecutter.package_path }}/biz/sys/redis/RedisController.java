@@ -9,8 +9,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
+import {{ cookiecutter.namespace }}.annotation.Resource;
+import {{ cookiecutter.namespace }}.validation.Valid;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 

@@ -9,8 +9,8 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
 
 /**
  * 新增应用请求

@@ -82,7 +82,7 @@ def main():
     tool = "maven"
     remove_build_tool(tool)
     git_init()
-    replace_namespace()
+    # replace_namespace()
 
 
 if __name__ == "__main__":

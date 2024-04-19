@@ -2,9 +2,9 @@ package {{ cookiecutter.basePackage }}.biz.sys.acl;
 
 import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Future;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -7,9 +7,9 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 /**
  * 新增权限请求

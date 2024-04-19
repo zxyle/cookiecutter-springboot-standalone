@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.password.request;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
 /**
  * 用户初始化密码

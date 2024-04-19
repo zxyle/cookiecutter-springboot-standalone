@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.common.request;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 
 /**
  * 主键ID请求

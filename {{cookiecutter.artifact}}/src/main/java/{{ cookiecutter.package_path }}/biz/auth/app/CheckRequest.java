@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.app;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
 @Data
 public class CheckRequest {

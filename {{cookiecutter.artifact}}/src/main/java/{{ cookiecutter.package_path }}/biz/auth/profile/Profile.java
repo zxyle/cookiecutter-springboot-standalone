@@ -13,8 +13,8 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.hibernate.validator.constraints.URL;
 
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Pattern;
+import {{ cookiecutter.namespace }}.validation.constraints.PastOrPresent;
+import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;

@@ -128,7 +128,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.21</version>
+            <version>5.8.27</version>
         </dependency>
         <dependency>
             <groupId>p6spy</groupId>
@@ -188,6 +188,20 @@
             <artifactId>easyexcel</artifactId>
             <version>3.3.2</version>
         </dependency>
+        {% if cookiecutter.bootVersion.split('.')[0] == '3' -%}
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>3.0.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--jsonwebtoken 引入 javax.xml 导致 java.lang.NoClassDefFoundError: javax/xml/bind/DatatypeConverter-->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        {% endif -%}
     </dependencies>
 
     <build>

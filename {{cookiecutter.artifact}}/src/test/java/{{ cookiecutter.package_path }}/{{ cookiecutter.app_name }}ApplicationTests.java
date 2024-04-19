@@ -16,6 +16,7 @@ class {{ cookiecutter.app_name }}ApplicationTests {
     @Autowired
     EmailCodeService emailService;
 
+    {% if cookiecutter.bootVersion.split('.')[0] == '2' -%}
     // 其他密码HASH方法
     @Test
     void salt() {
@@ -41,6 +42,7 @@ class {{ cookiecutter.app_name }}ApplicationTests {
         System.out.println("bcr1 password:" + bCryptPasswordEncoder.matches("123456", bcr1));
         System.out.println("bcr2 password:" + bCryptPasswordEncoder.matches("123456", bcr2));
     }
+    {% endif -%}
 
     @Test
     void send() {

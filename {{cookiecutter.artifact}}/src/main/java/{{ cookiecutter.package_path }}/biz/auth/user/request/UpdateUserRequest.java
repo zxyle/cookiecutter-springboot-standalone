@@ -1,8 +1,8 @@
 package {{ cookiecutter.basePackage }}.biz.auth.user.request;
 
 import lombok.Data;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 import java.util.List;
 

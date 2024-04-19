@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.permission.request;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 @Data
 public class TreePermissionRequest {

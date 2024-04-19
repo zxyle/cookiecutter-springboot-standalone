@@ -15,9 +15,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
+import {{ cookiecutter.namespace }}.validation.ConstraintViolationException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 

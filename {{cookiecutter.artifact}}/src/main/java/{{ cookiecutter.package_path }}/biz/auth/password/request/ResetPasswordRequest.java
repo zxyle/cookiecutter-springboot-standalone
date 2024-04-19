@@ -6,8 +6,8 @@ package {{ cookiecutter.basePackage }}.biz.auth.password.request;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 /**
  * 重置密码请求

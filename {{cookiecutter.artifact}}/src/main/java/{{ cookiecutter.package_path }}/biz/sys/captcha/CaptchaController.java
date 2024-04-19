@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
+import {{ cookiecutter.namespace }}.validation.Valid;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 

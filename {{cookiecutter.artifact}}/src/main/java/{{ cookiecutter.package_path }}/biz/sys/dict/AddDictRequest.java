@@ -6,9 +6,9 @@ package {{ cookiecutter.basePackage }}.biz.sys.dict;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 /**
  * 新增字典请求

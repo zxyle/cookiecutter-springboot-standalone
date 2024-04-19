@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
 /**
  * 使用旧密码方式修改密码

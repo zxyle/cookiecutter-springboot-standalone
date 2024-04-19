@@ -7,10 +7,10 @@ import {{ cookiecutter.basePackage }}.common.constant.RegexConst;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Pattern;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
 import java.util.List;
 
 /**

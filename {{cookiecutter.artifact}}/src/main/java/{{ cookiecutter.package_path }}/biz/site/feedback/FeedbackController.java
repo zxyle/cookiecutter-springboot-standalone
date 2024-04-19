@@ -15,8 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
+import {{ cookiecutter.namespace }}.validation.Valid;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;

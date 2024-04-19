@@ -29,8 +29,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.Valid;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -13,7 +13,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
+import {{ cookiecutter.namespace }}.mail.internet.MimeMessage;
 
 /**
  * 邮件验证码服务
