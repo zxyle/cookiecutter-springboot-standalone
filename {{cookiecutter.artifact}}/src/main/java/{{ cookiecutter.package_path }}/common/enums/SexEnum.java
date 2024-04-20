@@ -5,9 +5,20 @@ package {{ cookiecutter.basePackage }}.common.enums;
 
 import com.baomidou.mybatisplus.annotation.IEnum;
 
+/**
+ * 性别枚举
+ */
 public enum SexEnum implements IEnum<Integer> {
 
-    MAN(1, "男"), WOMAN(2, "女");
+    /**
+     * 男
+     */
+    MALE(1, "男"),
+
+    /**
+     * 女
+     */
+    FEMALE(2, "女");
 
     private final int value;
     private final String desc;

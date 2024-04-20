@@ -8,8 +8,19 @@ package {{ cookiecutter.basePackage }}.biz.auth.mfa;
  */
 public enum AccountEnum {
 
+    /**
+     * 用户名
+     */
     USERNAME("username"),
+
+    /**
+     * 手机号
+     */
     MOBILE("mobile"),
+
+    /**
+     * 邮箱
+     */
     EMAIL("email"),
 
     /**

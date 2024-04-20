@@ -17,8 +17,15 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum GenderEnum {
 
-    WOMEN(0, "女"),
-    MEN(1, "男");
+    /**
+     * 女
+     */
+    FEMALE(0, "女"),
+
+    /**
+     * 男
+     */
+    MALE(1, "男");
 
     /**
      * 用于数据库存储的值

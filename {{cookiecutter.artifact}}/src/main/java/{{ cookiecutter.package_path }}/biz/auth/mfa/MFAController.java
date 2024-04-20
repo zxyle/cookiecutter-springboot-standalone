@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.mfa;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import {{ cookiecutter.basePackage }}.common.aspect.LogOperation;
 import {{ cookiecutter.basePackage }}.biz.auth.mfa.totp.Totp;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
@@ -63,10 +63,10 @@ public class MFAController extends AuthBaseController {
         if (!validateService.validate(key, req.getCode())) return R.fail("验证码错误");
 
         // 更新用户信息
-        UpdateWrapper<User> wrapper = new UpdateWrapper<>();
-        wrapper.set(AccountUtil.isMobile(account), "mobile", account);
-        wrapper.set(AccountUtil.isEmail(account), "email", account);
-        wrapper.eq("id", getUserId());
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.set(AccountUtil.isMobile(account), User::getMobile, account);
+        wrapper.set(AccountUtil.isEmail(account), User::getEmail, account);
+        wrapper.eq(User::getId, getUserId());
         boolean success = userService.update(wrapper);
         return success ? R.ok("绑定成功") : R.fail("绑定失败");
     }

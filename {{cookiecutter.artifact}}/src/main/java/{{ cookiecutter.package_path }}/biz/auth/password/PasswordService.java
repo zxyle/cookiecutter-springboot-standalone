@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.password;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.password.history.PasswordHistoryService;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
@@ -38,15 +38,15 @@ public class PasswordService {
     public boolean change(Integer userId, String newPwd, ChangePasswordEnum policy) {
         User user = userService.findById(userId);
 
-        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("pwd", passwordEncoder.encode(newPwd.trim()));
-        updateWrapper.set("pwd_change_time", LocalDateTime.now());
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(User::getPwd, passwordEncoder.encode(newPwd.trim()));
+        updateWrapper.set(User::getPwdChangeTime, LocalDateTime.now());
         // 只有用户主动修改密码，页面才不会提示修改初始密码, 才会解除密码过期限制
         if (user.getMustChangePwd() && "user".equals(policy.getEditedBy())) {
-            updateWrapper.set("must_change_pwd", 0);
-            updateWrapper.set("expire_time", null);
+            updateWrapper.set(User::getMustChangePwd, 0);
+            updateWrapper.set(User::getExpireTime, null);
         }
-        updateWrapper.eq("id", userId);
+        updateWrapper.eq(User::getId, userId);
 
         boolean success = userService.update(updateWrapper);
         if (success && setting.get("pwd.enable-history").isReal()) {

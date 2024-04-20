@@ -9,6 +9,9 @@ package {{ cookiecutter.basePackage }}.common.enums;
  */
 public enum ErrorEnum {
 
+    /**
+     * 服务异常
+     */
     ERROR_9999("服务异常", "9999"),
     ;
 

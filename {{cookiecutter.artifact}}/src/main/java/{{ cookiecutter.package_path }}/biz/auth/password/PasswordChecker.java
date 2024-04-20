@@ -12,6 +12,10 @@ import java.util.regex.Pattern;
 public final class PasswordChecker {
 
     private static final int MIN_LENGTH = 8;
+    private static final Pattern UPPER_CASE = Pattern.compile("[A-Z]");
+    private static final Pattern LOWER_CASE = Pattern.compile("[a-z]");
+    private static final Pattern DIGIT = Pattern.compile("\\d");
+    private static final Pattern SPECIAL = Pattern.compile("[!@#$%^&*(),.?\":{}|<>]");
 
     private PasswordChecker() {
     }
@@ -26,29 +30,25 @@ public final class PasswordChecker {
         int score = 0;
 
         // Check for uppercase letters
-        Pattern upperCase = Pattern.compile("[A-Z]");
-        Matcher hasUpperCase = upperCase.matcher(password);
+        Matcher hasUpperCase = UPPER_CASE.matcher(password);
         if (hasUpperCase.find()) {
             score++;
         }
 
         // Check for lowercase letters
-        Pattern lowerCase = Pattern.compile("[a-z]");
-        Matcher hasLowerCase = lowerCase.matcher(password);
+        Matcher hasLowerCase = LOWER_CASE.matcher(password);
         if (hasLowerCase.find()) {
             score++;
         }
 
         // Check for digits
-        Pattern digit = Pattern.compile("\\d");
-        Matcher hasDigit = digit.matcher(password);
+        Matcher hasDigit = DIGIT.matcher(password);
         if (hasDigit.find()) {
             score++;
         }
 
         // Check for special characters
-        Pattern special = Pattern.compile("[!@#$%^&*(),.?\":{}|<>]");
-        Matcher hasSpecial = special.matcher(password);
+        Matcher hasSpecial = SPECIAL.matcher(password);
         if (hasSpecial.find()) {
             score++;
         }

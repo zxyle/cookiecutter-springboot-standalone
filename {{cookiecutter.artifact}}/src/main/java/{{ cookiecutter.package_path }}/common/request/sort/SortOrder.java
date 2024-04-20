@@ -7,6 +7,14 @@ package {{ cookiecutter.basePackage }}.common.request.sort;
  * 排序顺序
  */
 public enum SortOrder {
-    ASC, // 升序
-    DESC // 降序
+
+    /**
+     * 升序
+     */
+    ASC,
+
+    /**
+     * 降序
+     */
+    DESC
 }
