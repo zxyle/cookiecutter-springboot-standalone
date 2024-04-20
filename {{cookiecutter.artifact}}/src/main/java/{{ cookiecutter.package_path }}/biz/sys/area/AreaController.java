@@ -45,7 +45,7 @@ public class AreaController {
         String rootName = "中国";
         String rootCode = "0000";
         Integer rootLevel = 1;
-        if (!rootId.equals("0000")) {
+        if (!"0000".equals(rootId)) {
             wrapper.likeRight(Area::getCode, rootId);
             Area rootArea = thisService.findAreaByCode(rootId);
             rootName = rootArea.getName();
