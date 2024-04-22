@@ -32,10 +32,19 @@ public final class ProjectConst {
     public static final String CREATE_FIELD = "create_time";
 
     /**
+     * 数据表 记录创建人
+     */
+    public static final String CREATOR_FIELD = "create_by";
+
+    /**
      * 数据表 记录更新时间
      * 也可以采用这些命名： gmt_modified、modify_time
      */
     public static final String UPDATE_FIELD = "update_time";
 
+    /**
+     * 数据表 记录更新人
+     */
+    public static final String UPDATER_FIELD = "update_by";
 
 }

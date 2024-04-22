@@ -13,7 +13,7 @@ public final class CaptchaUtil {
     private CaptchaUtil() {
     }
 
-    private static final SecureRandom random = new SecureRandom();
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     private static final String LOWER = "abcdefghijklmnopqrstuvwxyz";
     private static final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -61,7 +61,7 @@ public final class CaptchaUtil {
         }
         StringBuilder builder = new StringBuilder(len);
         for (int i = 0; i < len; i++) {
-            int no = random.nextInt(chars.length());
+            int no = RANDOM.nextInt(chars.length());
             builder.append(chars.charAt(no));
         }
         return builder.toString();

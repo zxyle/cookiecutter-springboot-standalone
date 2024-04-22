@@ -92,7 +92,7 @@ public class GroupRoleService extends ServiceImpl<GroupRoleMapper, GroupRole> {
      * @param groupId 用户组ID
      * @param roleIds 角色ID列表
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateRelation(Integer groupId, List<Integer> roleIds) {
         if (CollectionUtils.isEmpty(roleIds) || groupId == null || groupId == 0) {
             return;
@@ -104,7 +104,13 @@ public class GroupRoleService extends ServiceImpl<GroupRoleMapper, GroupRole> {
         roleIds.forEach(roleId -> createRelation(groupId, roleId));
     }
 
-    // 构建wrapper
+    /**
+     * 构建wrapper
+     *
+     * @param groupId 用户组ID
+     * @param roleId  角色ID
+     * @return wrapper
+     */
     private LambdaQueryWrapper<GroupRole> buildWrapper(Integer groupId, Integer roleId) {
         LambdaQueryWrapper<GroupRole> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(groupId != null && groupId != 0, GroupRole::getGroupId, groupId);

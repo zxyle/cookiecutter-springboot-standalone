@@ -92,7 +92,7 @@ public class UserPermissionService extends ServiceImpl<UserPermissionMapper, Use
      * @param userId        用户ID
      * @param permissionIds 权限ID列表
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateRelation(Integer userId, List<Integer> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || userId == null || userId == 0) {
             return;
@@ -106,7 +106,13 @@ public class UserPermissionService extends ServiceImpl<UserPermissionMapper, Use
         }
     }
 
-    // 构建wrapper
+    /**
+     * 构建wrapper
+     *
+     * @param userId       用户ID
+     * @param permissionId 权限ID
+     * @return wrapper
+     */
     private LambdaQueryWrapper<UserPermission> buildWrapper(Integer userId, Integer permissionId) {
         LambdaQueryWrapper<UserPermission> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(userId != null && userId != 0, UserPermission::getUserId, userId);

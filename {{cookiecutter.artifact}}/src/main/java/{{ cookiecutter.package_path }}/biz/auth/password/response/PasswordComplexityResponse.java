@@ -42,6 +42,9 @@ public class PasswordComplexityResponse {
             case 4:
             case 5:
                 message = "密码复杂度：强";
+                break;
+            default:
+                message = "密码复杂度：未知";
         }
         return message;
     }

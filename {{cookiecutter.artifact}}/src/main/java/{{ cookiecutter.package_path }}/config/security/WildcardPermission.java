@@ -54,10 +54,9 @@ public class WildcardPermission {
 
     private boolean isAllowed(WildcardPermission wp) {
         for (int i = 0; i < parts.length; i++) {
-            if (!parts[i].equals(ASTERISK) && !parts[i].equalsIgnoreCase(wp.getParts()[i])) {
+            if (!ASTERISK.equals(parts[i]) && !parts[i].equalsIgnoreCase(wp.getParts()[i])) {
                 return false;
             }
-
         }
         return true;
     }

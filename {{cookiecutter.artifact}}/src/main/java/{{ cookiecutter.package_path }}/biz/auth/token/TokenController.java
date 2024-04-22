@@ -25,10 +25,14 @@ import java.time.Duration;
 @RequestMapping("/auth/token")
 public class TokenController extends AuthBaseController {
 
-    // token刷新窗口期
+    /**
+     * token刷新窗口期
+     */
     private static final int WINDOW_MINUTES = 30;
 
-    // token刷新次数限制
+    /**
+     * token刷新次数限制
+     */
     private static final int MAX_REFRESH_COUNT = 5;
 
     @Resource

@@ -38,7 +38,11 @@ public class LoginUser implements UserDetails {
      */
     private Integer expireDays;
 
-    // 获取权限列表
+    /**
+     * 获取权限列表
+     *
+     * @return 权限列表
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return permissions.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());

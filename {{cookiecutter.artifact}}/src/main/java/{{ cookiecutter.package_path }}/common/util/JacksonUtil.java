@@ -21,7 +21,7 @@ public final class JacksonUtil {
     private JacksonUtil() {
     }
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * 反序列化
@@ -29,7 +29,7 @@ public final class JacksonUtil {
     public static <T> T deserialize(String body, Class<T> t) {
         T response;
         try {
-            response = objectMapper.readValue(body, t);
+            response = MAPPER.readValue(body, t);
             return response;
         } catch (JsonProcessingException e) {
             log.error("error: ", e);
@@ -44,7 +44,7 @@ public final class JacksonUtil {
     public static <T> List<T> deserializeArray(String body) {
         List<T> list = new ArrayList<>();
         try {
-            list = objectMapper.readValue(body, List.class);
+            list = MAPPER.readValue(body, List.class);
             return list;
         } catch (JsonProcessingException e) {
             return list;
@@ -55,12 +55,12 @@ public final class JacksonUtil {
      * 序列化对象
      */
     public static String serialize(Object obj) {
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String o;
         try {
             // 解决无法序列化LocalDateTime问题
-            objectMapper.registerModule(new JavaTimeModule());
-            o = objectMapper.writeValueAsString(obj);
+            MAPPER.registerModule(new JavaTimeModule());
+            o = MAPPER.writeValueAsString(obj);
             return o;
         } catch (JsonProcessingException e) {
             log.error("error: ", e);

@@ -13,7 +13,9 @@ public final class RateUtil {
     private RateUtil() {
     }
 
-    // 设置精确到小数点后2位
+    /**
+     * 设置精确到小数点后2位
+     */
     public static final int DIGIT = 2;
 
     /**

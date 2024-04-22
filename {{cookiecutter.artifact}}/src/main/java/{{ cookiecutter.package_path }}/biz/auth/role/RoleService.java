@@ -39,7 +39,7 @@ public class RoleService extends ServiceImpl<RoleMapper, Role> {
      * @param roleId 角色ID
      */
     @CacheEvict(key = "#roleId")
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean delete(Integer roleId) {
         boolean s1 = groupRoleService.deleteRelation(0, roleId);
         boolean s2 = rolePermissionService.deleteRelation(roleId, 0);

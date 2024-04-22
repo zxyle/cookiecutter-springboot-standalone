@@ -90,7 +90,7 @@ public class RolePermissionService extends ServiceImpl<RolePermissionMapper, Rol
      * @param roleId        角色ID
      * @param permissionIds 权限ID列表
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateRelation(Integer roleId, List<Integer> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || roleId == null || roleId == 0) {
             return false;

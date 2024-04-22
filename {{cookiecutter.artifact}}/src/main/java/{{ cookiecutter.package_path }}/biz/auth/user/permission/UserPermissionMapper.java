@@ -21,6 +21,7 @@ public interface UserPermissionMapper extends BaseMapper<UserPermission> {
      * 查询用户直接拥有的权限代码列表
      *
      * @param userId 用户ID
+     * @return 权限列表
      */
     List<Permission> findPermissionsByUserId(Integer userId);
 
@@ -30,6 +31,7 @@ public interface UserPermissionMapper extends BaseMapper<UserPermission> {
      * @param page    分页对象
      * @param userId  用户ID
      * @param request 分页请求
+     * @return 权限分页对象
      */
     Page<Permission> page(Page<Permission> page, Integer userId, PaginationRequest request);
 

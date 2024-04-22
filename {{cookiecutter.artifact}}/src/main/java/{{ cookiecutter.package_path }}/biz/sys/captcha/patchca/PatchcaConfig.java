@@ -9,11 +9,7 @@ import org.patchca.color.GradientColorFactory;
 import org.patchca.color.RandomColorFactory;
 import org.patchca.color.SingleColorFactory;
 import org.patchca.filter.FilterFactory;
-import org.patchca.filter.predefined.CurvesRippleFilterFactory;
-import org.patchca.filter.predefined.DiffuseRippleFilterFactory;
-import org.patchca.filter.predefined.DoubleRippleFilterFactory;
-import org.patchca.filter.predefined.MarbleRippleFilterFactory;
-import org.patchca.filter.predefined.WobbleRippleFilterFactory;
+import org.patchca.filter.predefined.*;
 import org.patchca.service.ConfigurableCaptchaService;
 import org.patchca.word.RandomWordFactory;
 import org.springframework.context.annotation.Bean;
@@ -84,7 +80,11 @@ public class PatchcaConfig {
 
     }
 
-    // 自定义颜色工厂
+    /**
+     * 自定义颜色工厂
+     *
+     * @return 颜色工厂类
+     */
     public ColorFactory getColorFactory() {
         return x -> {
             SecureRandom random = new SecureRandom();

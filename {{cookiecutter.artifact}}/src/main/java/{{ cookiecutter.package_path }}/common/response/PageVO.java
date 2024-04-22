@@ -27,7 +27,7 @@ public class PageVO<T> {
      *
      * @mock 100
      */
-    private long total;
+    private Long total;
 
     public PageVO(List<T> list, Long total) {
         this.list = list;

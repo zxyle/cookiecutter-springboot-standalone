@@ -56,9 +56,10 @@ public class CaptchaController {
      */
     @GetMapping("/captchaImage")
     public void get(HttpServletResponse response) throws IOException {
+        // 在代理服务器端防止缓冲
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);  // 在代理服务器端防止缓冲
+        response.setDateHeader("Expires", 0);
         response.setContentType("image/jpeg");
         CaptchaPair captchaPair = codeService.send();
         response.setHeader("captchaId", captchaPair.getCaptchaId());

@@ -53,7 +53,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      * @param userId 用户ID
      */
     @CacheEvict(key = "#userId")
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean delete(Integer userId) {
         boolean s1 = userPermissionService.deleteRelation(userId, 0);
         boolean s2 = userRoleService.deleteRelation(userId, 0);
@@ -64,7 +64,12 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return (s1 && s2) && (s3 && s4) && (s5 && s6);
     }
 
-    // 禁用用户
+    /**
+     * 禁用用户
+     *
+     * @param userId 用户ID
+     * @return 禁用用户是否成功
+     */
     public boolean disable(Integer userId) {
         User user = new User();
         user.setId(userId);
@@ -73,7 +78,12 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return success && kick(userId);
     }
 
-    // 启用用户
+    /**
+     * 启用用户
+     *
+     * @param userId 用户ID
+     * @return 启用用户是否成功
+     */
     public boolean enable(Integer userId) {
         User user = new User();
         user.setId(userId);
@@ -81,7 +91,12 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return updateById(user);
     }
 
-    // 下线用户
+    /**
+     * 下线用户
+     *
+     * @param userId 用户ID
+     * @return 下线用户是否成功
+     */
     public boolean kick(Integer userId) {
         String key = AuthConst.KEY_PREFIX + userId;
         Boolean hasKey = stringRedisTemplate.hasKey(key);
@@ -144,7 +159,13 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         userPermissionService.updateRelation(userId, permissionIds);
     }
 
-    // 创建用户
+    /**
+     * 创建用户
+     *
+     * @param account         账号名
+     * @param encodedPassword 加密后的密码
+     * @return 用户信息
+     */
     public User create(String account, String encodedPassword) {
         User user = new User();
         user.setPwd(encodedPassword);

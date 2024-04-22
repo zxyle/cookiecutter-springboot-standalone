@@ -97,7 +97,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
      * @param groupId 用户组ID
      */
     @CacheEvict(key = "#groupId")
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean delete(Integer groupId) {
         boolean s1 = groupPermissionService.deleteRelation(groupId, 0);
         boolean s2 = groupRoleService.deleteRelation(groupId, 0);

@@ -95,7 +95,7 @@ public class UserGroupService extends ServiceImpl<UserGroupMapper, UserGroup> {
      * @param userId   用户ID
      * @param groupIds 用户组ID列表
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateRelation(Integer userId, List<Integer> groupIds) {
         if (CollectionUtils.isEmpty(groupIds) || userId == null || userId == 0) {
             return;
@@ -107,7 +107,13 @@ public class UserGroupService extends ServiceImpl<UserGroupMapper, UserGroup> {
         }
     }
 
-    // 构建wrapper
+    /**
+     * 构建wrapper
+     *
+     * @param userId  用户ID
+     * @param groupId 用户组ID
+     * @return wrapper
+     */
     private LambdaQueryWrapper<UserGroup> buildWrapper(Integer userId, Integer groupId) {
         LambdaQueryWrapper<UserGroup> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(userId != null && userId != 0, UserGroup::getUserId, userId);

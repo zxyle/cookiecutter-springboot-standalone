@@ -22,9 +22,13 @@ import java.time.LocalDateTime;
 public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
     private static final String CREATE_FIELD = StrUtil.toCamelCase(ProjectConst.CREATE_FIELD);
+    private static final String CREATOR_FIELD = StrUtil.toCamelCase(ProjectConst.CREATOR_FIELD);
     private static final String UPDATE_FIELD = StrUtil.toCamelCase(ProjectConst.UPDATE_FIELD);
+    private static final String UPDATER_FIELD = StrUtil.toCamelCase(ProjectConst.UPDATER_FIELD);
 
-    // mybatis plus 插入时填充策略
+    /**
+     * mybatis plus 插入时填充策略
+     */
     @Override
     public void insertFill(MetaObject metaObject) {
         this.setFieldValByName(CREATE_FIELD, LocalDateTime.now(), metaObject);
@@ -32,19 +36,21 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-            this.setFieldValByName("createBy", loginUser.getUser().getId(), metaObject);
-            this.setFieldValByName("updateBy", loginUser.getUser().getId(), metaObject);
+            this.setFieldValByName(CREATOR_FIELD, loginUser.getUser().getId(), metaObject);
+            this.setFieldValByName(UPDATER_FIELD, loginUser.getUser().getId(), metaObject);
         }
     }
 
-    // mybatis plus 更新时填充策略
+    /**
+     * mybatis plus 更新时填充策略
+     */
     @Override
     public void updateFill(MetaObject metaObject) {
         this.setFieldValByName(UPDATE_FIELD, LocalDateTime.now(), metaObject);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-            this.setFieldValByName("updateBy", loginUser.getUser().getId(), metaObject);
+            this.setFieldValByName(UPDATER_FIELD, loginUser.getUser().getId(), metaObject);
         }
     }
 }

@@ -13,6 +13,7 @@ public interface CounterService {
      *
      * @param biz 业务名
      * @param id  ID
+     * @return 自增后的统计次数
      */
     Long incr(String biz, String id);
 
@@ -21,6 +22,7 @@ public interface CounterService {
      *
      * @param biz 业务名
      * @param id  ID
+     * @return 当前统计次数
      */
     Long get(String biz, String id);
 
@@ -29,6 +31,7 @@ public interface CounterService {
      *
      * @param biz 业务名
      * @param id  ID
+     * @return 是否清除成功
      */
     boolean clear(String biz, String id);
 

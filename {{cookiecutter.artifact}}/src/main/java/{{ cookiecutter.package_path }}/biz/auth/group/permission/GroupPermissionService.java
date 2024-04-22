@@ -102,7 +102,7 @@ public class GroupPermissionService extends ServiceImpl<GroupPermissionMapper, G
      * @param groupId       用户组ID
      * @param permissionIds 权限ID列表
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateRelation(Integer groupId, List<Integer> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || groupId == null || groupId == 0) {
             return;

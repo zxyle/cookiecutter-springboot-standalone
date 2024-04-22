@@ -89,7 +89,7 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
      * @param permissionId 权限ID
      */
     @CacheEvict(key = "#permissionId")
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean delete(Integer permissionId) {
         boolean s1 = groupPermissionService.deleteRelation(0, permissionId);
         boolean s2 = rolePermissionService.deleteRelation(0, permissionId);

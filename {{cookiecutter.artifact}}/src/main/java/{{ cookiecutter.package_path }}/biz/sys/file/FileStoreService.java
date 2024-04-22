@@ -21,7 +21,9 @@ public interface FileStoreService {
 
     /**
      * 删除文件
+     *
      * @param objectName 文件名
+     * @return 是否删除成功
      */
     boolean delete(String objectName);
 }

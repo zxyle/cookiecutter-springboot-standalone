@@ -92,7 +92,7 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
      * @param userId  用户ID
      * @param roleIds 角色ID列表
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateRelation(Integer userId, List<Integer> roleIds) {
         if (CollectionUtils.isEmpty(roleIds) || userId == null || userId == 0) {
             return;
@@ -104,7 +104,13 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
         }
     }
 
-    // 构建wrapper
+    /**
+     * 构建wrapper
+     *
+     * @param userId 用户ID
+     * @param roleId 角色ID
+     * @return wrapper
+     */
     private LambdaQueryWrapper<UserRole> buildWrapper(Integer userId, Integer roleId) {
         LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(userId != null && userId != 0, UserRole::getUserId, userId);
