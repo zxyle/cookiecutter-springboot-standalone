@@ -48,15 +48,19 @@ public class UserResponse extends User {
     // 重写父类的get方法，对敏感信息进行脱敏
     @Override
     public String getEmail() {
-        if (StringUtils.isNotBlank(super.getEmail()))
+        if (StringUtils.isNotBlank(super.getEmail())) {
             super.setEmail(DesensitizedUtil.email(super.getEmail()));
+        }
+
         return super.getEmail();
     }
 
     @Override
     public String getMobile() {
-        if (StringUtils.isNotBlank(super.getMobile()))
+        if (StringUtils.isNotBlank(super.getMobile())) {
             super.setMobile(DesensitizedUtil.mobilePhone(super.getMobile()));
+        }
+
         return super.getMobile();
     }
 }

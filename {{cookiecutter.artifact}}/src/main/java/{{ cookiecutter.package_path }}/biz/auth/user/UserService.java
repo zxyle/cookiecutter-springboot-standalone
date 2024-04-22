@@ -214,8 +214,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         boolean update = update(wrapper);
 
         String key = "pwd:change:" + userId;
-        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key)))
+        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key))) {
             stringRedisTemplate.delete(key);
+        }
+
         return update;
     }
 

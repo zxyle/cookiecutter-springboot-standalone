@@ -57,7 +57,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         // 解析jwt, 解析失败则放行
         String userId;
         try {
-            Claims claims = JwtUtil.parseJWT(token);
+            Claims claims = JwtUtil.parseJwt(token);
             userId = claims.getSubject();
         } catch (Exception ignored) {
             log.error("解析JWT失败: {}", token);

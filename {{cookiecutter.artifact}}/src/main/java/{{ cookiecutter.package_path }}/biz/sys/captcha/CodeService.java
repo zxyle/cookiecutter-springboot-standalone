@@ -72,8 +72,9 @@ public class CodeService {
         }
 
         String captchaRedis = stringRedisTemplate.opsForValue().get(redisKey);
-        if (StringUtils.isBlank(captchaRedis))
+        if (StringUtils.isBlank(captchaRedis)) {
             return false;
+        }
 
         boolean match = captchaRedis.trim().equalsIgnoreCase(code);
         if (match) {

@@ -47,7 +47,9 @@ public class LoginController extends AuthBaseController {
     public R<LoginResponse> login(@Valid @RequestBody AccountLoginRequest req, HttpServletRequest servletRequest) {
         log.debug("用户登录：{}", servletRequest.getRequestURI());
         R<LoginResponse> beforeLoginResponse = beforeLogin(req);
-        if (beforeLoginResponse != null) return beforeLoginResponse;
+        if (beforeLoginResponse != null) {
+            return beforeLoginResponse;
+        }
 
         LoginResponse response = loginService.login(req.getAccount(), req.getPassword());
 
@@ -111,10 +113,14 @@ public class LoginController extends AuthBaseController {
 
         String key = "scan:" + code;
         String userId = stringRedisTemplate.opsForValue().get(key);
-        if (userId == null) return R.fail("二维码已过期，请刷新页面重试");
+        if (userId == null) {
+            return R.fail("二维码已过期，请刷新页面重试");
+        }
 
         User user = userService.findById(Integer.valueOf(userId));
-        if (user == null) return R.fail("用户不存在");
+        if (user == null) {
+            return R.fail("用户不存在");
+        }
 
         LoginResponse response = new LoginResponse(user);
         // 3. 服务端根据UUID查询到对应的用户信息，然后将用户信息返回给移动端

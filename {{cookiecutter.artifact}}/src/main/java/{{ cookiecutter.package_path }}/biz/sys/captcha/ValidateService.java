@@ -29,18 +29,21 @@ public class ValidateService {
      */
     public boolean validate(String key, String code) {
         // 检查参数是否为空
-        if (StringUtils.isBlank(key) || StringUtils.isBlank(code))
+        if (StringUtils.isBlank(key) || StringUtils.isBlank(code)) {
             return false;
+        }
 
         // 检查key是否存在
         Boolean hasKey = stringRedisTemplate.hasKey(key);
-        if (Boolean.FALSE.equals(hasKey))
+        if (Boolean.FALSE.equals(hasKey)) {
             return false;
+        }
 
         // 检查验证码是否正确
         String truthCode = (String) stringRedisTemplate.opsForHash().get(key, "code");
-        if (StringUtils.isBlank(truthCode) || !truthCode.equalsIgnoreCase(code))
+        if (StringUtils.isBlank(truthCode) || !truthCode.equalsIgnoreCase(code)) {
             return false;
+        }
 
         // 删除验证码
         stringRedisTemplate.delete(key);

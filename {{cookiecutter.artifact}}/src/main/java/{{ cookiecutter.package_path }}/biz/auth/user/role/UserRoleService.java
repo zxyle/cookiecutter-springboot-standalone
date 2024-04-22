@@ -37,7 +37,9 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
             @CacheEvict(key = "'roles:' + #userId")
     })
     public boolean deleteRelation(Integer userId, Integer roleId) {
-        if (countRelation(userId, roleId) == 0) return true;
+        if (countRelation(userId, roleId) == 0) {
+            return true;
+        }
 
         return remove(buildWrapper(userId, roleId));
     }
@@ -77,7 +79,9 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
             @CacheEvict(key = "'roles:' + #userId")
     })
     public boolean createRelation(Integer userId, Integer roleId) {
-        if (countRelation(userId, roleId) > 0) return true;
+        if (countRelation(userId, roleId) > 0) {
+            return true;
+        }
 
         return save(new UserRole(userId, roleId));
     }

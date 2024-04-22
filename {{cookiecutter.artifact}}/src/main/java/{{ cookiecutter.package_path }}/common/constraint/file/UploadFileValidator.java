@@ -44,7 +44,9 @@ public class UploadFileValidator implements ConstraintValidator<UploadFile, Mult
 
     @Override
     public boolean isValid(MultipartFile value, ConstraintValidatorContext context) {
-        if (value == null) return true;
+        if (value == null) {
+            return true;
+        }
 
         if (value.getSize() > maxSize || value.getSize() < minSize) {
             overWriteMessage(context, "文件大小超过限制");

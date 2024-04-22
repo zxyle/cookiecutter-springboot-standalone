@@ -43,7 +43,9 @@ public class FileController {
         List<String> list = new ArrayList<>(req.getFiles().size());
         List<MultipartFile> files = req.getFiles();
         for (MultipartFile file : files) {
-            if (file.isEmpty()) continue;
+            if (file.isEmpty()) {
+                continue;
+            }
             String url = store(file, req.getFolder());
             list.add(url);
         }

@@ -21,6 +21,7 @@ public interface GroupPermissionMapper extends BaseMapper<GroupPermission> {
      * 查询用户组拥有的权限代码列表
      *
      * @param groupId 用户组ID
+     * @return 权限代码列表
      */
     List<Permission> findPermissionsByGroupId(Integer groupId);
 
@@ -28,6 +29,7 @@ public interface GroupPermissionMapper extends BaseMapper<GroupPermission> {
      * 查询用户组拥有的权限代码列表
      *
      * @param groupIds 用户组ID列表
+     * @return 权限代码列表
      */
     List<Permission> findPermissionsByGroupIds(List<Integer> groupIds);
 

@@ -85,7 +85,9 @@ public class DictController {
     @DeleteMapping("/dicts/{id}")
     public R<Void> delete(@PathVariable Integer id) {
         Dict result = thisService.getById(id);
-        if (result == null) return R.fail("删除失败，字典不存在");
+        if (result == null) {
+            return R.fail("删除失败，字典不存在");
+        }
 
         boolean success = thisService.deleteDict(result.getDictType(), id);
         return success ? R.ok("删除字典成功") : R.fail("删除字典条目失败");

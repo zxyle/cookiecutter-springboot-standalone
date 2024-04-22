@@ -56,7 +56,9 @@ public class ProfileController extends AuthBaseController {
             user.setId(userId);
             user.setNickname(entity.getNickname());
             boolean result = userService.putById(user);
-            if (!result) log.error("更新auth_user表中的nickname失败，userId: {}", userId);
+            if (!result) {
+                log.error("更新auth_user表中的nickname失败，userId: {}", userId);
+            }
         }
         return R.ok(profile);
     }

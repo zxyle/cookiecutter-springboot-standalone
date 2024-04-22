@@ -56,11 +56,15 @@ public class MFAController extends AuthBaseController {
         }
 
         String account = req.getAccount();
-        if (userService.findByAccount(account) != null) return R.fail("该账号已绑定其他用户");
+        if (userService.findByAccount(account) != null) {
+            return R.fail("该账号已绑定其他用户");
+        }
 
         // 获取redis中验证码, 校验是否正确
         String key = "code:" + account;
-        if (!validateService.validate(key, req.getCode())) return R.fail("验证码错误");
+        if (!validateService.validate(key, req.getCode())) {
+            return R.fail("验证码错误");
+        }
 
         // 更新用户信息
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();

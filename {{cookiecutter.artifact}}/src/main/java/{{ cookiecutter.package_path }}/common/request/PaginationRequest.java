@@ -160,7 +160,9 @@ public class PaginationRequest extends BaseRequest {
     public <T> Page<T> toPageable() {
         Page<T> page = new Page<>(getPageNum(), getPageSize());
 
-        if (StringUtils.isBlank(sort)) return page;
+        if (StringUtils.isBlank(sort)) {
+            return page;
+        }
 
         // 排序字段处理
         List<String> columns = COLUMN_CACHE.computeIfAbsent(this.getClass(), this::getColumns);

@@ -48,12 +48,16 @@ public class RegisterController {
     public R<LoginResponse> register(@Valid @RequestBody RegisterRequest req) {
         String account = req.getAccount();
         R<LoginResponse> r = beforeRegister(req);
-        if (!r.isSuccess()) return r;
+        if (!r.isSuccess()) {
+            return r;
+        }
 
         // 创建用户
         User user = userService.create(account, encoder.encode(req.getPassword()));
         boolean success = userService.save(user);
-        if (!success) return R.fail("注册账号失败");
+        if (!success) {
+            return R.fail("注册账号失败");
+        }
 
         // 赋予默认角色
         Integer defaultRole = setting.get("auth.user.default-role").getIntValue();

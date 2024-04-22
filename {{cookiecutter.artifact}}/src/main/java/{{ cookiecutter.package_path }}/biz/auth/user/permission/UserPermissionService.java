@@ -37,7 +37,9 @@ public class UserPermissionService extends ServiceImpl<UserPermissionMapper, Use
             @CacheEvict(key = "'permissions:' + #userId"),
     })
     public boolean deleteRelation(Integer userId, Integer permissionId) {
-        if (countRelation(userId, permissionId) == 0) return true;
+        if (countRelation(userId, permissionId) == 0) {
+            return true;
+        }
 
         return remove(buildWrapper(userId, permissionId));
     }
@@ -77,7 +79,9 @@ public class UserPermissionService extends ServiceImpl<UserPermissionMapper, Use
             @CacheEvict(key = "'permissions:' + #userId")
     })
     public boolean createRelation(Integer userId, Integer permissionId) {
-        if (countRelation(userId, permissionId) > 0) return true;
+        if (countRelation(userId, permissionId) > 0) {
+            return true;
+        }
 
         return save(new UserPermission(userId, permissionId));
     }

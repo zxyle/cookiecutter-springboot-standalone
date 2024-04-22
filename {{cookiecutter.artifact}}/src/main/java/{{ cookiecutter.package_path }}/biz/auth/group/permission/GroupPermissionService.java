@@ -47,7 +47,9 @@ public class GroupPermissionService extends ServiceImpl<GroupPermissionMapper, G
             @CacheEvict(key = "'permissions:' + #groupId")
     })
     public boolean deleteRelation(Integer groupId, Integer permissionId) {
-        if (countRelation(groupId, permissionId) == 0) return true;
+        if (countRelation(groupId, permissionId) == 0) {
+            return true;
+        }
 
         return remove(buildWrapper(groupId, permissionId));
     }
@@ -87,7 +89,9 @@ public class GroupPermissionService extends ServiceImpl<GroupPermissionMapper, G
             @CacheEvict(key = "'permissions:' + #groupId")
     })
     public boolean createRelation(Integer groupId, Integer permissionId) {
-        if (countRelation(groupId, permissionId) > 0) return true;
+        if (countRelation(groupId, permissionId) > 0) {
+            return true;
+        }
 
         return save(new GroupPermission(groupId, permissionId));
     }

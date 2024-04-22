@@ -36,7 +36,9 @@ public class RolePermissionService extends ServiceImpl<RolePermissionMapper, Rol
             @CacheEvict(key = "null + ':' + #permissionId")
     })
     public boolean deleteRelation(Integer roleId, Integer permissionId) {
-        if (countRelation(roleId, permissionId) == 0) return true;
+        if (countRelation(roleId, permissionId) == 0) {
+            return true;
+        }
 
         return remove(buildWrapper(roleId, permissionId));
     }
@@ -75,7 +77,9 @@ public class RolePermissionService extends ServiceImpl<RolePermissionMapper, Rol
             @CacheEvict(key = "null + ':' + #permissionId")
     })
     public boolean createRelation(Integer roleId, Integer permissionId) {
-        if (countRelation(roleId, permissionId) > 0) return true;
+        if (countRelation(roleId, permissionId) > 0) {
+            return true;
+        }
 
         return save(new RolePermission(roleId, permissionId));
     }

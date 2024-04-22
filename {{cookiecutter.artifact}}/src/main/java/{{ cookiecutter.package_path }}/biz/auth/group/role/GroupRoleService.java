@@ -37,7 +37,9 @@ public class GroupRoleService extends ServiceImpl<GroupRoleMapper, GroupRole> {
             @CacheEvict(key = "'roles:' + #groupId"),
     })
     public boolean deleteRelation(Integer groupId, Integer roleId) {
-        if (countRelation(groupId, roleId) == 0) return true;
+        if (countRelation(groupId, roleId) == 0) {
+            return true;
+        }
 
         return remove(buildWrapper(groupId, roleId));
     }
@@ -77,7 +79,9 @@ public class GroupRoleService extends ServiceImpl<GroupRoleMapper, GroupRole> {
             @CacheEvict(key = "'roles:'+#groupId")
     })
     public boolean createRelation(Integer groupId, Integer roleId) {
-        if (countRelation(groupId, roleId) > 0) return true;
+        if (countRelation(groupId, roleId) > 0) {
+            return true;
+        }
 
         return save(new GroupRole(groupId, roleId));
     }

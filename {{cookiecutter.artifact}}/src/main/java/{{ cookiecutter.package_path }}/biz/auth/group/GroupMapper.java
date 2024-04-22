@@ -16,6 +16,7 @@ public interface GroupMapper extends BaseMapper<Group> {
      * 查询最大排序号
      *
      * @param parentId 父级ID
+     * @return 最大排序号
      */
     Integer findMaxSortNum(Integer parentId);
 

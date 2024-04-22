@@ -56,11 +56,11 @@ public class TokenController extends AuthBaseController {
         String key = "refresh:" + userId;
         String s = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isBlank(s)) {
-            response.setToken(JwtUtil.createJWT(userId));
+            response.setToken(JwtUtil.createJwt(userId));
             stringRedisTemplate.opsForValue().increment(key);
             stringRedisTemplate.expire(key, Duration.ofMinutes(WINDOW_MINUTES));
         } else if (Integer.parseInt(s) < MAX_REFRESH_COUNT) {
-            response.setToken(JwtUtil.createJWT(userId));
+            response.setToken(JwtUtil.createJwt(userId));
             stringRedisTemplate.opsForValue().increment(key);
         } else {
             return null;

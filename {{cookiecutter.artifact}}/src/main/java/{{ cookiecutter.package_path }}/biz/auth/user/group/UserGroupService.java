@@ -39,7 +39,9 @@ public class UserGroupService extends ServiceImpl<UserGroupMapper, UserGroup> {
             @CacheEvict(key = "'groups:user' + #userId")
     })
     public boolean deleteRelation(Integer userId, Integer groupId) {
-        if (countRelation(userId, groupId) == 0) return true;
+        if (countRelation(userId, groupId) == 0) {
+            return true;
+        }
 
         return remove(buildWrapper(userId, groupId));
     }
@@ -80,7 +82,9 @@ public class UserGroupService extends ServiceImpl<UserGroupMapper, UserGroup> {
             @CacheEvict(key = "'groups:user' + #userId")
     })
     public boolean createRelation(Integer userId, Integer groupId) {
-        if (countRelation(userId, groupId) > 0) return true;
+        if (countRelation(userId, groupId) > 0) {
+            return true;
+        }
 
         return save(new UserGroup(userId, groupId));
     }

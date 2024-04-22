@@ -79,8 +79,9 @@ public class AuthBaseController {
      */
     public Set<String> getRoleCodes() {
         LoginUser loginUser = getLoginUser();
-        if (loginUser == null) return Collections.emptySet(); // 如果登录用户为空，返回空集合
-
+        if (loginUser == null) {
+            return Collections.emptySet(); // 如果登录用户为空，返回空集合
+        }
         return loginUser.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .filter(s -> s.startsWith(ROLE_PREFIX))
@@ -103,7 +104,9 @@ public class AuthBaseController {
      */
     public Set<String> getPermissionCodes() {
         LoginUser loginUser = getLoginUser();
-        if (loginUser == null) return Collections.emptySet();
+        if (loginUser == null) {
+            return Collections.emptySet();
+        }
 
         return loginUser.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

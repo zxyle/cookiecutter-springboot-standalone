@@ -129,7 +129,9 @@ public class ${className} {
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
     @PutMapping("${table.endpoint}/{id}")
     public R<${table.className}> update(@Valid @RequestBody ${table.className} entity, @PathVariable Integer id) {
-        if (thisService.findById(id) == null) return R.fail("更新失败，${table.comment!}数据不存在");
+        if (thisService.findById(id) == null) {
+            return R.fail("更新失败，${table.comment!}数据不存在");
+        }
 
         entity.setId(id);
         ${table.className} result = thisService.putById(entity);
@@ -143,7 +145,9 @@ public class ${className} {
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
     @DeleteMapping("${table.endpoint}/{id}")
     public R<Void> delete(@PathVariable Integer id) {
-        if (thisService.findById(id) == null) return R.fail("删除失败，${table.comment!}数据不存在");
+        if (thisService.findById(id) == null) {
+            return R.fail("删除失败，${table.comment!}数据不存在");
+        }
 
         boolean deleted = thisService.deleteById(id);
         return deleted ? R.ok("删除${table.comment!}成功") : R.fail("删除${table.comment!}失败");

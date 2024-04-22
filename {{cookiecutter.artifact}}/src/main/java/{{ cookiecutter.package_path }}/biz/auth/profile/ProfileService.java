@@ -65,8 +65,9 @@ public class ProfileService extends ServiceImpl<ProfileMapper, Profile> {
     public boolean delete(Integer userId) {
         LambdaQueryWrapper<Profile> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Profile::getUserId, userId);
-        if (!exists(wrapper))
+        if (!exists(wrapper)) {
             return true;
+        }
 
         return remove(wrapper);
     }

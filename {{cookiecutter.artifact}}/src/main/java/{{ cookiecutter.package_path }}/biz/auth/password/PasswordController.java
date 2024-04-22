@@ -112,7 +112,9 @@ public class PasswordController extends AuthBaseController {
 
         // 修改密码
         boolean success = thisService.change(user.getId(), req.getNewPassword(), ChangePasswordEnum.FORGET);
-        if (!success) return R.fail("找回密码失败");
+        if (!success) {
+            return R.fail("找回密码失败");
+        }
         // 用户可能已经在某处登录，退出登录
         loginService.logout(user.getId());
         userService.unlock(user.getId());

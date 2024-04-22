@@ -28,7 +28,7 @@ public final class JwtUtil {
     // 设置秘钥明文
     private static final String JWT_KEY = "{{ random_ascii_string(32) }}";
 
-    private static String getUUID() {
+    private static String getUuid() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
@@ -37,8 +37,8 @@ public final class JwtUtil {
      *
      * @param subject token中要存放的数据（json格式）
      */
-    public static String createJWT(String subject) {
-        JwtBuilder builder = getJwtBuilder(subject, null, getUUID());// 设置过期时间
+    public static String createJwt(String subject) {
+        JwtBuilder builder = getJwtBuilder(subject, null, getUuid());// 设置过期时间
         return builder.compact();
     }
 
@@ -48,8 +48,8 @@ public final class JwtUtil {
      * @param subject   token中要存放的数据（json格式）
      * @param ttlMillis token超时时间
      */
-    public static String createJWT(String subject, Long ttlMillis) {
-        JwtBuilder builder = getJwtBuilder(subject, ttlMillis, getUUID());// 设置过期时间
+    public static String createJwt(String subject, Long ttlMillis) {
+        JwtBuilder builder = getJwtBuilder(subject, ttlMillis, getUuid());// 设置过期时间
         return builder.compact();
     }
 
@@ -83,7 +83,7 @@ public final class JwtUtil {
      * @param subject   主题
      * @param ttlMillis 过期时间
      */
-    public static String createJWT(String id, String subject, Long ttlMillis) {
+    public static String createJwt(String id, String subject, Long ttlMillis) {
         JwtBuilder builder = getJwtBuilder(subject, ttlMillis, id);  // 设置过期时间
         return builder.compact();
     }
@@ -99,7 +99,7 @@ public final class JwtUtil {
     /**
      * 解析token
      */
-    public static Claims parseJWT(String token) {
+    public static Claims parseJwt(String token) {
         SecretKey secretKey = generalKey();
         return Jwts.parser()
                 .setSigningKey(secretKey)

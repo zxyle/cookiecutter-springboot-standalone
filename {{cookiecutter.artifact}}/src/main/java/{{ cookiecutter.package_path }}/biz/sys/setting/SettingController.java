@@ -66,7 +66,9 @@ public class SettingController {
     @PutMapping("/settings/{id}")
     public R<Void> update(@Valid @RequestBody Setting entity, @PathVariable Integer id) {
         Setting setting = thisService.findById(id);
-        if (setting == null) return R.fail("设置不存在");
+        if (setting == null) {
+            return R.fail("设置不存在");
+        }
 
         entity.setId(id);
         String optionValue = entity.getOptionValue();
@@ -82,7 +84,9 @@ public class SettingController {
     @DeleteMapping("/settings/{id}")
     public R<Void> delete(@PathVariable Integer id) {
         Setting setting = thisService.findById(id);
-        if (setting == null) return R.fail("设置不存在");
+        if (setting == null) {
+            return R.fail("设置不存在");
+        }
 
         boolean deleted = thisService.deleteById(setting.getOptionLabel(), id);
         return deleted ? R.ok("删除系统设置成功") : R.fail("删除系统设置失败");
@@ -110,7 +114,9 @@ public class SettingController {
             setting = thisService.getOne(wrapper);
         }
 
-        if (setting == null) return R.fail("设置不存在");
+        if (setting == null) {
+            return R.fail("设置不存在");
+        }
 
         Item item = thisService.update(setting.getOptionLabel(), setting.getDefaultValue());
         return item != null ? R.ok("恢复默认设置成功") : R.fail("恢复默认设置失败");

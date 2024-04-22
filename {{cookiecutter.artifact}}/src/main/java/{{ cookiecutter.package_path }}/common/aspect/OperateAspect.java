@@ -83,8 +83,9 @@ public class OperateAspect {
             op.setSuccess(response.isSuccess());
             op.setTraceId(response.getTraceId());
             // 如果操作失败，记录失败原因
-            if (!response.isSuccess())
+            if (!response.isSuccess()) {
                 op.setResponse(StringUtils.substring(response.getMessage(), 0, Math.min(response.getMessage().length(), 1024)));
+            }
 
             return result;
         } catch (Exception e) {

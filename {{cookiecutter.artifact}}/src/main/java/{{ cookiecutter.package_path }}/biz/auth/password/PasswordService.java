@@ -64,8 +64,9 @@ public class PasswordService {
      * @return true: 匹配; false: 不匹配
      */
     public boolean isMatch(String raw, String encoded) {
-        if (StringUtils.isBlank(raw) || StringUtils.isBlank(encoded))
+        if (StringUtils.isBlank(raw) || StringUtils.isBlank(encoded)) {
             return false;
+        }
 
         return passwordEncoder.matches(raw, encoded);
     }

@@ -188,8 +188,9 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
         List<Integer> users = new ArrayList<>();
 
         Set<String> keys = stringRedisTemplate.keys(AuthConst.KEY_PREFIX);
-        if (null == keys)
+        if (null == keys) {
             return users;
+        }
 
         for (String key : keys) {
             Integer userId = Integer.valueOf(key.split(":")[1]);
@@ -236,11 +237,20 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
     public boolean isAlreadyUsed(Integer permissionId) {
         LambdaQueryWrapper<Permission> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Permission::getParentId, permissionId);
-        if (exists(wrapper)) return true;
+        if (exists(wrapper)) {
+            return true;
+        }
+
         Long userPermissions = userPermissionService.countRelation(null, permissionId);
-        if (userPermissions > 0) return true;
+        if (userPermissions > 0) {
+            return true;
+        }
+
         Long rolePermissions = rolePermissionService.countRelation(null, permissionId);
-        if (rolePermissions > 0) return true;
+        if (rolePermissions > 0) {
+            return true;
+        }
+
         Long groupPermissions = groupPermissionService.countRelation(null, permissionId);
         return groupPermissions > 0;
     }

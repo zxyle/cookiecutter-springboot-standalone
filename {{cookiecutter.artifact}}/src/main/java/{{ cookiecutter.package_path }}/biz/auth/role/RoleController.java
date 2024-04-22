@@ -95,7 +95,9 @@ public class RoleController extends AuthBaseController {
     @GetMapping("/roles/{roleId}")
     public R<RoleResponse> get(@PathVariable Integer roleId) {
         Role role = thisService.findById(roleId);
-        if (role == null) return R.fail("角色不存在");
+        if (role == null) {
+            return R.fail("角色不存在");
+        }
 
         // 查询角色对应权限关系
         RoleResponse response = thisService.attachRoleInfo(role, true);

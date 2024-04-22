@@ -41,8 +41,9 @@ public class CheckPermissionService {
         Integer userId = loginUser.getUser().getId();
         String key = AuthConst.KEY_PREFIX + userId;
         String value = stringRedisTemplate.opsForValue().get(key);
-        if (StringUtils.isBlank(value))
+        if (StringUtils.isBlank(value)) {
             return false;
+        }
 
         List<String> patterns = Arrays.asList(value.split(AuthConst.DELIMITER));
         return wildcardPermission.isPermit(permission, patterns);
