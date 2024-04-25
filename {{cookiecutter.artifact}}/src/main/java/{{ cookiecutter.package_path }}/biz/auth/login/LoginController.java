@@ -133,12 +133,18 @@ public class LoginController extends AuthBaseController {
     @PostMapping("/login/totp")
     public R<Void> totpLogin(@Valid @RequestBody CodeLoginRequest req) {
         User user = userService.findByAccount(req.getAccount());
-        if (user == null) return R.fail("用户不存在");
+        if (user == null) {
+            return R.fail("用户不存在");
+        }
 
         Totp totp = totpService.findByUserId(getUserId());
-        if (totp == null) return R.fail("用户未设置TOTP");
+        if (totp == null) {
+            return R.fail("用户未设置TOTP");
+        }
 
-        if (!Authenticator.valid(totp.getSecret(), req.getCode())) return R.fail("验证码错误，请重新输入");
+        if (!Authenticator.valid(totp.getSecret(), req.getCode())) {
+            return R.fail("验证码错误，请重新输入");
+        }
 
         // TODO 登录逻辑
         return R.ok("登录成功");

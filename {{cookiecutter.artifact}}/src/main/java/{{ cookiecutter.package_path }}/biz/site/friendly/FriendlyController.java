@@ -51,7 +51,9 @@ public class FriendlyController {
     @DeleteMapping("/links/{id}")
     public R<Void> delete(@PathVariable("id") Integer id) {
         Friendly friendly = thisService.findById(id);
-        if (friendly == null) return R.fail("删除失败，友链不存在");
+        if (friendly == null) {
+            return R.fail("删除失败，友链不存在");
+        }
 
         boolean deleted = thisService.deleteById(id);
         return deleted ? R.ok("删除友链成功") : R.fail("删除友链失败");
@@ -69,7 +71,9 @@ public class FriendlyController {
     @PutMapping("/links/{id}")
     public R<Friendly> update(@PathVariable Integer id, @Valid @RequestBody Friendly entity) {
         Friendly friendly = thisService.findById(id);
-        if (friendly == null) return R.fail("更新失败，友链不存在");
+        if (friendly == null) {
+            return R.fail("更新失败，友链不存在");
+        }
 
         entity.setId(id);
         Friendly result = thisService.putById(entity);

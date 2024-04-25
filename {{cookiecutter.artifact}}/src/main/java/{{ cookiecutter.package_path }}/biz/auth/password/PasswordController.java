@@ -127,7 +127,9 @@ public class PasswordController extends AuthBaseController {
     @PostMapping("/forget/question")
     public R<Void> forgetByQuestion(@Valid @RequestBody ForgetByQuestionRequest req) {
         User user = userService.findByAccount(req.getAccount());
-        if (null == user) return R.fail("找回密码失败，用户不存在");
+        if (null == user) {
+            return R.fail("找回密码失败，用户不存在");
+        }
 
         // 校验密保问题
         List<AddAnswerRequest.AnswerRequest> answers = req.getAnswers();
@@ -136,19 +138,25 @@ public class PasswordController extends AuthBaseController {
         // 判断密保问题是否与随机生成的密保问题一致
         Integer questionId = answerRequest.getQuestionId();
         String s = stringRedisTemplate.opsForValue().get("question:" + user.getId());
-        if (StringUtils.isBlank(s) || !Integer.valueOf(s).equals(questionId)) return R.fail("找回密码失败，密保问题不存在");
+        if (StringUtils.isBlank(s) || !Integer.valueOf(s).equals(questionId)) {
+            return R.fail("找回密码失败，密保问题不存在");
+        }
         stringRedisTemplate.delete("question:" + user.getId());
 
         // 判断密保问题答案是否正确
         Answer answer = answerService.findByUserId(user.getId(), questionId);
-        if (null == answer) return R.fail("找回密码失败，密保问题不存在");
+        if (null == answer) {
+            return R.fail("找回密码失败，密保问题不存在");
+        }
         if (!DigestUtil.md5Hex(answerRequest.getAnswer().trim()).equalsIgnoreCase(answer.getSecret())) {
             return R.fail("找回密码失败，密保问题答案错误");
         }
 
         // 回答正确，修改密码
         boolean success = thisService.change(user.getId(), req.getNewPassword(), ChangePasswordEnum.FORGET);
-        if (!success) return R.fail("找回密码失败");
+        if (!success) {
+            return R.fail("找回密码失败");
+        }
         // 用户可能已经在某处登录，退出登录
         loginService.logout(user.getId());
         userService.unlock(user.getId());

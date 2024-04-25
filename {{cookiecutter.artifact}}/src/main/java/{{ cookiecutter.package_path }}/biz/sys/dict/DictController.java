@@ -100,7 +100,9 @@ public class DictController {
     @PutMapping("/dicts/{id}")
     public R<Void> update(@Valid @RequestBody UpdateDictRequest req, @PathVariable Integer id) {
         Dict result = thisService.getById(id);
-        if (result == null) return R.fail("更新失败，字典条目不存在");
+        if (result == null) {
+            return R.fail("更新失败，字典条目不存在");
+        }
 
         Dict dict = new Dict();
         BeanUtils.copyProperties(req, dict);

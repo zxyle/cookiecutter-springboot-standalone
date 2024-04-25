@@ -47,7 +47,9 @@ public class RealnameController extends AuthBaseController {
     @PostMapping("/realnames")
     public R<Realname> add(@Valid @RequestBody RealnameRequest req) {
         Realname query = thisService.findByUserId(getUserId());
-        if (query != null) return R.fail("用户已实名认证");
+        if (query != null) {
+            return R.fail("用户已实名认证");
+        }
 
         Realname realname = new Realname();
         BeanUtils.copyProperties(req, realname);

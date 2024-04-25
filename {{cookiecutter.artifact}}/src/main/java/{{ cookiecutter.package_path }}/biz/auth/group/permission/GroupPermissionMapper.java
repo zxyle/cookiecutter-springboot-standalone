@@ -39,6 +39,7 @@ public interface GroupPermissionMapper extends BaseMapper<GroupPermission> {
      * @param page    分页对象
      * @param groupId 用户组ID
      * @param request 分页请求
+     * @return 权限分页对象
      */
     Page<Permission> page(Page<Permission> page, Integer groupId, PaginationRequest request);
 

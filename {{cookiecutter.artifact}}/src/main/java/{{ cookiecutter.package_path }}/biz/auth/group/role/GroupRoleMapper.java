@@ -21,6 +21,7 @@ public interface GroupRoleMapper extends BaseMapper<GroupRole> {
      * 查询用户组拥有的角色编码列表
      *
      * @param groupId 用户组ID
+     * @return 角色列表
      */
     List<Role> findRolesByGroupId(Integer groupId);
 
@@ -28,6 +29,7 @@ public interface GroupRoleMapper extends BaseMapper<GroupRole> {
      * 根据用户组ID列表查询角色列表
      *
      * @param groupIds 用户组ID列表
+     * @return 角色列表
      */
     List<Role> findRolesByGroupIds(List<Integer> groupIds);
 
@@ -37,6 +39,7 @@ public interface GroupRoleMapper extends BaseMapper<GroupRole> {
      * @param page    分页对象
      * @param groupId 用户组ID
      * @param request 分页请求
+     * @return 角色分页对象
      */
     Page<Role> page(Page<Role> page, Integer groupId, PaginationRequest request);
 

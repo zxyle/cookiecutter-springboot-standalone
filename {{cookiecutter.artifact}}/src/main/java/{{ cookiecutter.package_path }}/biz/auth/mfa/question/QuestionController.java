@@ -130,7 +130,9 @@ public class QuestionController extends AuthBaseController {
     @PutMapping("/answers")
     public R<Void> update(@Validated(Update.class) @RequestBody AddAnswerRequest req) {
         String key = "code:" + getUserId();
-        if (!validateService.validate(key, req.getCode())) return R.fail("验证码错误");
+        if (!validateService.validate(key, req.getCode())) {
+            return R.fail("验证码错误");
+        }
 
         LambdaQueryWrapper<Answer> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Answer::getUserId, getUserId());

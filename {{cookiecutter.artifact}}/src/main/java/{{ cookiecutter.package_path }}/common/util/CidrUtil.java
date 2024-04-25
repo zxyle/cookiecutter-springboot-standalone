@@ -53,11 +53,15 @@ public final class CidrUtil {
      */
     public static boolean in(String ip, List<String> ipList) {
         for (String ipStr : ipList) {
-            if (ipStr.equals(ip)) return true;
+            if (ipStr.equals(ip)) {
+                return true;
+            }
 
             if (ipStr.contains("/")) {
                 boolean result = ipInCidr(ip, ipStr);
-                if (result) return true;
+                if (result) {
+                    return true;
+                }
             }
         }
         return false;

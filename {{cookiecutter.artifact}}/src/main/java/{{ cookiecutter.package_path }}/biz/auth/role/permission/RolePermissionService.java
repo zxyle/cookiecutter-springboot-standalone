@@ -105,7 +105,13 @@ public class RolePermissionService extends ServiceImpl<RolePermissionMapper, Rol
         return del && success;
     }
 
-    // 构建wrapper
+    /**
+     * 构建wrapper
+     *
+     * @param roleId       角色ID
+     * @param permissionId 权限ID
+     * @return wrapper
+     */
     private LambdaQueryWrapper<RolePermission> buildWrapper(Integer roleId, Integer permissionId) {
         LambdaQueryWrapper<RolePermission> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(roleId != null && roleId != 0, RolePermission::getRoleId, roleId);

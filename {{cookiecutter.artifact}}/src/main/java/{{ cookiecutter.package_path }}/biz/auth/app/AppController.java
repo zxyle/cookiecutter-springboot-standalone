@@ -81,7 +81,9 @@ public class AppController extends AuthBaseController {
     @GetMapping("/apps/{id}")
     public R<App> get(@PathVariable Integer id) {
         App result = thisService.findById(id);
-        if (result != null) result.setAppSecret(null);
+        if (result != null) {
+            result.setAppSecret(null);
+        }
         return result == null ? R.fail("应用不存在") : R.ok(result);
     }
 
@@ -96,7 +98,9 @@ public class AppController extends AuthBaseController {
         BeanUtils.copyProperties(req, entity);
         entity.setId(id);
         App result = thisService.putById(entity);
-        if (result != null) result.setAppSecret(null);
+        if (result != null) {
+            result.setAppSecret(null);
+        }
         return result != null ? R.ok(result) : R.fail("更新应用失败");
     }
 
@@ -121,7 +125,9 @@ public class AppController extends AuthBaseController {
     @GetMapping("/apps/{id}/regenerateSecret")
     public R<App> regenerateSecret(@PathVariable Integer id) {
         App app = thisService.findById(id);
-        if (app == null) return R.fail("应用不存在");
+        if (app == null) {
+            return R.fail("应用不存在");
+        }
 
         app.setAppSecret(IdUtil.fastSimpleUUID());
         App result = thisService.putById(app);
@@ -137,8 +143,12 @@ public class AppController extends AuthBaseController {
     @GetMapping("/apps/{id}/publish")
     public R<Void> publish(@PathVariable Integer id) {
         App app = thisService.findById(id);
-        if (app == null) return R.fail("应用不存在");
-        if (app.getEnabled()) return R.fail("应用已上架");
+        if (app == null) {
+            return R.fail("应用不存在");
+        }
+        if (app.getEnabled()) {
+            return R.fail("应用已上架");
+        }
 
         app.setEnabled(true);  // 启用
         App result = thisService.putById(app);
@@ -154,8 +164,12 @@ public class AppController extends AuthBaseController {
     @GetMapping("/apps/{id}/revoke")
     public R<Void> revoke(@PathVariable Integer id) {
         App app = thisService.findById(id);
-        if (app == null) return R.fail("应用不存在");
-        if (!app.getEnabled()) return R.fail("应用已下架");
+        if (app == null) {
+            return R.fail("应用不存在");
+        }
+        if (!app.getEnabled()) {
+            return R.fail("应用已下架");
+        }
 
         app.setEnabled(false);  // 禁用
         App result = thisService.putById(app);
@@ -172,8 +186,12 @@ public class AppController extends AuthBaseController {
     public R<RedirectResponse> redirect(@PathVariable Integer id) {
         // 根据appId查询应用
         App app = thisService.findById(id);
-        if (app == null) return R.fail("应用不存在");
-        if (app.getEnabled()) return R.fail("应用已下架");
+        if (app == null) {
+            return R.fail("应用不存在");
+        }
+        if (app.getEnabled()) {
+            return R.fail("应用已下架");
+        }
 
         // 生成临时授权码, 存入redis, 30秒过期
         String authCode = UUID.randomUUID().toString();
@@ -197,24 +215,32 @@ public class AppController extends AuthBaseController {
         String appKey = servletRequest.getHeader("appKey");
         String timestamp = servletRequest.getHeader("timestamp");
         String sign = servletRequest.getHeader("sign");
-        if (StringUtils.isAnyBlank(appKey, timestamp, sign)) return R.fail("请求头缺少参数");
+        if (StringUtils.isAnyBlank(appKey, timestamp, sign)) {
+            return R.fail("请求头缺少参数");
+        }
 
         // 检查时间戳是否过期，5分钟内有效
         long now = System.currentTimeMillis();
         long interval = now - Long.parseLong(timestamp);
-        if (interval > 5 * 60 * 1000) return R.fail("请求已过期");
+        if (interval > 5 * 60 * 1000) {
+            return R.fail("请求已过期");
+        }
 
         // 检查授权码是否过期
         String key = "authCode:" + req.getAuthCode();
         String value = stringRedisTemplate.opsForValue().get(key);
-        if (StringUtils.isBlank(value)) return R.fail("授权码已过期");
+        if (StringUtils.isBlank(value)) {
+            return R.fail("授权码已过期");
+        }
 
         // 校验签名是否正确
         String[] split = value.split(":");
         String body = JacksonUtil.serialize(req);
         String appSecret = split[0];
         String md5Hex = DigestUtils.md5Hex(appKey + appSecret + body + timestamp);
-        if (!md5Hex.equalsIgnoreCase(sign)) return R.fail("签名错误");
+        if (!md5Hex.equalsIgnoreCase(sign)) {
+            return R.fail("签名错误");
+        }
 
         Integer userId = Integer.valueOf(split[1]);
         User user = userService.findById(userId);

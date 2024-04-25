@@ -34,7 +34,9 @@ public class CheckinController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('site:checkin:add')")
     @PostMapping("/checkins")
     public R<Checkin> add() {
-        if (thisService.hasCheckin(getUserId(), LocalDate.now())) return R.ok("今日已签到");
+        if (thisService.hasCheckin(getUserId(), LocalDate.now())) {
+            return R.ok("今日已签到");
+        }
 
         thisService.checkin(getUserId(), LocalDate.now());
         return R.ok("签到成功");
@@ -47,7 +49,9 @@ public class CheckinController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('site:checkin:patch')")
     @PostMapping("/checkins/patch")
     public R<Checkin> patch(@Valid @RequestBody PatchCheckinRequest req) {
-        if (thisService.hasCheckin(getUserId(), req.getCheckinDate())) return R.ok("该日已签到");
+        if (thisService.hasCheckin(getUserId(), req.getCheckinDate())) {
+            return R.ok("该日已签到");
+        }
 
         // 补签一般需要扣除积分、减掉补签次数等操作，以防止滥用
         thisService.checkin(getUserId(), req.getCheckinDate());

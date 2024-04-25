@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class LocalDateConverter implements Converter<LocalDate> {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
     public Class<LocalDate> supportJavaTypeKey() {
@@ -35,12 +35,12 @@ public class LocalDateConverter implements Converter<LocalDate> {
     @Override
     public LocalDate convertToJavaData(ReadCellData cellData, ExcelContentProperty excelContentProperty
             , GlobalConfiguration globalConfiguration) {
-        return LocalDate.parse(cellData.getStringValue(), formatter);
+        return LocalDate.parse(cellData.getStringValue(), FORMATTER);
     }
 
     @Override
     public WriteCellData<?> convertToExcelData(LocalDate localDate, ExcelContentProperty excelContentProperty
             , GlobalConfiguration globalConfiguration) {
-        return new WriteCellData<>(localDate.format(formatter));
+        return new WriteCellData<>(localDate.format(FORMATTER));
     }
 }

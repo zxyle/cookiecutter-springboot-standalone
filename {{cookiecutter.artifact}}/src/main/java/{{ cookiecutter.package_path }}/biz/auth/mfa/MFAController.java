@@ -99,12 +99,18 @@ public class MFAController extends AuthBaseController {
     public R<Void> bind(@NotBlank String code) {
         String key = "totp:" + getUserId();
         Totp result = totpService.findByUserId(getUserId());
-        if (result != null) return R.ok("用户已绑定");
+        if (result != null) {
+            return R.ok("用户已绑定");
+        }
 
         String secret = stringRedisTemplate.opsForValue().get(key);
-        if (secret == null) return R.fail("请先生成随机密钥");
+        if (secret == null) {
+            return R.fail("请先生成随机密钥");
+        }
 
-        if (!Authenticator.valid(secret, code)) return R.fail("验证码错误，请重新输入");
+        if (!Authenticator.valid(secret, code)) {
+            return R.fail("验证码错误，请重新输入");
+        }
 
         Totp totp = new Totp(getUserId(), secret);
         Totp inserted = totpService.insert(totp);
@@ -121,10 +127,14 @@ public class MFAController extends AuthBaseController {
     @GetMapping("/totp/unbind")
     public R<Void> unbind(@NotBlank String code) {
         Totp result = totpService.findByUserId(getUserId());
-        if (result == null) return R.ok("用户未设置");
+        if (result == null) {
+            return R.ok("用户未设置");
+        }
 
         String secret = result.getSecret();
-        if (!Authenticator.valid(secret, code)) return R.fail("验证码错误，请重新输入");
+        if (!Authenticator.valid(secret, code)) {
+            return R.fail("验证码错误，请重新输入");
+        }
 
         boolean deleted = totpService.deleteByUserId(getUserId());
         return deleted ? R.ok("解绑TOTP成功") : R.fail("解绑TOTP失败");

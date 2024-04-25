@@ -21,6 +21,7 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
      * 根据用户ID 查询该用户所拥有的角色信息
      *
      * @param userId 用户ID
+     * @return 角色列表
      */
     List<Role> findRolesByUserId(Integer userId);
 
@@ -30,6 +31,7 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
      * @param page    分页对象
      * @param userId  用户ID
      * @param request 分页请求
+     * @return 角色分页对象
      */
     Page<Role> page(Page<Role> page, Integer userId, PaginationRequest request);
 }

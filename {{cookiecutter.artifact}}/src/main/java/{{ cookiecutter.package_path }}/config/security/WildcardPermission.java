@@ -109,11 +109,13 @@ public class WildcardPermission {
      * @return true-有权限 false-无权限
      */
     public boolean isPermit(String permission, List<String> permissionPatterns) {
-        if (CollectionUtils.isEmpty(permissionPatterns) || StringUtils.isEmpty(permission))
+        if (CollectionUtils.isEmpty(permissionPatterns) || StringUtils.isEmpty(permission)) {
             return false;
-
+        }
         for (String p : permissionPatterns) {
-            if (StringUtils.isBlank(p)) continue;
+            if (StringUtils.isBlank(p)) {
+                continue;
+            }
 
             if (format(p).isAllowed(permission)) {
                 return true;
