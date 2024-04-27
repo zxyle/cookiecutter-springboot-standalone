@@ -18,6 +18,15 @@ public interface CounterService {
     Long incr(String biz, String id);
 
     /**
+     * 自减并获取统计次数
+     *
+     * @param biz 业务名
+     * @param id  ID
+     * @return 自减后的统计次数
+     */
+    Long decr(String biz, String id);
+
+    /**
      * 获取统计次数
      *
      * @param biz 业务名
