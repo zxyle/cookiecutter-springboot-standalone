@@ -4,10 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${table.basePackageName}.common.aspect.LogOperation;
 import ${table.basePackageName}.common.response.R;
+import ${table.basePackageName}.common.validation.Add;
+import ${table.basePackageName}.common.validation.Search;
+import ${table.basePackageName}.common.validation.Update;
 import {{ cookiecutter.namespace }}.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 <#if table.hasBaseController>
 import ${table.baseControllerPath};
@@ -93,7 +98,7 @@ public class ${className} {
     // @LogOperation(name = "${table.comment!}列表查询", biz = "${table.biz}")
     // @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
     // @GetMapping("${table.endpoint}")
-    // public R<List<${table.className}>> list() {
+    // public R<List<${table.className}>> list(@Validated(Search.class) ${table.className}Request req) {
     //     LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
     //     // 补充查询条件
     //     return R.ok(thisService.list(wrapper));
@@ -105,7 +110,9 @@ public class ${className} {
     @LogOperation(name = "新增${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:add')")
     @PostMapping("${table.endpoint}")
-    public R<${table.className}> add(@Valid @RequestBody ${table.className} entity) {
+    public R<${table.className}> add(@Validated(Add.class) @RequestBody ${table.className}Request req) {
+        ${table.className} entity = new ${table.className}();
+        BeanUtils.copyProperties(req, entity);
         ${table.className} result = thisService.insert(entity);
         return R.ok(result);
     }
@@ -127,11 +134,13 @@ public class ${className} {
     @LogOperation(name = "按ID更新${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
     @PutMapping("${table.endpoint}/{id}")
-    public R<${table.className}> update(@Valid @RequestBody ${table.className} entity, @PathVariable Integer id) {
+    public R<${table.className}> update(@Validated(Update.class) @RequestBody ${table.className}Request req, @PathVariable Integer id) {
         if (thisService.findById(id) == null) {
             return R.fail("更新失败，${table.comment!}数据不存在");
         }
 
+        ${table.className} entity = new ${table.className}();
+        BeanUtils.copyProperties(req, entity);
         entity.setId(id);
         ${table.className} result = thisService.putById(entity);
         return result != null ? R.ok(result) : R.fail("更新${table.comment!}失败");

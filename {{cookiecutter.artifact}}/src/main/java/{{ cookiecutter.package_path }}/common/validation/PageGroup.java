@@ -4,7 +4,7 @@
 package {{ cookiecutter.basePackage }}.common.validation;
 
 /**
- * 更新数据 校验分组
+ * 分页查询 校验分组
  */
-public interface Update {
+public interface PageGroup {
 }
