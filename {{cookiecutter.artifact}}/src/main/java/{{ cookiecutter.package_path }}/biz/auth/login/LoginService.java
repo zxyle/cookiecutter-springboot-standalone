@@ -7,11 +7,14 @@ import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 /**
  * 登录服务实现
@@ -54,5 +57,24 @@ public class LoginService {
         SecurityContextHolder.clearContext();
         // 删除redis中用户权限缓存
         return userService.kick(userId);
+    }
+
+    /**
+     * 登录后操作
+     */
+    @Async
+    public void afterLogin(LoginResponse response) {
+        User user = new User();
+        user.setId(response.getUserId());
+
+        // 用户初次登录后，需要在24小时内修改密码，否则到期后无法登录
+        if (response.isMustChangePwd()) {
+            response.setMustChangePwd(true);
+            user.setExpireTime(LocalDateTime.now().plusHours(24));
+        }
+
+        // 更新用户最后登录时间
+        user.setLastLoginTime(LocalDateTime.now());
+        userService.updateById(user);
     }
 }

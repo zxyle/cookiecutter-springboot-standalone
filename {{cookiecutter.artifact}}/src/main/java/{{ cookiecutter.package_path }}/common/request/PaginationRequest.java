@@ -178,6 +178,12 @@ public class PaginationRequest extends BaseRequest {
         return page;
     }
 
+    /**
+     * 创建排序项
+     *
+     * @param fieldName 字段名
+     * @param isAsc     是否升序
+     */
     private static OrderItem createOrderItem(String fieldName, boolean isAsc) {
         OrderItem orderItem = new OrderItem();
         orderItem.setColumn(StrUtil.toUnderlineCase(fieldName));
@@ -210,6 +216,9 @@ public class PaginationRequest extends BaseRequest {
         return startTime == null || endTime == null || !endTime.isBefore(startTime);
     }
 
+    /**
+     * 校验结束日期是否晚于开始日期
+     */
     @AssertTrue(message = "结束日期必须晚于开始日期")
     private boolean isEndDateValid() {
         return startDate == null || endDate == null || !endDate.isBefore(startDate);

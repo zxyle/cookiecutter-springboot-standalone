@@ -3,9 +3,12 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.mfa;
 
+import lombok.Getter;
+
 /**
  * 账号类型枚举
  */
+@Getter
 public enum AccountEnum {
 
     /**
@@ -32,9 +35,5 @@ public enum AccountEnum {
 
     AccountEnum(String kind) {
         this.kind = kind;
-    }
-
-    public String getKind() {
-        return kind;
     }
 }

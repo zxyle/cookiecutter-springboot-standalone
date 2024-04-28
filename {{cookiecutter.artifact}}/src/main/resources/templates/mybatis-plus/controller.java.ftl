@@ -3,7 +3,6 @@ package ${table.packageName};
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${table.basePackageName}.common.aspect.LogOperation;
-import ${table.basePackageName}.common.request.PaginationRequest;
 import ${table.basePackageName}.common.response.R;
 import {{ cookiecutter.namespace }}.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +55,7 @@ public class ${className} {
     @LogOperation(name = "分页查询${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
     @GetMapping("${table.endpoint}")
-    public R<Page<${table.className}>> page(@Valid PaginationRequest req) <#if excel>throws IOException</#if> {
+    public R<Page<${table.className}>> page(@Valid ${table.className}PageRequest req) <#if excel>throws IOException</#if> {
         LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
         // 设置查询条件
         // wrapper.eq(${table.className}::getId, 1);

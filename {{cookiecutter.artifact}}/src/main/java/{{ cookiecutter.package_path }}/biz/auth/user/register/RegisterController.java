@@ -76,7 +76,7 @@ public class RegisterController {
      */
     @PostMapping("/invite")
     public void invite() {
-
+        // 待开发
     }
 
     /**

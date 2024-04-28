@@ -16,13 +16,11 @@ import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
 import {{ cookiecutter.namespace }}.validation.Valid;
 import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,7 +51,7 @@ public class LoginController extends AuthBaseController {
 
         LoginResponse response = loginService.login(req.getAccount(), req.getPassword());
 
-        afterLogin(response);
+        loginService.afterLogin(response);
         return R.ok(response, "登录成功");
     }
 
@@ -170,25 +168,6 @@ public class LoginController extends AuthBaseController {
             return R.fail("验证码可能错误或过期");
         }
         return null;
-    }
-
-    /**
-     * 登录后操作
-     */
-    @Async
-    public void afterLogin(LoginResponse response) {
-        User user = new User();
-        user.setId(response.getUserId());
-
-        // 用户初次登录后，需要在24小时内修改密码，否则到期后无法登录
-        if (response.isMustChangePwd()) {
-            response.setMustChangePwd(true);
-            user.setExpireTime(LocalDateTime.now().plusHours(24));
-        }
-
-        // 更新用户最后登录时间
-        user.setLastLoginTime(LocalDateTime.now());
-        userService.updateById(user);
     }
 
 }
