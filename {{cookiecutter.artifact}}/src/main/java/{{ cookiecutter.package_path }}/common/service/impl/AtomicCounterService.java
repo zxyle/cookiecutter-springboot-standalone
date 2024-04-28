@@ -28,6 +28,19 @@ public class AtomicCounterService implements CounterService {
         return counterMap.get(key).incrementAndGet();
     }
 
+    /**
+     * 自减并获取统计次数
+     *
+     * @param biz 业务名
+     * @param id  ID
+     * @return 自减后的统计次数
+     */
+    @Override
+    public Long decr(String biz, String id) {
+        String key = String.format(FORMAT, biz, id);
+        return counterMap.get(key).decrementAndGet();
+    }
+
     @Override
     public Long get(String biz, String id) {
         String key = String.format(FORMAT, biz, id);

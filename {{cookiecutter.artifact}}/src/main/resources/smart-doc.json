@@ -3,5 +3,6 @@
    "openUrl": "http://docServer:7700/api",
    "replace": true,
    "appToken": "",
-   "allInOne": true
+   "allInOne": true,
+   "pathPrefix": "/api"
 }

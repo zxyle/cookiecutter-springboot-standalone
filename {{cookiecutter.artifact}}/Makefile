@@ -28,10 +28,11 @@ MYSQL_REMOTE_URL = https://mirrors.aliyun.com/mysql/MySQL-8.0/$(MYSQL_RPM)
 # 默认目标
 deploy: publish
 
-# 拉取最新代码并打包
+# 拉取最新代码后构建及上传api文档
 package:
 	# git pull
-	mvn clean package -Dmaven.test.skip=true
+	# mvn clean package -Dmaven.test.skip=true
+	mvn -Dfile.encoding=UTF-8 smart-doc:torna-rest -B clean package -Dmaven.test.skip=true -Dautoconfig.skip
 
 # 重启服务
 restart:

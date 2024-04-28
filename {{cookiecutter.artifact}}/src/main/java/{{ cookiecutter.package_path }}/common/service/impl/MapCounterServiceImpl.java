@@ -33,6 +33,20 @@ public class MapCounterServiceImpl implements CounterService {
     }
 
     /**
+     * 自减并获取统计次数
+     *
+     * @param biz 业务名
+     * @param id  ID
+     * @return 自减后的统计次数
+     */
+    @Override
+    public Long decr(String biz, String id) {
+        String key = String.format(FORMAT, biz, id);
+        counterMap.put(key, counterMap.getOrDefault(key, 0L) - 1);
+        return counterMap.get(key);
+    }
+
+    /**
      * 获取统计次数
      *
      * @param biz 业务名
