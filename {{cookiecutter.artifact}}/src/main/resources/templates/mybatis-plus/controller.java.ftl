@@ -190,7 +190,12 @@ public class ${className} {
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
     @DeleteMapping("${table.endpoint}/batch-delete")
     public R<Void> batchDelete(@Valid @RequestBody List<Integer> ids) {
-        boolean success = thisService.removeByIds(ids);
-        return success ? R.ok("批量删除成功") : R.fail("批量删除失败");
+        // boolean success = thisService.removeByIds(ids);
+        LambdaQueryWrapper<Semester> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(${table.className}::getId, ids);
+        // 为防止误删，这里只允许删除当前用户创建的记录
+        // wrapper.eq(${table.className}::getUserId, getUserId());
+        boolean success = thisService.remove(wrapper);
+        return success ? R.ok("批量删除${table.comment!}成功") : R.fail("批量删除${table.comment!}失败");
     }
 }
