@@ -254,8 +254,8 @@ CREATE TABLE `auth_profile` (
 -- Records of auth_profile
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_profile` (`id`, `user_id`, `birthday`, `age`, `gender`, `avatar`, `nickname`, `qq`, `wechat`, `weibo`, `intro`, `address`, `region`, `school`, `education`, `major`, `company`, `job`, `industry`, `profession`, `telephone`) VALUES (1, 1, '2023-01-01', 0, '男', NULL, NULL, NULL, NULL, NULL, NULL, '杭州市', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO `auth_profile` (`id`, `user_id`, `birthday`, `age`, `gender`, `avatar`, `nickname`, `qq`, `wechat`, `weibo`, `intro`, `address`, `region`, `school`, `education`, `major`, `company`, `job`, `industry`, `profession`, `telephone`) VALUES (2, 2, '2023-01-01', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `auth_profile` (`id`, `user_id`, `birthday`, `age`, `gender`, `avatar`, `nickname`, `qq`, `wechat`, `weibo`, `intro`, `address`, `region`, `school`, `education`, `major`, `company`, `job`, `industry`, `profession`, `telephone`) VALUES (1, 1, '2023-01-01', 0, '男', 'https://image.duoweibaohu.com/avatar/avatar.png', NULL, NULL, NULL, NULL, NULL, '杭州市', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `auth_profile` (`id`, `user_id`, `birthday`, `age`, `gender`, `avatar`, `nickname`, `qq`, `wechat`, `weibo`, `intro`, `address`, `region`, `school`, `education`, `major`, `company`, `job`, `industry`, `profession`, `telephone`) VALUES (2, 2, '2023-01-01', 0, '男', 'https://image.duoweibaohu.com/avatar/avatar.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 COMMIT;
 
 -- ----------------------------
