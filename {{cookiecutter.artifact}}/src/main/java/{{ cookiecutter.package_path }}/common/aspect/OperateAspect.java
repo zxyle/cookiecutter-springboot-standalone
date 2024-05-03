@@ -90,7 +90,9 @@ public class OperateAspect {
             return result;
         } catch (Exception e) {
             op.setSuccess(false);
-            op.setResponse(StringUtils.substring(e.getMessage(), 0, Math.min(e.getMessage().length(), 1024)));
+            if (StringUtils.isNotBlank(e.getMessage())) {
+                op.setResponse(StringUtils.substring(e.getMessage(), 0, Math.min(e.getMessage().length(), 1024)));
+            }
             log.error("操作失败: {}", op);
             throw e;
         } finally {
