@@ -32,4 +32,9 @@ public final class AuthConst {
     // AES加密key 需要16位
     public static final String AES_KEY = "{{ random_ascii_string(16) }}";
 
+    /**
+     * 登录默认过期天数
+     */
+    public static final int DEFAULT_EXPIRE_DAYS = 30;
+
 }

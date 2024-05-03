@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.token;
 
+import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -23,9 +24,9 @@ public final class JwtUtil {
     }
 
     /**
-     * 有效期（单位: 毫秒）默认一天
+     * 登录有效期（单位: 毫秒）默认一天
      */
-    private static final long JWT_TTL = 24 * 60 * 60 * 1000L;  // 一天
+    private static final long JWT_TTL = AuthConst.DEFAULT_EXPIRE_DAYS * 24 * 60 * 60 * 1000L;
 
     /**
      * 设置秘钥明文
