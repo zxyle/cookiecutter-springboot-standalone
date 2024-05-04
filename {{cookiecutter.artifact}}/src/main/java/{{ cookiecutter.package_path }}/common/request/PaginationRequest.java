@@ -127,6 +127,10 @@ public class PaginationRequest extends BaseRequest {
     @Length(max = 64, message = "搜索关键字长度不能超过64个字符")
     private String keyword;
 
+    /**
+     * 是否跳过总数查询，这样会加快查询速度
+     */
+    private boolean skipTotal;
 
     /**
      * 获取合法页码
@@ -158,7 +162,7 @@ public class PaginationRequest extends BaseRequest {
      * 获取mybatis plus翻页对象
      */
     public <T> Page<T> toPageable() {
-        Page<T> page = new Page<>(getPageNum(), getPageSize());
+        Page<T> page = new Page<>(getPageNum(), getPageSize(), !skipTotal);
 
         if (StringUtils.isBlank(sort)) {
             return page;

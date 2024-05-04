@@ -135,7 +135,8 @@ public class ${className} {
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
     @PutMapping("${table.endpoint}/{id}")
     public R<${table.className}> update(@Validated(Update.class) @RequestBody ${table.className}Request req, @PathVariable Integer id) {
-        if (thisService.findById(id) == null) {
+        ${table.className} entity = thisService.findById(id)
+        if (entity == null) {
             return R.fail("更新失败，${table.comment!}数据不存在");
         }
 
@@ -153,7 +154,8 @@ public class ${className} {
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
     @DeleteMapping("${table.endpoint}/{id}")
     public R<Void> delete(@PathVariable Integer id) {
-        if (thisService.findById(id) == null) {
+        ${table.className} entity = thisService.findById(id)
+        if (entity == null) {
             return R.fail("删除失败，${table.comment!}数据不存在");
         }
 
@@ -191,7 +193,7 @@ public class ${className} {
     @DeleteMapping("${table.endpoint}/batch")
     public R<Void> batchDelete(@Valid @RequestBody List<Integer> ids) {
         // boolean success = thisService.removeByIds(ids);
-        LambdaQueryWrapper<Semester> wrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(${table.className}::getId, ids);
         // 为防止误删，这里只允许删除当前用户创建的记录
         // wrapper.eq(${table.className}::getUserId, getUserId());
