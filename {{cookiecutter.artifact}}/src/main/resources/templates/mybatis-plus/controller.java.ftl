@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${table.basePackageName}.common.aspect.LogOperation;
 import ${table.basePackageName}.common.response.R;
+import ${table.basePackageName}.common.request.BatchRequest;
 import ${table.basePackageName}.common.validation.Add;
 import ${table.basePackageName}.common.validation.Search;
 import ${table.basePackageName}.common.validation.Update;
@@ -190,11 +191,11 @@ public class ${className} {
      */
     @LogOperation(name = "批量删除${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
-    @DeleteMapping("${table.endpoint}/batch")
-    public R<Void> batchDelete(@Valid @RequestBody List<Integer> ids) {
-        // boolean success = thisService.removeByIds(ids);
+    @DeleteMapping("${table.endpoint}")
+    public R<Void> batchDelete(@Valid BatchRequest req) {
+        // boolean success = thisService.removeByIds(req.getIds());
         LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(${table.className}::getId, ids);
+        wrapper.in(${table.className}::getId, req.getIds());
         // 为防止误删，这里只允许删除当前用户创建的记录
         // wrapper.eq(${table.className}::getUserId, getUserId());
         boolean success = thisService.remove(wrapper);

@@ -8,6 +8,9 @@ import lombok.Data;
 import {{ cookiecutter.namespace }}.validation.constraints.NotEmpty;
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 import {{ cookiecutter.namespace }}.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -20,7 +23,15 @@ public class BatchRequest {
      * 主键ID
      */
     @NotEmpty(message = "ID不能为空")
+    @Size(min = 1, max = 20)
     private List<@NotNull @Positive Integer> ids;
+
+    /**
+     * 获取去重后的id列表
+     */
+    public List<Integer> getIds() {
+        return new ArrayList<>(new HashSet<>(ids));
+    }
 
 }
 
