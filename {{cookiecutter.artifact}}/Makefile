@@ -160,6 +160,8 @@ docker: package
 # 快速查看日志
 log:
 	ssh $(SERVER) "tail -500f $(BACKEND_DIR)/logs/app.log"
+	#ssh $(SERVER) "tail -500f /var/log/nginx/access.log"
+	#ssh $(SERVER) "tail -500f /var/log/nginx/error.log"
 
 # 使用说明
 help:
