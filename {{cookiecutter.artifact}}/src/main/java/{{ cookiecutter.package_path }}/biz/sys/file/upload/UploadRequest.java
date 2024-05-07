@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.file.upload;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import {{ cookiecutter.namespace }}.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -15,17 +16,13 @@ import java.util.List;
 public class UploadRequest {
 
     /**
-     * 文件名
-     */
-    private String filename;
-
-    /**
-     * 上传目录， 默认根目录
+     * 上传文件目录，默认为根目录下
      */
     private String folder;
 
     /**
-     * 待上传文件
+     * 文件列表
      */
+    @NotEmpty
     private List<MultipartFile> files;
 }

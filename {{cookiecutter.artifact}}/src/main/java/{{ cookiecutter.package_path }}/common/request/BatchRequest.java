@@ -20,7 +20,9 @@ import java.util.List;
 public class BatchRequest {
 
     /**
-     * 主键ID
+     * 逗号分隔ID列表。最多20个ID
+     *
+     * @mock 1,2,3
      */
     @NotEmpty(message = "ID不能为空")
     @Size(min = 1, max = 20)
