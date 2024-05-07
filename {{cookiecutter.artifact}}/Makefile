@@ -157,9 +157,13 @@ nginx:
 docker: package
 	docker-compose up -d
 
+# 快速查看日志
+log:
+	ssh $(SERVER) "tail -500f $(BACKEND_DIR)/logs/app.log"
+
 # 使用说明
 help:
-	@echo "Usage: make [package|publish|restart|rollback|backup|init|deploy|clean|jdk|redis|nginx|mysql|docker]"
+	@echo "Usage: make [package|publish|restart|rollback|backup|init|deploy|clean|jdk|redis|nginx|mysql|docker|log]"
 
 # 清理
 clean:
@@ -167,4 +171,4 @@ clean:
 	@find . -type d -name "logs" -exec rm -r {} +
 	@echo "Clean success!"
 
-.PHONY: package publish restart rollback backup init deploy clean jdk redis nginx mysql help docker
+.PHONY: package publish restart rollback backup init deploy clean jdk redis nginx mysql help docker log
