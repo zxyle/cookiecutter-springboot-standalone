@@ -24,7 +24,7 @@ public class BatchRequest {
      *
      * @mock 1,2,3
      */
-    @NotEmpty(message = "ID不能为空")
+    @NotEmpty(message = "ids不能为空")
     @Size(min = 1, max = 20)
     private List<@NotNull @Positive Integer> ids;
 
