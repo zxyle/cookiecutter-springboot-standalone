@@ -82,8 +82,8 @@ public class GroupRoleController extends AuthBaseController {
      * @param groupId 用户组ID
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
-    @PostMapping("/groups/{groupId}/roles/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest req) {
+    @DeleteMapping("/groups/{groupId}/roles")
+    public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid BatchRequest req) {
         List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(roleId -> thisService.deleteRelation(groupId, roleId));

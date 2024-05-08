@@ -82,8 +82,8 @@ public class GroupPermissionController extends AuthBaseController {
      * @param groupId 用户组ID
      */
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
-    @PostMapping("/groups/{groupId}/permissions/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest req) {
+    @DeleteMapping("/groups/{groupId}/permissions")
+    public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid BatchRequest req) {
         List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(groupId, permissionId));

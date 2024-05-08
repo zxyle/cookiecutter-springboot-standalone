@@ -79,8 +79,8 @@ public class UserPermissionController {
      * @param userId 用户ID
      */
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
-    @PostMapping("/users/{userId}/permissions/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest req) {
+    @DeleteMapping("/users/{userId}/permissions")
+    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid BatchRequest req) {
         List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(userId, permissionId));

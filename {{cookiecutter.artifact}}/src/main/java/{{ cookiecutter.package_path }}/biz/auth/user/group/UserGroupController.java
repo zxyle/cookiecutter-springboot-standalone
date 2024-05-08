@@ -96,8 +96,8 @@ public class UserGroupController extends AuthBaseController {
      * @param userId 用户ID
      */
     @Secured(value = "ROLE_admin")
-    @PostMapping("/users/{userId}/groups/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest req) {
+    @DeleteMapping("/users/{userId}/groups")
+    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid BatchRequest req) {
         List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(groupId -> thisService.deleteRelation(userId, groupId));

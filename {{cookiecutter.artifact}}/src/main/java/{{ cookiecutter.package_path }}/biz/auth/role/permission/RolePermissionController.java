@@ -82,8 +82,8 @@ public class RolePermissionController extends AuthBaseController {
      * @param roleId 角色ID
      */
     @PreAuthorize("@ck.hasPermit('auth:role:update')")
-    @PostMapping("/roles/{roleId}/permissions/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer roleId, @Valid @RequestBody BatchRequest req) {
+    @DeleteMapping("/roles/{roleId}/permissions")
+    public R<Void> deleteBatch(@PathVariable Integer roleId, @Valid BatchRequest req) {
         List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(roleId, permissionId));

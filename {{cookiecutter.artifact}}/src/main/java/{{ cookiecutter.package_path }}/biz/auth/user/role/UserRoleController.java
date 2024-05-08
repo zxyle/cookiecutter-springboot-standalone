@@ -80,8 +80,8 @@ public class UserRoleController extends AuthBaseController {
      * @param userId 用户ID
      */
     @Secured(value = "ROLE_admin")
-    @PostMapping("/users/{userId}/roles/batch-delete")
-    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest req) {
+    @DeleteMapping("/users/{userId}/roles")
+    public R<Void> deleteBatch(@PathVariable Integer userId, @Valid BatchRequest req) {
         List<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(roleId -> thisService.deleteRelation(userId, roleId));
