@@ -24,6 +24,8 @@ public class CodeGenerator {
                 new Temp("mapper.xml.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Mapper.xml"),
                 new Temp("service.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Service.java"),
                 new Temp("request.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Request.java"),
+                new Temp("request.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}AddRequest.java"),
+                new Temp("request.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}UpdateRequest.java"),
                 new Temp("response.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Response.java"),
                 new Temp("pageRequest.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}PageRequest.java"),
                 new Temp("export.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Export.java")
