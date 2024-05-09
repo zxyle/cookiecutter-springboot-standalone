@@ -9,9 +9,7 @@ import {{ cookiecutter.namespace }}.validation.constraints.NotEmpty;
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import {{ cookiecutter.namespace }}.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Set;
 
 /**
  * 批量请求
@@ -26,14 +24,7 @@ public class BatchRequest {
      */
     @NotEmpty(message = "ids不能为空")
     @Size(min = 1, max = 20)
-    private List<@NotNull @Positive Integer> ids;
-
-    /**
-     * 获取去重后的id列表
-     */
-    public List<Integer> getIds() {
-        return new ArrayList<>(new HashSet<>(ids));
-    }
+    private Set<@NotNull @Positive Integer> ids;
 
 }
 

@@ -14,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import {{ cookiecutter.namespace }}.validation.Valid;
-import java.util.List;
+import java.util.Set;
 
 /**
  * 用户与权限关系管理
@@ -81,7 +81,7 @@ public class UserPermissionController {
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @DeleteMapping("/users/{userId}/permissions")
     public R<Void> deleteBatch(@PathVariable Integer userId, @Valid BatchRequest req) {
-        List<Integer> ids = req.getIds();
+        Set<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(userId, permissionId));
 
@@ -96,7 +96,7 @@ public class UserPermissionController {
     @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PostMapping("/users/{userId}/permissions/batch-add")
     public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest req) {
-        List<Integer> ids = req.getIds();
+        Set<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.createRelation(userId, permissionId));
 

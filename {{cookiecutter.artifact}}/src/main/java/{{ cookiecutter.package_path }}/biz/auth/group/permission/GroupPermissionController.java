@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import {{ cookiecutter.namespace }}.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户组与权限关系管理
@@ -84,7 +85,7 @@ public class GroupPermissionController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @DeleteMapping("/groups/{groupId}/permissions")
     public R<Void> deleteBatch(@PathVariable Integer groupId, @Valid BatchRequest req) {
-        List<Integer> ids = req.getIds();
+        Set<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.deleteRelation(groupId, permissionId));
 
@@ -99,7 +100,7 @@ public class GroupPermissionController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:group:update')")
     @PostMapping("/groups/{groupId}/permissions/batch-add")
     public R<Void> createBatch(@PathVariable Integer groupId, @Valid @RequestBody BatchRequest req) {
-        List<Integer> ids = req.getIds();
+        Set<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(permissionId -> thisService.createRelation(groupId, permissionId));
 

@@ -15,7 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import {{ cookiecutter.namespace }}.validation.Valid;
-import java.util.List;
+import java.util.Set;
 
 /**
  * 用户与角色关系管理
@@ -82,7 +82,7 @@ public class UserRoleController extends AuthBaseController {
     @Secured(value = "ROLE_admin")
     @DeleteMapping("/users/{userId}/roles")
     public R<Void> deleteBatch(@PathVariable Integer userId, @Valid BatchRequest req) {
-        List<Integer> ids = req.getIds();
+        Set<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(roleId -> thisService.deleteRelation(userId, roleId));
 
@@ -97,7 +97,7 @@ public class UserRoleController extends AuthBaseController {
     @Secured(value = "ROLE_admin")
     @PostMapping("/users/{userId}/roles/batch-add")
     public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest req) {
-        List<Integer> ids = req.getIds();
+        Set<Integer> ids = req.getIds();
         boolean success = ids.stream()
                 .allMatch(roleId -> thisService.createRelation(userId, roleId));
 
