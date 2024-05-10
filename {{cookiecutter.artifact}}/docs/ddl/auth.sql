@@ -37,7 +37,7 @@ CREATE TABLE `auth_group_permission` (
   UNIQUE KEY `uk_group_id_permission_id` (`group_id`,`permission_id`) USING BTREE,
   FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组权限';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组与权限关联';
 
 -- ----------------------------
 -- Table structure for auth_group_role
@@ -51,7 +51,7 @@ CREATE TABLE `auth_group_role` (
   UNIQUE KEY `uk_group_id_role_id` (`group_id`,`role_id`) USING BTREE,
   FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`role_id`) REFERENCES `auth_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组角色关联';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组与角色关联';
 
 -- ----------------------------
 -- Table structure for auth_password_history
@@ -303,7 +303,7 @@ CREATE TABLE `auth_role_permission` (
   UNIQUE KEY `uk_role_id_permission_id` (`role_id`,`permission_id`) USING BTREE,
   FOREIGN KEY (`role_id`) REFERENCES `auth_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色权限';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色与权限关联';
 
 -- ----------------------------
 -- Records of auth_role_permission
@@ -369,7 +369,7 @@ CREATE TABLE `auth_user_group` (
   UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE,
   FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-用户组关联';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户与用户组关联';
 
 -- ----------------------------
 -- Records of auth_user_group
@@ -391,7 +391,7 @@ CREATE TABLE `auth_user_permission` (
   UNIQUE KEY `uk_user_id_permission_id` (`user_id`,`permission_id`) USING BTREE,
   FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-权限关联';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户与权限关联';
 
 -- ----------------------------
 -- Records of auth_user_permission
@@ -412,7 +412,7 @@ CREATE TABLE `auth_user_role` (
   UNIQUE KEY `uk_user_id_role_id` (`user_id`,`role_id`) USING BTREE,
   FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`role_id`) REFERENCES `auth_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户和角色关联表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户与角色关联';
 
 -- ----------------------------
 -- Records of auth_user_role
