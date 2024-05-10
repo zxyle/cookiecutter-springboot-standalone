@@ -34,7 +34,9 @@ CREATE TABLE `auth_group_permission` (
   `group_id` int unsigned NOT NULL COMMENT '用户组ID',
   `permission_id` int unsigned NOT NULL COMMENT '权限ID',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_group_id_permission_id` (`group_id`,`permission_id`) USING BTREE
+  UNIQUE KEY `uk_group_id_permission_id` (`group_id`,`permission_id`) USING BTREE,
+  FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组权限';
 
 -- ----------------------------
@@ -46,7 +48,9 @@ CREATE TABLE `auth_group_role` (
   `group_id` int unsigned NOT NULL COMMENT '用户组ID',
   `role_id` int unsigned NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_group_id_role_id` (`group_id`,`role_id`) USING BTREE
+  UNIQUE KEY `uk_group_id_role_id` (`group_id`,`role_id`) USING BTREE,
+  FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`role_id`) REFERENCES `auth_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户组角色关联';
 
 -- ----------------------------
@@ -247,7 +251,8 @@ CREATE TABLE `auth_profile` (
   `profession` varchar(32) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '职业',
   `telephone` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '固定电话',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_user_id` (`user_id`) USING BTREE
+  UNIQUE KEY `uk_user_id` (`user_id`) USING BTREE,
+  FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户信息';
 
 -- ----------------------------
@@ -295,7 +300,9 @@ CREATE TABLE `auth_role_permission` (
   `role_id` int unsigned NOT NULL COMMENT '角色id',
   `permission_id` int unsigned NOT NULL COMMENT '权限id',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_role_id_permission_id` (`role_id`,`permission_id`) USING BTREE
+  UNIQUE KEY `uk_role_id_permission_id` (`role_id`,`permission_id`) USING BTREE,
+  FOREIGN KEY (`role_id`) REFERENCES `auth_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色权限';
 
 -- ----------------------------
@@ -359,7 +366,9 @@ CREATE TABLE `auth_user_group` (
   `group_id` int unsigned NOT NULL COMMENT '用户组ID',
   `admin` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否是该组管理员',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE
+  UNIQUE KEY `uk_user_id_group_id` (`user_id`,`group_id`) USING BTREE,
+  FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-用户组关联';
 
 -- ----------------------------
@@ -379,7 +388,9 @@ CREATE TABLE `auth_user_permission` (
   `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `permission_id` int unsigned NOT NULL COMMENT '权限ID',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_user_id_permission_id` (`user_id`,`permission_id`) USING BTREE
+  UNIQUE KEY `uk_user_id_permission_id` (`user_id`,`permission_id`) USING BTREE,
+  FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户-权限关联';
 
 -- ----------------------------
@@ -398,7 +409,9 @@ CREATE TABLE `auth_user_role` (
   `user_id` int NOT NULL COMMENT '用户ID',
   `role_id` int NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE KEY `uk_user_id_role_id` (`user_id`,`role_id`) USING BTREE
+  UNIQUE KEY `uk_user_id_role_id` (`user_id`,`role_id`) USING BTREE,
+  FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`role_id`) REFERENCES `auth_role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户和角色关联表';
 
 -- ----------------------------
@@ -422,7 +435,8 @@ CREATE TABLE `auth_answer` (
   `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `secret` char(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '安全问题答案md5',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_user_id` (`user_id`,`question_id`) USING BTREE
+  UNIQUE KEY `uk_user_id` (`user_id`,`question_id`) USING BTREE,
+  FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='安全问题答案';
 
 
@@ -495,7 +509,8 @@ CREATE TABLE `auth_totp` (
   `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `secret` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '密钥',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_user_id` (`user_id`) USING BTREE
+  UNIQUE KEY `uk_user_id` (`user_id`) USING BTREE,
+  FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='TOTP（基于时间的一次性密码）';
 
 SET FOREIGN_KEY_CHECKS = 1;
