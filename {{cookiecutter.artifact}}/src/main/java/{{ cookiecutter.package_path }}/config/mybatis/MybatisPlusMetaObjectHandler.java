@@ -8,6 +8,7 @@ import {{ cookiecutter.basePackage }}.common.constant.ProjectConst;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,8 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
         this.setFieldValByName(CREATE_FIELD, LocalDateTime.now(), metaObject);
         this.setFieldValByName(UPDATE_FIELD, LocalDateTime.now(), metaObject);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
+        // 新增时填充创建人、更新人
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
             this.setFieldValByName(CREATOR_FIELD, loginUser.getUser().getId(), metaObject);
             this.setFieldValByName(UPDATER_FIELD, loginUser.getUser().getId(), metaObject);
@@ -48,7 +50,8 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         this.setFieldValByName(UPDATE_FIELD, LocalDateTime.now(), metaObject);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
+        // 更新时填充更新人
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
             this.setFieldValByName(UPDATER_FIELD, loginUser.getUser().getId(), metaObject);
         }
