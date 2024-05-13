@@ -6,12 +6,19 @@ package {{ cookiecutter.basePackage }}.common.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import {{ cookiecutter.namespace }}.validation.constraints.AssertTrue;
+
 /**
  * 基础请求类
  */
 @Getter
 @Setter
 public class BaseRequest {
+
+    /**
+     * 请求超时时间 1分钟 60000毫秒
+     */
+    private static final int TIMEOUT_MS = 60000;
 
     /**
      * 请求毫秒时间戳
@@ -29,4 +36,20 @@ public class BaseRequest {
      * 随机数
      */
     private String nonce;
+
+    /**
+     * 校验时间戳
+     */
+    @AssertTrue(message = "时间戳无效")
+    private boolean isTsValid() {
+        return ts == null || Math.abs(System.currentTimeMillis() - ts) <= TIMEOUT_MS;
+    }
+
+    /**
+     * 校验签名，暂时不校验
+     */
+    @AssertTrue(message = "签名无效")
+    private boolean isSignValid() {
+        return true;
+    }
 }
