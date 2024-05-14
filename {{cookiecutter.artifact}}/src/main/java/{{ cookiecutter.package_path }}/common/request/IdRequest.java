@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.common.request;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
 
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
@@ -12,7 +13,8 @@ import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
  * 主键ID请求
  */
 @Data
-public class IdRequest {
+@EqualsAndHashCode(callSuper = false)
+public class IdRequest extends BaseRequest {
 
     /**
      * 主键ID

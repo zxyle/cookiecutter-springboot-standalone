@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.common.request;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import {{ cookiecutter.namespace }}.validation.constraints.NotEmpty;
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
@@ -15,7 +16,8 @@ import java.util.Set;
  * 批量请求
  */
 @Data
-public class BatchRequest {
+@EqualsAndHashCode(callSuper = false)
+public class BatchRequest extends BaseRequest {
 
     /**
      * 逗号分隔ID列表。最多20个ID

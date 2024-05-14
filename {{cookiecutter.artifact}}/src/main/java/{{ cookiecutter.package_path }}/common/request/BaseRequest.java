@@ -3,10 +3,16 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import {{ cookiecutter.namespace }}.validation.constraints.AssertTrue;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 基础请求类
@@ -15,33 +21,41 @@ import {{ cookiecutter.namespace }}.validation.constraints.AssertTrue;
 @Setter
 public class BaseRequest {
 
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final List<String> IGNORE = Arrays.asList("sign", "calledSort", "offset");
+
+    /**
+     * 签名密钥，需要给前端
+     */
+    public static final String SECRET = "your_secret_key";
+
     /**
      * 请求超时时间 1分钟 60000毫秒
      */
-    private static final int TIMEOUT_MS = 60000;
+    protected static final int TIMEOUT_MS = 60000;
 
     /**
      * 请求毫秒时间戳
      *
      * @mock 1644541518652
      */
-    private Long ts;
+    protected Long ts;
 
     /**
      * 请求体签名
      */
-    private String sign;
+    protected String sign;
 
     /**
      * 随机数
      */
-    private String nonce;
+    protected String nonce;
 
     /**
      * 校验时间戳
      */
     @AssertTrue(message = "时间戳无效")
-    private boolean isTsValid() {
+    protected boolean isTsValid() {
         return ts == null || Math.abs(System.currentTimeMillis() - ts) <= TIMEOUT_MS;
     }
 
@@ -49,7 +63,23 @@ public class BaseRequest {
      * 校验签名，暂时不校验
      */
     @AssertTrue(message = "签名无效")
-    private boolean isSignValid() {
-        return true;
+    protected boolean isSignValid() {
+        if (StringUtils.isBlank(sign)) {
+            return true;
+        }
+
+        Map<String, Object> params = objectMapper.convertValue(this, new TypeReference<Map<String, Object>>() {
+        });
+        Set<String> keys = params.keySet().stream()
+                .filter(key -> !IGNORE.contains(key))
+                .sorted().collect(Collectors.toCollection(LinkedHashSet::new));
+
+        String toSign = keys.stream()
+                .filter(key -> params.get(key) != null)
+                .map(key -> key + "=" + params.get(key))
+                .collect(Collectors.joining("&"));
+
+        String sign = DigestUtils.md5Hex(toSign + SECRET);
+        return sign.equals(params.get("sign"));
     }
 }

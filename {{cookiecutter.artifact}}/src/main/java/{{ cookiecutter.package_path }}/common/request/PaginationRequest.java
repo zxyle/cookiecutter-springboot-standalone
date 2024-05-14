@@ -3,140 +3,51 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import {{ cookiecutter.basePackage }}.common.request.sort.Sortable;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import {{ cookiecutter.namespace }}.validation.constraints.AssertTrue;
-import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
-import java.lang.reflect.Field;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
- * 带分页/多字段排序/时间范围/模糊搜索/文件导出的分页请求对象，所有分页请求对象都应该继承此类
+ * 分页请求对象，所有分页请求对象都应该继承此类
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class PaginationRequest extends BaseRequest {
+public class PaginationRequest extends ConditionRequest {
 
-    private static final String DEFAULT_ORDER = "asc";  // 默认排序方式
-    private static final String DEFAULT_COLUMN = "id";  // 默认排序字段
-    private static final int DEFAULT_PAGE_NUM = 1;      // 默认页码
-    private static final int DEFAULT_PAGE_SIZE = 10;    // 默认分页大小
-    private static final int MAX_PAGE_SIZE = 100;       // 最大分页大小，防止恶意请求
-    private static final List<String> DEFAULT_COLUMNS = Arrays.asList("id", "create_time", "update_time");
-    private static final Map<Class<?>, List<String>> COLUMN_CACHE = new ConcurrentHashMap<>();
+    protected static final int DEFAULT_PAGE_NUM = 1;      // 默认页码
+    protected static final int DEFAULT_PAGE_SIZE = 10;    // 默认分页大小
+    protected static final int MAX_PAGE_SIZE = 100;       // 最大分页大小，防止恶意请求
 
     /**
-     * 分页页码，三选一
+     * 分页页码
      *
      * @mock 1
      */
-    private Integer pageNum;
-
-    /**
-     * 分页页码，三选一
-     *
-     * @mock 1
-     */
-    private Integer pageNo;
-
-    /**
-     * 分页页码，三选一
-     *
-     * @mock 1
-     */
-    private Integer current;
+    protected Integer pageNum;
 
     /**
      * 分页大小
      *
      * @mock 10
      */
-    private Integer pageSize;
+    protected Integer pageSize;
 
     /**
-     * 是否导出Excel
-     *
-     * @mock false
+     * 是否跳过总数查询，加快查询速度
      */
-    private boolean export;
+    private Boolean skipTotal;
 
-    /**
-     * 多字段排序, 格式为：字段名:排序方式
-     *
-     * @mock name:asc,age:desc
-     */
-    @Pattern(regexp = "^[a-zA-Z:,]+$", message = "排序字段格式错误，只能包含英文字母、冒号、逗号")
-    private String sort;
-
-    /**
-     * 开始时间 yyyy-MM-dd HH:mm:ss
-     *
-     * @mock 2021-01-01 00:00:00
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime startTime;
-
-    /**
-     * 结束时间 yyyy-MM-dd HH:mm:ss
-     *
-     * @mock 2021-02-01 00:00:00
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime endTime;
-
-    /**
-     * 开始日期 yyyy-MM-dd
-     *
-     * @mock 2021-01-01
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startDate;
-
-    /**
-     * 结束日期 yyyy-MM-dd
-     *
-     * @mock 2021-02-01
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate endDate;
-
-    /**
-     * 搜索关键字(支持模糊查询)
-     * 较长的关键词可能会影响查询性能
-     *
-     * @mock 123
-     */
-    @Length(max = 64, message = "搜索关键字长度不能超过64个字符")
-    private String keyword;
-
-    /**
-     * 是否跳过总数查询，这样会加快查询速度
-     */
-    private boolean skipTotal;
 
     /**
      * 获取合法页码
      */
     public Integer getPageNum() {
-        return Stream.of(current, pageNum, pageNo)
+        return Stream.of(pageNum)
                 .filter(Objects::nonNull)
                 .filter(num -> num >= 1 && num < Integer.MAX_VALUE)
                 .findFirst()
@@ -152,7 +63,7 @@ public class PaginationRequest extends BaseRequest {
     }
 
     /**
-     * 获取分页偏移量
+     * 计算分页偏移量
      */
     public Integer getOffset() {
         return (getPageNum() - 1) * getPageSize();
@@ -162,70 +73,14 @@ public class PaginationRequest extends BaseRequest {
      * 获取mybatis plus翻页对象
      */
     public <T> Page<T> toPageable() {
-        Page<T> page = new Page<>(getPageNum(), getPageSize(), !skipTotal);
+        Page<T> page = new Page<>(getPageNum(), getPageSize(), !(skipTotal == null || skipTotal));
 
-        if (StringUtils.isBlank(sort)) {
-            return page;
+        if (!calledSort) {
+            List<OrderItem> orderItems = super.getOrderItems();
+            page.addOrder(orderItems);
+            super.calledSort = true;
         }
-
-        // 排序字段处理
-        List<String> columns = COLUMN_CACHE.computeIfAbsent(this.getClass(), this::getColumns);
-        List<OrderItem> orderItems = new ArrayList<>(Arrays.stream(sort.split(","))
-                .map(str -> str.split(":"))
-                .map(split -> createOrderItem(split[0], split.length == 1 ||
-                        StringUtils.equalsIgnoreCase(split[1], DEFAULT_ORDER)))
-                .filter(orderItem -> columns.contains(orderItem.getColumn()))  // 过滤掉不存在或不支持排序的字段
-                .collect(Collectors.toMap(OrderItem::getColumn, o -> o, (o1, o2) -> o1))  // 去重
-                .values());
-
-        page.addOrder(orderItems);
         return page;
-    }
-
-    /**
-     * 创建排序项
-     *
-     * @param fieldName 字段名
-     * @param isAsc     是否升序
-     */
-    private static OrderItem createOrderItem(String fieldName, boolean isAsc) {
-        OrderItem orderItem = new OrderItem();
-        orderItem.setColumn(StrUtil.toUnderlineCase(fieldName));
-        orderItem.setAsc(isAsc);
-        return orderItem;
-    }
-
-    /**
-     * 获取实体类的所有属性
-     *
-     * @param clazz 实体类
-     */
-    public List<String> getColumns(Class<?> clazz) {
-        // Sortable("asc|desc") 设置允许的排序号
-        // Sortable fieldAnnotation = field.getAnnotation(Sortable.class);
-        List<String> columns = new ArrayList<>(DEFAULT_COLUMNS);
-        columns.addAll(Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Sortable.class))
-                .map(Field::getName)
-                .map(StrUtil::toUnderlineCase)
-                .collect(Collectors.toList()));
-        return columns;
-    }
-
-    /**
-     * 校验结束时间是否晚于开始时间
-     */
-    @AssertTrue(message = "结束时间必须晚于开始时间")
-    private boolean isEndTimeValid() {
-        return startTime == null || endTime == null || !endTime.isBefore(startTime);
-    }
-
-    /**
-     * 校验结束日期是否晚于开始日期
-     */
-    @AssertTrue(message = "结束日期必须晚于开始日期")
-    private boolean isEndDateValid() {
-        return startDate == null || endDate == null || !endDate.isBefore(startDate);
     }
 
 }

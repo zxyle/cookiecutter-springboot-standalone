@@ -3,46 +3,138 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
-import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import {{ cookiecutter.basePackage }}.common.request.sort.Sortable;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import {{ cookiecutter.namespace }}.validation.constraints.AssertTrue;
+import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
- * 带查询条件 请求类
+ * 带时间范围/模糊搜索/多字段排序/文件导出的请求对象，所有查询请求对象都应该继承此类
  */
 @Slf4j
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class ConditionRequest extends BaseRequest {
 
-    private static final Map<Class<?>, Field[]> FIELD_CACHE = new ConcurrentHashMap<>();
+    protected static final Map<Class<?>, Field[]> FIELD_CACHE = new ConcurrentHashMap<>();
+    protected static final Map<Class<?>, List<String>> COLUMN_CACHE = new ConcurrentHashMap<>();
+    protected static final List<String> DEFAULT_COLUMNS = Arrays.asList("id", "create_time", "update_time");
+    protected static final String DEFAULT_ORDER = "asc";  // 默认排序方式
+    protected static final String DEFAULT_COLUMN = "id";  // 默认排序字段
 
     /**
-     * 根据请求类构建查询条件
+     * 是否导出Excel
+     *
+     * @mock false
      */
-    public <T> QueryWrapper<T> toWrapper() {
+    private Boolean export;
+
+    /**
+     * 多字段排序, 格式为：字段名:排序方式
+     *
+     * @mock name:asc,age:desc
+     */
+    @Pattern(regexp = "^[a-zA-Z:,]+$", message = "排序字段格式错误，只能包含英文字母、冒号、逗号")
+    protected String sort;
+
+    /**
+     * 开始时间 yyyy-MM-dd HH:mm:ss
+     *
+     * @mock 2021-01-01 00:00:00
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    protected LocalDateTime startTime;
+
+    /**
+     * 结束时间 yyyy-MM-dd HH:mm:ss
+     *
+     * @mock 2021-12-31 23:59:59
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    protected LocalDateTime endTime;
+
+    /**
+     * 开始日期 yyyy-MM-dd
+     *
+     * @mock 2021-01-01
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    protected LocalDate startDate;
+
+    /**
+     * 结束日期 yyyy-MM-dd
+     *
+     * @mock 2021-12-31
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    protected LocalDate endDate;
+
+    /**
+     * 搜索关键字(支持模糊查询)
+     * 较长的关键词可能会影响查询性能
+     *
+     * @mock 123
+     */
+    @Length(max = 64, message = "搜索关键字长度不能超过64个字符")
+    protected String keyword;
+
+    /**
+     * 是否调用过排序，避免重复排序
+     *
+     * @ignore
+     */
+    protected Boolean calledSort = false;
+
+    /**
+     * 根据请求类构建出查询条件
+     */
+    public <T> LambdaQueryWrapper<T> toWrapper() {
         QueryWrapper<T> wrapper = new QueryWrapper<>();
 
         Field[] fields = FIELD_CACHE.computeIfAbsent(this.getClass(), Class::getDeclaredFields);
         Arrays.stream(fields)
                 .filter(field -> field.isAnnotationPresent(QueryField.class))
                 .forEach(field -> handleField(field, wrapper));
-        return wrapper;
+
+        if (!calledSort) {
+            List<OrderItem> orderItems = getOrderItems();
+            if (CollectionUtils.isNotEmpty(orderItems)) {
+                for (OrderItem orderItem : orderItems) {
+                    wrapper.orderBy(true, orderItem.isAsc(), orderItem.getColumn());
+                }
+            }
+            calledSort = true;
+        }
+
+        // QueryWrapper转换成LambdaQueryWrapper
+        return wrapper.lambda();
     }
 
     /**
      * 处理单个字段
      */
-    private <T> void handleField(Field field, QueryWrapper<T> wrapper) {
+    protected <T> void handleField(Field field, QueryWrapper<T> wrapper) {
         try {
             field.setAccessible(true);
             Object fieldValue = field.get(this);
@@ -68,8 +160,8 @@ public class ConditionRequest extends BaseRequest {
     /**
      * 获取字段名称
      */
-    private String getFieldName(Field field, QueryField annotation) {
-        String fieldName = StrUtil.toUnderlineCase(field.getName());
+    protected String getFieldName(Field field, QueryField annotation) {
+        String fieldName = camelToUnderline(field.getName());
         if (StringUtils.isNotBlank(annotation.column())) {
             fieldName = annotation.column();
         }
@@ -84,7 +176,7 @@ public class ConditionRequest extends BaseRequest {
      * @param fieldValue 属性值
      * @param wrapper    查询条件
      */
-    public <T> void setQueryWrapper(Operator operator, String fieldName, Object fieldValue, QueryWrapper<T> wrapper) {
+    protected <T> void setQueryWrapper(Operator operator, String fieldName, Object fieldValue, QueryWrapper<T> wrapper) {
         switch (operator) {
             case EQ:
                 wrapper.eq(fieldName, fieldValue);
@@ -175,5 +267,84 @@ public class ConditionRequest extends BaseRequest {
                 log.warn("不支持的查询类型：{}", operator);
                 break;
         }
+    }
+
+    /**
+     * 创建排序项
+     *
+     * @param fieldName 字段名
+     * @param isAsc     是否升序
+     */
+    protected OrderItem createOrderItem(String fieldName, boolean isAsc) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setColumn(camelToUnderline(fieldName));
+        orderItem.setAsc(isAsc);
+        return orderItem;
+    }
+
+    /**
+     * 获取实体类的所有属性
+     *
+     * @param clazz 实体类
+     */
+    protected List<String> getColumns(Class<?> clazz) {
+        // Sortable("asc|desc") 设置允许的排序号
+        // Sortable fieldAnnotation = field.getAnnotation(Sortable.class);
+        List<String> columns = new ArrayList<>(DEFAULT_COLUMNS);
+        Field[] fields = FIELD_CACHE.computeIfAbsent(this.getClass(), Class::getDeclaredFields);
+        columns.addAll(Arrays.stream(fields)
+                .filter(field -> field.isAnnotationPresent(Sortable.class))
+                .map(Field::getName)
+                .map(ConditionRequest::camelToUnderline)
+                .collect(Collectors.toList()));
+        return columns;
+    }
+
+    protected List<OrderItem> getOrderItems() {
+        if (StringUtils.isBlank(sort)) {
+            // 默认排序
+            OrderItem orderItem = createOrderItem(DEFAULT_COLUMN, false);
+            return Collections.singletonList(orderItem);
+        }
+
+        // 排序字段处理
+        List<String> columns = COLUMN_CACHE.computeIfAbsent(this.getClass(), this::getColumns);
+        return new ArrayList<>(Arrays.stream(sort.split(","))
+                .map(str -> str.split(":"))
+                .map(split -> createOrderItem(split[0], split.length == 1 ||
+                        StringUtils.equalsIgnoreCase(split[1], DEFAULT_ORDER)))
+                .filter(orderItem -> columns.contains(orderItem.getColumn()))  // 过滤掉不存在或不支持排序的字段
+                .collect(Collectors.toMap(OrderItem::getColumn, o -> o, (o1, o2) -> o1))  // 去重
+                .values());
+    }
+
+    /**
+     * 驼峰转下划线
+     */
+    public static String camelToUnderline(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+
+        String regex = "([a-z])([A-Z]+)";
+        String replacement = "$1_$2";
+        str = str.replaceAll(regex, replacement);
+        return str.toLowerCase();
+    }
+
+    /**
+     * 校验结束时间是否晚于开始时间
+     */
+    @AssertTrue(message = "结束时间必须晚于开始时间")
+    private boolean isEndTimeValid() {
+        return startTime == null || endTime == null || !endTime.isBefore(startTime);
+    }
+
+    /**
+     * 校验结束日期是否晚于开始日期
+     */
+    @AssertTrue(message = "结束日期必须晚于开始日期")
+    private boolean isEndDateValid() {
+        return startDate == null || endDate == null || !endDate.isBefore(startDate);
     }
 }
