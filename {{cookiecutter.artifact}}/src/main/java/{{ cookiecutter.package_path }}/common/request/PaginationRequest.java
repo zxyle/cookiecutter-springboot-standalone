@@ -9,8 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * 分页请求对象，所有分页请求对象都应该继承此类
@@ -47,11 +45,8 @@ public class PaginationRequest extends ConditionRequest {
      * 获取合法页码
      */
     public Integer getPageNum() {
-        return Stream.of(pageNum)
-                .filter(Objects::nonNull)
-                .filter(num -> num >= 1 && num < Integer.MAX_VALUE)
-                .findFirst()
-                .orElse(DEFAULT_PAGE_NUM);
+        return (pageNum == null || pageNum < 1 || pageNum > Integer.MAX_VALUE) ?
+                DEFAULT_PAGE_NUM : pageNum;
     }
 
     /**
