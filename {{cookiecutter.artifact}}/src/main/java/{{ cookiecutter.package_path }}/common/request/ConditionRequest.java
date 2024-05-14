@@ -44,7 +44,7 @@ public class ConditionRequest extends BaseRequest {
      *
      * @mock false
      */
-    private Boolean export;
+    protected Boolean export;
 
     /**
      * 多字段排序, 格式为：字段名:排序方式
