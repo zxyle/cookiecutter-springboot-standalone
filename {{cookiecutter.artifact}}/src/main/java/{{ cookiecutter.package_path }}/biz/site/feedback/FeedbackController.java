@@ -43,7 +43,7 @@ public class FeedbackController {
         wrapper.le(req.getEndTime() != null, Feedback::getCreateTime, req.getEndTime());
 
         // 数据导出
-        if (req.isExport()) {
+        if (req.getExport()) {
             // wrapper.last("limit 10000"); // 过多的数据导出会造成系统卡顿
             List<Feedback> list = thisService.list(wrapper);
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
