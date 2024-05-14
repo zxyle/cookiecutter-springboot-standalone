@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 @Setter
 public class BaseRequest {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final List<String> IGNORE = Arrays.asList("sign", "calledSort", "offset");
+    protected static final ObjectMapper objectMapper = new ObjectMapper();
+    protected static final List<String> IGNORE = Arrays.asList("sign", "calledSort", "offset");
 
     /**
      * 签名密钥，需要给前端
@@ -60,7 +60,7 @@ public class BaseRequest {
     }
 
     /**
-     * 校验签名，暂时不校验
+     * 校验签名，防止请求体被篡改
      */
     @AssertTrue(message = "签名无效")
     protected boolean isSignValid() {
