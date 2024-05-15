@@ -37,6 +37,8 @@ public class PaginationRequest extends ConditionRequest {
 
     /**
      * 是否跳过总数查询，加快查询速度
+     *
+     * @mock false
      */
     private Boolean skipTotal;
 
