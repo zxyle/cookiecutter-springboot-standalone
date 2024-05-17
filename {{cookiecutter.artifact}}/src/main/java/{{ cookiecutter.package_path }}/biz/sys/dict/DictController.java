@@ -50,9 +50,8 @@ public class DictController {
      */
     @GetMapping("/dicts/dictType")
     public R<Map<String, List<Dict>>> list(@Valid MultiDictTypeRequest req) {
-        String[] types = req.getTypes().split(",");
-        Map<String, List<Dict>> map = new HashMap<>(types.length);
-        for (String type : types) {
+        Map<String, List<Dict>> map = new HashMap<>(req.getTypes().size());
+        for (String type : req.getTypes()) {
             List<Dict> dicts = thisService.findDictsByType(type.trim());
             map.put(type, dicts);
         }

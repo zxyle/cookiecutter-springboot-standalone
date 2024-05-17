@@ -5,8 +5,10 @@ package {{ cookiecutter.basePackage }}.biz.sys.dict;
 
 import lombok.Data;
 
-import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotEmpty;
 import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
+import {{ cookiecutter.namespace }}.validation.constraints.Size;
+import java.util.Set;
 
 
 /**
@@ -20,7 +22,7 @@ public class MultiDictTypeRequest {
      *
      * @mock gender,education
      */
-    @Pattern(regexp = "^[a-zA-Z,_]+$", message = "字典类型只能包含字母、逗号和下划线")
-    @NotBlank(message = "字典类型不能为空")
-    private String types;
+    @NotEmpty(message = "字典类型集合不能为空")
+    @Size(min = 1, message = "字典类型集合至少包含一个元素")
+    private Set<@Pattern(regexp = "^[a-zA-Z]+$", message = "字典类型只能包含字母") String> types;
 }
