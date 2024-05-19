@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.biz.site.follow;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import {{ cookiecutter.basePackage }}.biz.auth.user.User;
-import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
+import {{ cookiecutter.basePackage }}.biz.auth.profile.Profile;
+import {{ cookiecutter.basePackage }}.biz.auth.profile.ProfileService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -29,7 +29,7 @@ import java.util.Objects;
 public class FollowController extends AuthBaseController {
 
     final FollowService followService;
-    final UserService userService;
+    final ProfileService profileService;
 
     /**
      * 关注
@@ -64,18 +64,18 @@ public class FollowController extends AuthBaseController {
      * 获取粉丝列表
      */
     @GetMapping("/followers")
-    public R<Page<User>> getFollowers(@Valid PaginationRequest req) {
-        Page<User> p = new Page<>(req.getPageNum(), req.getPageSize());
+    public R<Page<Profile>> getFollowers(@Valid PaginationRequest req) {
+        Page<Profile> p = new Page<>(req.getPageNum(), req.getPageSize());
         List<Integer> followers = followService.getFollowers(getUserId(), req.getPageNum(), req.getPageSize());
         if (followers.isEmpty()) {
             return R.ok(p);
         }
 
         // 获取昵称和头像
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(User::getId, User::getNickname, User::getAvatarUrl);
-        wrapper.in(User::getId, followers);
-        List<User> profiles = userService.list(wrapper);
+        LambdaQueryWrapper<Profile> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Profile::getUserId, Profile::getNickname, Profile::getAvatar);
+        wrapper.in(Profile::getUserId, followers);
+        List<Profile> profiles = profileService.list(wrapper);
 
         p.setRecords(profiles);
         return R.ok(p);
@@ -85,18 +85,18 @@ public class FollowController extends AuthBaseController {
      * 获取关注列表
      */
     @GetMapping("/followings")
-    public R<Page<User>> getFollowings(@Valid PaginationRequest req) {
-        Page<User> p = new Page<>(req.getPageNum(), req.getPageSize());
+    public R<Page<Profile>> getFollowings(@Valid PaginationRequest req) {
+        Page<Profile> p = new Page<>(req.getPageNum(), req.getPageSize());
         List<Integer> followings = followService.getFollowing(getUserId(), req.getPageNum(), req.getPageSize());
         if (followings.isEmpty()) {
             return R.ok(p);
         }
 
         // 获取昵称和头像
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(User::getId, User::getNickname, User::getAvatarUrl);
-        wrapper.in(User::getId, followings);
-        List<User> profiles = userService.list(wrapper);
+        LambdaQueryWrapper<Profile> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Profile::getUserId, Profile::getNickname, Profile::getAvatar);
+        wrapper.in(Profile::getUserId, followings);
+        List<Profile> profiles = profileService.list(wrapper);
         p.setRecords(profiles);
         return R.ok(p);
     }
