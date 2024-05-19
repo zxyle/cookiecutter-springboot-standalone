@@ -30,6 +30,9 @@ public class ${className} {
     /**
      * ${column.comment}
      */
+    <#if column.javaType == "LocalDateTime">
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    </#if>
     private ${column.javaType} ${column.property};
 
 </#list>

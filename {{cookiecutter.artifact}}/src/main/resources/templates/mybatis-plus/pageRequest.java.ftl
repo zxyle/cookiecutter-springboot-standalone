@@ -40,6 +40,10 @@ public class ${className} extends PaginationRequest {
     @NotNull(message = "${column.comment}不能为null")
         </#if>
     </#if>
+    <#if column.javaType == "LocalDateTime">
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    </#if>
     private ${column.javaType} ${column.property};
 
 </#list>
