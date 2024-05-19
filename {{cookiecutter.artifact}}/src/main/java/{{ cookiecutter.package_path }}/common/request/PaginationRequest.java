@@ -18,6 +18,7 @@ import java.util.List;
 public class PaginationRequest extends ConditionRequest {
 
     protected static final int DEFAULT_PAGE_NUM = 1;      // 默认页码
+    protected static final int MAX_PAGE_NUM = 1000;       // 最大页码 避免深分页带来性能问题
     protected static final int DEFAULT_PAGE_SIZE = 10;    // 默认分页大小
     protected static final int MAX_PAGE_SIZE = 100;       // 最大分页大小，防止恶意请求
 
@@ -47,7 +48,7 @@ public class PaginationRequest extends ConditionRequest {
      * 获取合法页码
      */
     public Integer getPageNum() {
-        return (pageNum == null || pageNum < 1 || pageNum > Integer.MAX_VALUE) ?
+        return (pageNum == null || pageNum < 1 || pageNum > MAX_PAGE_NUM) ?
                 DEFAULT_PAGE_NUM : pageNum;
     }
 
