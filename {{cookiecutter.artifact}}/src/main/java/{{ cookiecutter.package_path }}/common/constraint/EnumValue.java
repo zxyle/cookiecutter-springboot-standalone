@@ -12,13 +12,13 @@ import java.lang.annotation.*;
  * EnumValue(enumClass = Gender.class)
  * private Integer gender;
  */
+@Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
 @Constraint(validatedBy = EnumValueValidator.class)
 public @interface EnumValue {
 
-    String message() default "参数值不合法";
+    String message() default "枚举值不合法";
 
     Class<? extends ValueEnum> enumClass();
 
