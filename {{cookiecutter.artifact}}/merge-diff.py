@@ -5,7 +5,7 @@ import re
 
 base_package = "{{ cookiecutter.basePackage }}"
 # TODO 需修改脚手架模板位置
-stage_dir = "..../cookiecutter-springboot-standalone"
+stage_dir = "/Users/xiangzheng/developer/projects/personal/cookiecutter-springboot-standalone"
 package_path = base_package.replace(".", "/")
 source_dir = os.path.dirname(os.path.abspath(__file__))
 target_dir = os.path.join(stage_dir, "{% raw %}{{cookiecutter.artifact}}{% endraw %}")
