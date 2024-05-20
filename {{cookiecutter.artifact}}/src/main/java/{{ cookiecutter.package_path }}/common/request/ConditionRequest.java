@@ -109,7 +109,7 @@ public class ConditionRequest extends BaseRequest {
     /**
      * 根据请求类构建出查询条件
      */
-    public <T> LambdaQueryWrapper<T> toWrapper() {
+    public <T> LambdaQueryWrapper<T> getWrapper() {
         QueryWrapper<T> wrapper = new QueryWrapper<>();
 
         Field[] fields = FIELD_CACHE.computeIfAbsent(this.getClass(), Class::getDeclaredFields);

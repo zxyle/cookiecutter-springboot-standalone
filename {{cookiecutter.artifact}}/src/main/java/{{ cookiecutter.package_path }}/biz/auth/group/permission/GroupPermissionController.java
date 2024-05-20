@@ -38,7 +38,7 @@ public class GroupPermissionController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:group:get')")
     @GetMapping("/groups/{groupId}/permissions")
     public R<Page<Permission>> list(@Valid PaginationRequest req, @PathVariable Integer groupId) {
-        Page<Permission> page = thisMapper.page(req.toPageable(), groupId, req);
+        Page<Permission> page = thisMapper.page(req.getPage(), groupId, req);
         return R.ok(page);
     }
 

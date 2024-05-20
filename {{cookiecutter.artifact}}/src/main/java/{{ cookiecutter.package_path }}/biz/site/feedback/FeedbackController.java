@@ -55,7 +55,7 @@ public class FeedbackController {
             return null;
         }
 
-        Page<Feedback> page = thisService.page(req.toPageable(), wrapper);
+        Page<Feedback> page = thisService.page(req.getPage(), wrapper);
         return R.ok(page);
     }
 

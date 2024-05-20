@@ -51,7 +51,7 @@ public class RoleController extends AuthBaseController {
                     .or().like(Role::getCode, req.getKeyword())
                     .or().like(Role::getDescription, req.getKeyword()));
         }
-        Page<Role> list = thisService.page(req.toPageable(), wrapper);
+        Page<Role> list = thisService.page(req.getPage(), wrapper);
         List<RoleResponse> roles = list.getRecords().stream()
                 .map(role -> thisService.attachRoleInfo(role, req.isFull()))
                 .collect(Collectors.toList());

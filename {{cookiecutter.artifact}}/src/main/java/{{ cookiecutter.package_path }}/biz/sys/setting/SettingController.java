@@ -32,7 +32,7 @@ public class SettingController {
     @PreAuthorize("@ck.hasPermit('sys:setting:list')")
     @GetMapping("/settings")
     public R<Page<Setting>> page(@Valid PaginationRequest req) {
-        Page<Setting> page = thisService.page(req.toPageable());
+        Page<Setting> page = thisService.page(req.getPage());
         return R.ok(page);
     }
 

@@ -37,7 +37,7 @@ public class UserRoleController extends AuthBaseController {
     @Secured(value = "ROLE_admin")
     @GetMapping("/users/{userId}/roles")
     public R<Page<Role>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
-        Page<Role> page = thisMapper.page(req.toPageable(), userId, req);
+        Page<Role> page = thisMapper.page(req.getPage(), userId, req);
         return R.ok(page);
     }
 

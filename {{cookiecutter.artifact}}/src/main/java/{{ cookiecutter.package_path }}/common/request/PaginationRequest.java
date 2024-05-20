@@ -70,7 +70,7 @@ public class PaginationRequest extends ConditionRequest {
     /**
      * 获取mybatis plus翻页对象
      */
-    public <T> Page<T> toPageable() {
+    public <T> Page<T> getPage() {
         Page<T> page = new Page<>(getPageNum(), getPageSize(), !(skipTotal == null || skipTotal));
 
         if (!calledSort) {

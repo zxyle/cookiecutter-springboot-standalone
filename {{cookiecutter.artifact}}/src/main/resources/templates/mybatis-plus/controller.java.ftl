@@ -87,7 +87,7 @@ public class ${className} {
         }
 
         </#if>
-        Page<${table.className}> page = thisService.page(req.toPageable(), wrapper);
+        Page<${table.className}> page = thisService.page(req.getPage(), wrapper);
         return R.ok(page);
     }
 
