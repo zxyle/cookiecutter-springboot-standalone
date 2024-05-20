@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.counter;
 
-import {{ cookiecutter.basePackage }}.common.service.CounterService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

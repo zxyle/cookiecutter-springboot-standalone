@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.counter;
 
-import {{ cookiecutter.basePackage }}.common.service.CounterService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.data.redis.core.StringRedisTemplate;
