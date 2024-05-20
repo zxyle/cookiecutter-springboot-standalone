@@ -13,3 +13,5 @@ package {{ cookiecutter.basePackage }}.biz.site;
 // 7. realname：      实名认证
 // 8. release：       系统版本
 // 9. star：          收藏管理
+// 10. pay：           支付管理
+// 11. miniprogram：     微信小程序管理
