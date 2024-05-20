@@ -5,6 +5,7 @@ package {{ cookiecutter.basePackage }}.biz.site.miniprogram;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.http.HttpUtil;
+import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
