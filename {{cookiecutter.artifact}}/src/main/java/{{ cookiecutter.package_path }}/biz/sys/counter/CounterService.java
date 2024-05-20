@@ -3,15 +3,45 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.counter;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 /**
- * 计数器 服务实现类
+ * 计数器服务类
  */
-@Slf4j
-@Service
-public class CounterService extends ServiceImpl<CounterMapper, Counter>  {
+public interface CounterService {
+
+    /**
+     * 自增并获取统计次数
+     *
+     * @param biz 业务名
+     * @param id  ID
+     * @return 自增后的统计次数
+     */
+    Long incr(String biz, String id);
+
+    /**
+     * 自减并获取统计次数
+     *
+     * @param biz 业务名
+     * @param id  ID
+     * @return 自减后的统计次数
+     */
+    Long decr(String biz, String id);
+
+    /**
+     * 获取统计次数
+     *
+     * @param biz 业务名
+     * @param id  ID
+     * @return 当前统计次数
+     */
+    Long get(String biz, String id);
+
+    /**
+     * 清除统计次数
+     *
+     * @param biz 业务名
+     * @param id  ID
+     * @return 是否清除成功
+     */
+    boolean clear(String biz, String id);
 
 }

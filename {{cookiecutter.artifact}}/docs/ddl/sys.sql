@@ -698,18 +698,4 @@ CREATE TABLE `template` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='模板表';
 
--- ----------------------------
--- Table structure for sys_counter
--- ----------------------------
-DROP TABLE IF EXISTS `sys_counter`;
-CREATE TABLE `sys_counter` (
-  `id` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `biz` varchar(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '键',
-  `number` bigint UNSIGNED NOT NULL DEFAULT '0' COMMENT '计数值',
-  PRIMARY KEY (`id`),
-  KEY `uk_biz` (`biz`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='计数器';
-
 SET FOREIGN_KEY_CHECKS = 1;
