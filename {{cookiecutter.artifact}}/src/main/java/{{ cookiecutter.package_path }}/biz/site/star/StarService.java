@@ -41,10 +41,12 @@ public interface StarService {
     /**
      * 获取用户收藏的资源ID列表
      *
-     * @param resType 资源类型
-     * @param userId  用户ID
+     * @param resType  资源类型
+     * @param userId   用户ID
+     * @param pageNo   页码
+     * @param pageSize 分页大小
      * @return 资源ID列表
      */
-    List<Integer> getResIdList(Integer resType, Integer userId);
+    List<StarDTO> getResIdList(Integer resType, Integer userId, Integer pageNo, Integer pageSize);
 
 }

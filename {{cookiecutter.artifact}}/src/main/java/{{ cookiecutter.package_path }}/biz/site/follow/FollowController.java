@@ -56,6 +56,7 @@ public class FollowController extends AuthBaseController {
         if (Objects.equals(followId, getUserId())) {
             return R.fail("不能取消关注自己");
         }
+
         followService.unfollow(getUserId(), followId);
         return R.ok();
     }
@@ -71,13 +72,7 @@ public class FollowController extends AuthBaseController {
             return R.ok(p);
         }
 
-        // 获取昵称和头像
-        LambdaQueryWrapper<Profile> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(Profile::getUserId, Profile::getNickname, Profile::getAvatar);
-        wrapper.in(Profile::getUserId, followers);
-        List<Profile> profiles = profileService.list(wrapper);
-
-        p.setRecords(profiles);
+        p.setRecords(getProfiles(followers));
         return R.ok(p);
     }
 
@@ -92,12 +87,7 @@ public class FollowController extends AuthBaseController {
             return R.ok(p);
         }
 
-        // 获取昵称和头像
-        LambdaQueryWrapper<Profile> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(Profile::getUserId, Profile::getNickname, Profile::getAvatar);
-        wrapper.in(Profile::getUserId, followings);
-        List<Profile> profiles = profileService.list(wrapper);
-        p.setRecords(profiles);
+        p.setRecords(getProfiles(followings));
         return R.ok(p);
     }
 
@@ -110,6 +100,18 @@ public class FollowController extends AuthBaseController {
         Long countFollowers = followService.countFollowers(getUserId());
         FollowStatResponse response = new FollowStatResponse(countFollowing, countFollowers);
         return R.ok(response);
+    }
+
+    /**
+     * 获取昵称和头像
+     *
+     * @param userIds 用户ID列表
+     */
+    private List<Profile> getProfiles(List<Integer> userIds) {
+        LambdaQueryWrapper<Profile> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Profile::getUserId, Profile::getNickname, Profile::getAvatar);
+        wrapper.in(Profile::getUserId, userIds);
+        return profileService.list(wrapper);
     }
 
 }

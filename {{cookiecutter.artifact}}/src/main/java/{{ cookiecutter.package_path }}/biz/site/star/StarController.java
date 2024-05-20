@@ -4,13 +4,61 @@
 package {{ cookiecutter.basePackage }}.biz.site.star;
 
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
+import {{ cookiecutter.basePackage }}.common.response.R;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 收藏管理
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class StarController extends AuthBaseController {
+
+    final StarService starService;
+
+    /**
+     * 收藏
+     *
+     * @param resType 资源类型
+     * @param resId   资源ID
+     */
+    @PostMapping("/star")
+    public R<Void> star(Integer resType, Integer resId) {
+        Long star = starService.star(resType, resId, getUserId());
+        return R.ok();
+    }
+
+    /**
+     * 取消收藏
+     *
+     * @param resType 资源类型
+     * @param resId   资源ID
+     */
+    @DeleteMapping("/unstar")
+    public R<Void> unstar(Integer resType, Integer resId) {
+        Long unstar = starService.unstar(resType, resId, getUserId());
+        return R.ok();
+    }
+
+    /**
+     * 收藏列表
+     *
+     * @param resType  资源类型
+     * @param pageNo   页码
+     * @param pageSize 每页数量
+     */
+    @GetMapping("/stars")
+    public R<List<StarDTO>> starList(Integer resType, Integer pageNo, Integer pageSize) {
+        List<StarDTO> idList = starService.getResIdList(resType, getUserId(), pageNo, pageSize);
+        return R.ok(idList);
+    }
+
 }

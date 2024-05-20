@@ -5,8 +5,6 @@ package {{ cookiecutter.basePackage }}.biz.site.follow;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
@@ -41,19 +39,21 @@ public class RedisFollowServiceImpl implements FollowService {
      */
     @Override
     public void follow(Integer userId, Integer followId) {
+        // 自己关注列表
         String key = String.format(FOLLOWING_KEY, userId);
+        // 对方粉丝列表
         String key2 = String.format(FANS_KEY, followId);
+        // 自己关注数 +1
         String key3 = String.format(FOLLOWING_CNT_KEY, userId);
+        // 对方粉丝数 +1
         String key4 = String.format(FANS_CNT_KEY, followId);
 
-        List<Object> results = stringRedisTemplate.executePipelined(new RedisCallback<Object>() {
-            public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                connection.zAdd(key.getBytes(), Instant.now().getEpochSecond(), followId.toString().getBytes());
-                connection.zAdd(key2.getBytes(), Instant.now().getEpochSecond(), userId.toString().getBytes());
-                connection.incr(key3.getBytes());
-                connection.incr(key4.getBytes());
-                return null;
-            }
+        List<Object> results = stringRedisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+            connection.zAdd(key.getBytes(), Instant.now().getEpochSecond(), followId.toString().getBytes());
+            connection.zAdd(key2.getBytes(), Instant.now().getEpochSecond(), userId.toString().getBytes());
+            connection.incr(key3.getBytes());
+            connection.incr(key4.getBytes());
+            return null;
         });
         log.info("follow results: {}", results);
     }
@@ -66,25 +66,27 @@ public class RedisFollowServiceImpl implements FollowService {
      */
     @Override
     public void unfollow(Integer userId, Integer followId) {
+        // 自己关注列表 删除掉
         String key = String.format(FOLLOWING_KEY, userId);
+        // 对方粉丝列表 删除掉自己
         String key2 = String.format(FANS_KEY, followId);
+        // 自己关注数 -1
         String key3 = String.format(FOLLOWING_CNT_KEY, userId);
+        // 对方粉丝数 -1
         String key4 = String.format(FANS_CNT_KEY, followId);
 
-        List<Object> results = stringRedisTemplate.executePipelined(new RedisCallback<Object>() {
-            public Object doInRedis(RedisConnection connection) throws DataAccessException {
-                connection.zRem(key.getBytes(), followId.toString().getBytes());
-                connection.zRem(key2.getBytes(), userId.toString().getBytes());
-                Long decr1 = connection.decr(key3.getBytes());
-                Long decr2 = connection.decr(key4.getBytes());
-                if (decr1 == null || decr1 <= 0) {
-                    connection.del(key3.getBytes());
-                }
-                if (decr2 == null || decr2 <= 0) {
-                    connection.del(key4.getBytes());
-                }
-                return null;
+        List<Object> results = stringRedisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+            connection.zRem(key.getBytes(), followId.toString().getBytes());
+            connection.zRem(key2.getBytes(), userId.toString().getBytes());
+            Long decr1 = connection.decr(key3.getBytes());
+            Long decr2 = connection.decr(key4.getBytes());
+            if (decr1 == null || decr1 <= 0) {
+                connection.del(key3.getBytes());
             }
+            if (decr2 == null || decr2 <= 0) {
+                connection.del(key4.getBytes());
+            }
+            return null;
         });
         log.info("unfollow results: {}", results);
     }

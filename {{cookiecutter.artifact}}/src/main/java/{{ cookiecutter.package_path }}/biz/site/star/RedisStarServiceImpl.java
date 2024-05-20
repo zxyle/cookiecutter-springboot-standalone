@@ -5,12 +5,18 @@ package {{ cookiecutter.basePackage }}.biz.site.star;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 使用Redis实现 收藏业务
@@ -38,12 +44,16 @@ public class RedisStarServiceImpl implements StarService {
         String countKey = String.format(STAR_COUNT_KEY, resType, resId);
         String userKey = String.format(USER_STAR_LIST_KEY, resType, userId);
 
-        stringRedisTemplate.opsForZSet().add(key, String.valueOf(userId), Instant.now().getEpochSecond());
-        // 增加点赞数
-        Long increment = stringRedisTemplate.opsForValue().increment(countKey);
-        // 用户收藏列表添加
-        stringRedisTemplate.opsForZSet().add(userKey, String.valueOf(resId), Instant.now().getEpochSecond());
-
+        List<Object> results = stringRedisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+            // 资源增加用户
+            connection.zAdd(key.getBytes(), Instant.now().getEpochSecond(), userId.toString().getBytes());
+            // 点赞数 +1
+            connection.incr(countKey.getBytes());
+            // 用户收藏列表添加
+            connection.zAdd(userKey.getBytes(), Instant.now().getEpochSecond(), resId.toString().getBytes());
+            return null;
+        });
+        log.info("star: {}", results);
         return 0L;
     }
 
@@ -56,6 +66,20 @@ public class RedisStarServiceImpl implements StarService {
      */
     @Override
     public Long unstar(Integer resType, Integer resId, Integer userId) {
+        String key = String.format(STAR_KEY, resType, resId);
+        String countKey = String.format(STAR_COUNT_KEY, resType, resId);
+        String userKey = String.format(USER_STAR_LIST_KEY, resType, userId);
+
+        List<Object> results = stringRedisTemplate.executePipelined((RedisCallback<Object>) connection -> {
+            // 资源用户列表移除
+            connection.zRem(key.getBytes(), userId.toString().getBytes());
+            // 点赞数 -1
+            connection.decr(countKey.getBytes());
+            // 用户收藏列表移除
+            connection.zRem(userKey.getBytes(), resId.toString().getBytes());
+            return null;
+        });
+        log.info("unstar: {}", results);
         return 0L;
     }
 
@@ -69,18 +93,39 @@ public class RedisStarServiceImpl implements StarService {
      */
     @Override
     public boolean isStarred(Integer resType, Integer resId, Integer userId) {
-        return false;
+        Double score = stringRedisTemplate.opsForZSet().score(String.format(STAR_KEY, resType, resId), userId.toString());
+        return score != null;
     }
 
     /**
      * 获取用户收藏的资源ID列表
      *
-     * @param resType 资源类型
-     * @param userId  用户ID
+     * @param resType  资源类型
+     * @param userId   用户ID
+     * @param pageNo   页码
+     * @param pageSize 分页大小
      * @return 资源ID列表
      */
     @Override
-    public List<Integer> getResIdList(Integer resType, Integer userId) {
+    public List<StarDTO> getResIdList(Integer resType, Integer userId, Integer pageNo, Integer pageSize) {
+        String userKey = String.format(USER_STAR_LIST_KEY, resType, userId);
+        int start = (pageNo - 1) * pageSize;
+        int stop = start + pageSize - 1;
+
+        Set<ZSetOperations.TypedTuple<String>> tupleSet = stringRedisTemplate.opsForZSet()
+                .reverseRangeWithScores(userKey, start, stop);
+
+        if (tupleSet != null && !tupleSet.isEmpty()) {
+            return tupleSet.stream().map(tuple -> {
+                StarDTO starDTO = new StarDTO();
+                starDTO.setStarTime(Instant.ofEpochSecond(Objects.requireNonNull(tuple.getScore()).longValue())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime());
+                starDTO.setResId(Integer.parseInt(Objects.requireNonNull(tuple.getValue())));
+                return starDTO;
+            }).collect(Collectors.toList());
+        }
+
         return Collections.emptyList();
     }
 }
