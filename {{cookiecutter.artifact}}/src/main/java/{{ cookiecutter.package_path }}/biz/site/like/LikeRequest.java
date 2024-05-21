@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.biz.site.like;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 /**
  * 点赞和取消点赞请求

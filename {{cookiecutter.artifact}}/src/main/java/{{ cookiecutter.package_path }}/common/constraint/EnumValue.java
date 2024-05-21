@@ -3,8 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.common.constraint;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
+import {{ cookiecutter.namespace }}.validation.Constraint;
+import {{ cookiecutter.namespace }}.validation.Payload;
 import java.lang.annotation.*;
 
 /**

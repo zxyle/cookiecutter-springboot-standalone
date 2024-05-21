@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
 import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
 import {{ cookiecutter.namespace }}.validation.ConstraintViolationException;
+{% if cookiecutter.bootVersion.split('.')[0] == '3' -%}
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+{% endif -%}
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -126,10 +129,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(R.fail(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
     }
 
-    // TODO spring boot3添加了对方法入参的校验
-    // HandlerMethodValidationException.class
-    // public String xxx(@Pattern(regexp = "^[1-9]\\d*$",message = "id不合法") @RequestParam String id){
-
+    /**
+     * spring boot3添加了对方法入参的校验
+     */
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<R<Void>> handleMethodValidationException(HandlerMethodValidationException ex) {
+        log.warn("URL参数校验失败: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(R.fail(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+    {% if cookiecutter.bootVersion.split('.')[0] == '3' -%}
     /**
      * 处理其他未知异常
      */
@@ -139,6 +147,7 @@ public class GlobalExceptionHandler {
         log.error("异常详情: {}", getExceptionMessage(e));
         return new ResponseEntity<>(R.fail("操作失败"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    {% endif %}
 
     public String getExceptionMessage(Exception ex) {
         StringWriter stringWriter = new StringWriter();
