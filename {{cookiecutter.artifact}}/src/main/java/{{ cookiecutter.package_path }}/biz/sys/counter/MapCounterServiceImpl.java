@@ -31,6 +31,21 @@ public class MapCounterServiceImpl implements CounterService {
     }
 
     /**
+     * 自增并获取统计次数
+     *
+     * @param biz  业务名
+     * @param id   ID
+     * @param step 自增步长
+     * @return 自增后的统计次数
+     */
+    @Override
+    public Long incr(String biz, String id, Integer step) {
+        String key = String.format(FORMAT, biz, id);
+        counterMap.put(key, counterMap.getOrDefault(key, 0L) + step);
+        return counterMap.get(key);
+    }
+
+    /**
      * 自减并获取统计次数
      *
      * @param biz 业务名

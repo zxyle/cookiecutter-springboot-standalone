@@ -27,6 +27,22 @@ public class AtomicCounterService implements CounterService {
     }
 
     /**
+     * 自增并获取统计次数
+     *
+     * @param biz  业务名
+     * @param id   ID
+     * @param step 自增步长
+     * @return 自增后的统计次数
+     */
+    @Override
+    public Long incr(String biz, String id, Integer step) {
+        for (int i = 0; i < step; i++) {
+            incr(biz, id);
+        }
+        return get(biz, id);
+    }
+
+    /**
      * 自减并获取统计次数
      *
      * @param biz 业务名

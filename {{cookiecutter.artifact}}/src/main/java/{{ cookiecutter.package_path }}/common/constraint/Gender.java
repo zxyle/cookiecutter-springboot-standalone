@@ -13,7 +13,13 @@ public enum Gender implements ValueEnum {
     MALE(1, "男"),
     FEMALE(2, "女");
 
+    /**
+     * 枚举值
+     */
     private final Integer value;
 
+    /**
+     * 枚举描述
+     */
     private final String name;
 }

@@ -9,6 +9,7 @@ import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -22,11 +23,13 @@ public class UpdateAuthRequest extends BaseRequest {
      *
      * @mock 更新项目
      */
+    @Length(max = 16, message = "名称长度不能超过16个字符")
     private String name;
 
     /**
      * 描述信息
      */
+    @Length(max = 32, message = "描述信息不能超过32个字符")
     private String description;
 
     /**

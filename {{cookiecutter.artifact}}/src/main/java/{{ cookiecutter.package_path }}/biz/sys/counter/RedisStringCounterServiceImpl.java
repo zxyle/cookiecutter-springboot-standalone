@@ -3,20 +3,22 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.counter;
 
+import {{ cookiecutter.namespace }}.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import {{ cookiecutter.namespace }}.annotation.Resource;
-
 /**
- * Redis计数器实现
+ * 使用Redis String实现计数器
  */
 @Service
 @ConditionalOnClass(StringRedisTemplate.class)
-public class RedisCounterServiceImpl implements CounterService {
+public class RedisStringCounterServiceImpl implements CounterService {
 
+    /**
+     * 计数key格式由 业务名:ID 组成，业务名需要尽可能短
+     */
     private static final String FORMAT = "%s:%s";
 
     @Resource
@@ -30,8 +32,24 @@ public class RedisCounterServiceImpl implements CounterService {
      */
     @Override
     public Long incr(String biz, String id) {
+        return incr(biz, id, 1);
+    }
+
+    /**
+     * 自增并获取统计次数
+     *
+     * @param biz  业务名
+     * @param id   ID
+     * @param step 自增步长
+     * @return 自增后的统计次数
+     */
+    @Override
+    public Long incr(String biz, String id, Integer step) {
+        if (step == null || step < 1) {
+            step = 1;
+        }
         String key = String.format(FORMAT, biz, id);
-        Long count = stringRedisTemplate.opsForValue().increment(key);
+        Long count = stringRedisTemplate.opsForValue().increment(key, step);
         return count != null ? count : 0;
     }
 
@@ -46,6 +64,10 @@ public class RedisCounterServiceImpl implements CounterService {
     public Long decr(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
         Long count = stringRedisTemplate.opsForValue().decrement(key);
+        if (count != null && count <= 0) {
+            stringRedisTemplate.delete(key);
+            return 0L;
+        }
         return count != null ? count : 0;
     }
 

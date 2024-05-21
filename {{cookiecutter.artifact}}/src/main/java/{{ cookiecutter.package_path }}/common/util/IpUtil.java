@@ -4,11 +4,11 @@
 package {{ cookiecutter.basePackage }}.common.util;
 
 import {{ cookiecutter.basePackage }}.common.constant.ProjectConst;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
@@ -39,20 +39,22 @@ public final class IpUtil {
      * @return 可能有多个，例如：192.168.1.110， 192.168.1.120
      */
     public static String getIpAddr(HttpServletRequest request) {
-        String ip = LOCAL_IP;
-        if (request != null) {
-            ip = request.getHeader("x-forwarded-for");
-            if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getHeader("Proxy-Client-IP");
-            }
+        String ip;
+        if (request == null) {
+            return LOCAL_IP;
+        }
 
-            if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getHeader("WL-Proxy-Client-IP");
-            }
+        ip = request.getHeader("x-forwarded-for");
+        if (StringUtils.isBlank(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
 
-            if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
-                ip = request.getRemoteAddr();
-            }
+        if (StringUtils.isBlank(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+
+        if (StringUtils.isBlank(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
         }
         return ip;
 

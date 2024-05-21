@@ -147,6 +147,7 @@ public class GlobalExceptionHandler {
         log.error("异常详情: {}", getExceptionMessage(e));
         return new ResponseEntity<>(R.fail("操作失败"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     {% endif %}
 
     public String getExceptionMessage(Exception ex) {

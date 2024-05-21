@@ -47,7 +47,7 @@ public class BaseRequest {
     protected String sign;
 
     /**
-     * 随机数
+     * 一次性随机数
      */
     protected String nonce;
 

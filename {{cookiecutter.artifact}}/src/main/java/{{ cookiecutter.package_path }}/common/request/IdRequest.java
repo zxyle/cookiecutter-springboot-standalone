@@ -3,11 +3,10 @@
 
 package {{ cookiecutter.basePackage }}.common.request;
 
+import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.validator.constraints.Range;
-
-import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 
 /**
  * 主键ID请求
@@ -19,7 +18,7 @@ public class IdRequest extends BaseRequest {
     /**
      * 主键ID
      */
-    @Range(min = 1, message = "ID必须为正整数")
+    @Positive
     @NotNull(message = "ID不能为空")
     private Integer id;
 

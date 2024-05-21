@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 @TableName("sys_setting")
 @EqualsAndHashCode(callSuper = false)
 public class Setting extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /**
