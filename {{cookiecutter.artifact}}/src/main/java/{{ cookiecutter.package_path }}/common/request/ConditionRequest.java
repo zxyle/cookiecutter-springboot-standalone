@@ -235,14 +235,14 @@ public class ConditionRequest extends BaseRequest {
             case BETWEEN:
                 if (fieldValue instanceof Object[]) {
                     Object[] fv = (Object[]) fieldValue;
+                    assert fv.length == 2;
                     wrapper.between(fieldName, fv[0], fv[1]);
                 }
 
                 if (fieldValue instanceof String) {
                     String[] split = fieldValue.toString().split(",");
-                    if (split.length == 2) {
-                        wrapper.between(fieldName, split[0], split[1]);
-                    }
+                    assert split.length == 2;
+                    wrapper.between(fieldName, split[0], split[1]);
                 }
                 break;
             case NOT_BETWEEN:
@@ -252,9 +252,8 @@ public class ConditionRequest extends BaseRequest {
                 }
                 if (fieldValue instanceof String) {
                     String[] split = fieldValue.toString().split(",");
-                    if (split.length == 2) {
-                        wrapper.notBetween(fieldName, split[0], split[1]);
-                    }
+                    assert split.length == 2;
+                    wrapper.notBetween(fieldName, split[0], split[1]);
                 }
                 break;
             case IS_NULL:

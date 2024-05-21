@@ -112,6 +112,7 @@ redis:
 	ssh $(SERVER) "rm -rf /tmp/$(REDIS_RPM)"
 	ssh $(SERVER) "redis-server --version"
 	ssh $(SERVER) "echo 'requirepass RGCqg&fju#Q6xypF' >> /etc/redis.conf"
+	#ssh $(SERVER) "echo 'bind 0.0.0.0' >> /etc/redis.conf"
 	ssh $(SERVER) "systemctl enable redis --now"
 
 # 安装mysql

@@ -29,77 +29,112 @@ import java.io.StringWriter;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 使用GET PUT DELETE操作不存在的数据
+    /**
+     * 处理使用GET PUT DELETE操作不存在的数据
+     */
     @ExceptionHandler(DataNotFoundException.class)
-    public ResponseEntity<R<Object>> handleDataNotFoundException(DataNotFoundException ex) {
+    public ResponseEntity<R<Void>> handleDataNotFoundException(DataNotFoundException ex) {
         // 对一个不存在的数据进行操作，认定是一次违规操作
         return new ResponseEntity<>(R.fail(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
-    // 处理密码不正确异常
+    /**
+     * 处理密码不正确异常
+     */
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<R<Object>> handleAuthException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+    public ResponseEntity<R<Void>> handleAuthException(HttpServletRequest request, Exception ex, HttpServletResponse response) {
+        log.warn("用户名或密码错误: {}", ex.getMessage());
         return new ResponseEntity<>(R.fail("用户名或密码错误", HttpStatus.UNAUTHORIZED.value()), HttpStatus.UNAUTHORIZED);
     }
 
-    // 处理无权限访问异常
+    /**
+     * 处理无权限访问异常
+     */
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<R<Object>> handleAccessDeniedException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+    public ResponseEntity<R<Void>> handleAccessDeniedException(Exception ex) {
+        log.warn("权限不足: {}", ex.getMessage());
         return new ResponseEntity<>(R.fail("权限不足", HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
     }
 
-    // 处理密码已过期异常
+    /**
+     * 处理密码已过期异常
+     */
     @ExceptionHandler(CredentialsExpiredException.class)
-    public ResponseEntity<R<Object>> handleCredentialsExpiredException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+    public ResponseEntity<R<Void>> handleCredentialsExpiredException(Exception ex) {
+        log.warn("密码已过期: {}", ex.getMessage());
         return new ResponseEntity<>(R.fail("密码已过期", HttpStatus.UNAUTHORIZED.value()), HttpStatus.UNAUTHORIZED);
     }
 
-    // 处理账号过期
+    /**
+     * 处理账号过期异常
+     */
     @ExceptionHandler(AccountExpiredException.class)
-    ResponseEntity<R<Object>> handleAccountExpiredException(AccountExpiredException e) {
+    ResponseEntity<R<Void>> handleAccountExpiredException(AccountExpiredException ex) {
+        log.warn("账号已过期: {}", ex.getMessage());
         return new ResponseEntity<>(R.fail("该账号已过期，请联系管理员", HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
     }
 
-    // 处理账号停用
+    /**
+     * 处理账号停用异常
+     */
     @ExceptionHandler(DisabledException.class)
-    ResponseEntity<R<Object>> handleDisabledException(DisabledException e) {
-        return new ResponseEntity<>(R.fail("该账号已被停用", HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
+    ResponseEntity<R<Void>> handleDisabledException(DisabledException ex) {
+        log.warn("账号已被停用: {}", ex.getMessage());
+        return new ResponseEntity<>(R.fail("该账号已被停用，请联系管理员", HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
     }
 
-    // 处理账号锁定
+    /**
+     * 处理账号锁定异常
+     */
     @ExceptionHandler(LockedException.class)
-    ResponseEntity<R<Object>> handleLockedException(LockedException e) {
-        return new ResponseEntity<>(R.fail("该账号已被锁定", HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
+    ResponseEntity<R<Void>> handleLockedException(LockedException ex) {
+        log.warn("账号已被锁定: {}", ex.getMessage());
+        return new ResponseEntity<>(R.fail("该账号已被锁定，请联系管理员", HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
     }
 
-
-    // AnonymousAuthenticationToken  -> UsernamePasswordAuthenticationToken
+    /**
+     * 处理AnonymousAuthenticationToken -> UsernamePasswordAuthenticationToken类型转换异常
+     */
     @ExceptionHandler(ClassCastException.class)
-    public ResponseEntity<R<Object>> handleClassCastException(HttpServletRequest request, Exception e, HttpServletResponse response) {
+    public ResponseEntity<R<Void>> handleClassCastException(Exception ex) {
+        log.warn("登录失效,请重新登录: {}", ex.getMessage());
         return new ResponseEntity<>(R.fail("登录失效，请重新登录", HttpStatus.UNAUTHORIZED.value()), HttpStatus.UNAUTHORIZED);
     }
 
-    // 处理JSON提交方式 数据校验失败
+    /**
+     * 处理JSON提交方式数据校验失败异常
+     */
+    // MethodArgumentNotValidException 是BindException的子类
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<R<Object>> handleValidationExceptions(BindException ex) {
+    public ResponseEntity<R<Void>> handleValidationExceptions(BindException ex) {
         StringBuilder builder = new StringBuilder();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             builder.append(fieldName).append(":").append(errorMessage).append(";");
         });
+        log.warn("JSON数据校验失败: {}", builder);
         return new ResponseEntity<>(R.fail(builder.toString(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
     }
 
-    // 处理表单方式 数据校验失败
+    /**
+     * 处理表单方式数据校验失败异常
+     */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(R.fail(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    public ResponseEntity<R<Void>> handleConstraintViolationException(ConstraintViolationException ex) {
+        log.warn("表单数据校验失败: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(R.fail(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
     }
 
-    // 异常处理
+    // TODO spring boot3添加了对方法入参的校验
+    // HandlerMethodValidationException.class
+    // public String xxx(@Pattern(regexp = "^[1-9]\\d*$",message = "id不合法") @RequestParam String id){
+
+    /**
+     * 处理其他未知异常
+     */
     @ExceptionHandler(value = {Exception.class, NullPointerException.class, HttpMessageNotReadableException.class})
-    public ResponseEntity<R<Object>> exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
+    public ResponseEntity<R<Void>> exceptionHandler(Exception e) {
         log.error("未知异常: {}", e.getMessage());
         log.error("异常详情: {}", getExceptionMessage(e));
         return new ResponseEntity<>(R.fail("操作失败"), HttpStatus.INTERNAL_SERVER_ERROR);
