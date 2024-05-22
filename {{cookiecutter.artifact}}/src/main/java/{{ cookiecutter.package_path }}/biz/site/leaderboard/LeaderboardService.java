@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.biz.site.leaderboard;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import {{ cookiecutter.namespace }}.annotation.Resource;
