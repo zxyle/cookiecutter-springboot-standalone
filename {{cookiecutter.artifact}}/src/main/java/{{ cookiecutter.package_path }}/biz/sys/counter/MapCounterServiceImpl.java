@@ -90,4 +90,9 @@ public class MapCounterServiceImpl implements CounterService {
         counterMap.remove(key);
         return true;
     }
+
+    @Override
+    public boolean batchClear(String biz, List<Integer> ids) {
+        return true;
+    }
 }

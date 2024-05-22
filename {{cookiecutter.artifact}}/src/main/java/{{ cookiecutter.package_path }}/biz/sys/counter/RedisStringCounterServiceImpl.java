@@ -125,5 +125,19 @@ public class RedisStringCounterServiceImpl implements CounterService {
         Boolean deleted = stringRedisTemplate.delete(key);
         return Boolean.TRUE.equals(deleted);
     }
+
+    /**
+     * 批量清除统计次数
+     *
+     * @param biz 业务名
+     * @param ids ID列表
+     * @return 批量清除结果
+     */
+    @Override
+    public boolean batchClear(String biz, List<Integer> ids) {
+        List<String> keys = ids.stream().map(id -> String.format(FORMAT, biz, id)).collect(Collectors.toList());
+        Long delete = stringRedisTemplate.delete(keys);
+        return delete != null && delete == ids.size();
+    }
 }
 

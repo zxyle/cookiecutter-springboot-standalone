@@ -51,7 +51,7 @@ public interface CounterService {
      * 使用mget批量获取统计次数
      *
      * @param biz 业务名
-     * @param ids ID
+     * @param ids ID列表
      * @return 统计次数列表
      */
     List<Long> batchGet(String biz, List<Integer> ids);
@@ -65,4 +65,12 @@ public interface CounterService {
      */
     boolean clear(String biz, String id);
 
+    /**
+     * 批量清除统计次数
+     *
+     * @param biz 业务名
+     * @param ids ID列表
+     * @return 批量清除结果
+     */
+    boolean batchClear(String biz, List<Integer> ids);
 }
