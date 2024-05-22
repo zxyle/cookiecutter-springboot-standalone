@@ -217,7 +217,7 @@ public class ConditionRequest extends BaseRequest {
                 }
                 if (fieldValue instanceof String) {
                     String[] split = fieldValue.toString().split(",");
-                    wrapper.in(fieldName, split);
+                    wrapper.in(fieldName, Arrays.asList(split));
                 }
                 break;
             case NOT_IN:
@@ -229,7 +229,7 @@ public class ConditionRequest extends BaseRequest {
                 }
                 if (fieldValue instanceof String) {
                     String[] split = fieldValue.toString().split(",");
-                    wrapper.notIn(fieldName, split);
+                    wrapper.notIn(fieldName, Arrays.asList(split));
                 }
                 break;
             case BETWEEN:
