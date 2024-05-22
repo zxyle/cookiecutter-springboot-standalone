@@ -158,7 +158,7 @@ public class RedisLikeServiceImpl implements LikeService {
         // 获取用户点赞的资源ID列表
         String key = String.format(USER_LIKE_LIST_KEY, resType, userId);
         Long total = stringRedisTemplate.opsForZSet().zCard(key);
-        if (count == null || count == 0) {
+        if (total == null || total == 0) {
             return page;
         }
         page.setTotal(total);
