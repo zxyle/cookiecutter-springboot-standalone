@@ -13,20 +13,25 @@ import java.util.Set;
  * Redis ZSet 实现排行榜服务
  */
 @Service
-public class RedisLeaderboardService {
+public class LeaderboardService {
+
+    /**
+     * 排行榜key格式，举例 rank:article 热门文章排行榜
+     */
+    private static final String RANK_KEY = "rank:%s";
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
     /**
-     * 添加成员及其分数到排行榜中。
+     * 添加成员及其分数到排行榜中
      *
      * @param biz    排行榜的键, 比如文章article
      * @param member 成员信息，可以是文章ID、用户ID、热搜关键词
      * @param score  成员的分数
      */
     public void addMember(String biz, String member, double score) {
-        String key = String.format("rank:%s", biz);
+        String key = String.format(RANK_KEY, biz);
         stringRedisTemplate.opsForZSet().add(key, member, score);
     }
 
@@ -38,19 +43,19 @@ public class RedisLeaderboardService {
      * @return 成员的分数
      */
     public Double getMemberScore(String biz, String member) {
-        String key = String.format("rank:%s", biz);
+        String key = String.format(RANK_KEY, biz);
         return stringRedisTemplate.opsForZSet().score(key, member);
     }
 
     /**
-     * 获取成员在排行榜中的排名。排名从0开始，0表示最高分。
+     * 获取成员在排行榜中的排名
      *
      * @param biz    排行榜的键, 比如文章article
      * @param member 成员信息，可以是文章ID、用户ID、热搜关键词
      * @return 成员的排名
      */
     public Long getMemberRank(String biz, String member) {
-        String key = String.format("rank:%s", biz);
+        String key = String.format(RANK_KEY, biz);
         Long rank = stringRedisTemplate.opsForZSet().reverseRank(key, member);
         if (rank == null) {
             return 0L;
@@ -60,7 +65,7 @@ public class RedisLeaderboardService {
     }
 
     /**
-     * 获取排行榜中指定范围内的成员及其分数。排名从0开始，0表示最高分。
+     * 获取排行榜中指定范围内的成员及其分数
      *
      * @param biz 排行榜的键, 比如文章article
      * @param k   要获取的成员数量
@@ -69,7 +74,7 @@ public class RedisLeaderboardService {
     public Set<String> getTopMember(String biz, int k) {
         long start = 0;
         long end = k - 1;
-        String key = String.format("rank:%s", biz);
+        String key = String.format(RANK_KEY, biz);
         return stringRedisTemplate.opsForZSet().reverseRange(key, start, end);
     }
 
@@ -82,18 +87,18 @@ public class RedisLeaderboardService {
      * @return 增加后的分数
      */
     public Double incrMemberScore(String biz, String member, double delta) {
-        String key = String.format("rank:%s", biz);
+        String key = String.format(RANK_KEY, biz);
         return stringRedisTemplate.opsForZSet().incrementScore(key, member, delta);
     }
 
     /**
-     * 删除排行榜中的用户。
+     * 删除排行榜中的成员
      *
      * @param biz    排行榜的键, 比如文章article
      * @param member 成员信息，可以是文章ID、用户ID、热搜关键词
      */
     public void removeMember(String biz, String member) {
-        String key = String.format("rank:%s", biz);
+        String key = String.format(RANK_KEY, biz);
         stringRedisTemplate.opsForZSet().remove(key, member);
     }
 
@@ -104,7 +109,7 @@ public class RedisLeaderboardService {
      * @param rank 排名阈值（不包含）
      */
     public void removeResOutsideTop(String biz, long rank) {
-        String key = String.format("rank:%s", biz);
+        String key = String.format(RANK_KEY, biz);
         long start = 0;
         long end = -(rank + 1);
         stringRedisTemplate.opsForZSet().removeRange(key, start, end);
