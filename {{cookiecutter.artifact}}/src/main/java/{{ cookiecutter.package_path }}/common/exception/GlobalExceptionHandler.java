@@ -6,17 +6,14 @@ package {{ cookiecutter.basePackage }}.common.exception;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.*;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
-import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
 import {{ cookiecutter.namespace }}.validation.ConstraintViolationException;
 {% if cookiecutter.bootVersion.split('.')[0] == '3' -%}
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
@@ -29,79 +26,79 @@ import java.io.StringWriter;
  * 全局异常处理
  */
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
      * 处理使用GET PUT DELETE操作不存在的数据
      */
     @ExceptionHandler(DataNotFoundException.class)
-    public ResponseEntity<R<Void>> handleDataNotFoundException(DataNotFoundException ex) {
+    public R<Void> handleDataNotFoundException(DataNotFoundException ex) {
         // 对一个不存在的数据进行操作，认定是一次违规操作
-        return new ResponseEntity<>(R.fail(ex.getMessage()), HttpStatus.NOT_FOUND);
+        return R.fail(ex.getMessage(), HttpStatus.NOT_FOUND.value());
     }
 
     /**
      * 处理密码不正确异常
      */
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<R<Void>> handleAuthException(HttpServletRequest request, Exception ex, HttpServletResponse response) {
+    public R<Void> handleAuthException(Exception ex) {
         log.warn("用户名或密码错误: {}", ex.getMessage());
-        return new ResponseEntity<>(R.fail("用户名或密码错误", HttpStatus.UNAUTHORIZED.value()), HttpStatus.UNAUTHORIZED);
+        return R.fail("用户名或密码错误", HttpStatus.UNAUTHORIZED.value());
     }
 
     /**
      * 处理无权限访问异常
      */
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<R<Void>> handleAccessDeniedException(Exception ex) {
+    public R<Void> handleAccessDeniedException(Exception ex) {
         log.warn("权限不足: {}", ex.getMessage());
-        return new ResponseEntity<>(R.fail("权限不足", HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
+        return R.fail("权限不足", HttpStatus.FORBIDDEN.value());
     }
 
     /**
      * 处理密码已过期异常
      */
     @ExceptionHandler(CredentialsExpiredException.class)
-    public ResponseEntity<R<Void>> handleCredentialsExpiredException(Exception ex) {
+    public R<Void> handleCredentialsExpiredException(Exception ex) {
         log.warn("密码已过期: {}", ex.getMessage());
-        return new ResponseEntity<>(R.fail("密码已过期", HttpStatus.UNAUTHORIZED.value()), HttpStatus.UNAUTHORIZED);
+        return R.fail("密码已过期，请联系管理员", HttpStatus.UNAUTHORIZED.value());
     }
 
     /**
      * 处理账号过期异常
      */
     @ExceptionHandler(AccountExpiredException.class)
-    ResponseEntity<R<Void>> handleAccountExpiredException(AccountExpiredException ex) {
+    public R<Void> handleAccountExpiredException(AccountExpiredException ex) {
         log.warn("账号已过期: {}", ex.getMessage());
-        return new ResponseEntity<>(R.fail("该账号已过期，请联系管理员", HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
+        return R.fail("账号已过期，请联系管理员", HttpStatus.FORBIDDEN.value());
     }
 
     /**
      * 处理账号停用异常
      */
     @ExceptionHandler(DisabledException.class)
-    ResponseEntity<R<Void>> handleDisabledException(DisabledException ex) {
+    public R<Void> handleDisabledException(DisabledException ex) {
         log.warn("账号已被停用: {}", ex.getMessage());
-        return new ResponseEntity<>(R.fail("该账号已被停用，请联系管理员", HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
+        return R.fail("账号已被停用，请联系管理员", HttpStatus.FORBIDDEN.value());
     }
 
     /**
      * 处理账号锁定异常
      */
     @ExceptionHandler(LockedException.class)
-    ResponseEntity<R<Void>> handleLockedException(LockedException ex) {
+    public R<Void> handleLockedException(LockedException ex) {
         log.warn("账号已被锁定: {}", ex.getMessage());
-        return new ResponseEntity<>(R.fail("该账号已被锁定，请联系管理员", HttpStatus.FORBIDDEN.value()), HttpStatus.FORBIDDEN);
+        return R.fail("账号已被锁定，请联系管理员", HttpStatus.FORBIDDEN.value());
     }
 
     /**
      * 处理AnonymousAuthenticationToken -> UsernamePasswordAuthenticationToken类型转换异常
      */
     @ExceptionHandler(ClassCastException.class)
-    public ResponseEntity<R<Void>> handleClassCastException(Exception ex) {
+    public R<Void> handleClassCastException(Exception ex) {
         log.warn("登录失效,请重新登录: {}", ex.getMessage());
-        return new ResponseEntity<>(R.fail("登录失效，请重新登录", HttpStatus.UNAUTHORIZED.value()), HttpStatus.UNAUTHORIZED);
+        return R.fail("登录失效，请重新登录", HttpStatus.UNAUTHORIZED.value());
     }
 
     /**
@@ -109,7 +106,7 @@ public class GlobalExceptionHandler {
      */
     // MethodArgumentNotValidException 是BindException的子类
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<R<Void>> handleValidationExceptions(BindException ex) {
+    public R<Void> handleValidationExceptions(BindException ex) {
         StringBuilder builder = new StringBuilder();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
@@ -117,38 +114,39 @@ public class GlobalExceptionHandler {
             builder.append(fieldName).append(":").append(errorMessage).append(";");
         });
         log.warn("JSON数据校验失败: {}", builder);
-        return new ResponseEntity<>(R.fail(builder.toString(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+        return R.fail(builder.toString(), HttpStatus.BAD_REQUEST.value());
     }
 
     /**
      * 处理表单方式数据校验失败异常
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<R<Void>> handleConstraintViolationException(ConstraintViolationException ex) {
+    public R<Void> handleConstraintViolationException(ConstraintViolationException ex) {
         log.warn("表单数据校验失败: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(R.fail(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        return R.fail(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
+    {% if cookiecutter.bootVersion.split('.')[0] == '3' -%}
     /**
      * spring boot3添加了对方法入参的校验
      */
     @ExceptionHandler(HandlerMethodValidationException.class)
-    public ResponseEntity<R<Void>> handleMethodValidationException(HandlerMethodValidationException ex) {
+    public R<Void> handleMethodValidationException(HandlerMethodValidationException ex) {
         log.warn("URL参数校验失败: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(R.fail(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        return R.fail(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
-    {% if cookiecutter.bootVersion.split('.')[0] == '3' -%}
+
+    {% endif %}
+
     /**
      * 处理其他未知异常
      */
     @ExceptionHandler(value = {Exception.class, NullPointerException.class, HttpMessageNotReadableException.class})
-    public ResponseEntity<R<Void>> exceptionHandler(Exception e) {
+    public R<Void> exceptionHandler(Exception e) {
         log.error("未知异常: {}", e.getMessage());
         log.error("异常详情: {}", getExceptionMessage(e));
-        return new ResponseEntity<>(R.fail("操作失败"), HttpStatus.INTERNAL_SERVER_ERROR);
+        return R.fail("操作失败");
     }
-
-    {% endif %}
 
     public String getExceptionMessage(Exception ex) {
         StringWriter stringWriter = new StringWriter();

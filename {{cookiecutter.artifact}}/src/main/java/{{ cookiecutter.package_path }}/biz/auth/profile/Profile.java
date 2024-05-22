@@ -7,6 +7,7 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.constant.RegexConst;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import {{ cookiecutter.basePackage }}.common.enums.GenderEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
@@ -55,8 +56,7 @@ public class Profile extends BaseEntity {
      *
      * @mock 男
      */
-    @Pattern(regexp = "[男|女]", message = "性别只能是男或女")
-    private String gender;
+    private GenderEnum gender;
 
     /**
      * 头像url
