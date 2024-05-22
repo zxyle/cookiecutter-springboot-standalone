@@ -65,6 +65,11 @@ public class AtomicCounterService implements CounterService {
     }
 
     @Override
+    public List<Long> batchGet(String biz, List<Integer> ids) {
+        return Collections.emptyList();
+    }
+
+    @Override
     public boolean clear(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
         counterMap.remove(key);

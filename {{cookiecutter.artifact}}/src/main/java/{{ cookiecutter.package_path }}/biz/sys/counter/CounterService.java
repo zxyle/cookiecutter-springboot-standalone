@@ -46,6 +46,15 @@ public interface CounterService {
     Long get(String biz, String id);
 
     /**
+     * 使用mget批量获取统计次数
+     *
+     * @param biz 业务名
+     * @param ids ID
+     * @return 统计次数列表
+     */
+    List<Long> batchGet(String biz, List<Integer> ids);
+
+    /**
      * 清除统计次数
      *
      * @param biz 业务名

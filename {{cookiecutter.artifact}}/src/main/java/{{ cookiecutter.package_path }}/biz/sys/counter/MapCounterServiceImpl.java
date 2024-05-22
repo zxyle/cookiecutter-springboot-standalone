@@ -71,6 +71,11 @@ public class MapCounterServiceImpl implements CounterService {
         return counterMap.getOrDefault(key, 0L);
     }
 
+    @Override
+    public List<Long> batchGet(String biz, List<Integer> ids) {
+        return Collections.emptyList();
+    }
+
     /**
      * 清除统计次数
      *

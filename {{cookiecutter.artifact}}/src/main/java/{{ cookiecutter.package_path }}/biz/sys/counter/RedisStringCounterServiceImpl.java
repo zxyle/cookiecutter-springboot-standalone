@@ -9,6 +9,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * 使用Redis String实现计数器
  */
@@ -82,6 +86,27 @@ public class RedisStringCounterServiceImpl implements CounterService {
         String key = String.format(FORMAT, biz, id);
         String count = stringRedisTemplate.opsForValue().get(key);
         return StringUtils.isNumeric(count) ? Long.parseLong(count) : 0L;
+    }
+
+    /**
+     * 使用mget批量获取统计次数
+     *
+     * @param biz 业务名
+     * @param ids ID
+     * @return 统计次数列表
+     */
+    @Override
+    public List<Long> batchGet(String biz, List<Integer> ids) {
+        List<String> keys = ids.stream().map(id -> String.format(FORMAT, biz, id)).collect(Collectors.toList());
+
+        List<String> values = stringRedisTemplate.opsForValue().multiGet(keys);
+        if (values != null && !values.isEmpty()) {
+            return values.stream()
+                    .map(result -> result == null ? 0 : result)
+                    .map(result -> StringUtils.isNumeric(result.toString()) ? Long.parseLong(result.toString()) : 0L)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
     /**
