@@ -28,13 +28,17 @@ public class TopRequest extends BaseRequest {
 
     /**
      * 获取数量
+     *
+     * @mock 10
      */
-    @Range(min = 1, max = 100, message = "获取数量必须在1-100之间")
+    @Range(min = 1, max = 50, message = "获取数量必须在1-50之间")
     @NotNull(message = "获取数量不能为空")
     private Integer size;
 
     /**
      * 排序，默认降序
+     *
+     * @mock true
      */
     private Boolean desc = true;
 }

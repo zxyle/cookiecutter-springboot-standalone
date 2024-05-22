@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Set;
+import java.util.List;
 
 /**
  * 排行榜管理
@@ -28,8 +28,8 @@ public class LeaderboardController {
      * 获取排行榜
      */
     @GetMapping("/top")
-    public R<Set<String>> top(@Valid TopRequest req) {
-        Set<String> members = leaderboardService.getTopMember(req.getBiz(), req.getSize());
+    public R<List<TopResponse>> top(@Valid TopRequest req) {
+        List<TopResponse> members = leaderboardService.getTopMember(req.getBiz(), req.getSize());
         // TODO 获取member其他信息，比如用户昵称，文章标题等
         return R.ok(members);
     }

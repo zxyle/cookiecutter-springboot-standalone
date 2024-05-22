@@ -14,6 +14,7 @@ public enum RankBizEnum {
     LIKE("like", "点赞排行榜"),
     COMMENT("comment", "评论排行榜"),
     ARTICLE("article", "热门文章排行榜"),
+    KEYWORD("keyword", "热搜排行榜"),
     VIEW("view", "浏览排行榜");
 
     /**

@@ -7,7 +7,10 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import {{ cookiecutter.namespace }}.annotation.Resource;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Redis ZSet 实现排行榜服务
@@ -69,13 +72,19 @@ public class LeaderboardService {
      *
      * @param biz 排行榜的键, 比如文章article
      * @param k   要获取的成员数量
-     * @return 成员和分数组成的集合
+     * @return 成员和分数组成的列表
      */
-    public Set<String> getTopMember(String biz, int k) {
+    public List<TopResponse> getTopMember(String biz, int k) {
         long start = 0;
         long end = k - 1;
         String key = String.format(RANK_KEY, biz);
-        return stringRedisTemplate.opsForZSet().reverseRange(key, start, end);
+        Set<ZSetOperations.TypedTuple<String>> tuples = stringRedisTemplate.opsForZSet().reverseRangeWithScores(key, start, end);
+        if (tuples == null || tuples.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return tuples.stream().map(
+                tuple -> new TopResponse(tuple.getValue(), "", tuple.getScore())
+        ).collect(Collectors.toList());
     }
 
     /**

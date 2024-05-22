@@ -3,9 +3,11 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.leaderboard;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class TopResponse {
 
     /**
