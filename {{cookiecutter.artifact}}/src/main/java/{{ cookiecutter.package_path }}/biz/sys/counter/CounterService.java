@@ -3,6 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.counter;
 
+import java.util.List;
+
 /**
  * 计数器服务类
  */
