@@ -27,6 +27,17 @@ public class LikeController extends AuthBaseController {
     final LikeService likeService;
 
     /**
+     * 查看自己点赞列表
+     */
+    @GetMapping("/likes")
+    public R<Page<LikeDTO>> page(@Valid LikePageRequest req) {
+        Page<LikeDTO> page = likeService.getResIdList(req.getResType(), getUserId(), req.getPageNum(), req.getPageSize());
+        List<Integer> list = page.getRecords().stream().map(LikeDTO::getResId).collect(Collectors.toList());
+        // TODO 查询资源信息 补充LikeDTO的res属性
+        return R.ok(page);
+    }
+
+    /**
      * 点赞
      */
     @GetMapping("/like")

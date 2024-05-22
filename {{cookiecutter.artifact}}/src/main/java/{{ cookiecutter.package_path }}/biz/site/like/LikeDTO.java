@@ -19,4 +19,9 @@ public class LikeDTO {
      * 点赞时间
      */
     private LocalDateTime likeTime;
+
+    /**
+     * 资源信息
+     */
+    private Object res;
 }

@@ -3,7 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.like;
 
-
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.List;
 
 /**
@@ -63,7 +63,7 @@ public interface LikeService {
     boolean remove(Integer resType, Integer resId);
 
     /**
-     * 获取用户点赞的资源ID列表
+     * 分页获取用户点赞的资源ID列表
      *
      * @param resType  资源类型
      * @param userId   点赞人用户ID
@@ -71,7 +71,7 @@ public interface LikeService {
      * @param pageSize 分页大小
      * @return 资源ID列表
      */
-    List<LikeDTO> getResIdList(Integer resType, Integer userId, Integer pageNo, Integer pageSize);
+    Page<LikeDTO> getResIdList(Integer resType, Integer userId, Integer pageNo, Integer pageSize);
 
     /**
      * 返回当前用户是否点赞，且当前资源的点赞数

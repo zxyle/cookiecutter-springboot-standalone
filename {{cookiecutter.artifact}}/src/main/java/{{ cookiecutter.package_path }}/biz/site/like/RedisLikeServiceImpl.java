@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.like;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -139,7 +140,7 @@ public class RedisLikeServiceImpl implements LikeService {
     }
 
     /**
-     * 获取用户点赞的资源ID列表
+     * 分页获取用户点赞的资源ID列表
      *
      * @param resType  资源类型
      * @param userId   点赞人用户ID
@@ -148,17 +149,25 @@ public class RedisLikeServiceImpl implements LikeService {
      * @return 资源ID列表
      */
     @Override
-    public List<LikeDTO> getResIdList(Integer resType, Integer userId, Integer pageNo, Integer pageSize) {
+    public Page<LikeDTO> getResIdList(Integer resType, Integer userId, Integer pageNo, Integer pageSize) {
         int start = (pageNo - 1) * pageSize;
         int stop = start + pageSize - 1;
 
+        Page<LikeDTO> page = Page.of(pageNo, pageSize);
+
         // 获取用户点赞的资源ID列表
         String key = String.format(USER_LIKE_LIST_KEY, resType, userId);
+        Long total = stringRedisTemplate.opsForZSet().zCard(key);
+        if (count == null || count == 0) {
+            return page;
+        }
+        page.setTotal(total);
+
         Set<ZSetOperations.TypedTuple<String>> tupleSet = stringRedisTemplate.opsForZSet()
                 .reverseRangeWithScores(key, start, stop);
 
         if (tupleSet != null && !tupleSet.isEmpty()) {
-            return tupleSet.stream().map(tuple -> {
+            List<LikeDTO> records = tupleSet.stream().map(tuple -> {
                 LikeDTO likeDTO = new LikeDTO();
                 likeDTO.setLikeTime(Instant.ofEpochSecond(Objects.requireNonNull(tuple.getScore()).longValue())
                         .atZone(ZoneId.systemDefault())
@@ -166,9 +175,10 @@ public class RedisLikeServiceImpl implements LikeService {
                 likeDTO.setResId(Integer.parseInt(Objects.requireNonNull(tuple.getValue())));
                 return likeDTO;
             }).collect(Collectors.toList());
+            page.setRecords(records);
         }
 
-        return Collections.emptyList();
+        return page;
     }
 
     /**
