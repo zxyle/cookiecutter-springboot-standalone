@@ -19,39 +19,39 @@ public class RedisLeaderboardService {
     private StringRedisTemplate stringRedisTemplate;
 
     /**
-     * 添加资源及其分数到排行榜中。
+     * 添加成员及其分数到排行榜中。
      *
-     * @param biz   排行榜的键, 比如文章article
-     * @param resId 资源ID,可以是文章ID、用户ID
-     * @param score 资源的分数
+     * @param biz    排行榜的键, 比如文章article
+     * @param member 成员信息，可以是文章ID、用户ID、热搜关键词
+     * @param score  成员的分数
      */
-    public void addRes(String biz, String resId, double score) {
+    public void addMember(String biz, String member, double score) {
         String key = String.format("rank:%s", biz);
-        stringRedisTemplate.opsForZSet().add(key, resId, score);
+        stringRedisTemplate.opsForZSet().add(key, member, score);
     }
 
     /**
-     * 获取资源的分数。
+     * 获取成员的分数
      *
-     * @param biz   排行榜的键, 比如文章article
-     * @param resId 资源ID,可以是文章ID、用户ID
-     * @return 资源的分数
+     * @param biz    排行榜的键, 比如文章article
+     * @param member 成员信息，可以是文章ID、用户ID、热搜关键词
+     * @return 成员的分数
      */
-    public Double getResScore(String biz, String resId) {
+    public Double getMemberScore(String biz, String member) {
         String key = String.format("rank:%s", biz);
-        return stringRedisTemplate.opsForZSet().score(key, resId);
+        return stringRedisTemplate.opsForZSet().score(key, member);
     }
 
     /**
-     * 获取资源在排行榜中的排名。排名从0开始，0表示最高分。
+     * 获取成员在排行榜中的排名。排名从0开始，0表示最高分。
      *
-     * @param biz   排行榜的键, 比如文章article
-     * @param resId 资源ID,可以是文章ID、用户ID
-     * @return 资源的排名
+     * @param biz    排行榜的键, 比如文章article
+     * @param member 成员信息，可以是文章ID、用户ID、热搜关键词
+     * @return 成员的排名
      */
-    public Long getResRank(String biz, Integer resId) {
+    public Long getMemberRank(String biz, String member) {
         String key = String.format("rank:%s", biz);
-        Long rank = stringRedisTemplate.opsForZSet().reverseRank(key, String.valueOf(resId));
+        Long rank = stringRedisTemplate.opsForZSet().reverseRank(key, member);
         if (rank == null) {
             return 0L;
         }
@@ -60,13 +60,13 @@ public class RedisLeaderboardService {
     }
 
     /**
-     * 获取排行榜中指定范围内的资源及其分数。排名从0开始，0表示最高分。
+     * 获取排行榜中指定范围内的成员及其分数。排名从0开始，0表示最高分。
      *
      * @param biz 排行榜的键, 比如文章article
-     * @param k   要获取的资源数量
-     * @return 用户ID和分数组成的集合
+     * @param k   要获取的成员数量
+     * @return 成员和分数组成的集合
      */
-    public Set<String> getTopRes(String biz, int k) {
+    public Set<String> getTopMember(String biz, int k) {
         long start = 0;
         long end = k - 1;
         String key = String.format("rank:%s", biz);
@@ -74,34 +74,34 @@ public class RedisLeaderboardService {
     }
 
     /**
-     * 增加资源的分数
+     * 增加成员的分数
      *
-     * @param biz   排行榜的键, 比如文章article
-     * @param resId 资源ID,可以是文章ID、用户ID
-     * @param delta 增加的分数
+     * @param biz    排行榜的键, 比如文章article
+     * @param member 成员信息，可以是文章ID、用户ID、热搜关键词
+     * @param delta  增加的分数
      * @return 增加后的分数
      */
-    public Double incrResScore(String biz, Integer resId, double delta) {
+    public Double incrMemberScore(String biz, String member, double delta) {
         String key = String.format("rank:%s", biz);
-        return stringRedisTemplate.opsForZSet().incrementScore(key, String.valueOf(resId), delta);
+        return stringRedisTemplate.opsForZSet().incrementScore(key, member, delta);
     }
 
     /**
      * 删除排行榜中的用户。
      *
-     * @param biz   排行榜的键, 比如文章article
-     * @param resId 资源ID,可以是文章ID、用户ID
+     * @param biz    排行榜的键, 比如文章article
+     * @param member 成员信息，可以是文章ID、用户ID、热搜关键词
      */
-    public void removeRes(String biz, String resId) {
+    public void removeMember(String biz, String member) {
         String key = String.format("rank:%s", biz);
-        stringRedisTemplate.opsForZSet().remove(key, resId);
+        stringRedisTemplate.opsForZSet().remove(key, member);
     }
 
     /**
-     * 删除排行榜中排名在指定名次之后的资源。
+     * 删除排行榜中排名在指定名次之后的成员
      *
-     * @param biz   排行榜的键, 比如文章article
-     * @param rank           排名阈值（不包含）
+     * @param biz  排行榜的键, 比如文章article
+     * @param rank 排名阈值（不包含）
      */
     public void removeResOutsideTop(String biz, long rank) {
         String key = String.format("rank:%s", biz);
