@@ -79,7 +79,8 @@ public class LeaderboardService {
         long start = 0;
         long end = k - 1;
         String key = String.format(RANK_KEY, biz);
-        Set<ZSetOperations.TypedTuple<String>> tuples = stringRedisTemplate.opsForZSet().reverseRangeWithScores(key, start, end);
+        Set<ZSetOperations.TypedTuple<String>> tuples = stringRedisTemplate.opsForZSet()
+                .reverseRangeWithScores(key, start, end);
         if (tuples == null || tuples.isEmpty()) {
             return Collections.emptyList();
         }

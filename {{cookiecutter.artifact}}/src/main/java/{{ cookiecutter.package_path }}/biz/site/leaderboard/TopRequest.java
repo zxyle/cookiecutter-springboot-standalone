@@ -33,7 +33,7 @@ public class TopRequest extends BaseRequest {
      */
     @Range(min = 1, max = 50, message = "获取数量必须在1-50之间")
     @NotNull(message = "获取数量不能为空")
-    private Integer size;
+    private Integer size = 10;
 
     /**
      * 排序，默认降序
