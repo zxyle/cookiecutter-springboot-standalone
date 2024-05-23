@@ -12,4 +12,4 @@ package {{ cookiecutter.basePackage }}.biz.site;
 // 6. release：       系统版本
 // 7. pay：          支付管理
 // 8. miniprogram：  微信小程序管理
-// 9. leaderboard：  排行榜功能
+// 9. rank：  排行榜功能
