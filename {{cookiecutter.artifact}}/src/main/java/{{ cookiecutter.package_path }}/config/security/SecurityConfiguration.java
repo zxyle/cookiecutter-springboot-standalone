@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.config.security;
 {% if cookiecutter.bootVersion.split('.')[0] == '2' -%}
+import {{ cookiecutter.basePackage }}.config.CorsProperties;
 import {{ cookiecutter.basePackage }}.config.security.filter.AntiSpiderFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.AclFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.JwtAuthenticationTokenFilter;
@@ -21,6 +22,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * Spring Security配置
@@ -37,6 +41,7 @@ public class SecurityConfiguration {
     final AuthenticationEntryPoint authenticationEntryPoint;
     final AccessDeniedHandler accessDeniedHandler;
     final SmsSecurityConfigurerAdapter smsSecurityConfigurerAdapter;
+    final CorsProperties corsProperties;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -47,6 +52,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 关闭csrf
         http.csrf().disable()
+                .cors().configurationSource(corsConfigSource()).and()
                 // 不通过session获取securityContext
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -78,6 +84,21 @@ public class SecurityConfiguration {
         // 允许跨域
         http.cors();
         return http.build();
+    }
+
+    /**
+     * Spring Security 配置跨域
+     */
+    private CorsConfigurationSource corsConfigSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedHeaders(corsProperties.getAllowedHeaders());
+        configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        configuration.setAllowedMethods(corsProperties.getAllowedMethods());
+        configuration.setMaxAge(corsProperties.getMaxAge());
+        configuration.setExposedHeaders(configuration.getExposedHeaders());
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
