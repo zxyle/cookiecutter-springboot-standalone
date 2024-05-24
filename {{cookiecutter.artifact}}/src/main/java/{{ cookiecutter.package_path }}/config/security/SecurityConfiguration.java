@@ -107,6 +107,7 @@ public class SecurityConfiguration {
     }
 }
 {% else %}
+import {{ cookiecutter.basePackage }}.config.CorsProperties;
 import {{ cookiecutter.basePackage }}.config.security.filter.AclFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.AntiSpiderFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.JwtAuthenticationTokenFilter;
@@ -129,6 +130,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * Spring Security配置
@@ -148,6 +152,7 @@ public class SecurityConfiguration {
     final AccessDeniedHandler accessDeniedHandler;
     final SmsSecurityConfigurerAdapter smsSecurityConfigurerAdapter;
     final UserDetailsService userDetailsService;
+    final CorsProperties corsProperties;
 
 
     @Bean
@@ -158,6 +163,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 // 对于登录接口 允许匿名访问
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/auth/login/**").anonymous()
@@ -194,6 +200,21 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    /**
+     * Spring Security 配置跨域
+     */
+    private CorsConfigurationSource corsConfigSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedHeaders(corsProperties.getAllowedHeaders());
+        configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        configuration.setAllowedMethods(corsProperties.getAllowedMethods());
+        configuration.setMaxAge(corsProperties.getMaxAge());
+        configuration.setExposedHeaders(configuration.getExposedHeaders());
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
 {% endif %}
