@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import {{ cookiecutter.namespace }}.validation.Valid;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/social")
 public class LikeController extends AuthBaseController {
 
     final LikeService likeService;
