@@ -67,11 +67,11 @@ public interface LikeService {
      *
      * @param resType  资源类型
      * @param userId   点赞人用户ID
-     * @param pageNo   页码
+     * @param pageNum  分页页码
      * @param pageSize 分页大小
      * @return 资源ID列表
      */
-    Page<LikeDTO> getResIdList(Integer resType, Integer userId, Integer pageNo, Integer pageSize);
+    Page<LikeDTO> getResIdList(Integer resType, Integer userId, Integer pageNum, Integer pageSize);
 
     /**
      * 返回当前用户是否点赞，且当前资源的点赞数

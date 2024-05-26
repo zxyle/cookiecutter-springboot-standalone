@@ -144,16 +144,16 @@ public class RedisLikeServiceImpl implements LikeService {
      *
      * @param resType  资源类型
      * @param userId   点赞人用户ID
-     * @param pageNo   页码
+     * @param pageNum  分页页码
      * @param pageSize 分页大小
      * @return 资源ID列表
      */
     @Override
-    public Page<LikeDTO> getResIdList(Integer resType, Integer userId, Integer pageNo, Integer pageSize) {
-        int start = (pageNo - 1) * pageSize;
+    public Page<LikeDTO> getResIdList(Integer resType, Integer userId, Integer pageNum, Integer pageSize) {
+        int start = (pageNum - 1) * pageSize;
         int stop = start + pageSize - 1;
 
-        Page<LikeDTO> page = Page.of(pageNo, pageSize);
+        Page<LikeDTO> page = Page.of(pageNum, pageSize);
 
         // 获取用户点赞的资源ID列表
         String key = String.format(USER_LIKE_LIST_KEY, resType, userId);
