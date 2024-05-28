@@ -3,42 +3,32 @@
 
 package {{ cookiecutter.basePackage }}.config.interceptor;
 
-import {{ cookiecutter.basePackage }}.common.constant.ProjectConst;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import {{ cookiecutter.basePackage }}.config.CorsProperties;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
-import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-
 /**
- * 允许跨域拦截器
+ * 跨域拦截器
  */
 @Component
+@RequiredArgsConstructor
 public class AllowCrossDomainInterceptor implements HandlerInterceptor {
 
-    private final Environment env;
-
-    @Autowired
-    public AllowCrossDomainInterceptor(Environment env) {
-        this.env = env;
-    }
+    final CorsProperties coreProperties;
 
     @Override
-    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        // 仅在非正式环境下生效
-        if (!Arrays.asList(env.getActiveProfiles()).contains(ProjectConst.PROD)) {
-            String origin = httpServletRequest.getHeader("Origin");
-            httpServletResponse.setHeader("Access-Control-Allow-Origin", StringUtils.isBlank(origin) ? "*" : origin);
-            httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, PATCH");
-            httpServletResponse.setHeader("Access-Control-Max-Age", "0");
-            httpServletResponse.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
-            httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
-            httpServletResponse.setHeader("XDomainRequestAllowed", "1");
-        }
+    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) {
+        httpServletResponse.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, String.join(",", coreProperties.getAllowedOrigins()));
+        httpServletResponse.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, String.join(",", coreProperties.getAllowedMethods()));
+        httpServletResponse.setHeader(HttpHeaders.ACCESS_CONTROL_MAX_AGE, String.valueOf(coreProperties.getMaxAge()));
+        httpServletResponse.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, String.join(",", coreProperties.getAllowedHeaders()));
+        httpServletResponse.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, String.valueOf(coreProperties.getAllowCredentials()));
+        httpServletResponse.setHeader(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS,  String.join(",", coreProperties.getExposedHeaders()));
         return true;
     }
 }
+
