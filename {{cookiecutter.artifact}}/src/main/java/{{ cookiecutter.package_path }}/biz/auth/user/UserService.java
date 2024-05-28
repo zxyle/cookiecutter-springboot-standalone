@@ -113,7 +113,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      *
      * @param account 账号
      */
-    @Cacheable(cacheNames = "UserCache", key = "#account", unless = "#result == null")
+    // FIXME 存在bug：当用户修改密码后，重新登陆时，会查询到旧密码
+    // @Cacheable(cacheNames = "UserCache", key = "#account", unless = "#result == null")
     public User findByAccount(String account) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(AccountUtil.isUsername(account), User::getUsername, account);
