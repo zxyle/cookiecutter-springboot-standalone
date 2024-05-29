@@ -65,7 +65,7 @@ public class OperateLog extends LiteEntity {
     /**
      * 操作是否成功
      */
-    private boolean success;
+    private Boolean success;
 
     /**
      * 链路追踪ID

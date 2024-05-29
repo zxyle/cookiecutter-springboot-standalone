@@ -55,6 +55,6 @@ public class LoginLog extends LiteEntity {
     /**
      * 登录是否成功
      */
-    private boolean success;
+    private Boolean success;
 
 }

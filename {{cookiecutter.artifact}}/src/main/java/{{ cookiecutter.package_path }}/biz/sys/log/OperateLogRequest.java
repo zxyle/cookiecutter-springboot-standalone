@@ -36,4 +36,9 @@ public class OperateLogRequest extends PaginationRequest {
     @Sortable
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime operateTime;
+
+    /**
+     * 操作是否成功
+     */
+    private Boolean success;
 }

@@ -29,4 +29,9 @@ public class LoginLogRequest extends PaginationRequest {
     @Sortable
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime loginTime;
+
+    /**
+     * 登录是否成功
+     */
+    private Boolean success;
 }
