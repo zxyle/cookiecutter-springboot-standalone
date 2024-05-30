@@ -41,6 +41,8 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
             this.setFieldValByName(CREATOR_FIELD, loginUser.getUser().getId(), metaObject);
             this.setFieldValByName(UPDATER_FIELD, loginUser.getUser().getId(), metaObject);
         }
+        // 逻辑删除
+        // this.setFieldValByName(ProjectConst.LOGIC_DELETE_FIELD, ProjectConst.LOGIC_NOT_DELETED, metaObject);
     }
 
     /**

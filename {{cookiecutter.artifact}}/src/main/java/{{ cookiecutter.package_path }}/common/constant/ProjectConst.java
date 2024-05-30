@@ -47,4 +47,13 @@ public final class ProjectConst {
      */
     public static final String UPDATER_FIELD = "update_by";
 
+    /**
+     * 逻辑删除字段
+     */
+    public static final String LOGIC_DELETE_FIELD = "deleted";
+
+    /*逻辑删除 0未删除 1已删除*/
+    public static final Integer LOGIC_NOT_DELETED = 0;
+    public static final Integer LOGIC_DELETED = 1;
+
 }
