@@ -3,11 +3,11 @@
 <mapper namespace="${table.packageName}.${table.className}Mapper">
 
     <select id="page" resultType="${package}.${table.className}">
-        SELECT
-        <#list table.columns as column>
-          ${column.name}<#if column?is_last><#else>,</#if>
-        </#list>
-        FROM
-          ${table.tableName}
+      SELECT
+      <#list table.columns as column>
+        ${column.name}<#if column?is_last><#else>,</#if>
+      </#list>
+      FROM
+        ${table.tableName}
     </select>
 </mapper>

@@ -9,10 +9,12 @@ import ${table.basePackageName}.common.validation.Add;
 import ${table.basePackageName}.common.validation.Search;
 import ${table.basePackageName}.common.validation.Update;
 import {{ cookiecutter.namespace }}.validation.Valid;
+import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 <#if table.hasBaseController>
 import ${table.baseControllerPath};
@@ -39,6 +41,7 @@ import org.springframework.beans.BeanUtils;
 </#if>
  */
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/${table.biz}")
 @RequiredArgsConstructor
@@ -123,7 +126,7 @@ public class ${className} {
     @LogOperation(name = "按ID查询${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:get')")
     @GetMapping("${table.endpoint}/{id}")
-    public R<${table.className}> get(@PathVariable Integer id) {
+    public R<${table.className}> get(@PathVariable @Positive Integer id) {
         ${table.className} entity = thisService.findById(id);
         return entity == null ? R.fail("${table.comment!}不存在") : R.ok(entity);
     }
@@ -134,7 +137,7 @@ public class ${className} {
     @LogOperation(name = "按ID更新${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
     @PutMapping("${table.endpoint}/{id}")
-    public R<${table.className}> update(@Valid @RequestBody ${table.className}UpdateRequest req, @PathVariable Integer id) {
+    public R<${table.className}> update(@Valid @RequestBody ${table.className}UpdateRequest req, @PathVariable @Positive Integer id) {
         ${table.className} entity = thisService.findById(id)
         if (entity == null) {
             return R.fail("更新失败，${table.comment!}数据不存在");
@@ -153,7 +156,7 @@ public class ${className} {
     @LogOperation(name = "按ID删除${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
     @DeleteMapping("${table.endpoint}/{id}")
-    public R<Void> delete(@PathVariable Integer id) {
+    public R<Void> delete(@PathVariable @Positive Integer id) {
         ${table.className} entity = thisService.findById(id)
         if (entity == null) {
             return R.fail("删除失败，${table.comment!}数据不存在");

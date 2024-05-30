@@ -96,7 +96,7 @@ public class ConditionRequest extends BaseRequest {
      *
      * @mock 123
      */
-    @Length(max = 64, message = "搜索关键字长度不能超过64个字符")
+    @Length(min = 2, max = 64, message = "搜索关键字长度必须在2-64字符之间")
     protected String keyword;
 
     /**
