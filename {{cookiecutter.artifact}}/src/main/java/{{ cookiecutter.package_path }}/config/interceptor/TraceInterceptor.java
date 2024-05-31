@@ -15,17 +15,19 @@ import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
  */
 public class TraceInterceptor implements HandlerInterceptor {
 
+    public static final String TRACE_ID = "traceId";
+
     /**
      * 给每个请求生成一个唯一的traceId
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        MDC.put("traceId", IdUtil.fastSimpleUUID());
+        MDC.put(TRACE_ID, IdUtil.fastSimpleUUID().substring(0, 8));
         return true;
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        MDC.remove("traceId");
+        MDC.remove(TRACE_ID);
     }
 }

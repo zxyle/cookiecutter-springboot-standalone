@@ -8,6 +8,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.log.OperateLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
+import {{ cookiecutter.basePackage }}.config.interceptor.TraceInterceptor;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,7 +98,7 @@ public class OperateAspect {
             throw e;
         } finally {
             op.setMeasured(System.currentTimeMillis() - startTime);
-            op.setTraceId(MDC.get("traceId"));
+            op.setTraceId(MDC.get(TraceInterceptor.TRACE_ID));
             logService.saveLog(op);
         }
     }
