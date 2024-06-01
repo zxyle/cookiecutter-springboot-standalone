@@ -150,10 +150,7 @@ public class RedisLikeServiceImpl implements LikeService {
      */
     @Override
     public Page<LikeDTO> getResIdList(Integer resType, Integer userId, Integer pageNum, Integer pageSize) {
-        int start = (pageNum - 1) * pageSize;
-        int stop = start + pageSize - 1;
-
-        Page<LikeDTO> page = Page.of(pageNum, pageSize);
+        Page<LikeDTO> page = Page.of(pageNum, pageSize, 0L);
 
         // 获取用户点赞的资源ID列表
         String key = String.format(USER_LIKE_LIST_KEY, resType, userId);
@@ -162,6 +159,9 @@ public class RedisLikeServiceImpl implements LikeService {
             return page;
         }
         page.setTotal(total);
+
+        int start = (pageNum - 1) * pageSize;
+        int stop = start + pageSize - 1;
 
         Set<ZSetOperations.TypedTuple<String>> tupleSet = stringRedisTemplate.opsForZSet()
                 .reverseRangeWithScores(key, start, stop);

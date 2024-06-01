@@ -3,7 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.social.follow;
 
-import java.util.List;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 
 /**
  * 用户关注 服务类
@@ -30,21 +31,17 @@ public interface FollowService {
      * 获取关注列表
      *
      * @param userId   用户ID
-     * @param pageNo   页码
-     * @param pageSize 分页大小
-     * @return 关注列表
+     * @return 关注用户ID分页
      */
-    List<Integer> getFollowing(Integer userId, Integer pageNo, Integer pageSize);
+    Page<Integer> getFollowing(Integer userId, PaginationRequest req);
 
     /**
      * 获取粉丝列表
      *
      * @param userId   用户ID
-     * @param pageNo   页码
-     * @param pageSize 分页大小
-     * @return 粉丝列表
+     * @return 粉丝用户ID分页
      */
-    List<Integer> getFollowers(Integer userId, Integer pageNo, Integer pageSize);
+    Page<Integer> getFollowers(Integer userId, PaginationRequest req);
 
     /**
      * 获取关注数

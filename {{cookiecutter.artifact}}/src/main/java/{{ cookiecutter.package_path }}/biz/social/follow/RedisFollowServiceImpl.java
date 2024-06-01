@@ -3,6 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.social.follow;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisCallback;
@@ -11,7 +13,6 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -95,46 +96,46 @@ public class RedisFollowServiceImpl implements FollowService {
      * 获取关注用户ID列列表
      *
      * @param userId   用户ID
-     * @param pageNo   页码
-     * @param pageSize 分页大小
-     * @return 关注用户ID列表
+     * @return 关注用户ID分页
      */
     @Override
-    public List<Integer> getFollowing(Integer userId, Integer pageNo, Integer pageSize) {
-        int start = (pageNo - 1) * pageSize;
-        int stop = start + pageSize - 1;
-
+    public Page<Integer> getFollowing(Integer userId, PaginationRequest req) {
         String key = String.format(FOLLOWING_KEY, userId);
-        return getIntegers(key, start, stop);
+        return getIntegers(key, req.getPageNum(), req.getPageSize());
     }
 
-    private List<Integer> getIntegers(String key, int start, int stop) {
+    private Page<Integer> getIntegers(String key, int pageNum, int pageSize) {
+        Page<Integer> page = Page.of(pageNum, pageSize, 0L);
+        Long total = stringRedisTemplate.opsForZSet().zCard(key);
+        if (total == null || total == 0) {
+            return page;
+        }
+        page.setTotal(total);
+        int start = (pageNum - 1) * pageSize;
+        int stop = start + pageSize - 1;
+
         Set<ZSetOperations.TypedTuple<String>> tuples = stringRedisTemplate.opsForZSet()
                 .reverseRangeWithScores(key, start, stop);
         if (tuples != null && !tuples.isEmpty()) {
-            return tuples.stream()
+            List<Integer> list = tuples.stream()
                     .map(t -> Integer.valueOf(Objects.requireNonNull(t.getValue())))
                     .collect(Collectors.toList());
+            page.setRecords(list);
         }
 
-        return Collections.emptyList();
+        return page;
     }
 
     /**
      * 获取粉丝列表
      *
      * @param userId   用户ID
-     * @param pageNo   页码
-     * @param pageSize 分页大小
-     * @return 粉丝用户ID列表
+     * @return 粉丝用户ID分页
      */
     @Override
-    public List<Integer> getFollowers(Integer userId, Integer pageNo, Integer pageSize) {
-        int start = (pageNo - 1) * pageSize;
-        int stop = start + pageSize - 1;
-
+    public Page<Integer> getFollowers(Integer userId, PaginationRequest req) {
         String key = String.format(FANS_KEY, userId);
-        return getIntegers(key, start, stop);
+        return getIntegers(key, req.getPageNum(), req.getPageSize());
     }
 
     /**

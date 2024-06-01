@@ -40,7 +40,7 @@ public class LikeController extends AuthBaseController {
     }
 
     /**
-     * 点赞
+     * 点赞，返回当前点赞数
      */
     @GetMapping("/like")
     public R<Long> like(@Valid LikeRequest req) {
@@ -49,7 +49,7 @@ public class LikeController extends AuthBaseController {
     }
 
     /**
-     * 取消点赞
+     * 取消点赞，返回当前点赞数
      */
     @GetMapping("/unlike")
     public R<Long> unlike(@Valid LikeRequest req) {

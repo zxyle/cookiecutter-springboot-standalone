@@ -10,14 +10,15 @@ import {{ cookiecutter.basePackage }}.biz.auth.profile.ProfileService;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import {{ cookiecutter.namespace }}.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import {{ cookiecutter.namespace }}.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,12 +70,13 @@ public class FollowController extends AuthBaseController {
     @GetMapping("/followers")
     public R<Page<Profile>> getFollowers(@Valid PaginationRequest req) {
         Page<Profile> p = new Page<>(req.getPageNum(), req.getPageSize());
-        List<Integer> followers = followService.getFollowers(getUserId(), req.getPageNum(), req.getPageSize());
-        if (followers.isEmpty()) {
+        Page<Integer> followers = followService.getFollowers(getUserId(), req);
+        if (followers == null || followers.getTotal() == 0) {
             return R.ok(p);
         }
 
-        p.setRecords(getProfiles(followers));
+        p.setTotal(followers.getTotal());
+        p.setRecords(getProfiles(followers.getRecords()));
         return R.ok(p);
     }
 
@@ -84,12 +86,13 @@ public class FollowController extends AuthBaseController {
     @GetMapping("/followings")
     public R<Page<Profile>> getFollowings(@Valid PaginationRequest req) {
         Page<Profile> p = new Page<>(req.getPageNum(), req.getPageSize());
-        List<Integer> followings = followService.getFollowing(getUserId(), req.getPageNum(), req.getPageSize());
-        if (followings.isEmpty()) {
+        Page<Integer> followings = followService.getFollowing(getUserId(), req);
+        if (followings == null || followings.getTotal() == 0) {
             return R.ok(p);
         }
 
-        p.setRecords(getProfiles(followings));
+        p.setTotal(followings.getTotal());
+        p.setRecords(getProfiles(followings.getRecords()));
         return R.ok(p);
     }
 
@@ -110,6 +113,9 @@ public class FollowController extends AuthBaseController {
      * @param userIds 用户ID列表
      */
     private List<Profile> getProfiles(List<Integer> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            return Collections.emptyList();
+        }
         LambdaQueryWrapper<Profile> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(Profile::getUserId, Profile::getNickname, Profile::getAvatar);
         wrapper.in(Profile::getUserId, userIds);

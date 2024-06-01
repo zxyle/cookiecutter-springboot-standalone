@@ -3,7 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.biz.social.star;
 
-import java.util.List;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 
 /**
  * 收藏服务类
@@ -43,10 +44,8 @@ public interface StarService {
      *
      * @param resType  资源类型
      * @param userId   用户ID
-     * @param pageNo   页码
-     * @param pageSize 分页大小
      * @return 资源ID列表
      */
-    List<StarDTO> getResIdList(Integer resType, Integer userId, Integer pageNo, Integer pageSize);
+    Page<StarDTO> getResIdList(Integer resType, Integer userId, PaginationRequest req);
 
 }

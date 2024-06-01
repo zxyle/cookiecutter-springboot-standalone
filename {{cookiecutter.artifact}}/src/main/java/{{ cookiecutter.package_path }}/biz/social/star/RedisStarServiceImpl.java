@@ -3,6 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.biz.social.star;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import {{ cookiecutter.basePackage }}.biz.social.like.LikeDTO;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisCallback;
@@ -102,21 +105,27 @@ public class RedisStarServiceImpl implements StarService {
      *
      * @param resType  资源类型
      * @param userId   用户ID
-     * @param pageNo   页码
-     * @param pageSize 分页大小
      * @return 资源ID列表
      */
     @Override
-    public List<StarDTO> getResIdList(Integer resType, Integer userId, Integer pageNo, Integer pageSize) {
+    public Page<StarDTO> getResIdList(Integer resType, Integer userId, PaginationRequest req) {
+        Page<StarDTO> page = Page.of(req.getPageNum(), req.getPageSize(), 0L);
         String userKey = String.format(USER_STAR_LIST_KEY, resType, userId);
-        int start = (pageNo - 1) * pageSize;
-        int stop = start + pageSize - 1;
+
+        Long total = stringRedisTemplate.opsForZSet().zCard(userKey);
+        if (total == null || total == 0) {
+            return page;
+        }
+        page.setTotal(total);
+
+        int start = (req.getPageNum() - 1) * req.getPageSize();
+        int stop = start + req.getPageSize() - 1;
 
         Set<ZSetOperations.TypedTuple<String>> tupleSet = stringRedisTemplate.opsForZSet()
                 .reverseRangeWithScores(userKey, start, stop);
 
         if (tupleSet != null && !tupleSet.isEmpty()) {
-            return tupleSet.stream().map(tuple -> {
+            List<StarDTO> list = tupleSet.stream().map(tuple -> {
                 StarDTO starDTO = new StarDTO();
                 starDTO.setStarTime(Instant.ofEpochSecond(Objects.requireNonNull(tuple.getScore()).longValue())
                         .atZone(ZoneId.systemDefault())
@@ -124,8 +133,9 @@ public class RedisStarServiceImpl implements StarService {
                 starDTO.setResId(Integer.parseInt(Objects.requireNonNull(tuple.getValue())));
                 return starDTO;
             }).collect(Collectors.toList());
+            page.setRecords(list);
         }
 
-        return Collections.emptyList();
+        return page;
     }
 }

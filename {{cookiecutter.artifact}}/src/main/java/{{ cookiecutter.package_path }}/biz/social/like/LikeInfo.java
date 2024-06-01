@@ -19,6 +19,8 @@ public class LikeInfo {
 
     /**
      * 当前点赞数
+     *
+     * @mock 100
      */
     private Long likeCount;
 }

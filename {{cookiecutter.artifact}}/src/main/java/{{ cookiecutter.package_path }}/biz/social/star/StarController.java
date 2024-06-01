@@ -3,17 +3,13 @@
 
 package {{ cookiecutter.basePackage }}.biz.social.star;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import {{ cookiecutter.basePackage }}.common.controller.AuthBaseController;
+import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 收藏管理
@@ -27,39 +23,37 @@ public class StarController extends AuthBaseController {
     final StarService starService;
 
     /**
-     * 收藏
+     * 收藏，返回当前收藏数量
      *
      * @param resType 资源类型
      * @param resId   资源ID
      */
     @PostMapping("/star")
-    public R<Void> star(Integer resType, Integer resId) {
-        Long star = starService.star(resType, resId, getUserId());
-        return R.ok();
+    public R<Long> star(Integer resType, Integer resId) {
+        Long currentStar = starService.star(resType, resId, getUserId());
+        return R.ok(currentStar);
     }
 
     /**
-     * 取消收藏
+     * 取消收藏，返回当前收藏数量
      *
      * @param resType 资源类型
      * @param resId   资源ID
      */
     @DeleteMapping("/unstar")
-    public R<Void> unstar(Integer resType, Integer resId) {
-        Long unstar = starService.unstar(resType, resId, getUserId());
-        return R.ok();
+    public R<Long> unstar(Integer resType, Integer resId) {
+        Long currentStar = starService.unstar(resType, resId, getUserId());
+        return R.ok(currentStar);
     }
 
     /**
      * 收藏列表
      *
-     * @param resType  资源类型
-     * @param pageNo   页码
-     * @param pageSize 每页数量
+     * @param resType 资源类型
      */
     @GetMapping("/stars")
-    public R<List<StarDTO>> starList(Integer resType, Integer pageNo, Integer pageSize) {
-        List<StarDTO> idList = starService.getResIdList(resType, getUserId(), pageNo, pageSize);
+    public R<Page<StarDTO>> starList(Integer resType, PaginationRequest req) {
+        Page<StarDTO> idList = starService.getResIdList(resType, getUserId(), req);
         return R.ok(idList);
     }
 

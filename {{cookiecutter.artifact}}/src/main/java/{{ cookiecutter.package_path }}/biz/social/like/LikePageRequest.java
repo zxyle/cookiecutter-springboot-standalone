@@ -28,6 +28,8 @@ public class LikePageRequest extends PaginationRequest {
 
     /**
      * 评论ID
+     *
+     * @mock 1
      */
     private Integer commentId;
 
