@@ -88,7 +88,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
     @Cacheable(cacheNames = "subGroupsCache", key = "#rootGroupId", unless = "#result == null")
     public List<Integer> getSubGroups(Integer rootGroupId) {
         List<Group> groups = getAllChildren(null, rootGroupId);
-        return groups.stream().map(LiteEntity::getId).distinct().collect(Collectors.toList());
+        return groups.stream().map(LiteEntity::getId).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %}
     }
 
     /**
@@ -180,7 +180,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
 
         // 去重
         List<Integer> allGroupIds = allGroups.stream()
-                .map(Group::getId).distinct().collect(Collectors.toList());
+                .map(Group::getId).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %}
 
         if (acceptUserId != null) {
             // 查询该用户所在的用户组
@@ -235,7 +235,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
             List<User> users = userGroupService.findUsersByGroupId(group.getId());
             // 对用户信息进行脱敏处理
             List<UserResponse> collect = users.stream()
-                    .map(UserResponse::new).collect(Collectors.toList());
+                    .map(UserResponse::new).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
             response.setUsers(CollectionUtils.isNotEmpty(collect) ? collect : null);
         }
 

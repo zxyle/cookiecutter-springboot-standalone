@@ -52,11 +52,11 @@ public class AclFilter extends OncePerRequestFilter {
         // 过滤掉过期的黑白名单
         List<String> whitelist = acl.stream().filter(
                 b -> b.getEndTime() == null || LocalDateTime.now().isBefore(b.getEndTime())
-        ).filter(e-> e.getAllowed().equals(true)).map(Acl::getIp).collect(Collectors.toList());
+        ).filter(e-> e.getAllowed().equals(true)).map(Acl::getIp).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
 
         List<String> blacklist = acl.stream().filter(
                 b -> b.getEndTime() == null || LocalDateTime.now().isBefore(b.getEndTime())
-        ).filter(e-> e.getAllowed().equals(false)).map(Acl::getIp).collect(Collectors.toList());
+        ).filter(e-> e.getAllowed().equals(false)).map(Acl::getIp).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
 
         if ((CidrUtil.in(ip, whitelist)) || (CidrUtil.notIn(ip, blacklist))) {
             log.error("不允许的ip访问: {}", ip);

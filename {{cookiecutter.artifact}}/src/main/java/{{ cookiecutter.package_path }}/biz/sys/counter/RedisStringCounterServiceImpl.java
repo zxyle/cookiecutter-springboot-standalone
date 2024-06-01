@@ -97,14 +97,14 @@ public class RedisStringCounterServiceImpl implements CounterService {
      */
     @Override
     public List<Long> batchGet(String biz, List<Integer> ids) {
-        List<String> keys = ids.stream().map(id -> String.format(FORMAT, biz, id)).collect(Collectors.toList());
+        List<String> keys = ids.stream().map(id -> String.format(FORMAT, biz, id)).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
 
         List<String> values = stringRedisTemplate.opsForValue().multiGet(keys);
         if (values != null && !values.isEmpty()) {
             return values.stream()
                     .map(result -> result == null ? 0 : result)
                     .map(result -> StringUtils.isNumeric(result.toString()) ? Long.parseLong(result.toString()) : 0L)
-                    .collect(Collectors.toList());
+                    .{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         }
         return Collections.emptyList();
     }
@@ -135,7 +135,7 @@ public class RedisStringCounterServiceImpl implements CounterService {
      */
     @Override
     public boolean batchClear(String biz, List<Integer> ids) {
-        List<String> keys = ids.stream().map(id -> String.format(FORMAT, biz, id)).collect(Collectors.toList());
+        List<String> keys = ids.stream().map(id -> String.format(FORMAT, biz, id)).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         Long delete = stringRedisTemplate.delete(keys);
         return delete != null && delete == ids.size();
     }

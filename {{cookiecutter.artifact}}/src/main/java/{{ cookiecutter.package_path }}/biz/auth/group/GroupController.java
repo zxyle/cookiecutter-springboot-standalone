@@ -44,7 +44,7 @@ public class GroupController extends AuthBaseController {
         Page<Group> page = groupService.page(req.getPage(), wrapper);
         List<GroupResponse> collect = page.getRecords().stream()
                 .map(group -> groupService.attachGroupInfo(group, req.isFull()))
-                .collect(Collectors.toList());
+                .{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         Page<GroupResponse> responsePage = new Page<>();
         responsePage.setRecords(collect);
         responsePage.setTotal(page.getTotal());

@@ -130,7 +130,7 @@ public class RedisStarServiceImpl implements StarService {
                         .toLocalDateTime());
                 starDTO.setResId(Integer.parseInt(Objects.requireNonNull(tuple.getValue())));
                 return starDTO;
-            }).collect(Collectors.toList());
+            }).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
             page.setRecords(list);
         }
 

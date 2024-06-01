@@ -204,10 +204,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         // 查询用户组下的所有用户
         LambdaQueryWrapper<UserGroup> userGroupQueryWrapper = new LambdaQueryWrapper<>();
         userGroupQueryWrapper.select(UserGroup::getUserId, UserGroup::getGroupId);
-        List<Integer> groupIds = allGroups.stream().distinct().map(Group::getId).collect(Collectors.toList());
+        List<Integer> groupIds = allGroups.stream().distinct().map(Group::getId).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         userGroupQueryWrapper.in(UserGroup::getGroupId, groupIds);
         List<UserGroup> userGroupList = userGroupService.list(userGroupQueryWrapper);
-        return userGroupList.stream().map(UserGroup::getUserId).collect(Collectors.toList());
+        return userGroupList.stream().map(UserGroup::getUserId).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
     }
 
     /**

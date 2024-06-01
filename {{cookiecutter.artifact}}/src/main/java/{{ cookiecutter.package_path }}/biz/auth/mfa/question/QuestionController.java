@@ -149,7 +149,7 @@ public class QuestionController extends AuthBaseController {
             answer.setQuestionId(ans.getQuestionId());
             answer.setSecret(DigestUtil.md5Hex(ans.getAnswer().trim()));  // md5加密，防止数据库泄露
             return answer;
-        }).collect(Collectors.toList());
+        }).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         return answerService.saveBatch(answers);
     }
 

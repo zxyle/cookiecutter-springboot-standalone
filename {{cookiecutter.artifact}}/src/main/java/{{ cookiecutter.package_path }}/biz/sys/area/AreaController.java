@@ -60,7 +60,7 @@ public class AreaController {
         List<Area> areas = thisService.list(wrapper);
         List<AreaNode> nodes = areas.stream()
                 .map(node -> new AreaNode(node.getName(), node.getParentId(), node.getCode()))
-                .collect(Collectors.toList());
+                .{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
 
         List<AntdTree2> listTree = TreeUtil.createTree(nodes, rootId);
         AntdTree2 tree = new AntdTree2(rootName, rootCode, listTree);

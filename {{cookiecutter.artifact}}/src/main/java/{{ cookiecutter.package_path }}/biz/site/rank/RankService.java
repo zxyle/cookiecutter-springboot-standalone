@@ -86,7 +86,7 @@ public class RankService {
         }
         return tuples.stream().map(
                 tuple -> new TopResponse(tuple.getValue(), "", tuple.getScore())
-        ).collect(Collectors.toList());
+        ).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
     }
 
     /**

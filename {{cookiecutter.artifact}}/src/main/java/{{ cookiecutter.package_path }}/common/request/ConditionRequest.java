@@ -295,7 +295,7 @@ public class ConditionRequest extends BaseRequest {
                 .filter(field -> field.isAnnotationPresent(Sortable.class))
                 .map(Field::getName)
                 .map(ConditionRequest::camelToUnderline)
-                .collect(Collectors.toList()));
+                .{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         return columns;
     }
 

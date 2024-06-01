@@ -132,7 +132,7 @@ public class AuthBaseController {
         for (Integer groupId : getGroupIds()) {
             longs.addAll(groupService.getSubGroups(groupId));
         }
-        return longs.stream().distinct().collect(Collectors.toList());
+        return longs.stream().distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
     }
 
     /**
@@ -150,7 +150,7 @@ public class AuthBaseController {
      */
     public List<Integer> getUsersByGroup(Integer groupId) {
         List<UserGroup> groups = userGroupService.queryRelation(0, groupId);
-        return groups.stream().map(UserGroup::getUserId).collect(Collectors.toList());
+        return groups.stream().map(UserGroup::getUserId).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
     }
 
     /**
@@ -161,7 +161,7 @@ public class AuthBaseController {
      */
     public List<Integer> getUsersByRole(Integer roleId) {
         List<UserRole> roles = userRoleService.queryRelation(0, roleId);
-        return roles.stream().map(UserRole::getUserId).collect(Collectors.toList());
+        return roles.stream().map(UserRole::getUserId).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
     }
 
     /**
@@ -169,7 +169,7 @@ public class AuthBaseController {
      */
     public List<Integer> getGroupIds() {
         List<UserGroup> groups = userGroupService.queryRelation(getUserId(), 0);
-        return groups.stream().map(UserGroup::getGroupId).collect(Collectors.toList());
+        return groups.stream().map(UserGroup::getGroupId).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
     }
 
 }

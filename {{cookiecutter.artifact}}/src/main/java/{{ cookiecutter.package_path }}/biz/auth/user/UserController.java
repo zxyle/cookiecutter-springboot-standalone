@@ -62,7 +62,7 @@ public class UserController extends AuthBaseController {
         // 增加角色和组信息
         List<UserResponse> userResponses = page.getRecords().stream()
                 .map(user -> thisService.attachUserInfo(user, req.isFull()))
-                .collect(Collectors.toList());
+                .{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         Page<UserResponse> responsePage = new Page<>();
         responsePage.setRecords(userResponses);
         responsePage.setTotal(page.getTotal());

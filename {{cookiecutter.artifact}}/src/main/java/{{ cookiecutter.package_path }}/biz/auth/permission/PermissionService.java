@@ -66,7 +66,7 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
         if (CollectionUtils.isNotEmpty(groupIds)) {
             permissions.addAll(groupPermissionMapper.findPermissionsByGroupIds(groupIds));
         }
-        return permissions.stream().distinct().collect(Collectors.toList());
+        return permissions.stream().distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
     }
 
     /**
@@ -106,14 +106,14 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
     public List<String> getSecurityPermissions(Integer userId) {
         // 查询用户所在用户组
         List<UserGroup> groups = userGroupService.queryRelation(userId, 0);
-        List<Integer> groupIds = groups.stream().map(UserGroup::getGroupId).collect(Collectors.toList());
+        List<Integer> groupIds = groups.stream().map(UserGroup::getGroupId).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
 
         // 查询用户所有角色
         List<Role> roles = userRoleService.findRolesByUserId(userId);
         if (CollectionUtils.isNotEmpty(groupIds)) {
             roles.addAll(groupRoleService.findRolesByGroupIds(groupIds));
         }
-        List<Integer> roleIds = roles.stream().map(Role::getId).distinct().collect(Collectors.toList());
+        List<Integer> roleIds = roles.stream().map(Role::getId).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
 
         // 查询角色关联的权限
         List<Permission> allPermissions = new ArrayList<>(rolePermissionMapper.findPermissionsByRoleIds(roleIds));
@@ -130,8 +130,8 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
 
         // 组装权限码和角色码
         List<String> list = new ArrayList<>(allPermissions.size() + roles.size());
-        list.addAll(allPermissions.stream().map(Permission::getCode).distinct().collect(Collectors.toList()));
-        list.addAll(roles.stream().map(e -> "ROLE_" + e.getCode()).distinct().collect(Collectors.toList()));
+        list.addAll(allPermissions.stream().map(Permission::getCode).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
+        list.addAll(roles.stream().map(e -> "ROLE_" + e.getCode()).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         return list;
     }
 
@@ -156,8 +156,8 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
 
         // 组装权限码和角色码
         List<String> list = new ArrayList<>(roleCodes.size() + children.size());
-        list.addAll(children.stream().map(Permission::getCode).distinct().collect(Collectors.toList()));
-        list.addAll(roleCodes.stream().map(e -> AuthBaseController.ROLE_PREFIX + e).distinct().collect(Collectors.toList()));
+        list.addAll(children.stream().map(Permission::getCode).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
+        list.addAll(roleCodes.stream().map(e -> AuthBaseController.ROLE_PREFIX + e).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         return list;
     }
 

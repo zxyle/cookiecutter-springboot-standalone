@@ -34,7 +34,7 @@ public class LikeController extends AuthBaseController {
     @GetMapping("/likes")
     public R<Page<LikeDTO>> page(@Valid LikePageRequest req) {
         Page<LikeDTO> page = likeService.getResIdList(req.getResType(), getUserId(), req.getPageNum(), req.getPageSize());
-        List<Integer> list = page.getRecords().stream().map(LikeDTO::getResId).collect(Collectors.toList());
+        List<Integer> list = page.getRecords().stream().map(LikeDTO::getResId).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         // TODO 查询资源信息 补充LikeDTO的res属性
         return R.ok(page);
     }

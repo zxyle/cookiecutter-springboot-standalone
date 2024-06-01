@@ -173,7 +173,7 @@ public class RedisLikeServiceImpl implements LikeService {
                         .toLocalDateTime());
                 likeDTO.setResId(Integer.parseInt(Objects.requireNonNull(tuple.getValue())));
                 return likeDTO;
-            }).collect(Collectors.toList());
+            }).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
             page.setRecords(records);
         }
 

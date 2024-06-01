@@ -51,7 +51,7 @@ public class LoginUser implements UserDetails {
         if (CollectionUtils.isEmpty(permissions) || "".equals(permissions.get(0))) {
             return Collections.emptyList();
         }
-        return permissions.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return permissions.stream().map(SimpleGrantedAuthority::new).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
     }
 
     @Override
