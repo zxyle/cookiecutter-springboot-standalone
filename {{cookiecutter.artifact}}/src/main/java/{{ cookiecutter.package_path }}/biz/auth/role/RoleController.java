@@ -54,7 +54,7 @@ public class RoleController extends AuthBaseController {
         Page<Role> list = thisService.page(req.getPage(), wrapper);
         List<RoleResponse> roles = list.getRecords().stream()
                 .map(role -> thisService.attachRoleInfo(role, req.isFull()))
-                .collect(Collectors.toList());
+                .{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         Page<RoleResponse> roleResponsePage = new Page<>();
         roleResponsePage.setRecords(roles);
         roleResponsePage.setTotal(list.getTotal());
