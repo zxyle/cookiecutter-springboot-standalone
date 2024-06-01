@@ -6,6 +6,9 @@ package {{ cookiecutter.basePackage }}.biz.social.like;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * 列表、详情页点赞信息
+ */
 @Data
 @AllArgsConstructor
 public class LikeInfo {

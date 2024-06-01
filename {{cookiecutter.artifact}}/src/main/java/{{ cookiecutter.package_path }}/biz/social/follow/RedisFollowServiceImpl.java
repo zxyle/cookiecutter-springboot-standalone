@@ -93,7 +93,7 @@ public class RedisFollowServiceImpl implements FollowService {
     }
 
     /**
-     * 获取关注用户ID列列表
+     * 获取关注用户ID列表
      *
      * @param userId 用户ID
      * @return 关注用户ID分页
@@ -127,7 +127,7 @@ public class RedisFollowServiceImpl implements FollowService {
         if (tuples != null && !tuples.isEmpty()) {
             List<Integer> list = tuples.stream()
                     .map(t -> Integer.valueOf(Objects.requireNonNull(t.getValue())))
-                    .collect(Collectors.toList());
+                    .{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
             page.setRecords(list);
         }
 

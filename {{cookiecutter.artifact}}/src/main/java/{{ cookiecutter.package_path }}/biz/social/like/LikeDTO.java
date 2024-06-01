@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * 点赞列表信息
+ */
 @Data
 public class LikeDTO {
 
