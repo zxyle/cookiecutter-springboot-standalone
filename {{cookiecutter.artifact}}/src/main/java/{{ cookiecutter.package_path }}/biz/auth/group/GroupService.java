@@ -88,7 +88,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
     @Cacheable(cacheNames = "subGroupsCache", key = "#rootGroupId", unless = "#result == null")
     public List<Integer> getSubGroups(Integer rootGroupId) {
         List<Group> groups = getAllChildren(null, rootGroupId);
-        return groups.stream().map(LiteEntity::getId).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %}
+        return groups.stream().map(LiteEntity::getId).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
     }
 
     /**
@@ -180,7 +180,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
 
         // 去重
         List<Integer> allGroupIds = allGroups.stream()
-                .map(Group::getId).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %}
+                .map(Group::getId).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
 
         if (acceptUserId != null) {
             // 查询该用户所在的用户组

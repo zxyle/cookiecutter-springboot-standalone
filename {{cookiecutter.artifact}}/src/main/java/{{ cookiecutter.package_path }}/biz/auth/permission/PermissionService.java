@@ -130,8 +130,8 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
 
         // 组装权限码和角色码
         List<String> list = new ArrayList<>(allPermissions.size() + roles.size());
-        list.addAll(allPermissions.stream().map(Permission::getCode).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
-        list.addAll(roles.stream().map(e -> "ROLE_" + e.getCode()).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
+        list.addAll(allPermissions.stream().map(Permission::getCode).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %});
+        list.addAll(roles.stream().map(e -> "ROLE_" + e.getCode()).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %});
         return list;
     }
 
@@ -156,8 +156,8 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
 
         // 组装权限码和角色码
         List<String> list = new ArrayList<>(roleCodes.size() + children.size());
-        list.addAll(children.stream().map(Permission::getCode).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
-        list.addAll(roleCodes.stream().map(e -> AuthBaseController.ROLE_PREFIX + e).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
+        list.addAll(children.stream().map(Permission::getCode).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %});
+        list.addAll(roleCodes.stream().map(e -> AuthBaseController.ROLE_PREFIX + e).distinct().{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %});
         return list;
     }
 
