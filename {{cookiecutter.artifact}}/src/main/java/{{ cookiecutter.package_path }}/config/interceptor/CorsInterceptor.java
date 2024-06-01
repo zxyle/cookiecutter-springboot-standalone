@@ -16,7 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  */
 @Component
 @RequiredArgsConstructor
-public class AllowCrossDomainInterceptor implements HandlerInterceptor {
+public class CorsInterceptor implements HandlerInterceptor {
 
     final CorsProperties coreProperties;
 

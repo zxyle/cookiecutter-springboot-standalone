@@ -30,7 +30,7 @@ public class BaseRequest {
     public static final String SECRET = "your_secret_key";
 
     /**
-     * 请求超时时间 1分钟 60000毫秒
+     * 请求超时时间 1分钟 = 60000毫秒
      */
     protected static final int TIMEOUT_MS = 60000;
 
