@@ -95,7 +95,7 @@ public class RedisFollowServiceImpl implements FollowService {
     /**
      * 获取关注用户ID列列表
      *
-     * @param userId   用户ID
+     * @param userId 用户ID
      * @return 关注用户ID分页
      */
     @Override
@@ -104,6 +104,14 @@ public class RedisFollowServiceImpl implements FollowService {
         return getIntegers(key, req.getPageNum(), req.getPageSize());
     }
 
+    /**
+     * 分页获取用户ID列表
+     *
+     * @param key      redis zset key
+     * @param pageNum  页码
+     * @param pageSize 页大小
+     * @return 关注用户ID分页
+     */
     private Page<Integer> getIntegers(String key, int pageNum, int pageSize) {
         Page<Integer> page = Page.of(pageNum, pageSize, 0L);
         Long total = stringRedisTemplate.opsForZSet().zCard(key);
@@ -129,7 +137,7 @@ public class RedisFollowServiceImpl implements FollowService {
     /**
      * 获取粉丝列表
      *
-     * @param userId   用户ID
+     * @param userId 用户ID
      * @return 粉丝用户ID分页
      */
     @Override
