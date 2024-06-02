@@ -166,7 +166,7 @@ log:
 
 # 使用说明
 help:
-	@echo "Usage: make [package|publish|restart|rollback|backup|init|deploy|clean|jdk|redis|nginx|mysql|docker|log]"
+	@echo "Usage: make [package|publish|restart|rollback|backup|init|deploy|clean|jdk|redis|nginx|mysql|docker|log|ssh]"
 
 # 清理
 clean:
@@ -174,4 +174,8 @@ clean:
 	@find . -type d -name "logs" -exec rm -r {} +
 	@echo "Clean success!"
 
-.PHONY: package publish restart rollback backup init deploy clean jdk redis nginx mysql help docker log
+# ssh 连接后端服务器部署目录
+ssh:
+	ssh $(SERVER) -t "cd $(BACKEND_DIR); bash"
+
+.PHONY: package publish restart rollback backup init deploy clean jdk redis nginx mysql help docker log ssh

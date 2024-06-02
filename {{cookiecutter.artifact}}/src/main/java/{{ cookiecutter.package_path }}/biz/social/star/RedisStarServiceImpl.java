@@ -31,6 +31,8 @@ public class RedisStarServiceImpl implements StarService {
     private static final String STAR_KEY = "star:%d:%d";
     private static final String STAR_COUNT_KEY = "starCnt:%d:%d";
     private static final String USER_STAR_LIST_KEY = "starList:%d:%d";
+    // 防止zset每个元素score占用内存过大，设置一个起始时间戳
+    private static final long START_TS = 1704038400L;
 
     /**
      * 收藏，返回当前收藏数量
@@ -47,11 +49,11 @@ public class RedisStarServiceImpl implements StarService {
 
         List<Object> results = stringRedisTemplate.executePipelined((RedisCallback<Object>) connection -> {
             // 资源增加用户
-            connection.zAdd(key.getBytes(), Instant.now().getEpochSecond(), userId.toString().getBytes());
+            connection.zAdd(key.getBytes(), Instant.now().getEpochSecond() - START_TS, userId.toString().getBytes());
             // 点赞数 +1
             connection.incr(countKey.getBytes());
             // 用户收藏列表添加
-            connection.zAdd(userKey.getBytes(), Instant.now().getEpochSecond(), resId.toString().getBytes());
+            connection.zAdd(userKey.getBytes(), Instant.now().getEpochSecond() - START_TS, resId.toString().getBytes());
             return null;
         });
         log.info("star: {}", results);
@@ -125,7 +127,7 @@ public class RedisStarServiceImpl implements StarService {
         if (tupleSet != null && !tupleSet.isEmpty()) {
             List<StarDTO> list = tupleSet.stream().map(tuple -> {
                 StarDTO starDTO = new StarDTO();
-                starDTO.setStarTime(Instant.ofEpochSecond(Objects.requireNonNull(tuple.getScore()).longValue())
+                starDTO.setStarTime(Instant.ofEpochSecond(Objects.requireNonNull(tuple.getScore()).longValue() + START_TS)
                         .atZone(ZoneId.systemDefault())
                         .toLocalDateTime());
                 starDTO.setResId(Integer.parseInt(Objects.requireNonNull(tuple.getValue())));
