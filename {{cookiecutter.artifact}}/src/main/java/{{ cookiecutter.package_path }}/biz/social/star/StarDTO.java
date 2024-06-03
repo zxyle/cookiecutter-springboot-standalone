@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * 收藏对象
+ */
 @Data
 public class StarDTO {
 

@@ -40,6 +40,7 @@ public class RedisStarServiceImpl implements StarService {
      * @param resType 资源类型
      * @param resId   资源ID
      * @param userId  用户ID
+     * @return 收藏数量
      */
     @Override
     public Long star(Integer resType, Integer resId, Integer userId) {
@@ -66,6 +67,7 @@ public class RedisStarServiceImpl implements StarService {
      * @param resType 资源类型
      * @param resId   资源ID
      * @param userId  用户ID
+     * @return 收藏数量
      */
     @Override
     public Long unstar(Integer resType, Integer resId, Integer userId) {

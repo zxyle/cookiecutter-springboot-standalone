@@ -17,6 +17,7 @@ public interface StarService {
      * @param resType 资源类型
      * @param resId   资源ID
      * @param userId  用户ID
+     * @return 收藏数量
      */
     Long star(Integer resType, Integer resId, Integer userId);
 
@@ -26,6 +27,7 @@ public interface StarService {
      * @param resType 资源类型
      * @param resId   资源ID
      * @param userId  用户ID
+     * @return 收藏数量
      */
     Long unstar(Integer resType, Integer resId, Integer userId);
 

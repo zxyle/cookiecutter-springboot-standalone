@@ -61,7 +61,7 @@ public class AclService extends ServiceImpl<AclMapper, Acl> {
      * 查询所有IP（带缓存）
      */
     @Cacheable(key = "'all'")
-    public List<Acl> findAllIP() {
+    public List<Acl> findAllIp() {
         LambdaQueryWrapper<Acl> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(Acl::getIp, Acl::getAllowed, Acl::getEndTime);
         return list(wrapper);

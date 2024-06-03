@@ -113,7 +113,13 @@ public class GroupPermissionService extends ServiceImpl<GroupPermissionMapper, G
         permissionIds.forEach(permissionId -> createRelation(groupId, permissionId));
     }
 
-    // 构建wrapper
+    /**
+     * 构建wrapper
+     *
+     * @param groupId      用户组ID
+     * @param permissionId 权限ID
+     * @return wrapper
+     */
     private LambdaQueryWrapper<GroupPermission> buildWrapper(Integer groupId, Integer permissionId) {
         LambdaQueryWrapper<GroupPermission> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(groupId != null && groupId != 0, GroupPermission::getGroupId, groupId);

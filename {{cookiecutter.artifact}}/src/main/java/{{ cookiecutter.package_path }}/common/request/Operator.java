@@ -8,11 +8,25 @@ package {{ cookiecutter.basePackage }}.common.request;
  */
 public enum Operator {
 
+    /**
+     * 等于
+     */
     EQ,
 
+    /**
+     * 不等于
+     */
     NE,
 
-    LIKE, NOT_LIKE,
+    /**
+     * LIKE '%值%'
+     */
+    LIKE,
+
+    /**
+     * not LIKE '%值%'
+     */
+    NOT_LIKE,
 
     /**
      * LIKE '值%'

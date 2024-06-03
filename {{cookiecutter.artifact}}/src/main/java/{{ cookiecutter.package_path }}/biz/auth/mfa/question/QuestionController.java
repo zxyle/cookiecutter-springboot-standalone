@@ -141,9 +141,15 @@ public class QuestionController extends AuthBaseController {
         return (removed && saved) ? R.ok("成功修改密保问题") : R.fail("修改密保问题失败");
     }
 
-    // 保存用户安全问题答案
-    private boolean saveAnswers(AddAnswerRequest request, Integer userId) {
-        List<Answer> answers = request.getAnswers().stream().map(ans -> {
+    /**
+     * 保存用户安全问题答案
+     *
+     * @param req 包含用户安全问题答案请求
+     * @param userId 用户ID
+     * @return 是否保存成功
+     */
+    private boolean saveAnswers(AddAnswerRequest req, Integer userId) {
+        List<Answer> answers = req.getAnswers().stream().map(ans -> {
             Answer answer = new Answer();
             answer.setUserId(userId);
             answer.setQuestionId(ans.getQuestionId());

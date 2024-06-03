@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MapCounterServiceImpl implements CounterService {
 
     private static final String FORMAT = "%s:%s";
-    private static final Map<String, Long> counterMap = new ConcurrentHashMap<>();
+    private static final Map<String, Long> COUNTER_MAP = new ConcurrentHashMap<>();
 
     /**
      * 自增并获取统计次数
@@ -28,8 +28,8 @@ public class MapCounterServiceImpl implements CounterService {
     @Override
     public Long incr(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
-        counterMap.put(key, counterMap.getOrDefault(key, 0L) + 1);
-        return counterMap.get(key);
+        COUNTER_MAP.put(key, COUNTER_MAP.getOrDefault(key, 0L) + 1);
+        return COUNTER_MAP.get(key);
     }
 
     /**
@@ -43,8 +43,8 @@ public class MapCounterServiceImpl implements CounterService {
     @Override
     public Long incr(String biz, String id, Integer step) {
         String key = String.format(FORMAT, biz, id);
-        counterMap.put(key, counterMap.getOrDefault(key, 0L) + step);
-        return counterMap.get(key);
+        COUNTER_MAP.put(key, COUNTER_MAP.getOrDefault(key, 0L) + step);
+        return COUNTER_MAP.get(key);
     }
 
     /**
@@ -57,8 +57,8 @@ public class MapCounterServiceImpl implements CounterService {
     @Override
     public Long decr(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
-        counterMap.put(key, counterMap.getOrDefault(key, 0L) - 1);
-        return counterMap.get(key);
+        COUNTER_MAP.put(key, COUNTER_MAP.getOrDefault(key, 0L) - 1);
+        return COUNTER_MAP.get(key);
     }
 
     /**
@@ -70,7 +70,7 @@ public class MapCounterServiceImpl implements CounterService {
     @Override
     public Long get(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
-        return counterMap.getOrDefault(key, 0L);
+        return COUNTER_MAP.getOrDefault(key, 0L);
     }
 
     @Override

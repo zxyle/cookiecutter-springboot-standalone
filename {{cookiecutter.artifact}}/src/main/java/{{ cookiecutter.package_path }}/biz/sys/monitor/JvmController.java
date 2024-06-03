@@ -31,7 +31,7 @@ public class JvmController {
     @GetMapping("/jvm")
     public R<JvmResponse> get() {
         JvmResponse jvmResponse = new JvmResponse();
-        jvmResponse.setProcessId(getProcessID());
+        jvmResponse.setProcessId(getProcessId());
         log.info("{}", SystemUtil.getJvmSpecInfo());
         log.info("{}", SystemUtil.getJvmInfo());
         log.info("{}", SystemUtil.getJavaSpecInfo());
@@ -44,8 +44,10 @@ public class JvmController {
         return R.ok(jvmResponse);
     }
 
-    // 获取进程ID
-    private static int getProcessID() {
+    /**
+     * 获取进程ID
+     */
+    private static int getProcessId() {
         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
         return Integer.parseInt(runtimeMXBean.getName().split("@")[0]);
     }

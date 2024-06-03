@@ -6,6 +6,9 @@ package {{ cookiecutter.basePackage }}.biz.site.rank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * 排行榜成员响应
+ */
 @Data
 @AllArgsConstructor
 public class TopResponse {

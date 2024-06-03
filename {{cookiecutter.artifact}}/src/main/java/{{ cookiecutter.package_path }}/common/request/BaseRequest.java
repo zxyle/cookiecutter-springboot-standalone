@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Setter
 public class BaseRequest {
 
-    protected static final ObjectMapper objectMapper = new ObjectMapper();
+    protected static final ObjectMapper MAPPER = new ObjectMapper();
     protected static final List<String> IGNORE = Arrays.asList("sign", "calledSort", "offset");
 
     /**
@@ -68,7 +68,7 @@ public class BaseRequest {
             return true;
         }
 
-        Map<String, Object> params = objectMapper.convertValue(this, new TypeReference<Map<String, Object>>() {
+        Map<String, Object> params = MAPPER.convertValue(this, new TypeReference<Map<String, Object>>() {
         });
         Set<String> keys = params.keySet().stream()
                 .filter(key -> !IGNORE.contains(key))

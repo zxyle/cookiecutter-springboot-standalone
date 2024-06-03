@@ -16,16 +16,16 @@ import java.util.concurrent.atomic.AtomicLong;
  * 原子计数器
  */
 @Service
-public class AtomicCounterService implements CounterService {
+public class AtomicCounterServiceImpl implements CounterService {
 
     private static final String FORMAT = "%s:%s";
-    private static final Map<String, AtomicLong> counterMap = new ConcurrentHashMap<>();
+    private static final Map<String, AtomicLong> COUNTER_MAP = new ConcurrentHashMap<>();
 
     @Override
     public Long incr(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
-        counterMap.putIfAbsent(key, new AtomicLong(0));
-        return counterMap.get(key).incrementAndGet();
+        COUNTER_MAP.putIfAbsent(key, new AtomicLong(0));
+        return COUNTER_MAP.get(key).incrementAndGet();
     }
 
     /**
@@ -54,14 +54,14 @@ public class AtomicCounterService implements CounterService {
     @Override
     public Long decr(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
-        return counterMap.get(key).decrementAndGet();
+        return COUNTER_MAP.get(key).decrementAndGet();
     }
 
     @Override
     public Long get(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
-        if (counterMap.containsKey(key)) {
-            return counterMap.get(key).get();
+        if (COUNTER_MAP.containsKey(key)) {
+            return COUNTER_MAP.get(key).get();
         }
         return 0L;
     }
@@ -74,7 +74,7 @@ public class AtomicCounterService implements CounterService {
     @Override
     public boolean clear(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
-        counterMap.remove(key);
+        COUNTER_MAP.remove(key);
         return true;
     }
 
