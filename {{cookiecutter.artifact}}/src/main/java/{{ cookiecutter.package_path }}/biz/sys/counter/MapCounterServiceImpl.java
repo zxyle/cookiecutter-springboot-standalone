@@ -87,7 +87,7 @@ public class MapCounterServiceImpl implements CounterService {
     @Override
     public boolean clear(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
-        counterMap.remove(key);
+        COUNTER_MAP.remove(key);
         return true;
     }
 
