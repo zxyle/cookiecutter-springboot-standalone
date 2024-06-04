@@ -51,6 +51,7 @@ public class LogAuditController {
         LambdaQueryWrapper<OperateLog> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(req.getUserId() != null, OperateLog::getUserId, req.getUserId());
         wrapper.eq(StringUtils.isNotBlank(req.getBiz()), OperateLog::getBiz, req.getBiz());
+        wrapper.eq(StringUtils.isNotBlank(req.getTraceId()), OperateLog::getTraceId, req.getTraceId());
         wrapper.between(req.getStartTime() != null && req.getEndTime() != null,
                 OperateLog::getOperateTime, req.getStartTime(), req.getEndTime());
         wrapper.eq(req.getSuccess() != null, OperateLog::getSuccess, req.getSuccess());

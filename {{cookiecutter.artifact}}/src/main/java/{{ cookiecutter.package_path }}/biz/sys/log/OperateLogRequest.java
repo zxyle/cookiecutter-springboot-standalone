@@ -41,4 +41,11 @@ public class OperateLogRequest extends PaginationRequest {
      * 操作是否成功
      */
     private Boolean success;
+
+    /**
+     * 链路追踪ID
+     *
+     * @mock f404bb73b28e4757ab20f7305c2426c0
+     */
+    private String traceId;
 }
