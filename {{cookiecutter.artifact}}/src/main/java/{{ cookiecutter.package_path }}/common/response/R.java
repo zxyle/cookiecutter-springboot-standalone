@@ -91,7 +91,7 @@ public class R<T> implements Serializable {
     }
 
     public static <T> R<T> fail(ErrorEnum errorEnum) {
-        return fail(errorEnum.getMessage(), Integer.valueOf(errorEnum.getCode()));
+        return fail(errorEnum.getMessage(), errorEnum.getCode());
     }
 
     public static <T> R<T> result(boolean success) {

@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.common.exception;
 
+import {{ cookiecutter.basePackage }}.common.enums.ErrorEnum;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -145,7 +146,7 @@ public class GlobalExceptionHandler {
     public R<Void> exceptionHandler(Exception e) {
         log.error("未知异常: {}", e.getMessage());
         log.error("异常详情: {}", getExceptionMessage(e));
-        return R.fail("操作失败");
+        return R.fail(ErrorEnum.SERVER_ERROR);
     }
 
     public String getExceptionMessage(Exception ex) {
