@@ -25,6 +25,6 @@ public enum ErrorEnum {
     ;
 
     private final int code;
-    private final String message;
+    private final String desc;
 
 }

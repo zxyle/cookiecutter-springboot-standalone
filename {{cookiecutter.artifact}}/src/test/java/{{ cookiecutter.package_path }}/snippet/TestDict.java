@@ -36,7 +36,7 @@ public class TestDict {
             dict.setName(name);
             dict.setDictSort(i);
             dict.setDictType(dictType);
-            dict.setLabel(value.getName());
+            dict.setLabel(value.getDesc());
             dict.setValue(String.valueOf(value.getCode()));
             dicts.add(dict);
             i++;

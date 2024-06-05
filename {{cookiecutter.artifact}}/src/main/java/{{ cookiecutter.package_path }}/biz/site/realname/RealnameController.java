@@ -68,7 +68,7 @@ public class RealnameController extends AuthBaseController {
     public R<Realname> get() {
         Integer userId = getUserId();
         Realname entity = thisService.findByUserId(userId);
-        return entity == null ? R.fail(VerificationStatusEnum.UNVERIFIED.getName()) : R.ok(entity);
+        return entity == null ? R.fail(VerificationStatusEnum.UNVERIFIED.getDesc()) : R.ok(entity);
     }
 
 }

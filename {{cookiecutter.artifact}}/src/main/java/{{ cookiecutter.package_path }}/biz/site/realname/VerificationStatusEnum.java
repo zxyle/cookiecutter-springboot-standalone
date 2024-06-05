@@ -32,5 +32,5 @@ public enum VerificationStatusEnum {
      * 用于前端展示的值
      */
     @JsonValue
-    private final String name;
+    private final String desc;
 }

@@ -10,7 +10,7 @@
          "title": "业务异常枚举",
          "enumClassName": "{{ cookiecutter.basePackage }}.common.enums.ErrorEnum",
          "codeField": "code",
-         "descField": "message"
+         "descField": "desc"
       },
       {
          "title": "排行榜业务枚举",
@@ -22,13 +22,13 @@
          "title": "证件类型枚举",
          "enumClassName": "{{ cookiecutter.basePackage }}.biz.site.realname.IdTypeEnum",
          "codeField": "code",
-         "descField": "name"
+         "descField": "desc"
       },
       {
          "title": "实名认证状态枚举",
          "enumClassName": "{{ cookiecutter.basePackage }}.biz.site.realname.VerificationStatusEnum",
          "codeField": "code",
-         "descField": "name"
+         "descField": "desc"
       }
    ]
 }
