@@ -406,8 +406,8 @@ COMMIT;
 DROP TABLE IF EXISTS `auth_user_role`;
 CREATE TABLE `auth_user_role` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `user_id` int NOT NULL COMMENT '用户ID',
-  `role_id` int NOT NULL COMMENT '角色ID',
+  `user_id` int unsigned NOT NULL COMMENT '用户ID',
+  `role_id` int unsigned NOT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_user_id_role_id` (`user_id`,`role_id`) USING BTREE,
   FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,

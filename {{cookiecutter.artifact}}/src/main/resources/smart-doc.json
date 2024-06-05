@@ -11,6 +11,12 @@
          "enumClassName": "{{ cookiecutter.basePackage }}.common.enums.ErrorEnum",
          "codeField": "code",
          "descField": "message"
+      },
+      {
+         "title": "排行榜业务枚举",
+         "enumClassName": "{{ cookiecutter.basePackage }}.biz.site.rank.RankBizEnum",
+         "codeField": "code",
+         "descField": "desc"
       }
    ]
 }
