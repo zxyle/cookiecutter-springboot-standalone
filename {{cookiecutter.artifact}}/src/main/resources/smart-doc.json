@@ -17,6 +17,18 @@
          "enumClassName": "{{ cookiecutter.basePackage }}.biz.site.rank.RankBizEnum",
          "codeField": "code",
          "descField": "desc"
+      },
+      {
+         "title": "证件类型枚举",
+         "enumClassName": "{{ cookiecutter.basePackage }}.biz.site.realname.IdTypeEnum",
+         "codeField": "code",
+         "descField": "name"
+      },
+      {
+         "title": "实名认证状态枚举",
+         "enumClassName": "{{ cookiecutter.basePackage }}.biz.site.realname.VerificationStatusEnum",
+         "codeField": "code",
+         "descField": "name"
       }
    ]
 }

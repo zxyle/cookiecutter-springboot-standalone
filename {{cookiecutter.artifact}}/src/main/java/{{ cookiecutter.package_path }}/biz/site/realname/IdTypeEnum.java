@@ -17,39 +17,12 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum IdTypeEnum {
 
-    /**
-     * 0-身份证
-     */
     ID_CARD(0, "身份证"),
-
-    /**
-     * 1-护照
-     */
     PASSPORT(1, "护照"),
-
-    /**
-     * 2-港澳居民来往内地通行证
-     */
     HONG_KONG_AND_MACAO_RESIDENTS_TRAVEL_PERMIT(2, "港澳居民来往内地通行证"),
-
-    /**
-     * 3-台湾居民来往大陆通行证
-     */
     TAIWAN_RESIDENTS_TRAVEL_PERMIT(3, "台湾居民来往大陆通行证"),
-
-    /**
-     * 4-外国人居留证
-     */
     ALIEN_RESIDENCE_PERMIT(4, "外国人居留证"),
-
-    /**
-     * 5-港澳居民居住证
-     */
     HONG_KONG_AND_MACAO_RESIDENTS_RESIDENCE_PERMIT(5, "港澳居民居住证"),
-
-    /**
-     * 6-台湾居民居住证
-     */
     TAIWAN_RESIDENTS_RESIDENCE_PERMIT(6, "台湾居民居住证");
 
     /**

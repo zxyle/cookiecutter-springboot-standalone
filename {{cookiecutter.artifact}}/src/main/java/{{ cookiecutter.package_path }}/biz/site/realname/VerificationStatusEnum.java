@@ -17,24 +17,9 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum VerificationStatusEnum {
 
-    /**
-     * 0-未认证
-     */
     UNVERIFIED(0, "未认证"),
-
-    /**
-     * 1-认证中
-     */
     VERIFICATION_IN_PROGRESS(1, "认证中"),
-
-    /**
-     * 2-已认证
-     */
     VERIFIED(2, "已认证"),
-
-    /**
-     * 3-认证失败
-     */
     VERIFICATION_FAILED(3, "认证失败");
 
     /**
