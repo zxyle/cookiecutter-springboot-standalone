@@ -20,8 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import {{ cookiecutter.namespace }}.validation.Valid;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -89,7 +90,7 @@ public class UserController extends AuthBaseController {
             return R.fail("创建用户失败");
         }
 
-        List<Integer> roleIds = new ArrayList<>();
+        Set<Integer> roleIds = new HashSet<>();
         if (CollectionUtils.isEmpty(req.getRoleIds())) {
             Integer defaultRole = setting.get("auth.user.default-role").getIntValue();
             roleIds.add(defaultRole);

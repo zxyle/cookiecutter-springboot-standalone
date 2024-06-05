@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 组角色关联 服务实现类
@@ -89,11 +90,11 @@ public class GroupRoleService extends ServiceImpl<GroupRoleMapper, GroupRole> {
     /**
      * 更新映射关系
      *
-     * @param groupId 用户组ID
-     * @param roleIds 角色ID列表
+     * @param groupId 用户组id
+     * @param roleIds 角色id集合
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateRelation(Integer groupId, List<Integer> roleIds) {
+    public void updateRelation(Integer groupId, Set<Integer> roleIds) {
         if (CollectionUtils.isEmpty(roleIds) || groupId == null || groupId == 0) {
             return;
         }

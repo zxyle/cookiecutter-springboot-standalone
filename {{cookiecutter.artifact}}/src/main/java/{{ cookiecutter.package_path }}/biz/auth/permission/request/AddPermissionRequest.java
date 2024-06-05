@@ -48,6 +48,7 @@ public class AddPermissionRequest {
      *
      * @mock 1
      */
+    @Positive(message = "父级权限ID必须为正整数")
     private Integer parentId;
 
     /**

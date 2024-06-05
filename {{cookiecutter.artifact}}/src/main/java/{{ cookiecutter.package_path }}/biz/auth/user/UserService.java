@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -149,12 +150,12 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     /**
      * 更新用户关联的角色、用户组、权限
      *
-     * @param userId        用户ID
-     * @param roleIds       角色ID列表
-     * @param groupIds      用户组ID列表
-     * @param permissionIds 权限ID列表
+     * @param userId        用户id
+     * @param roleIds       角色id集合
+     * @param groupIds      用户组id集合
+     * @param permissionIds 权限id集合
      */
-    public void updateRelation(Integer userId, List<Integer> roleIds, List<Integer> groupIds, List<Integer> permissionIds) {
+    public void updateRelation(Integer userId, Set<Integer> roleIds, Set<Integer> groupIds, Set<Integer> permissionIds) {
         userRoleService.updateRelation(userId, roleIds);
         userGroupService.updateRelation(userId, groupIds);
         userPermissionService.updateRelation(userId, permissionIds);

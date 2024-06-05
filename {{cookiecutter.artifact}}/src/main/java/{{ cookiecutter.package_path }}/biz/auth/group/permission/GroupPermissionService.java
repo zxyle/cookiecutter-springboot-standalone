@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户组权限 服务实现类
@@ -99,11 +100,11 @@ public class GroupPermissionService extends ServiceImpl<GroupPermissionMapper, G
     /**
      * 更新映射关系
      *
-     * @param groupId       用户组ID
-     * @param permissionIds 权限ID列表
+     * @param groupId       用户组id
+     * @param permissionIds 权限id集合
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateRelation(Integer groupId, List<Integer> permissionIds) {
+    public void updateRelation(Integer groupId, Set<Integer> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || groupId == null || groupId == 0) {
             return;
         }

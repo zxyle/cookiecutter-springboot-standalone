@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户-用户组关联 服务实现类
@@ -92,11 +93,11 @@ public class UserGroupService extends ServiceImpl<UserGroupMapper, UserGroup> {
     /**
      * 更新映射关系
      *
-     * @param userId   用户ID
-     * @param groupIds 用户组ID列表
+     * @param userId   用户id
+     * @param groupIds 用户组id集合
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateRelation(Integer userId, List<Integer> groupIds) {
+    public void updateRelation(Integer userId, Set<Integer> groupIds) {
         if (CollectionUtils.isEmpty(groupIds) || userId == null || userId == 0) {
             return;
         }

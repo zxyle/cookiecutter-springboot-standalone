@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户-权限关联 服务实现类
@@ -89,11 +90,11 @@ public class UserPermissionService extends ServiceImpl<UserPermissionMapper, Use
     /**
      * 更新映射关系
      *
-     * @param userId        用户ID
-     * @param permissionIds 权限ID列表
+     * @param userId        用户id
+     * @param permissionIds 权限id集合
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateRelation(Integer userId, List<Integer> permissionIds) {
+    public void updateRelation(Integer userId, Set<Integer> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || userId == null || userId == 0) {
             return;
         }

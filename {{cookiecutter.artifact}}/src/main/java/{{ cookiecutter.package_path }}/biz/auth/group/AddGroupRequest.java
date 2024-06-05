@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 import {{ cookiecutter.namespace }}.validation.constraints.Positive;
-import java.util.List;
+import java.util.Set;
 
 /**
  * 创建用户组请求
@@ -56,13 +56,13 @@ public class AddGroupRequest {
     private String remark;
 
     /**
-     * 权限ID列表
+     * 权限ID集合
      */
-    private List<@Positive @NotNull Integer> permissionIds;
+    private Set<@Positive @NotNull Integer> permissionIds;
 
     /**
-     * 角色ID列表
+     * 角色ID集合
      */
-    private List<@Positive @NotNull Integer> roleIds;
+    private Set<@Positive @NotNull Integer> roleIds;
 
 }

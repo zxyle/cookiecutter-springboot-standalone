@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -207,11 +208,11 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
     /**
      * 更新用户组关联关系
      *
-     * @param groupId       用户组ID
-     * @param roleIds       角色ID
-     * @param permissionIds 权限ID
+     * @param groupId       用户组id
+     * @param roleIds       角色id集合
+     * @param permissionIds 权限id集合
      */
-    public void updateRelation(Integer groupId, List<Integer> roleIds, List<Integer> permissionIds) {
+    public void updateRelation(Integer groupId, Set<Integer> roleIds, Set<Integer> permissionIds) {
         groupPermissionService.updateRelation(groupId, permissionIds);
         groupRoleService.updateRelation(groupId, roleIds);
     }

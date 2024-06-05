@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户和角色关联表 服务实现类
@@ -89,11 +90,11 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
     /**
      * 更新用户角色关系
      *
-     * @param userId  用户ID
-     * @param roleIds 角色ID列表
+     * @param userId  用户id
+     * @param roleIds 角色id集合
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateRelation(Integer userId, List<Integer> roleIds) {
+    public void updateRelation(Integer userId, Set<Integer> roleIds) {
         if (CollectionUtils.isEmpty(roleIds) || userId == null || userId == 0) {
             return;
         }

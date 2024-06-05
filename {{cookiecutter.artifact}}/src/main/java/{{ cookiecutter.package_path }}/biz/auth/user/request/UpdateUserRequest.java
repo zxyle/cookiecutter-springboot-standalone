@@ -4,7 +4,7 @@ import lombok.Data;
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * 更新用户请求
@@ -13,17 +13,17 @@ import java.util.List;
 public class UpdateUserRequest {
 
     /**
-     * 角色列表
+     * 角色id集合
      */
-    private List<@Positive @NotNull Integer> roleIds;
+    private Set<@Positive @NotNull Integer> roleIds;
 
     /**
-     * 用户组列表
+     * 用户组id集合
      */
-    private List<@Positive @NotNull Integer> groupIds;
+    private Set<@Positive @NotNull Integer> groupIds;
 
     /**
-     * 权限列表
+     * 权限id集合
      */
-    private List<@Positive @NotNull Integer> permissionIds;
+    private Set<@Positive @NotNull Integer> permissionIds;
 }

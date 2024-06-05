@@ -11,7 +11,7 @@ import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
-import java.util.List;
+import java.util.Set;
 
 /**
  * 管理员添加用户
@@ -39,14 +39,14 @@ public class AdminAddUserRequest {
     private String password;
 
     /**
-     * 角色列表
+     * 角色id集合
      */
-    private List<@Positive @NotNull Integer> roleIds;
+    private Set<@Positive @NotNull Integer> roleIds;
 
     /**
-     * 用户组ID
+     * 用户组id集合
      */
-    private List<@Positive @NotNull Integer> groupIds;
+    private Set<@Positive @NotNull Integer> groupIds;
 
     /**
      * 是否需要修改密码

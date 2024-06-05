@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import {{ cookiecutter.namespace }}.validation.Valid;
 import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 注册管理
@@ -61,7 +61,7 @@ public class RegisterController {
 
         // 赋予默认角色
         Integer defaultRole = setting.get("auth.user.default-role").getIntValue();
-        userService.updateRelation(user.getId(), Collections.singletonList(defaultRole), null, null);
+        userService.updateRelation(user.getId(), Set.of(defaultRole), null, null);
 
         // 自动登录
         if (setting.get("auth.user.auto-login").isReal()) {
