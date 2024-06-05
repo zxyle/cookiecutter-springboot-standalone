@@ -28,6 +28,11 @@ import java.io.InputStreamReader;
 @Slf4j
 public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
+    /**
+     * 登录请求体json 账号key
+     */
+    public static final String ACCOUNT = "account";
+
     public SmsCodeAuthenticationFilter() {
         // 处理的验证码登录请求处理url
         super(new AntPathRequestMatcher("/auth/user/login/code", HttpMethod.POST.name()));
@@ -57,7 +62,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
         }
 
         account = account.trim();
-        req.setAttribute("account", account);
+        req.setAttribute(ACCOUNT, account);
         // 创建SmsCodeAuthenticationToken(未认证)
         SmsCodeAuthenticationToken authRequest = new SmsCodeAuthenticationToken(account, code);
 

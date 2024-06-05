@@ -3,6 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.config.security;
 
+import {{ cookiecutter.basePackage }}.common.enums.ErrorEnum;
+import {{ cookiecutter.basePackage }}.common.response.R;
+import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -26,7 +29,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
         PrintWriter writer = response.getWriter();
-        writer.print("{\"message\": \"权限不足\", \"success\": false, \"code\": \"403\"}");
+        writer.print(JacksonUtil.serialize(R.fail(ErrorEnum.ACCESS_DENIED)));
         writer.flush();
         writer.close();
     }

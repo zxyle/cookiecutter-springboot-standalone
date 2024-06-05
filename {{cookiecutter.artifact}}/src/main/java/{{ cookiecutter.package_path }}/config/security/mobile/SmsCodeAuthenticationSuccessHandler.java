@@ -55,7 +55,7 @@ public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSucces
     }
 
     private void recordLog(HttpServletRequest request) {
-        String account = (String) request.getAttribute("account");
+        String account = (String) request.getAttribute(SmsCodeAuthenticationFilter.ACCOUNT);
         LoginLog loginLog = new LoginLog();
         loginLog.setIp(request.getRemoteAddr());
         loginLog.setUa(request.getHeader(HttpHeaders.USER_AGENT));

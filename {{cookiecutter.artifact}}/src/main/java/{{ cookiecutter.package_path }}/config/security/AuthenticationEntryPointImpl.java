@@ -3,6 +3,9 @@
 
 package {{ cookiecutter.basePackage }}.config.security;
 
+import {{ cookiecutter.basePackage }}.common.enums.ErrorEnum;
+import {{ cookiecutter.basePackage }}.common.response.R;
+import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -27,7 +30,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
         PrintWriter writer = response.getWriter();
-        writer.print("{\"message\": \"认证失败请重新登录\", \"success\": false, \"code\": \"401\"}");
+        writer.print(JacksonUtil.serialize(R.fail(ErrorEnum.AUTH_ERROR)));
         writer.flush();
         writer.close();
     }

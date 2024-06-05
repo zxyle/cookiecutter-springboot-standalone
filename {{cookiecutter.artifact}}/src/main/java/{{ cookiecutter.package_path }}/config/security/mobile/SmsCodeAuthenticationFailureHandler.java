@@ -5,6 +5,9 @@ package {{ cookiecutter.basePackage }}.config.security.mobile;
 
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
+import {{ cookiecutter.basePackage }}.common.enums.ErrorEnum;
+import {{ cookiecutter.basePackage }}.common.response.R;
+import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Component;
 import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
 import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 验证码登录失败处理
@@ -32,11 +36,11 @@ public class SmsCodeAuthenticationFailureHandler implements AuthenticationFailur
         recordLog(request, exception);
 
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"message\": \"登录失败\", \"success\": false, \"code\": \"401\"}");
+        response.getWriter().write(Objects.requireNonNull(JacksonUtil.serialize(R.fail(ErrorEnum.AUTH_ERROR))));
     }
 
     private void recordLog(HttpServletRequest request, AuthenticationException exception) {
-        String account = (String) request.getAttribute("account");
+        String account = (String) request.getAttribute(SmsCodeAuthenticationFilter.ACCOUNT);
         LoginLog loginLog = new LoginLog();
         loginLog.setIp(request.getRemoteAddr());
         loginLog.setUa(request.getHeader(HttpHeaders.USER_AGENT));
