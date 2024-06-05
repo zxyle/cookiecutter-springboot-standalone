@@ -4,5 +4,13 @@
    "replace": true,
    "appToken": "",
    "allInOne": true,
-   "pathPrefix": "/api"
+   "pathPrefix": "/api",
+   "dataDictionaries": [
+      {
+         "title": "业务异常枚举",
+         "enumClassName": "{{ cookiecutter.basePackage }}.common.enums.ErrorEnum",
+         "codeField": "code",
+         "descField": "message"
+      }
+   ]
 }

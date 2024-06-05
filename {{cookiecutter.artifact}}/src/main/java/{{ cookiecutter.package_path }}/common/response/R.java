@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.common.response;
 
+import {{ cookiecutter.basePackage }}.common.enums.ErrorEnum;
 import lombok.Data;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
@@ -87,6 +88,10 @@ public class R<T> implements Serializable {
         response.setSuccess(false);
         response.setTraceId(MDC.get(TRACE_ID));
         return response;
+    }
+
+    public static <T> R<T> fail(ErrorEnum errorEnum) {
+        return fail(errorEnum.getMessage(), Integer.valueOf(errorEnum.getCode()));
     }
 
     public static <T> R<T> result(boolean success) {

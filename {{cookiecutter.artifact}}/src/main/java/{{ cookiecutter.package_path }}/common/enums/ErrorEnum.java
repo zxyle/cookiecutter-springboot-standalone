@@ -3,31 +3,20 @@
 
 package {{ cookiecutter.basePackage }}.common.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * 业务异常枚举
  */
+@Getter
+@AllArgsConstructor
 public enum ErrorEnum {
 
-    /**
-     * 服务异常
-     */
     ERROR_9999("服务异常", "9999"),
     ;
 
     private final String message;
     private final String code;
 
-    ErrorEnum(String message, String code) {
-        this.message = message;
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getCode() {
-        return code;
-    }
 }
