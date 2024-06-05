@@ -11,7 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Length;
 
-import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -33,12 +33,12 @@ public class UpdateAuthRequest extends BaseRequest {
     private String description;
 
     /**
-     * 权限ID集合
+     * 权限id集合
      */
     private Set<@Positive @NotNull Integer> permissionIds;
 
     /**
-     * 角色ID集合
+     * 角色id集合
      */
     private Set<@Positive @NotNull Integer> roleIds;
 }
