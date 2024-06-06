@@ -5,7 +5,7 @@ package {{ cookiecutter.basePackage }}.common.util;
 
 import {{ cookiecutter.basePackage }}.common.response.AntdTree2;
 import {{ cookiecutter.basePackage }}.common.response.TreeNode;
-import dev.zhengxiang.tool.utils.BoolUtil;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public final class TreeUtil {
         List<AntdTree2> childTreeList = getChildTree(list, parentId);
         for (AntdTree2 tree : childTreeList) {
             List<AntdTree2> children = createTree(list, tree.getValue());
-            if (BoolUtil.bool(children)) {
+            if (CollectionUtils.isNotEmpty(children)) {
                 tree.setChildren(children);
             }
         }

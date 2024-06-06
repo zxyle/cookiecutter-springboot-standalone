@@ -170,11 +170,6 @@
         </dependency>
         <dependency>
             <groupId>dev.zhengxiang</groupId>
-            <artifactId>frontend</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>dev.zhengxiang</groupId>
             <artifactId>tool</artifactId>
             <version>1.0.0</version>
         </dependency>
