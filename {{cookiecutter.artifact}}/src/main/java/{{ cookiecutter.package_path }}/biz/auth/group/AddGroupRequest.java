@@ -45,23 +45,19 @@ public class AddGroupRequest {
 
     /**
      * 描述信息
+     *
+     * @mock 测试组
      */
     @Length(max = 32, message = "描述信息长度不能超过32个字符")
     private String description;
 
     /**
-     * 备注
-     */
-    @Length(max = 32, message = "备注长度不能超过32个字符")
-    private String remark;
-
-    /**
-     * 权限ID集合
+     * 权限id集合
      */
     private Set<@Positive @NotNull Integer> permissionIds;
 
     /**
-     * 角色ID集合
+     * 角色id集合
      */
     private Set<@Positive @NotNull Integer> roleIds;
 

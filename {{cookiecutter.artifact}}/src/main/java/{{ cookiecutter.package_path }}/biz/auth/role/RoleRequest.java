@@ -12,7 +12,7 @@ import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 import {{ cookiecutter.namespace }}.validation.constraints.Null;
 import {{ cookiecutter.namespace }}.validation.constraints.Positive;
-import java.util.List;
+import java.util.Set;
 
 /**
  * 创建角色请求
@@ -47,13 +47,7 @@ public class RoleRequest {
     private String description;
 
     /**
-     * 备注
+     * 权限id集合
      */
-    @Length(max = 32, message = "备注长度不能超过32个字符", groups = {Add.class, Update.class})
-    private String remark;
-
-    /**
-     * 权限id列表
-     */
-    private List<@Positive @NotNull Integer> permissionIds;
+    private Set<@Positive @NotNull Integer> permissionIds;
 }

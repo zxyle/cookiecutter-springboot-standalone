@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 角色权限信息 服务实现类
@@ -87,11 +88,11 @@ public class RolePermissionService extends ServiceImpl<RolePermissionMapper, Rol
     /**
      * 更新映射关系
      *
-     * @param roleId        角色ID
-     * @param permissionIds 权限ID列表
+     * @param roleId        角色id
+     * @param permissionIds 权限id集合
      */
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateRelation(Integer roleId, List<Integer> permissionIds) {
+    public boolean updateRelation(Integer roleId, Set<Integer> permissionIds) {
         if (CollectionUtils.isEmpty(permissionIds) || roleId == null || roleId == 0) {
             return false;
         }

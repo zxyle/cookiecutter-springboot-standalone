@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 角色信息 服务实现类
@@ -93,10 +94,10 @@ public class RoleService extends ServiceImpl<RoleMapper, Role> {
     /**
      * 更新角色权限关系
      *
-     * @param roleId        角色ID
-     * @param permissionIds 权限ID列表
+     * @param roleId        角色id
+     * @param permissionIds 权限id集合
      */
-    public void updateRelation(Integer roleId, List<Integer> permissionIds) {
+    public void updateRelation(Integer roleId, Set<Integer> permissionIds) {
         rolePermissionService.updateRelation(roleId, permissionIds);
     }
 
