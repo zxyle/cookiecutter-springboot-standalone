@@ -122,6 +122,8 @@ public class ${className} {
 
     /**
      * 按ID查询${table.comment!}
+     *
+     * @param id ${table.comment!}id
      */
     @LogOperation(name = "按ID查询${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:get')")
@@ -133,6 +135,8 @@ public class ${className} {
 
     /**
      * 按ID更新${table.comment!}
+     *
+     * @param id ${table.comment!}id
      */
     @LogOperation(name = "按ID更新${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
@@ -152,6 +156,8 @@ public class ${className} {
 
     /**
      * 按ID删除${table.comment!}
+     *
+     * @param id ${table.comment!}id
      */
     @LogOperation(name = "按ID删除${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:delete')")
