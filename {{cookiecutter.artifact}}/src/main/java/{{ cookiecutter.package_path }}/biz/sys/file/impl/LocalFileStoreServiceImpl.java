@@ -59,4 +59,15 @@ public class LocalFileStoreServiceImpl implements FileStoreService {
         }
         return true;
     }
+
+    /**
+     * 判断文件是否存在
+     *
+     * @param objectName 文件名
+     * @return 存在则返回url, 不存在则返回null
+     */
+    @Override
+    public String exists(String objectName) {
+        return null;
+    }
 }

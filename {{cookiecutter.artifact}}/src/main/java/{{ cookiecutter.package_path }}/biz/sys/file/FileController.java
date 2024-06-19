@@ -3,13 +3,11 @@
 
 package {{ cookiecutter.basePackage }}.biz.sys.file;
 
-import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadData;
-import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadRequest;
-import {{ cookiecutter.basePackage }}.biz.sys.file.upload.UploadResponse;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -20,12 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import {{ cookiecutter.namespace }}.validation.Valid;
 import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 文件管理
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/sys/file")
@@ -39,7 +39,7 @@ public class FileController {
      * 文件上传
      */
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public UploadResponse upload(@Valid UploadRequest req) {
+    public R<List<String>> upload(@Valid UploadRequest req) {
         List<String> list = new ArrayList<>(req.getFiles().size());
         List<MultipartFile> files = req.getFiles();
         for (MultipartFile file : files) {
@@ -50,10 +50,7 @@ public class FileController {
             list.add(url);
         }
 
-        UploadData data = new UploadData();
-        data.setUrls(list);
-        data.setSuccess(true);
-        return new UploadResponse(data);
+        return R.ok(list);
     }
 
     /**
@@ -91,12 +88,25 @@ public class FileController {
      * @param folder 上传到指定目录
      */
     private String store(MultipartFile file, String folder) {
-        String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        String objectName = IdUtil.fastSimpleUUID() + "." + extension;
-        // String objectName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
-        if (StringUtils.isNotBlank(folder)) {
-            objectName = folder + "/" + objectName;
+        try {
+            // 计算文件md5，避免重复上传
+            String md5Hex = DigestUtils.md5Hex(file.getBytes());
+            String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+            String objectName = md5Hex + "." + extension;
+            if (StringUtils.isNotBlank(folder)) {
+                objectName = folder + "/" + objectName;
+            }
+
+            // 先判断文件是否存在，如果存在则直接返回url
+            String url = fileStoreService.exists(objectName);
+            if (StringUtils.isNotBlank(url)) {
+                return url;
+            }
+
+            return fileStoreService.upload(file, objectName);
+        } catch (IOException e) {
+            log.error("文件上传失败", e);
+            return "";
         }
-        return fileStoreService.upload(file, objectName);
     }
 }

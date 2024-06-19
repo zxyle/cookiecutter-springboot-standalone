@@ -26,4 +26,12 @@ public interface FileStoreService {
      * @return 是否删除成功
      */
     boolean delete(String objectName);
+
+    /**
+     * 判断文件是否存在
+     *
+     * @param objectName 文件名
+     * @return 存在则返回url, 不存在则返回null
+     */
+    String exists(String objectName);
 }
