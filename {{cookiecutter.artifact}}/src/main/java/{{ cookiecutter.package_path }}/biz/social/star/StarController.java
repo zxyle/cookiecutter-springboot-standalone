@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import {{ cookiecutter.namespace }}.validation.Valid;
+
 /**
  * 收藏管理
  */
@@ -24,25 +26,19 @@ public class StarController extends AuthBaseController {
 
     /**
      * 收藏，返回当前收藏数量
-     *
-     * @param resType 资源类型
-     * @param resId   资源ID
      */
     @PostMapping("/star")
-    public R<Long> star(Integer resType, Integer resId) {
-        Long currentStar = starService.star(resType, resId, getUserId());
+    public R<Long> star(@Valid @RequestBody StarRequest req) {
+        Long currentStar = starService.star(req.getResType(), req.getResId(), getUserId());
         return R.ok(currentStar);
     }
 
     /**
      * 取消收藏，返回当前收藏数量
-     *
-     * @param resType 资源类型
-     * @param resId   资源ID
      */
     @DeleteMapping("/unstar")
-    public R<Long> unstar(Integer resType, Integer resId) {
-        Long currentStar = starService.unstar(resType, resId, getUserId());
+    public R<Long> unstar(@Valid StarRequest req) {
+        Long currentStar = starService.unstar(req.getResType(), req.getResId(), getUserId());
         return R.ok(currentStar);
     }
 
@@ -53,8 +49,8 @@ public class StarController extends AuthBaseController {
      */
     @GetMapping("/stars")
     public R<Page<StarDTO>> starList(Integer resType, PaginationRequest req) {
-        Page<StarDTO> idList = starService.getResIdList(resType, getUserId(), req);
-        return R.ok(idList);
+        Page<StarDTO> page = starService.getResIdList(resType, getUserId(), req);
+        return R.ok(page);
     }
 
 }
