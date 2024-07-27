@@ -80,7 +80,8 @@ public class OperateAspect {
         try {
             Object result = joinPoint.proceed();
             // 记录操作结果
-            R<Object> response = (R) result;
+            @SuppressWarnings("unchecked")
+            R<Object> response = (R<Object>) result;
             op.setSuccess(response.isSuccess());
             op.setTraceId(response.getTraceId());
             // 如果操作失败，记录失败原因

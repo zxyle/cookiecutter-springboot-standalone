@@ -550,7 +550,7 @@ CREATE TABLE `sys_operate_log` (
   `request` varchar(2048) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '请求体',
   `ip` varchar(20) NOT NULL COMMENT '请求来源IP',
   `method` varchar(6) CHARACTER SET utf8mb4 NOT NULL COMMENT 'http方法',
-  `path` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '请求路径',
+  `path` varchar(128) CHARACTER SET utf8mb4 NOT NULL COMMENT '请求路径',
   `response` varchar(1024) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '响应体',
   `success` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作是否成功',
   `trace_id` char(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '链路追踪ID',

@@ -54,13 +54,14 @@ public class LogAspect {
         HttpServletRequest request = attributes.getRequest();
 
         String url = request.getRequestURL().toString();
+        String method = request.getMethod();
         String ip = request.getRemoteAddr();
         // 获得类名.方法名
         String classMethod = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
         // 获得方法参数
         Object[] args = joinPoint.getArgs();
 
-        RequestLog requestLog = new RequestLog(url, ip, classMethod, args);
+        RequestLog requestLog = new RequestLog(method, url, ip, classMethod, args);
         // 打印请求信息
         log.info("Request: {}", requestLog);
     }
@@ -99,7 +100,8 @@ public class LogAspect {
         loginLog.setAccount(request.getAccount());
         long start = System.currentTimeMillis();
         // 调用执行目标方法(result为目标方法执行结果)，必须有此行代码才会执行目标调用的方法（等价于@befor+@after），否则只会执行一次之前的（等价于@before）
-        R<LoginResponse> result = (R) pjp.proceed();
+        @SuppressWarnings("unchecked")
+        R<LoginResponse> result = (R<LoginResponse>) pjp.proceed();
         // log.info("Around Result: {}", result);
         long end = System.currentTimeMillis();
         loginLog.setMsg(result.getMessage());
@@ -129,6 +131,7 @@ public class LogAspect {
     @Data
     @AllArgsConstructor
     public static class RequestLog {      // 用于封装请求信息
+        private String method;
         private String url;
         private String ip;
         private String classMethod;

@@ -23,6 +23,6 @@ public class UploadRequest {
     /**
      * 文件列表
      */
-    @NotEmpty
+    @NotEmpty(message = "文件列表不能为空")
     private List<MultipartFile> files;
 }
