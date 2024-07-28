@@ -66,7 +66,15 @@ public class WeChatMiniProgramService {
         return response;
     }
 
-    // 获取用户信息 https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserProfile.html
+    /**
+     * 解密用户敏感数据
+     *
+     * @param encryptedData 包括敏感数据在内的完整用户信息的加密数据
+     * @param sessionKey    会话密钥
+     * @param vi            加密算法的初始向量
+     * @return 解密后的字符串数据
+     * @throws Exception 异常
+     */
     public String decryptData(String encryptedData, String sessionKey, String vi) throws Exception {
         byte[] encData = Base64.decode(encryptedData);
         byte[] iv = Base64.decode(vi);
@@ -107,4 +115,20 @@ public class WeChatMiniProgramService {
         return response.getAccessToken();
     }
 
+    /**
+     * 获取用户信息
+     *
+     * @param encryptedData 包括敏感数据在内的完整用户信息的加密数据
+     */
+    // https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/user-info/phone-number/getPhoneNumber.html
+    // https://developers.weixin.qq.com/miniprogram/dev/api/open-api/user-info/wx.getUserProfile.html
+    public WxUserInfo getUserInfo(String encryptedData, String sessionKey, String vi) {
+        try {
+            String decryptData = decryptData(encryptedData, sessionKey, vi);
+            return JacksonUtil.deserialize(decryptData, WxUserInfo.class);
+        } catch (Exception e) {
+            log.error("decryptData error", e);
+            return null;
+        }
+    }
 }
