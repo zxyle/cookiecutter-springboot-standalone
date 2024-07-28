@@ -29,6 +29,8 @@ public class ${className} extends PaginationRequest {
 <#list table.columns as column>
     /**
      * ${column.comment}
+     *
+     * @mock <#if column.defaultValue??>${column.defaultValue}</#if>
      */
     <#if column.length gt 0>
     @Length(max = ${column.length?string("0")}, message = "${column.comment}长度不能超过${column.length?string("0")}个字符")

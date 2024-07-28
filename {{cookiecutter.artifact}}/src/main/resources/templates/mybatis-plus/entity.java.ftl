@@ -29,6 +29,8 @@ public class ${className} {
 <#list table.columns as column>
     /**
      * ${column.comment}
+     *
+     * @mock <#if column.defaultValue??>${column.defaultValue}</#if>
      */
     <#if column.javaType == "LocalDateTime">
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
