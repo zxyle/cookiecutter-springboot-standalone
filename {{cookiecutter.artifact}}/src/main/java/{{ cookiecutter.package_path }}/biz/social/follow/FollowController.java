@@ -116,6 +116,7 @@ public class FollowController extends AuthBaseController {
         if (userIds == null || userIds.isEmpty()) {
             return Collections.emptyList();
         }
+
         LambdaQueryWrapper<Profile> wrapper = new LambdaQueryWrapper<>();
         wrapper.select(Profile::getUserId, Profile::getNickname, Profile::getAvatar);
         wrapper.in(Profile::getUserId, userIds);
