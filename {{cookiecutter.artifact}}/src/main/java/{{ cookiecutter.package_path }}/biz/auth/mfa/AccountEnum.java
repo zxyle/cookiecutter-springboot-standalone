@@ -3,37 +3,29 @@
 
 package {{ cookiecutter.basePackage }}.biz.auth.mfa;
 
-import lombok.Getter;
-
 /**
  * 账号类型枚举
  */
-@Getter
 public enum AccountEnum {
 
     /**
      * 用户名
      */
-    USERNAME("username"),
+    USERNAME,
 
     /**
      * 手机号
      */
-    MOBILE("mobile"),
+    MOBILE,
 
     /**
      * 邮箱
      */
-    EMAIL("email"),
+    EMAIL,
 
     /**
      * 非法字符串
      */
-    ILLEGAL("illegal");
+    ILLEGAL;
 
-    private final String kind;
-
-    AccountEnum(String kind) {
-        this.kind = kind;
-    }
 }
