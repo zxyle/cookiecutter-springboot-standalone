@@ -11,6 +11,7 @@ import {{ cookiecutter.namespace }}.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Redis ZSet 实现排行榜服务

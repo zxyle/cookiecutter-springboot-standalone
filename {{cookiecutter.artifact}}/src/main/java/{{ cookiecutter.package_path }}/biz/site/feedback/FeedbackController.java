@@ -19,7 +19,6 @@ import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
 import {{ cookiecutter.namespace }}.validation.Valid;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -49,7 +48,7 @@ public class FeedbackController {
             List<Feedback> list = thisService.list(wrapper);
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             String fileName = "意见反馈";
-            String baseName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replace("\\+", "%20");
+            String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
             response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
             EasyExcelFactory.write(response.getOutputStream(), Feedback.class)
                     .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(list);
