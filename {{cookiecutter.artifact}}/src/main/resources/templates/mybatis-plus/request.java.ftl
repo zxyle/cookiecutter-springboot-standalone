@@ -1,6 +1,7 @@
 package ${table.packageName};
 
 import ${table.basePackageName}.common.request.BaseRequest;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 <#list table.imports as import>
 import ${import};
