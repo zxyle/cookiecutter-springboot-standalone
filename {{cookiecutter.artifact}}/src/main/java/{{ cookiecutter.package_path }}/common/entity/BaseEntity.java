@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties(value = {"createTime", "updateTime", "version", "deleted"})
+@JsonIgnoreProperties(value = {"updateTime", "version", "deleted"})
 public class BaseEntity extends LiteEntity {
 
     /**
