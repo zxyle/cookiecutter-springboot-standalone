@@ -3,6 +3,7 @@
 
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
+import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class SmsSecurityConfigurerAdapter extends SecurityConfigurerAdapter<Defa
     final UserDetailsService userDetailsService;
     final ValidateService validateService;
     final LoginLogService loginLogService;
+    final UserService userService;
 
     @Override
     public void configure(HttpSecurity http) {
@@ -35,7 +37,7 @@ public class SmsSecurityConfigurerAdapter extends SecurityConfigurerAdapter<Defa
 
         // 设置自定义SmsCodeAuthenticationProvider的认证器userDetailsService
         SmsCodeAuthenticationProvider smsCodeAuthenticationProvider =
-                new SmsCodeAuthenticationProvider(userDetailsService, validateService);
+                new SmsCodeAuthenticationProvider(userDetailsService, validateService, userService);
 
         // 在UsernamePasswordAuthenticationFilter过滤前执行
         http.authenticationProvider(smsCodeAuthenticationProvider)

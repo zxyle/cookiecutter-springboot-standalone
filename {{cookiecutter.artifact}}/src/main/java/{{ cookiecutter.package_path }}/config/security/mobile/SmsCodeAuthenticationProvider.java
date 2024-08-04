@@ -3,6 +3,8 @@
 
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
+import {{ cookiecutter.basePackage }}.biz.auth.user.User;
+import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,12 +20,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
 
     UserDetailsService userDetailsService;
-
     ValidateService validateService;
+    UserService userService;
 
-    public SmsCodeAuthenticationProvider(UserDetailsService userDetailsService, ValidateService validateService) {
+    public SmsCodeAuthenticationProvider(UserDetailsService userDetailsService, ValidateService validateService, UserService userService) {
         this.userDetailsService = userDetailsService;
         this.validateService = validateService;
+        this.userService = userService;
     }
 
     @Override
@@ -38,6 +41,14 @@ public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
         String key = "code:" + account;
         if (!validateService.validate(key, smsCode)) {
             throw new BadCredentialsException("输入的验证码不正确或可能过期，请重新输入");
+        }
+
+        // 检查当前手机号是否已注册，没有则创建用户
+        User account1 = userService.findByAccount(account);
+        if (account1 == null) {
+            User user = new User();
+            user.setMobile(account);  // TODO 需要判断账号是邮箱还是手机号
+            userService.save(user);
         }
 
         // 调用自定义的userDetailsService认证
