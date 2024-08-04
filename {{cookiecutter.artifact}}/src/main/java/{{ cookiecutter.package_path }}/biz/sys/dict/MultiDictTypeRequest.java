@@ -24,5 +24,5 @@ public class MultiDictTypeRequest {
      */
     @NotEmpty(message = "字典类型集合不能为空")
     @Size(min = 1, message = "字典类型集合至少包含一个元素")
-    private Set<@Pattern(regexp = "^[a-zA-Z]+$", message = "字典类型只能包含字母") String> types;
+    private Set<@Pattern(regexp = "^[a-zA-Z_]+$", message = "字典类型只能包含字母和下划线") String> types;
 }

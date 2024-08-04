@@ -69,10 +69,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String key = AuthConst.KEY_PREFIX + userId;
         List<String> permissions;
         String value = stringRedisTemplate.opsForValue().get(key);
-        if (StringUtils.isBlank(value)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         // 获取权限信息封装到Authentication中
         permissions = Arrays.asList(value.split(AuthConst.DELIMITER));
