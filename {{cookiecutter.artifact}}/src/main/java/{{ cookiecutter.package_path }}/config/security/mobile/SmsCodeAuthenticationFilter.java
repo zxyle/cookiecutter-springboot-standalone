@@ -35,7 +35,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
 
     public SmsCodeAuthenticationFilter() {
         // 处理的验证码登录请求处理url
-        super(new AntPathRequestMatcher("/auth/user/login/code", HttpMethod.POST.name()));
+        super(new AntPathRequestMatcher("/auth/login/code", HttpMethod.POST.name()));
     }
 
     @Override
