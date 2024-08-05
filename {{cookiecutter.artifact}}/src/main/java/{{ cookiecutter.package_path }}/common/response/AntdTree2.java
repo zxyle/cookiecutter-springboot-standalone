@@ -3,10 +3,17 @@
 
 package {{ cookiecutter.basePackage }}.common.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AntdTree2 {
+
     /**
      * 行政区名称
      *
@@ -17,7 +24,7 @@ public class AntdTree2 {
     /**
      * 行政区代码
      *
-     * @mock 330000
+     * @mock 33
      */
     private String value;
 
@@ -31,36 +38,4 @@ public class AntdTree2 {
         this.value = value;
     }
 
-    public AntdTree2(String label, String value, List<? extends AntdTree2> children) {
-        this.label = label;
-        this.value = value;
-        this.children = children;
-    }
-
-    public AntdTree2() {
-    }
-
-    public String getLabel() {
-        return this.label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getValue() {
-        return this.value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public List<? extends AntdTree2> getChildren() {
-        return this.children;
-    }
-
-    public void setChildren(List<? extends AntdTree2> children) {
-        this.children = children;
-    }
 }

@@ -48,9 +48,11 @@ public class AreaController {
         if (!"0000".equals(rootId)) {
             wrapper.likeRight(Area::getCode, rootId);
             Area rootArea = thisService.findAreaByCode(rootId);
-            rootName = rootArea.getName();
-            rootCode = rootArea.getCode();
-            rootLevel = rootArea.getLevel();
+            if (rootArea != null) {
+                rootName = rootArea.getName();
+                rootCode = rootArea.getCode();
+                rootLevel = rootArea.getLevel();
+            }
         }
 
         if ((level - rootLevel) > 3) {
