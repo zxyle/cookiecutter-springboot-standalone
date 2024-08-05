@@ -106,6 +106,7 @@ public class LogAspect {
         long end = System.currentTimeMillis();
         loginLog.setMsg(result.getMessage());
         loginLog.setSuccess(result.isSuccess());
+        loginLog.setUserId(result.getData().getUserId());
 
         log.debug("{} -> {}, 耗费时间: {}毫秒.", pjp.getTarget().getClass().getSimpleName(), pjp.getSignature().getName(), (end - start));
         log.info("登录耗费时间: {}毫秒", (end - start));
@@ -115,7 +116,7 @@ public class LogAspect {
     }
 
     @AfterThrowing(throwing = "e", pointcut = "log()")
-    public void doAfterThrowing(Throwable e) {
+    public void doAfterThrowing(JoinPoint joinPoint, Throwable e) {
         log.error("------------doAfterThrowing------------");
         log.error("Exception: {}", e.getMessage());
         // 获取RequestAttributes
@@ -126,6 +127,25 @@ public class LogAspect {
         // 从获取RequestAttributes中获取HttpServletRequest的信息
         HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
         log.error("request: {}", request);
+
+        LoginLog loginLog = new LoginLog();
+        Object[] values = joinPoint.getArgs();
+        String[] names = ((CodeSignature) joinPoint.getSignature()).getParameterNames();
+        Map<String, Object> map = new HashMap<>(names.length);
+        for (int i = 0; i < names.length; i++) {
+            map.put(names[i], values[i]);
+        }
+        HttpServletRequest servletRequest = (HttpServletRequest) map.get("servletRequest");
+        AccountLoginRequest accountRequest = (AccountLoginRequest) map.get("req");
+        loginLog.setUa(servletRequest.getHeader(HttpHeaders.USER_AGENT));
+        loginLog.setIp(IpUtil.getIpAddr(servletRequest));
+        loginLog.setAccount(accountRequest.getAccount());
+        loginLog.setSuccess(false);
+        loginLog.setMsg(e.getMessage());
+        loginLog.setUserId(null);  // FIXME 如何记录登录失败的用户ID？
+
+        log.info("登录失败日志: {}", loginLog);
+        loginLogService.saveLoginLog(loginLog);
     }
 
     @Data
