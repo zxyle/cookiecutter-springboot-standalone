@@ -330,7 +330,7 @@ CREATE TABLE `auth_user` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `username` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '登录用户名',
-  `mobile` varchar(11) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '手机号码',
+  `mobile` char(11) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '手机号码',
   `email` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '邮箱地址',
   `pwd` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '密码',
   `nickname` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '昵称/名字/真实姓名（只用于展示）',
@@ -340,13 +340,13 @@ CREATE TABLE `auth_user` (
   `pwd_change_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '密码上次修改时间',
   `enabled` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '账号是否启用',
   `must_change_pwd` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否需要修改密码',
-  `registered_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间',
   `last_login_time` datetime DEFAULT NULL COMMENT '最后登录时间',
   `openid` varchar(30) DEFAULT NULL COMMENT '微信用户唯一标识',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uk_email` (`email`) USING BTREE,
-  KEY `idx_username` (`username`) USING BTREE,
-  KEY `idx_mobile` (`mobile`) USING BTREE
+  UNIQUE KEY `uk_mobile` (`mobile`) USING BTREE,
+  UNIQUE KEY `uk_username` (`username`) USING BTREE,
+  CONSTRAINT `chk_account` CHECK (`username` IS NOT NULL OR `mobile` IS NOT NULL OR `email` IS NOT NULL)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户';
 
 -- ----------------------------

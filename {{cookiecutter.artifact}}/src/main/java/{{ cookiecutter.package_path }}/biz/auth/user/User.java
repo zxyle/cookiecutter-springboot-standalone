@@ -82,12 +82,6 @@ public class User extends BaseEntity {
     private Boolean mustChangePwd;
 
     /**
-     * 注册时间
-     */
-    @JsonIgnore
-    private LocalDateTime registeredAt;
-
-    /**
      * 最后登录时间
      */
     @JsonIgnore
