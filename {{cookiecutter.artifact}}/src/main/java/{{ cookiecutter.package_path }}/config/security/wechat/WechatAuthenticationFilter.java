@@ -35,6 +35,7 @@ public class WechatAuthenticationFilter extends AbstractAuthenticationProcessing
      * 登录请求体json 账号key
      */
     public static final String ACCOUNT = "account";
+    public static final String USER_ID = "userId";
 
     private final WeChatMiniProgramService wechatMiniProgramService;
 
@@ -51,7 +52,7 @@ public class WechatAuthenticationFilter extends AbstractAuthenticationProcessing
             throw new AuthenticationServiceException("不支持的Http方法: {}" + req.getMethod());
         }
 
-        // 从请求body中获取手机号或邮箱和验证码
+        // 从请求body中获取登录参数
         WechatLoginRequest loginRequest = obtainCodeLoginRequest(req);
         String jsCode = loginRequest.getJsCode();
         String encryptedData = loginRequest.getEncryptedData();

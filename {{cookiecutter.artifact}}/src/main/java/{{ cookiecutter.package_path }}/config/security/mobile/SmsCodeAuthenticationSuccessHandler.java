@@ -3,7 +3,10 @@
 
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.login.LoginResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.user.User;
+import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Component;
 import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
 import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 
 /**
@@ -33,6 +37,7 @@ public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSucces
 
     final LoginLogService loginLogService;
     static StringRedisTemplate stringRedisTemplate;
+    final UserService usersService;
 
     // 解决 @Component 下 @Autowired 注入为null的情况
     @Autowired
@@ -43,6 +48,7 @@ public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSucces
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         LoginUser principal = (LoginUser) authentication.getPrincipal();
+        request.setAttribute(SmsCodeAuthenticationFilter.USER_ID, principal.getUser().getId());
 
         // 登录成功后，记录登录日志
         recordLog(request);
@@ -56,12 +62,19 @@ public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSucces
 
     private void recordLog(HttpServletRequest request) {
         String account = (String) request.getAttribute(SmsCodeAuthenticationFilter.ACCOUNT);
+        Integer userId = (Integer) request.getAttribute(SmsCodeAuthenticationFilter.USER_ID);
         LoginLog loginLog = new LoginLog();
         loginLog.setIp(request.getRemoteAddr());
         loginLog.setUa(request.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setAccount(account);
         loginLog.setMsg("登录成功");
         loginLog.setSuccess(true);
+        loginLog.setUserId(userId);
         loginLogService.saveLoginLog(loginLog);
+
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(User::getId, userId);
+        wrapper.set(User::getLastLoginTime, LocalDateTime.now());
+        usersService.update(wrapper);
     }
 }

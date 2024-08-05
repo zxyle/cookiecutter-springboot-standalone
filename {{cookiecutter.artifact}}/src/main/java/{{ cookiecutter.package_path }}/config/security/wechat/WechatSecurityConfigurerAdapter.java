@@ -35,7 +35,7 @@ public class WechatSecurityConfigurerAdapter extends SecurityConfigurerAdapter<D
         // 自定义WechatAuthenticationFilter过滤器
         WechatAuthenticationFilter wechatAuthenticationFilter = new WechatAuthenticationFilter(wechatMiniProgramService);
         wechatAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        wechatAuthenticationFilter.setAuthenticationSuccessHandler(new WechatAuthenticationSuccessHandler(loginLogService));
+        wechatAuthenticationFilter.setAuthenticationSuccessHandler(new WechatAuthenticationSuccessHandler(loginLogService, userService));
         wechatAuthenticationFilter.setAuthenticationFailureHandler(new WechatAuthenticationFailureHandler(loginLogService));
 
         // 设置自定义WechatAuthenticationProvider的认证器userDetailsService

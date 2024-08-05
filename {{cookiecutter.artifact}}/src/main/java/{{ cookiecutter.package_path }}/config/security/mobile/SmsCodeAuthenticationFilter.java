@@ -32,6 +32,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
      * 登录请求体json 账号key
      */
     public static final String ACCOUNT = "account";
+    public static final String USER_ID = "userId";
 
     public SmsCodeAuthenticationFilter() {
         // 处理的验证码登录请求处理url

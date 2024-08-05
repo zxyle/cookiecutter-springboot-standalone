@@ -32,7 +32,7 @@ public class SmsSecurityConfigurerAdapter extends SecurityConfigurerAdapter<Defa
         // 自定义SmsCodeAuthenticationFilter过滤器
         SmsCodeAuthenticationFilter smsAuthenticationFilter = new SmsCodeAuthenticationFilter();
         smsAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        smsAuthenticationFilter.setAuthenticationSuccessHandler(new SmsCodeAuthenticationSuccessHandler(loginLogService));
+        smsAuthenticationFilter.setAuthenticationSuccessHandler(new SmsCodeAuthenticationSuccessHandler(loginLogService, userService));
         smsAuthenticationFilter.setAuthenticationFailureHandler(new SmsCodeAuthenticationFailureHandler(loginLogService));
 
         // 设置自定义SmsCodeAuthenticationProvider的认证器userDetailsService
