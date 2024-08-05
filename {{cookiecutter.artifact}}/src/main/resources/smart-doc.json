@@ -1,8 +1,8 @@
 {
    "outPath": "src/main/resources/static/doc",
-   "openUrl": "http://docServer:7700/api",
+   "openUrl": "http://127.0.0.1:7700/api",
    "replace": true,
-   "appToken": "",
+   "appToken": "替换为你的appToken",
    "allInOne": true,
    "pathPrefix": "/api",
    "dataDictionaries": [
