@@ -60,8 +60,8 @@ public class LoginController extends AuthBaseController {
      */
     @PostMapping("/login/code")
     public R<LoginResponse> codeLogin(@Valid @RequestBody CodeLoginRequest req) {
-        // 登录逻辑直接走Filter即可，无需在这里实现
-        log.debug("验证码登录, account: {}, code: {}", req.getAccount(), req.getCode());
+        // 登录逻辑直接走SmsCodeAuthenticationFilter，无需在这里实现
+        log.info("验证码登录: {}", req);
         return R.ok(null);
     }
 
@@ -146,6 +146,16 @@ public class LoginController extends AuthBaseController {
 
         // TODO 登录逻辑
         return R.ok("登录成功");
+    }
+
+    /**
+     * 方式六：微信手机号授权登录
+     */
+    @PostMapping("/login/wechat")
+    public R<LoginResponse> wechatLogin(@Valid @RequestBody WechatLoginRequest req) {
+        // 登录逻辑直接走WechatAuthenticationFilter，无需在这里实现
+        log.info("微信手机号授权登录: {}", req);
+        return R.ok(null);
     }
 
     /**

@@ -93,4 +93,9 @@ public class User extends BaseEntity {
     @JsonIgnore
     private LocalDateTime lastLoginTime;
 
+    /**
+     * 微信用户唯一标识
+     */
+    private String openid;
+
 }

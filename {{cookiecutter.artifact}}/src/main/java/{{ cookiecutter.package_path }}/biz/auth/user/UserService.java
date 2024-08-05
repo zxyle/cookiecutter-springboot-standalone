@@ -117,6 +117,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     // FIXME 存在bug：当用户修改密码后，重新登陆时，会查询到旧密码
     // @Cacheable(cacheNames = "UserCache", key = "#account", unless = "#result == null")
     public User findByAccount(String account) {
+        if (!AccountUtil.isMobile(account) && !AccountUtil.isUsername(account) && !AccountUtil.isEmail(account)) {
+            throw new IllegalArgumentException("account: " + account + " 账号格式错误.");
+        }
+
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(AccountUtil.isUsername(account), User::getUsername, account);
         wrapper.eq(AccountUtil.isEmail(account), User::getEmail, account);

@@ -8,6 +8,7 @@ import {{ cookiecutter.basePackage }}.config.security.filter.AntiSpiderFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.AclFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.JwtAuthenticationTokenFilter;
 import {{ cookiecutter.basePackage }}.config.security.mobile.SmsSecurityConfigurerAdapter;
+import {{ cookiecutter.basePackage }}.config.security.wechat.WechatSecurityConfigurerAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,6 +43,7 @@ public class SecurityConfiguration {
     final AccessDeniedHandler accessDeniedHandler;
     final SmsSecurityConfigurerAdapter smsSecurityConfigurerAdapter;
     final CorsProperties corsProperties;
+    final WechatSecurityConfigurerAdapter wechatSecurityConfigurerAdapter;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -66,7 +68,8 @@ public class SecurityConfiguration {
 
                 // 除上述请求 全部需要鉴权认证
                 .anyRequest().authenticated()
-                .and().apply(smsSecurityConfigurerAdapter);
+               .and().apply(smsSecurityConfigurerAdapter)
+               .and().apply(wechatSecurityConfigurerAdapter);
 
 
         // 添加过滤器
@@ -112,6 +115,7 @@ import {{ cookiecutter.basePackage }}.config.security.filter.AclFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.AntiSpiderFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.JwtAuthenticationTokenFilter;
 import {{ cookiecutter.basePackage }}.config.security.mobile.SmsSecurityConfigurerAdapter;
+import {{ cookiecutter.basePackage }}.config.security.wechat.WechatSecurityConfigurerAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -153,6 +157,7 @@ public class SecurityConfiguration {
     final SmsSecurityConfigurerAdapter smsSecurityConfigurerAdapter;
     final UserDetailsService userDetailsService;
     final CorsProperties corsProperties;
+    final WechatSecurityConfigurerAdapter wechatSecurityConfigurerAdapter;
 
 
     @Bean
@@ -185,6 +190,7 @@ public class SecurityConfiguration {
                         // 配置授权失败处理器
                         .accessDeniedHandler(accessDeniedHandler))
                  .with(smsSecurityConfigurerAdapter, customizer -> {});
+                 // FIXME 解决spring boot3 使用微信授权登录问题
 
         return http.build();
     }
