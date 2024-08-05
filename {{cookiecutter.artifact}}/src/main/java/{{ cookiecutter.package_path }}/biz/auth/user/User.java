@@ -27,6 +27,16 @@ public class User extends BaseEntity {
     private String username;
 
     /**
+     * 登录手机号码
+     */
+    private String mobile;
+
+    /**
+     * 登录邮箱
+     */
+    private String email;
+
+    /**
      * 密码
      */
     @JsonIgnore
@@ -36,16 +46,6 @@ public class User extends BaseEntity {
      * 昵称/名字/真实姓名（只用于展示）
      */
     private String nickname;
-
-    /**
-     * 登录手机号码
-     */
-    private String mobile;
-
-    /**
-     * 登录邮箱
-     */
-    private String email;
 
     /**
      * 账号是否锁定

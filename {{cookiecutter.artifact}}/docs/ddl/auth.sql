@@ -353,8 +353,7 @@ CREATE TABLE `auth_user` (
 -- Records of auth_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `admin`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', 'admin', '13111111111', 'admin@example.com', 0, 1, '2099-12-31 23:59:59', NOW(), 1);
-INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `admin`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (2, 'zheng', '$2a$10$veHMsJJZtiFt0jyLOK9hAuKS1yejN1dsD7mGuAJ8rQfK7KUkXslYC', 'zheng', '15012345678', 'zheng@example.com', 0, 0, NULL, NOW(), 1);
+INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `admin`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', '管理员', '13111111111', 'admin@example.com', 0, 1, '2099-12-31 23:59:59', NOW(), 1);
 COMMIT;
 
 -- ----------------------------
@@ -451,7 +450,7 @@ CREATE TABLE `auth_question` (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `ask` varchar(64) CHARACTER SET utf8mb4 NOT NULL COMMENT '安全问题',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COMMENT='安全问题';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='安全问题';
 
 -- ----------------------------
 -- Records of auth_question
