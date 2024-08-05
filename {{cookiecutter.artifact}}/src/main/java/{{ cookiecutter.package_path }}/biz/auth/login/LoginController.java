@@ -39,7 +39,7 @@ public class LoginController extends AuthBaseController {
     final StringRedisTemplate stringRedisTemplate;
 
     /**
-     * 方式一：用户名/邮箱/手机号 + 密码登录
+     * 方式一：账号（用户名/邮箱/手机号） + 密码登录
      */
     @PostMapping("/login/account")
     public R<LoginResponse> login(@Valid @RequestBody AccountLoginRequest req, HttpServletRequest servletRequest) {
@@ -149,12 +149,12 @@ public class LoginController extends AuthBaseController {
     }
 
     /**
-     * 方式六：微信手机号授权登录
+     * 方式六：微信小程序手机号授权登录
      */
     @PostMapping("/login/wechat")
     public R<LoginResponse> wechatLogin(@Valid @RequestBody WechatLoginRequest req) {
         // 登录逻辑直接走WechatAuthenticationFilter，无需在这里实现
-        log.info("微信手机号授权登录: {}", req);
+        log.info("微信小程序手机号授权登录: {}", req);
         return R.ok(null);
     }
 

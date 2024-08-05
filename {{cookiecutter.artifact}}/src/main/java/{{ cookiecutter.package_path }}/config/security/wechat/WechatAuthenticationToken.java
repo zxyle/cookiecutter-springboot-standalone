@@ -6,7 +6,7 @@ package {{ cookiecutter.basePackage }}.config.security.wechat;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 /**
- * 微信登录认证Token
+ * 微信小程序手机号授权登录认证Token
  */
 public class WechatAuthenticationToken extends AbstractAuthenticationToken {
 

@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * 微信登录失败处理
+ * 微信小程序手机号授权登录失败处理
  */
 @Slf4j
 @Component

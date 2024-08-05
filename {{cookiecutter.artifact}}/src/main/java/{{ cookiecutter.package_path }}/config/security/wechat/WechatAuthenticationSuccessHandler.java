@@ -28,7 +28,7 @@ import java.time.LocalDateTime;
 
 
 /**
- * 微信登录成功处理
+ * 微信小程序手机号授权登录成功处理
  */
 @Slf4j
 @Component

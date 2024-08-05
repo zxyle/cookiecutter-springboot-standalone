@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * 微信登录过滤器
+ * 微信小程序手机号授权登录过滤器
  */
 @Slf4j
 public class WechatAuthenticationFilter extends AbstractAuthenticationProcessingFilter {

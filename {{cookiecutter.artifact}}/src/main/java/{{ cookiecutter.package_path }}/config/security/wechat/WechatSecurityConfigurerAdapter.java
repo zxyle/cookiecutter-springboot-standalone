@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Component;
 
 /**
- * 微信登录认证配置
+ * 微信小程序手机号授权登录认证配置
  */
 @Component
 @RequiredArgsConstructor

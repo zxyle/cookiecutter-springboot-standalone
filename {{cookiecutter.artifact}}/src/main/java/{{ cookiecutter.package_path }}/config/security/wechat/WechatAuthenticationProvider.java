@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
- * 微信登录认证Provider
+ * 微信小程序手机号授权登录认证Provider
  */
 public class WechatAuthenticationProvider implements AuthenticationProvider {
 
