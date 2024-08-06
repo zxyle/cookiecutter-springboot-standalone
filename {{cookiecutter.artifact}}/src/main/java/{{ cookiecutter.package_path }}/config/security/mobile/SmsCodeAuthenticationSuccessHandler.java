@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.login.LoginResponse;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
+import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
@@ -64,7 +65,7 @@ public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSucces
         String account = (String) request.getAttribute(SmsCodeAuthenticationFilter.ACCOUNT);
         Integer userId = (Integer) request.getAttribute(SmsCodeAuthenticationFilter.USER_ID);
         LoginLog loginLog = new LoginLog();
-        loginLog.setIp(request.getRemoteAddr());
+        loginLog.setIp(IpUtil.getIpAddr(request));
         loginLog.setUa(request.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setAccount(account);
         loginLog.setMsg("登录成功");

@@ -10,6 +10,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +65,7 @@ public class WechatAuthenticationSuccessHandler implements AuthenticationSuccess
         String account = (String) request.getAttribute(WechatAuthenticationFilter.ACCOUNT);
         Integer userId = (Integer) request.getAttribute(WechatAuthenticationFilter.USER_ID);
         LoginLog loginLog = new LoginLog();
-        loginLog.setIp(request.getRemoteAddr());
+        loginLog.setIp(IpUtil.getIpAddr(request));
         loginLog.setUa(request.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setAccount(account);
         loginLog.setMsg("登录成功");

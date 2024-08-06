@@ -7,6 +7,7 @@ import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import {{ cookiecutter.basePackage }}.common.enums.ErrorEnum;
 import {{ cookiecutter.basePackage }}.common.response.R;
+import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class SmsCodeAuthenticationFailureHandler implements AuthenticationFailur
     private void recordLog(HttpServletRequest request, AuthenticationException exception) {
         String account = (String) request.getAttribute(SmsCodeAuthenticationFilter.ACCOUNT);
         LoginLog loginLog = new LoginLog();
-        loginLog.setIp(request.getRemoteAddr());
+        loginLog.setIp(IpUtil.getIpAddr(request));
         loginLog.setUa(request.getHeader(HttpHeaders.USER_AGENT));
         loginLog.setSuccess(false);
         loginLog.setAccount(account);
