@@ -3,8 +3,10 @@
 
 package {{ cookiecutter.basePackage }}.config.security.wechat;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.login.LoginResponse;
-import {{ cookiecutter.basePackage }}.biz.auth.login.LoginService;
+import com.example.diaoapi.biz.auth.user.User;
+import com.example.diaoapi.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
@@ -36,7 +38,7 @@ public class WechatAuthenticationSuccessHandler implements AuthenticationSuccess
 
     final LoginLogService loginLogService;
     static StringRedisTemplate stringRedisTemplate;
-    final LoginService loginService;
+    final UserService usersService;
 
     // 解决 @Component 下 @Autowired 注入为null的情况
     @Autowired
@@ -54,7 +56,6 @@ public class WechatAuthenticationSuccessHandler implements AuthenticationSuccess
 
         // 登录成功后，返回token
         LoginResponse loginResponse = new LoginResponse(principal.getUser());
-        loginService.afterLogin(loginResponse);
         response.setContentType("application/json;charset=UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(response.getOutputStream(), R.ok(loginResponse, "登录成功"));
@@ -71,5 +72,10 @@ public class WechatAuthenticationSuccessHandler implements AuthenticationSuccess
         loginLog.setSuccess(true);
         loginLog.setUserId(userId);
         loginLogService.saveLoginLog(loginLog);
+
+        LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(User::getId, userId);
+        wrapper.set(User::getLastLoginTime, LocalDateTime.now());
+        usersService.update(wrapper);
     }
 }

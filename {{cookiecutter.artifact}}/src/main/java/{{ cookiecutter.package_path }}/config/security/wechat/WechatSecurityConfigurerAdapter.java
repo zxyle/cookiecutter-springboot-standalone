@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.config.security.wechat;
 
-import {{ cookiecutter.basePackage }}.biz.auth.login.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.biz.site.miniprogram.WeChatMiniProgramService;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
@@ -29,14 +28,13 @@ public class WechatSecurityConfigurerAdapter extends SecurityConfigurerAdapter<D
     final LoginLogService loginLogService;
     final WeChatMiniProgramService wechatMiniProgramService;
     final UserService userService;
-    final LoginService loginService;
 
     @Override
     public void configure(HttpSecurity http) {
         // 自定义WechatAuthenticationFilter过滤器
         WechatAuthenticationFilter wechatAuthenticationFilter = new WechatAuthenticationFilter(wechatMiniProgramService);
         wechatAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        wechatAuthenticationFilter.setAuthenticationSuccessHandler(new WechatAuthenticationSuccessHandler(loginLogService, loginService));
+        wechatAuthenticationFilter.setAuthenticationSuccessHandler(new WechatAuthenticationSuccessHandler(loginLogService, userService));
         wechatAuthenticationFilter.setAuthenticationFailureHandler(new WechatAuthenticationFailureHandler(loginLogService));
 
         // 设置自定义WechatAuthenticationProvider的认证器userDetailsService

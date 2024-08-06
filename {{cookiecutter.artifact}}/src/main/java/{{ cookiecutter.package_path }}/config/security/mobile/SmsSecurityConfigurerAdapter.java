@@ -3,7 +3,6 @@
 
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
-import {{ cookiecutter.basePackage }}.biz.auth.login.LoginService;
 import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
@@ -27,14 +26,13 @@ public class SmsSecurityConfigurerAdapter extends SecurityConfigurerAdapter<Defa
     final ValidateService validateService;
     final LoginLogService loginLogService;
     final UserService userService;
-    final LoginService loginService;
 
     @Override
     public void configure(HttpSecurity http) {
         // 自定义SmsCodeAuthenticationFilter过滤器
         SmsCodeAuthenticationFilter smsAuthenticationFilter = new SmsCodeAuthenticationFilter();
         smsAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        smsAuthenticationFilter.setAuthenticationSuccessHandler(new SmsCodeAuthenticationSuccessHandler(loginLogService, loginService));
+        smsAuthenticationFilter.setAuthenticationSuccessHandler(new SmsCodeAuthenticationSuccessHandler(loginLogService, userService));
         smsAuthenticationFilter.setAuthenticationFailureHandler(new SmsCodeAuthenticationFailureHandler(loginLogService));
 
         // 设置自定义SmsCodeAuthenticationProvider的认证器userDetailsService
