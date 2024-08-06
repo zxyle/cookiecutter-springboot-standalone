@@ -159,6 +159,15 @@ public class LoginController extends AuthBaseController {
     }
 
     /**
+     * 方式七：本机号码一键登录
+     */
+    @PostMapping("/login/onekey")
+    public R<LoginResponse> oneLogin(@Valid @RequestBody OneKeyLoginRequest req) {
+        // 根据提供的token, 去服务提供商解密获取到手机号
+        return R.ok(null);
+    }
+
+    /**
      * 退出登录
      */
     @LogOperation(name = "退出登录", biz = "auth")
