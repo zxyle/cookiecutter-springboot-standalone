@@ -4,6 +4,7 @@
 package {{ cookiecutter.basePackage }}.config.security.wechat;
 
 import {{ cookiecutter.basePackage }}.biz.auth.login.LoginResponse;
+import {{ cookiecutter.basePackage }}.biz.auth.login.LoginService;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
