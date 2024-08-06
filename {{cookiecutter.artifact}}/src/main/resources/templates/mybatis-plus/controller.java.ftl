@@ -67,6 +67,7 @@ public class ${className} {
         LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
         // 设置查询条件
         // wrapper.eq(${table.className}::getId, 1);
+        wrapper.orderByDesc(${table.className}::getId);
         <#if excel>
 
         // Excel导出功能，不需要可以删除
@@ -104,6 +105,7 @@ public class ${className} {
     // public R<List<${table.className}>> list(@Valid ${table.className}Request req) {
     //     LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
     //     // 补充查询条件
+    //     wrapper.orderByDesc(${table.className}::getId);
     //     return R.ok(thisService.list(wrapper));
     // }
 
