@@ -49,6 +49,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         // 将权限码和角色码存入redis
         String key = AuthConst.KEY_PREFIX + userId;
         String join = String.join(AuthConst.DELIMITER, permissions);
+        // TODO 没权限是否要存redis？
         stringRedisTemplate.opsForValue().set(key, join, AuthConst.DEFAULT_EXPIRE_DAYS, TimeUnit.DAYS);
         Integer expireDays = setting.get("pwd.expire-days").getIntValue();
         return new LoginUser(permissions, user, expireDays);

@@ -189,8 +189,8 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         // 配置授权失败处理器
                         .accessDeniedHandler(accessDeniedHandler))
-                 .with(smsSecurityConfigurerAdapter, customizer -> {});
-                 // FIXME 解决spring boot3 使用微信授权登录问题
+                 .with(smsSecurityConfigurerAdapter, customizer -> {})
+                 .with(wechatSecurityConfigurerAdapter, customizer -> {});
 
         return http.build();
     }
