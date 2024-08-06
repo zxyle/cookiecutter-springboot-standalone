@@ -61,8 +61,8 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
                 .antMatchers("/auth/login/**").anonymous()
-                .antMatchers("/auth/sdk/**", "/sys/dicts/**", "/sys/area/**", "/sys/file/**", "/sys/infos", "/auth/user/register",
-                        "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers",
+                .antMatchers("/sys/dicts/**", "/sys/area/**", "/sys/file/**", "/site/infos", "/auth/user/register",
+                        "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers", "/ip", "/now",
                         "/getPublicKey", "/auth/login/qrcode", "/auth/login/scan", "/auth/apps/currentUser", "/actuator/**"
                 ).permitAll()
 
@@ -172,8 +172,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 // 对于登录接口 允许匿名访问
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers("/auth/login/**").anonymous()
-                        .requestMatchers("/auth/sdk/**", "/sys/dicts/**", "/sys/area/**", "/sys/file/**", "/sys/infos", "/auth/user/register",
-                                "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers",
+                        .requestMatchers("/sys/dicts/**", "/sys/area/**", "/sys/file/**", "/site/infos", "/auth/user/register",
+                                "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers", "/ip", "/now",
                                 "/getPublicKey").permitAll()// 除上述请求 全部需要鉴权认证
                         // 访问actuator信息 需要添加"/actuator/**"
                         .anyRequest().authenticated())
