@@ -5,8 +5,8 @@ package {{ cookiecutter.basePackage }}.config.security.wechat;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import {{ cookiecutter.basePackage }}.biz.auth.login.LoginResponse;
-import com.example.diaoapi.biz.auth.user.User;
-import com.example.diaoapi.biz.auth.user.UserService;
+import {{ cookiecutter.basePackage }}.biz.auth.user.User;
+import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
