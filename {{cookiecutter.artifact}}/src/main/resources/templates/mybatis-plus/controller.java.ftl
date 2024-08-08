@@ -67,6 +67,10 @@ public class ${className} {
         LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
         // 设置查询条件
         // wrapper.eq(${table.className}::getId, 1);
+        // if (StringUtils.isNotBlank(req.getKeyword())) {
+        //     wrapper.and(i -> i.like(${table.className}::getName, req.getKeyword())
+        //             .or().like(${table.className}::getName, req.getKeyword()));
+        // }
         wrapper.orderByDesc(${table.className}::getId);
         <#if excel>
 
@@ -180,9 +184,14 @@ public class ${className} {
     @LogOperation(name = "批量新增${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:add')")
     @PostMapping("${table.endpoint}/batch")
-    public R<Void> batchCreate(@Valid @RequestBody List<${table.className}> list) {
+    public R<Void> batchCreate(@Valid @RequestBody List<${table.className}AddRequest> requests) {
+        List<${table.className}> list = requests.stream().map(req -> {
+                ${table.className} item = new ${table.className}();
+                BeanUtils.copyProperties(req, item);
+                return item;
+            }).collect(Collectors.toList());
         boolean success = thisService.saveBatch(list);
-        return success ? R.ok("批量新增成功") : R.fail("批量新增失败");
+        return success ? R.ok("批量新增${table.comment!}成功") : R.fail("批量新增${table.comment!}失败");
     }
 
     /**
@@ -191,9 +200,14 @@ public class ${className} {
     @LogOperation(name = "批量更新${table.comment!}", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
     @PutMapping("${table.endpoint}/batch")
-    public R<Void> batchUpdate(@Valid @RequestBody List<${table.className}> list) {
+    public R<Void> batchUpdate(@Valid @RequestBody List<${table.className}UpdateRequest> requests) {
+        List<Ad> list = requests.stream().map(req -> {
+                ${table.className} item = new ${table.className}();
+                BeanUtils.copyProperties(req, item);
+                return item;
+            }).collect(Collectors.toList());
         boolean success = thisService.updateBatchById(list);
-        return success ? R.ok("批量更新成功") : R.fail("批量更新失败");
+        return success ? R.ok("批量更新${table.comment!}成功") : R.fail("批量更新${table.comment!}失败");
     }
 
     /**

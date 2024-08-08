@@ -1,5 +1,6 @@
 package ${table.packageName};
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,11 +45,33 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     }
 
     /**
+     * 查询指定用户的数据
+     */
+    @Cacheable(key = "#id + '_' + #userId")
+    public ${table.className} findById(Integer id, Integer userId) {
+        LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(id != null, ${table.className}::getId, id);
+        // wrapper.eq(userId != null, ${table.className}::getUserId, userId);
+        return getOne(wrapper);
+    }
+
+    /**
      * 按ID删除${table.comment}
      */
     @CacheEvict(key = "#id")
     public boolean deleteById(Integer id) {
         return removeById(id);
+    }
+
+    /**
+     * 删除指定用户的数据
+     */
+    @CacheEvict(key = "#id + '_' + #userId")
+    public boolean deleteById(Integer id, Integer userId) {
+        LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(id != null, ${table.className}::getId, id);
+        // wrapper.eq(userId != null, ${table.className}::getUserId, userId);
+        return remove(wrapper);
     }
 
     /**
