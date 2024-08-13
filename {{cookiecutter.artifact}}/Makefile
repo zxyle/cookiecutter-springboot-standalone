@@ -154,6 +154,12 @@ nginx:
 	ssh $(SERVER) "nginx -t"
 	ssh $(SERVER) "nginx -s reload"
 
+# 安装caddy
+caddy:
+	ssh $(SERVER) "yum install yum-plugin-copr -y"
+	ssh $(SERVER) "yum copr enable @caddy/caddy -y"
+	ssh $(SERVER) "yum install caddy -y"
+
 # 使用docker-compose运行应用
 docker: package
 	docker-compose up -d
@@ -166,7 +172,7 @@ log:
 
 # 使用说明
 help:
-	@echo "Usage: make [package|publish|restart|rollback|backup|init|deploy|clean|jdk|redis|nginx|mysql|docker|log|ssh]"
+	@echo "Usage: make [package|publish|restart|rollback|backup|init|deploy|clean|jdk|redis|nginx|caddy|mysql|docker|log|ssh]"
 
 # 清理
 clean:
@@ -178,4 +184,4 @@ clean:
 ssh:
 	ssh $(SERVER) -t "cd $(BACKEND_DIR); bash"
 
-.PHONY: package publish restart rollback backup init deploy clean jdk redis nginx mysql help docker log ssh
+.PHONY: package publish restart rollback backup init deploy clean jdk redis nginx caddy mysql help docker log ssh
