@@ -148,7 +148,7 @@ public class WeChatMiniProgramService {
      * @param page       跳转页面路由
      */
     // https://developers.weixin.qq.com/miniprogram/dev/OpenApiDoc/mp-message-management/subscribe-message/sendMessage.html
-    public void sendTemplateMessage(String openid, String templateId, Map<String, String> variables) {
+    public void sendTemplateMessage(String openid, String page, String templateId, Map<String, String> variables) {
         String accessToken = getAccessToken();
         String url = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken;
         SubscribeMessage message = new SubscribeMessage();
