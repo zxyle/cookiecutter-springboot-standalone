@@ -6,8 +6,11 @@ package {{ cookiecutter.basePackage }}.biz.site.miniprogram;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.http.HttpUtil;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -16,11 +19,14 @@ import org.springframework.stereotype.Service;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.spec.AlgorithmParameterSpec;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 微信小程序服务
@@ -31,6 +37,9 @@ import java.util.concurrent.TimeUnit;
 public class WeChatMiniProgramService {
 
     final StringRedisTemplate stringRedisTemplate;
+    final ObjectMapper objectMapper;
+    final WeChatOfficeAccountService weChatOfficeAccountService;
+    public MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     /**
      * 小程序 appId
@@ -129,6 +138,38 @@ public class WeChatMiniProgramService {
         } catch (Exception e) {
             log.error("decryptData error", e);
             return null;
+        }
+    }
+
+    /**
+     * 发送订阅消息
+     *
+     * @param openid 用户ID
+     * @param templateId 模板ID
+     * @param variables 模板变量
+     */
+    public void sendTemplateMessage(String openid, String templateId, Map<String, String> variables) {
+        String accessToken = getAccessToken();
+        String url = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=" + accessToken;
+        SubscribeMessage message = new SubscribeMessage();
+        message.setTouser(openid);
+        message.setTemplateId(templateId);
+        message.setData(
+                variables.entrySet().stream().collect(
+                        Collectors.toMap(
+                                Map.Entry::getKey,
+                                entry -> Collections.singletonMap("value", entry.getValue())
+                        )
+                )
+        );
+
+        try {
+            String json = objectMapper.writeValueAsString(message);
+            RequestBody body = RequestBody.create(JSON, json);
+            String response = weChatOfficeAccountService.doPostRequest(url, body);
+            log.info("sendTemplateMessage response: {}", response);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
