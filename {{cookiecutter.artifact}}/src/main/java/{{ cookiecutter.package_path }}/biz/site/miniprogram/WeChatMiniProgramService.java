@@ -4,13 +4,13 @@
 package {{ cookiecutter.basePackage }}.biz.site.miniprogram;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -38,8 +38,6 @@ public class WeChatMiniProgramService {
 
     final StringRedisTemplate stringRedisTemplate;
     final ObjectMapper objectMapper;
-    final WeChatOfficeAccountService weChatOfficeAccountService;
-    public MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     /**
      * 小程序 appId
@@ -170,11 +168,23 @@ public class WeChatMiniProgramService {
 
         try {
             String json = objectMapper.writeValueAsString(message);
-            RequestBody body = RequestBody.create(JSON, json);
-            String response = weChatOfficeAccountService.doPostRequest(url, body);
+            String response = doPostRequest(url, json);
             log.info("sendTemplateMessage response: {}", response);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public String doPostRequest(String url, String json) {
+        try (HttpResponse response = HttpRequest.post(url)
+                .header("Accept", "application/json")
+                .body(json)
+                .execute()){
+            if (response.getStatus() != 200) {
+                throw new RuntimeException("response status: " + response.getStatus());
+            }
+
+            return response.body();
         }
     }
 }
