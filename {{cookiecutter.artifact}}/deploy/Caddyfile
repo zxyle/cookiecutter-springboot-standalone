@@ -26,6 +26,6 @@ www.example.com {
 
     # TODO 需要进一步优化 如压缩 保留天数等
 	log {
-		output file /opt/webapps/sensor/access.log
-	}
+        output file /var/log/caddy/access.log
+    }
 }

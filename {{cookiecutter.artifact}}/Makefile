@@ -154,11 +154,14 @@ nginx:
 	ssh $(SERVER) "nginx -t"
 	ssh $(SERVER) "nginx -s reload"
 
-# 安装caddy
+# 安装caddy，并创建日志目录
 caddy:
 	ssh $(SERVER) "yum install yum-plugin-copr -y"
 	ssh $(SERVER) "yum copr enable @caddy/caddy -y"
 	ssh $(SERVER) "yum install caddy -y"
+	ssh $(SERVER) "mkdir /var/log/caddy"
+	ssh $(SERVER) "chown caddy:caddy /var/log/caddy"
+	ssh $(SERVER) "chmod 755 /var/log/caddy"
 
 # 使用docker-compose运行应用
 docker: package
