@@ -162,6 +162,7 @@ caddy:
 	ssh $(SERVER) "mkdir /var/log/caddy"
 	ssh $(SERVER) "chown caddy:caddy /var/log/caddy"
 	ssh $(SERVER) "chmod 755 /var/log/caddy"
+	ssh $(SERVER) "systemctl enable caddy --now"
 
 # 使用docker-compose运行应用
 docker: package
