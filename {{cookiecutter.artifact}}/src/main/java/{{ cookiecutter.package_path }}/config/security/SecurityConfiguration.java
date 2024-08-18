@@ -64,7 +64,7 @@ public class SecurityConfiguration {
                 .antMatchers("/sys/dicts/**", "/sys/area/**", "/sys/file/**", "/site/infos", "/auth/user/register",
                         "/auth/password/**", "/sys/captcha/**", "/status", "/ping", "/ua", "/headers", "/ip", "/now",
                         "/getPublicKey", "/auth/login/qrcode", "/auth/login/scan", "/auth/apps/currentUser", "/actuator/**",
-                        "/site/legal/**",
+                        "/site/legal/**"
                 ).permitAll()
 
                 // 除上述请求 全部需要鉴权认证
