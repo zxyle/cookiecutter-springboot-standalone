@@ -3,13 +3,30 @@
 
 package {{ cookiecutter.basePackage }}.biz.site.info;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
  * 系统信息 服务实现类
  */
 @Service
+@CacheConfig(cacheNames = "InfoCache")
 public class InfoService extends ServiceImpl<InfoMapper, Info> {
+
+    /**
+     * 根据key获取系统信息
+     *
+     * @param key 系统信息key
+     * @return 系统信息
+     */
+    @Cacheable(key = "#key")
+    public Info getByKey(String key) {
+        LambdaQueryWrapper<Info> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Info::getParamKey, key);
+        return this.getOne(wrapper);
+    }
 
 }

@@ -45,9 +45,10 @@ CREATE TABLE `site_info` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `param_key` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '参数名称',
-  `param_value` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '参数值',
+  `param_value` text CHARACTER SET utf8mb4 NOT NULL COMMENT '参数值',
   `description` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '描述信息',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_param_key` (`param_key`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统信息';
 -- ----------------------------
 -- Records of site_info
@@ -68,6 +69,8 @@ INSERT INTO `site_info` (`param_key`, `param_value`, `description`) VALUES ('tit
 INSERT INTO `site_info` (`param_key`, `param_value`, `description`) VALUES ('tel', '400-111-2222', '联系电话');
 INSERT INTO `site_info` (`param_key`, `param_value`, `description`) VALUES ('address', '浙江省杭州市余杭区文一西路10000号', '联系地址');
 INSERT INTO `site_info` (`param_key`, `param_value`, `description`) VALUES ('about', 'XX公司是一家什么公司', '关于我们');
+INSERT INTO `site_info` (`param_key`, `param_value`, `description`) VALUES ('user-agreement', '这是用户协议', '用户协议');
+INSERT INTO `site_info` (`param_key`, `param_value`, `description`) VALUES ('privacy-policy', '这是隐私政策', '隐私政策');
 COMMIT;
 
 -- ----------------------------
