@@ -48,15 +48,15 @@ backup:
 # 当发现部署失败时，可以回滚到上一个版本
 rollback:
 	ssh $(SERVER) "mv $(BACKEND_DIR)/backup/backup.jar $(BACKEND_DIR)/$(JAR)"
-	restart
+	$(MAKE) restart
 
 # 部署（打包 -> 备份 -> 同步lib包 -> 上传jar包 -> 重启服务 -> 清理）
 publish: package backup
 	# 将lib目录下的依赖jar包同步到服务器
 	rsync -avz --progress --delete ./target/lib/ $(SERVER):$(BACKEND_DIR)/lib
 	scp -rC ./target/*.jar $(SERVER):$(BACKEND_DIR)
-	restart
-	clean
+	$(MAKE) restart
+	$(MAKE) clean
 	@echo "Deployed successfully!"
 
 # 初始化前后端运行环境
@@ -154,7 +154,7 @@ nginx:
 	ssh $(SERVER) "nginx -t"
 	ssh $(SERVER) "nginx -s reload"
 
-# 安装caddy，并创建日志目录
+# 安装caddy，并创建日志目录 TODO 增加复制Caddyfile到/etc/caddy/目录下 进行格式化 以及reload
 caddy:
 	ssh $(SERVER) "yum install yum-plugin-copr -y"
 	ssh $(SERVER) "yum copr enable @caddy/caddy -y"
