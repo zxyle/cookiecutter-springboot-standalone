@@ -21,6 +21,7 @@ import {{ cookiecutter.namespace }}.validation.ConstraintViolationException;
 {% if cookiecutter.bootVersion.split('.')[0] == '3' -%}
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 {% endif -%}
+import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
