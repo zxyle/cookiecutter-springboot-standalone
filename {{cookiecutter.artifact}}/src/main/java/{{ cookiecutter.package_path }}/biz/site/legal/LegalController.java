@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
  * 法律声明管理
  */
 @RestController
-@RequestMapping("/site/legal")
 @RequiredArgsConstructor
+@RequestMapping("/site/legal")
 public class LegalController {
 
     final InfoService infoService;

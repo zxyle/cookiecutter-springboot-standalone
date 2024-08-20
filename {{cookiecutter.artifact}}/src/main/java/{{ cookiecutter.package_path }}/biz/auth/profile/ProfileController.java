@@ -31,8 +31,8 @@ public class ProfileController extends AuthBaseController {
     /**
      * 获取当前用户资料
      */
-    @LogOperation(name = "获取当前用户资料", biz = "auth")
-    @PreAuthorize("@ck.hasPermit('auth:profile:get')")
+    // @LogOperation(name = "获取当前用户资料", biz = "auth")
+    // @PreAuthorize("@ck.hasPermit('auth:profile:get')")
     @GetMapping("/profile")
     public R<Profile> get() {
         Integer userId = getUserId();
@@ -42,9 +42,9 @@ public class ProfileController extends AuthBaseController {
     /**
      * 更新当前用户资料
      */
-    @LogOperation(name = "更新当前用户资料", biz = "auth")
-    @PreAuthorize("@ck.hasPermit('auth:profile:update')")
-    @PutMapping("/profile")
+    // @LogOperation(name = "更新当前用户资料", biz = "auth")
+    // @PreAuthorize("@ck.hasPermit('auth:profile:update')")
+    @PostMapping("/profile")
     public R<Profile> update(@Valid @RequestBody Profile entity) {
         Integer userId = getUserId();
         entity.setUserId(userId);

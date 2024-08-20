@@ -149,7 +149,7 @@ public class LoginController extends AuthBaseController {
     }
 
     /**
-     * 方式六：微信小程序手机号授权登录
+     * 方式六：微信小程序手机号授权登录 TODO url可能不合适 因为还有一个微信扫码登录
      */
     @PostMapping("/login/wechat")
     public R<LoginResponse> wechatLogin(@Valid @RequestBody WechatLoginRequest req) {

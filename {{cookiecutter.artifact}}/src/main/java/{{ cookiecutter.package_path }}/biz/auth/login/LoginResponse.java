@@ -54,6 +54,8 @@ public class LoginResponse {
      */
     private boolean mustChangePwd;
 
+    // TODO 考虑增加一个头像Url
+
     public LoginResponse(User user) {
         this.userId = user.getId();
         this.nickname = user.getNickname();

@@ -12,8 +12,10 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.*;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 import {{ cookiecutter.namespace }}.validation.ConstraintViolationException;
 {% if cookiecutter.bootVersion.split('.')[0] == '3' -%}
@@ -29,6 +31,21 @@ import java.io.StringWriter;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * 处理不支持的HTTP请求方法异常
+     *
+     * @param request Web请求对象
+     * @param httpServletRequest HTTP请求对象
+     * @return 返回操作结果
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public R<Void> handleHttpRequestMethodNotSupported(WebRequest request, HttpServletRequest httpServletRequest) {
+        String url = request.getDescription(false).replace("uri=", "");
+        String message = String.format("请求方法不支持: %s %s", httpServletRequest.getMethod(), url);
+        log.error(message);
+        return R.fail(message, HttpStatus.METHOD_NOT_ALLOWED.value());
+    }
 
     /**
      * 处理使用GET PUT DELETE操作不存在的数据
@@ -149,6 +166,12 @@ public class GlobalExceptionHandler {
         return R.fail(ErrorEnum.SERVER_ERROR);
     }
 
+    /**
+     * 获取异常信息的字符串表示形式
+     *
+     * @param ex 异常对象
+     * @return 异常信息的字符串表示形式
+     */
     public String getExceptionMessage(Exception ex) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
