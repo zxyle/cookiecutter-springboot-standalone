@@ -37,7 +37,7 @@ public class SmsCodeAuthenticationFailureHandler implements AuthenticationFailur
         recordLog(request, exception);
 
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(Objects.requireNonNull(JacksonUtil.serialize(R.fail(ErrorEnum.AUTH_ERROR))));
+        response.getWriter().write(Objects.requireNonNull(JacksonUtil.serialize(R.fail(exception.getMessage(), ErrorEnum.AUTH_ERROR.getCode()))));
     }
 
     private void recordLog(HttpServletRequest request, AuthenticationException exception) {

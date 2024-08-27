@@ -49,6 +49,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
         CodeLoginRequest loginRequest = obtainCodeLoginRequest(req);
         String account = loginRequest.getAccount();
         String code = loginRequest.getCode();
+        req.setAttribute(ACCOUNT, account);
 
         if (account == null) {
             account = "";
