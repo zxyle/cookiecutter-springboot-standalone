@@ -21,6 +21,6 @@ public interface CaptchaService {
      * 生成验证码ID
      */
     default String getCaptchaId() {
-        return UUID.randomUUID().toString().replace("-", "");
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 8);
     }
 }
