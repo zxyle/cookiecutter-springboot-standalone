@@ -135,4 +135,31 @@ CREATE TABLE `site_checkin` (
   UNIQUE KEY `uk_user_date` (`user_id`,`checkin_date`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='签到';
 
+-- ----------------------------
+-- Table structure for site_banner
+-- ----------------------------
+DROP TABLE IF EXISTS `site_banner`;
+CREATE TABLE `site_banner` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `name` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '名称',
+  `title` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '标题',
+  `description` text CHARACTER SET utf8mb4 NOT NULL COMMENT '描述',
+  `image_url` varchar(512) CHARACTER SET utf8mb4 NOT NULL COMMENT '图片路径或URL',
+  `link_url` varchar(512) CHARACTER SET utf8mb4 NOT NULL COMMENT '链接',
+  `sort_order` int unsigned NOT NULL DEFAULT '0' COMMENT '展示顺序，越小越靠前',
+  `status` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '状态 (1:启用, 0:禁用)',
+  `position` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '展示位置',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_pos_status` (`status`,`position`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Banner';
+
+-- ----------------------------
+-- Records of site_banner
+-- ----------------------------
+BEGIN;
+INSERT INTO `site_banner` (`name`, `title`, `description`, `image_url`, `link_url`, `sort_order`, `status`, `position`) VALUES ('首页banner1', '欢迎来到我们的网站', '', '/images/banner1.jpg', '/', 1, 0, 'header');
+COMMIT;
+
 SET FOREIGN_KEY_CHECKS = 1;
