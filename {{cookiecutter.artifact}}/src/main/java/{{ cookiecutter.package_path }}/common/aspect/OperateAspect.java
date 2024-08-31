@@ -104,8 +104,17 @@ public class OperateAspect {
         }
     }
 
+    /**
+     * 获取当前登录用户的ID
+     *
+     * @return 当前登录用户的ID，如果未登录或出现异常返回0
+     */
     private Integer getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof LoginUser)) {
+            return 0;
+        }
+
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         return loginUser.getUser().getId();
     }

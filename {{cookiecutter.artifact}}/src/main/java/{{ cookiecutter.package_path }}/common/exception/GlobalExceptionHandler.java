@@ -114,11 +114,11 @@ public class GlobalExceptionHandler {
     /**
      * 处理AnonymousAuthenticationToken -> UsernamePasswordAuthenticationToken类型转换异常
      */
-    @ExceptionHandler(ClassCastException.class)
-    public R<Void> handleClassCastException(Exception ex) {
-        log.warn("登录失效,请重新登录: {}", ex.getMessage());
-        return R.fail("登录失效，请重新登录", HttpStatus.UNAUTHORIZED.value());
-    }
+    // @ExceptionHandler(ClassCastException.class)
+    // public R<Void> handleClassCastException(Exception ex) {
+    //     log.warn("登录失效,请重新登录: {}", ex.getMessage());
+    //     return R.fail("登录失效，请重新登录", HttpStatus.UNAUTHORIZED.value());
+    // }
 
     /**
      * 处理JSON提交方式数据校验失败异常

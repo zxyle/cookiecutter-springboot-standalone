@@ -5,9 +5,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${table.basePackageName}.common.aspect.LogOperation;
 import ${table.basePackageName}.common.response.R;
 import ${table.basePackageName}.common.request.BatchRequest;
-import ${table.basePackageName}.common.validation.Add;
-import ${table.basePackageName}.common.validation.Search;
-import ${table.basePackageName}.common.validation.Update;
 import {{ cookiecutter.namespace }}.validation.Valid;
 import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +18,7 @@ import ${table.baseControllerPath};
 </#if>
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 <#if excel>
 import com.alibaba.excel.EasyExcelFactory;
@@ -201,7 +199,7 @@ public class ${className} {
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:update')")
     @PutMapping("${table.endpoint}/batch")
     public R<Void> batchUpdate(@Valid @RequestBody List<${table.className}UpdateRequest> requests) {
-        List<Ad> list = requests.stream().map(req -> {
+        List<${table.className}> list = requests.stream().map(req -> {
                 ${table.className} item = new ${table.className}();
                 BeanUtils.copyProperties(req, item);
                 return item;
