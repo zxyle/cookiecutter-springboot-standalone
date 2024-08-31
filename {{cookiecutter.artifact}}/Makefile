@@ -73,15 +73,12 @@ init: package
 	ssh $(SERVER) "systemctl daemon-reload"
 	ssh $(SERVER) "systemctl enable {{ cookiecutter.artifact }} --now"
 
-	# 前端配置
+	# 前端配置一个测试页面
 	ssh $(SERVER) "mkdir -p $(FRONTEND_DIR)"
 	ssh $(SERVER) "mv $(BACKEND_DIR)/index.html $(FRONTEND_DIR)/"
 
-	# Nginx配置 (如果没有安装Nginx，需要先安装)
-	ssh $(SERVER) "mv $(BACKEND_DIR)/*.conf /etc/nginx/conf.d/"
-	ssh $(SERVER) "systemctl enable nginx --now"
-	ssh $(SERVER) "nginx -t"
-	ssh $(SERVER) "nginx -s reload"
+	# 删除多余文件
+	ssh $(SERVER) "rm -rf $(BACKEND_DIR)/Caddyfile $(BACKEND_DIR)/*.conf"
 
 # 安装JDK
 jdk:
@@ -125,7 +122,7 @@ mysql:
 		echo "$(MYSQL_TARGET_FILE) already exists."; \
 	fi
 	scp $(MYSQL_TARGET_FILE) $(SERVER):/tmp
-	scp $(SERVER) "yum install libaio* -y"
+	ssh $(SERVER) "yum install libaio* -y"
 	ssh $(SERVER) "tar -xvf /tmp/$(MYSQL_RPM) -C /tmp"
 	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-client-plugins-$(MYSQL_VERSION).rpm --force --nodeps"
 	ssh $(SERVER) "rpm -ivh /tmp/mysql-community-devel-$(MYSQL_VERSION).rpm --force --nodeps"
@@ -150,11 +147,11 @@ mysql:
 nginx:
 	ssh $(SERVER) "yum install -y epel-release"
 	ssh $(SERVER) "yum install -y nginx"
+	scp -rvC ./deploy/*.conf $(SERVER):/etc/nginx/conf.d/
 	ssh $(SERVER) "systemctl enable nginx --now"
 	ssh $(SERVER) "nginx -t"
-	ssh $(SERVER) "nginx -s reload"
 
-# 安装caddy，并创建日志目录 TODO 增加复制Caddyfile到/etc/caddy/目录下 进行格式化 以及reload
+# 安装caddy
 caddy:
 	ssh $(SERVER) "yum install yum-plugin-copr -y"
 	ssh $(SERVER) "yum copr enable @caddy/caddy -y"
@@ -162,6 +159,8 @@ caddy:
 	ssh $(SERVER) "mkdir /var/log/caddy"
 	ssh $(SERVER) "chown caddy:caddy /var/log/caddy"
 	ssh $(SERVER) "chmod 755 /var/log/caddy"
+	scp -rvC ./deploy/Caddyfile $(SERVER):/etc/caddy/
+	ssh $(SERVER) "cd /etc/caddy && caddy fmt --overwrite"
 	ssh $(SERVER) "systemctl enable caddy --now"
 
 # 使用docker-compose运行应用
@@ -173,6 +172,7 @@ log:
 	ssh $(SERVER) "tail -500f $(BACKEND_DIR)/logs/app.log"
 	#ssh $(SERVER) "tail -500f /var/log/nginx/access.log"
 	#ssh $(SERVER) "tail -500f /var/log/nginx/error.log"
+	#ssh $(SERVER) "tail -500f /var/log/caddy/access.log"
 
 # 使用说明
 help:
