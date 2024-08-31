@@ -39,6 +39,10 @@ public class ${className} extends PaginationRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     </#if>
+    <#if column.javaType == "LocalDate">
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    </#if>
     private ${column.javaType} ${column.property};
 
 </#list>

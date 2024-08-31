@@ -9,6 +9,7 @@ import {{ cookiecutter.namespace }}.validation.Valid;
 import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -64,11 +65,21 @@ public class ${className} {
     public R<Page<${table.className}>> page(@Valid ${table.className}PageRequest req) <#if excel>throws IOException</#if> {
         LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
         // 设置查询条件
-        // wrapper.eq(${table.className}::getId, 1);
         // if (StringUtils.isNotBlank(req.getKeyword())) {
         //     wrapper.and(i -> i.like(${table.className}::getName, req.getKeyword())
         //             .or().like(${table.className}::getName, req.getKeyword()));
         // }
+        <#list table.columns as column>
+        <#if column.javaType == "String">
+        wrapper.eq(StringUtils.isNotBlank(req.get${column.property?capitalize}()), ${table.className}::get${column.property?capitalize}, req.get${column.property?capitalize}());
+        <#else>
+        wrapper.eq(req.get${column.property?capitalize}() != null, ${table.className}::get${column.property?capitalize}, req.get${column.property?capitalize}());
+        </#if>
+        </#list>
+        wrapper.ge(req.getStartDate() != null, ${table.className}::getCreateTime, req.getStartDate());
+        wrapper.le(req.getEndDate() != null, ${table.className}::getCreateTime, req.getEndDate());
+        wrapper.ge(req.getStartTime() != null, ${table.className}::getCreateTime, req.getStartTime());
+        wrapper.le(req.getEndTime() != null, ${table.className}::getCreateTime, req.getEndTime());
         wrapper.orderByDesc(${table.className}::getId);
         <#if excel>
 

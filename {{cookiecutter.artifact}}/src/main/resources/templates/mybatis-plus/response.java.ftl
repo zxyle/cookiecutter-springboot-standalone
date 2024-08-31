@@ -32,6 +32,9 @@ public class ${className} {
     <#if column.javaType == "LocalDateTime">
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     </#if>
+    <#if column.javaType == "LocalDate">
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    </#if>
     private ${column.javaType} ${column.property};
 
 </#list>
