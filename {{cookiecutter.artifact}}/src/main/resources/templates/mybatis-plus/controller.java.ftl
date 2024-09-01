@@ -84,7 +84,7 @@ public class ${className} {
         <#if excel>
 
         // Excel导出功能，不需要可以删除
-        if (req.isExport()) {
+        if (Boolean.TRUE.equals(req.getExport())) {
             // wrapper.last("limit 10000"); // 过多的数据导出会造成系统卡顿，建议设置限制条数
             List<${table.className}> list = thisService.list(wrapper);
             List<${table.className}Export> exportList = IntStream.range(0, list.size())

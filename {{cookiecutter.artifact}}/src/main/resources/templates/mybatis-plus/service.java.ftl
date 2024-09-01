@@ -10,8 +10,6 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * ${table.comment} 服务类
 <#if author??>
@@ -24,8 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "${table.className}Cache")
 public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.className}> {
-
-    final ${table.className}Mapper thisMapper;
 
     /**
      * 新增${table.comment}
@@ -81,21 +77,6 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     public ${table.className} putById(${table.className} entity) {
         updateById(entity);
         return getById(entity.getId());
-    }
-
-    public boolean saveBatch(List<${table.className}> list) {
-        long count = list.stream().map(item -> baseMapper.insert(item)).count();
-        return count == list.size();
-    }
-
-    public boolean updateBatchById(List<${table.className}> list) {
-        long count = list.stream().map(item -> baseMapper.updateById(item)).count();
-        return count == list.size();
-    }
-
-    public boolean removeByIds(List<Integer> ids) {
-        long count = ids.stream().map(item -> baseMapper.deleteById(item)).count();
-        return count == ids.size();
     }
 
 }
