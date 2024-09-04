@@ -71,9 +71,9 @@ public class ${className} {
         // }
         <#list table.columns as column>
         <#if column.javaType == "String">
-        wrapper.eq(StringUtils.isNotBlank(req.get${column.property?capitalize}()), ${table.className}::get${column.property?capitalize}, req.get${column.property?capitalize}());
+        wrapper.eq(StringUtils.isNotBlank(req.get${column.property?cap_first}()), ${table.className}::get${column.property?cap_first}, req.get${column.property?cap_first}());
         <#else>
-        wrapper.eq(req.get${column.property?capitalize}() != null, ${table.className}::get${column.property?capitalize}, req.get${column.property?capitalize}());
+        wrapper.eq(req.get${column.property?cap_first}() != null, ${table.className}::get${column.property?cap_first}, req.get${column.property?cap_first}());
         </#if>
         </#list>
         wrapper.ge(req.getStartDate() != null, ${table.className}::getCreateTime, req.getStartDate());
