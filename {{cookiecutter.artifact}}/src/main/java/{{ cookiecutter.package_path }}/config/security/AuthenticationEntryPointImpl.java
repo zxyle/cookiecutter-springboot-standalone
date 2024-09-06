@@ -6,6 +6,7 @@ package {{ cookiecutter.basePackage }}.config.security;
 import {{ cookiecutter.basePackage }}.common.enums.ErrorEnum;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.JacksonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.io.PrintWriter;
 /**
  * 认证异常处理
  */
+@Slf4j
 @Component
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
@@ -26,6 +28,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
             throws IOException {
 
+        log.error("认证异常: {}", exception.getMessage());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
