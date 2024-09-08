@@ -162,4 +162,15 @@ BEGIN;
 INSERT INTO `site_banner` (`name`, `title`, `description`, `image_url`, `link_url`, `sort_order`, `status`, `position`) VALUES ('首页banner1', '欢迎来到我们的网站', '', '/images/banner1.jpg', '/', 1, 0, 'header');
 COMMIT;
 
+DROP TABLE IF EXISTS `site_banner`;
+CREATE TABLE `site_bank_card` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `user_id` int unsigned NOT NULL COMMENT '用户ID',
+  `card_no` varchar(20) NOT NULL COMMENT '银行卡号',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_user_id` (`user_id`,`card_no`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='银行卡号';
+
 SET FOREIGN_KEY_CHECKS = 1;
