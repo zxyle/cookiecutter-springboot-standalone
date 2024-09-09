@@ -172,4 +172,17 @@ public class AuthBaseController {
         return groups.stream().map(UserGroup::getGroupId).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
     }
 
+    /**
+     * 判断用户是否登录
+     */
+    public boolean isLogin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof LoginUser)) {
+            return false;
+        }
+
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        return loginUser.getUser().getId() != null;
+    }
+
 }
