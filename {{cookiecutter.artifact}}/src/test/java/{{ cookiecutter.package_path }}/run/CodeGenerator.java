@@ -18,6 +18,8 @@ public class CodeGenerator {
 
         // 需渲染的模板
         List<Temp> temps = Arrays.asList(
+                new Temp("api.js.ftl", "api/${biz}/${feat}.js"),
+                new Temp("index.vue.ftl", "views/${biz}/${className}/index.vue"),
                 new Temp("controller.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Controller.java"),
                 new Temp("entity.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}.java"),
                 new Temp("mapper.java.ftl", "src/main/java/${pkg}/biz/${biz}/${feat}/${className}Mapper.java"),
