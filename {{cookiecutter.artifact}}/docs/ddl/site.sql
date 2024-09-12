@@ -166,7 +166,6 @@ DROP TABLE IF EXISTS `site_banner`;
 CREATE TABLE `site_bank_card` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `user_id` int unsigned NOT NULL COMMENT '用户ID',
   `card_no` varchar(20) NOT NULL COMMENT '银行卡号',
   PRIMARY KEY (`id`),

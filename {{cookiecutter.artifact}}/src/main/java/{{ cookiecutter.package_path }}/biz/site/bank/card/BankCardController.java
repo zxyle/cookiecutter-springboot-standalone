@@ -14,7 +14,7 @@ import java.util.List;
 
 
 /**
- * 银行卡号管理
+ * 银行卡管理
  */
 @Slf4j
 @Validated
@@ -27,7 +27,7 @@ public class BankCardController extends AuthBaseController {
 
 
     /**
-     * 银行卡号列表查询
+     * 银行卡列表查询
      */
     @GetMapping("/cards")
     public R<List<BankCard>> list() {
@@ -39,7 +39,7 @@ public class BankCardController extends AuthBaseController {
     }
 
     /**
-     * 绑定银行卡号
+     * 绑定银行卡
      */
     @PostMapping("/cards")
     public R<BankCard> add(@Valid @RequestBody BankCardAddRequest req) {
@@ -51,19 +51,19 @@ public class BankCardController extends AuthBaseController {
     }
 
     /**
-     * 解绑银行卡号
+     * 解绑银行卡
      *
-     * @param id 银行卡号id
+     * @param id 银行卡id
      */
     @DeleteMapping("/cards/{id}")
     public R<Void> delete(@PathVariable @Positive Integer id) {
         BankCard entity = thisService.findById(id, getUserId());
         if (entity == null) {
-            return R.fail("删除失败，银行卡号数据不存在");
+            return R.fail("删除失败，银行卡不存在");
         }
 
         boolean deleted = thisService.deleteById(id);
-        return deleted ? R.ok("删除银行卡号成功") : R.fail("删除银行卡号失败");
+        return deleted ? R.ok("删除银行卡成功") : R.fail("删除银行卡失败");
     }
 
 }

@@ -1,7 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.site.bank.card;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
+import {{ cookiecutter.basePackage }}.common.entity.RecordEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @TableName("site_bank_card")
 @EqualsAndHashCode(callSuper = false)
-public class BankCard extends BaseEntity {
+public class BankCard extends RecordEntity {
 
     /**
      * 用户ID
