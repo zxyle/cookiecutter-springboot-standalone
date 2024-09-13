@@ -34,7 +34,7 @@ public class ${className} extends BaseRequest {
      *
      * @mock <#if column.defaultValue??>${column.defaultValue}</#if>
      */
-    <#if column.length gt 0>
+    <#if (column.length gt 0) && (column.dataType != "enum")>
     @Length(max = ${column.length?string("0")}, message = "${column.comment}长度不能超过${column.length?string("0")}个字符")
     </#if>
     <#if !column.nullable>
