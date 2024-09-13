@@ -1,16 +1,23 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-
       <#list table.columns as column>
         <el-form-item label="${column.comment}" prop="${column.property}">
-          <el-input
-                  v-model="queryParams.${column.property}"
-                  placeholder="请输入${column.comment}"
-                  clearable
-                  style="width: 200px"
-                  @keyup.enter="handleQuery"
-          />
+            <#if column.dataType == "enum">
+              <el-select v-model="queryParams.${column.property}" placeholder="请选择${column.comment}" style="width: 200px">
+                <#list column.constants as constant>
+                  <el-option label="${constant}" value="${constant}" />
+                </#list>
+              </el-select>
+            <#else >
+            <el-input
+                    v-model="queryParams.${column.property}"
+                    placeholder="请输入${column.comment}"
+                    clearable
+                    style="width: 200px"
+                    @keyup.enter="handleQuery"
+            />
+            </#if>
         </el-form-item>
       </#list>
 
@@ -66,7 +73,15 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" prop="id" width="100" />
       <#list table.columns as column>
-        <el-table-column label="${column.comment}" align="center" prop="${column.property}" />
+      <#if column.javaType == "Boolean">
+      <el-table-column label="${column.comment}" align="center" key="${column.property}">
+        <template #default="scope">
+          <el-switch v-model="scope.row.${column.property}" @change="handleStatusChange(scope.row)"></el-switch>
+        </template>
+      </el-table-column>
+      <#else>
+      <el-table-column label="${column.comment}" align="center" prop="${column.property}" />
+      </#if>
       </#list>
 
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -93,11 +108,25 @@
             <el-col :span="24">
               <el-form-item label="${column.comment}" prop="${column.property}">
               <#if column.javaType == "LocalDate">
-                <el-date-picker v-model="form.${column.property}" type="date" placeholder="请输入${column.comment}" :size="size" />
+                <el-date-picker v-model="form.${column.property}" type="date" placeholder="请输入${column.comment}" :size="size" value-format="YYYY-MM-DD" />
               <#elseif column.javaType == "LocalDateTime">
-                <el-date-picker v-model="form.${column.property}" type="datetime" placeholder="请输入${column.comment}" :size="size" />
+                <el-date-picker v-model="form.${column.property}" type="datetime" placeholder="请输入${column.comment}" :size="size" value-format="YYYY-MM-DD HH:mm:ss" />
+              <#elseif column.javaType == "LocalTime">
+                <el-time-picker v-model="form.${column.property}" type="time" placeholder="请输入${column.comment}" :size="size" value-format="HH:mm:ss" />
               <#elseif column.javaType == "Integer">
                 <el-input-number v-model="form.${column.property}" placeholder="请输入${column.comment}" />
+              <#elseif column.javaType == "Long">
+                <el-input-number v-model="form.${column.property}" placeholder="请输入${column.comment}" :min="0" />
+              <#elseif column.javaType == "Double">
+                <el-input-number v-model="form.${column.property}" placeholder="请输入${column.comment}" :precision="2" />
+              <#elseif column.javaType == "BigDecimal">
+                <el-input-number v-model="form.${column.property}" placeholder="请输入${column.comment}" :precision="2" :step="0.01" />
+              <#elseif column.dataType == "enum">
+                <el-select v-model="form.${column.property}" placeholder="请选择${column.comment}">
+                  <#list column.constants as constant>
+                    <el-option label="${constant}" value="${constant}" />
+                  </#list>
+                </el-select>
               <#elseif column.javaType == "Boolean">
                 <el-switch v-model="form.${column.property}" />
               <#else>
@@ -221,13 +250,13 @@
       if (valid) {
         if (form.value.id != undefined) {
           update(form.value).then(response => {
-            proxy.$modal.msgSuccess("修改成功");
+            proxy.$modal.msgSuccess("修改${table.comment}成功");
             open.value = false;
             getList();
           });
         } else {
           add(form.value).then(response => {
-            proxy.$modal.msgSuccess("新增成功");
+            proxy.$modal.msgSuccess("新增${table.comment}成功");
             open.value = false;
             getList();
           });
@@ -248,7 +277,7 @@
       }
     }).then(() => {
       getList();
-      proxy.$modal.msgSuccess("删除成功");
+      proxy.$modal.msgSuccess("删除${table.comment}成功");
     }).catch(() => {});
   }
 
