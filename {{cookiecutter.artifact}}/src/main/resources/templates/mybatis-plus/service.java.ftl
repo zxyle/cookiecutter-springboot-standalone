@@ -29,7 +29,8 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     @CachePut(key = "#result.id")
     public ${table.className} insert(${table.className} entity) {
         baseMapper.insert(entity);
-        return entity;
+        # 有些字段是数据库默认值，直接返回entity是没有的，所以需要重新查询
+        return getById(entity.getId());
     }
 
     /**
