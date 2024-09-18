@@ -4,6 +4,9 @@
 
     <select id="page" resultType="${package}.${table.className}">
       SELECT
+        id,
+        create_time,
+        update_time,
       <#list table.columns as column>
         ${column.name}<#if column?is_last><#else>,</#if>
       </#list>

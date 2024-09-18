@@ -150,7 +150,7 @@
 
 <script setup name="Person">
 
-  import { page, get, del, add, update, batchDelete } from "@/api/tool/person";
+  import { page, get, del, add, update, batchDelete } from "@/api/${biz}/${feat}";
 
   const { proxy } = getCurrentInstance();
 

@@ -55,7 +55,7 @@ export function batchDelete(query) {
 // 导出${table.comment!}
 export function exportExcel(query) {
   return request({
-    url: '/site/people',
+    url: '/${table.biz}${table.endpoint}',
     method: 'get',
     params: { ...query, export: true}
   })
