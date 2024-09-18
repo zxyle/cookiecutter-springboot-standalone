@@ -26,6 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import {{ cookiecutter.namespace }}.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 登录日志切面
@@ -106,7 +107,7 @@ public class LogAspect {
         long end = System.currentTimeMillis();
         loginLog.setMsg(result.getMessage());
         loginLog.setSuccess(result.isSuccess());
-        loginLog.setUserId(result.getData().getUserId());
+        Optional.ofNullable(result.getData()).ifPresent(data -> loginLog.setUserId(data.getUserId()));
 
         log.debug("{} -> {}, 耗费时间: {}毫秒.", pjp.getTarget().getClass().getSimpleName(), pjp.getSignature().getName(), (end - start));
         log.info("登录耗费时间: {}毫秒", (end - start));

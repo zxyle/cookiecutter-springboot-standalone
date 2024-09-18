@@ -37,9 +37,9 @@ public class AccountLoginRequest extends BaseRequest {
     /**
      * 验证码ID
      *
-     * @mock 1a38695e74b748ae7b48791f8d81531d
+     * @mock 1a38695e
      */
-    @Length(min = 32, max = 32, message = "验证码ID长度为32个字符")
+    @Length(min = 8, max = 8, message = "验证码ID长度为8个字符")
     private String captchaId;
 
     /**
