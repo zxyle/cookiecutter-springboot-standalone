@@ -248,7 +248,7 @@
   function submitForm() {
     proxy.$refs["noticeRef"].validate(valid => {
       if (valid) {
-        if (form.value.id != undefined) {
+        if (form.value.id !== undefined) {
           update(form.value).then(response => {
             proxy.$modal.msgSuccess("修改${table.comment}成功");
             open.value = false;
@@ -267,8 +267,8 @@
 
   /** 删除按钮操作 */
   function handleDelete(row) {
-    const aa = row.id || ids.value
-    proxy.$modal.confirm('是否确认删除编号为"' + aa + '"的数据项？').then(function() {
+    const pks = row.id || ids.value
+    proxy.$modal.confirm('是否确认删除编号为"' + pks + '"的数据项？').then(function() {
       if (row.id) {
         return del(row.id)
       }
