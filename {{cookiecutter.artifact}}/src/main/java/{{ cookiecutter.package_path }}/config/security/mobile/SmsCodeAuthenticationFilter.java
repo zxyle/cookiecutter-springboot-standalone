@@ -90,6 +90,7 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
         }
 
         String requestBody = stringBuilder.toString();
+        log.info("验证码账号登录请求：{}", requestBody);
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(requestBody, CodeLoginRequest.class);
     }

@@ -98,6 +98,7 @@ public class WechatAuthenticationFilter extends AbstractAuthenticationProcessing
         }
 
         String requestBody = stringBuilder.toString();
+        log.info("微信授权登录请求：{}", requestBody);
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(requestBody, WechatLoginRequest.class);
     }
