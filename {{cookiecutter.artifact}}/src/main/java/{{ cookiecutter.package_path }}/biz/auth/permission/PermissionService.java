@@ -225,6 +225,7 @@ public class PermissionService extends ServiceImpl<PermissionMapper, Permission>
             tree.putExtra("kind", object.getKind());
             tree.putExtra("sort", object.getSort());
             tree.putExtra("code", object.getCode());
+            tree.putExtra("createTime", object.getCreateTime());
         });
     }
 

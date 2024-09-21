@@ -44,7 +44,7 @@ public class RoleController extends AuthBaseController {
     @GetMapping("/roles")
     public R<Page<RoleResponse>> list(@Valid ListAuthRequest req) {
         LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(Role::getId, Role::getName, Role::getCode, Role::getDescription);
+        wrapper.select(Role::getId, Role::getCreateTime, Role::getName, Role::getCode, Role::getDescription);
         // 模糊查询
         if (StringUtils.isNotBlank(req.getKeyword())) {
             wrapper.and(i -> i.like(Role::getName, req.getKeyword())

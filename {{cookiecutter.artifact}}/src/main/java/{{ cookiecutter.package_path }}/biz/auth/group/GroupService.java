@@ -115,7 +115,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
     public List<Tree<Integer>> getTree(Integer rootId) {
         // 查询所有数据
         LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(Group::getId, Group::getParentId, Group::getName, Group::getSort);
+        wrapper.select(Group::getId, Group::getCreateTime, Group::getParentId, Group::getName, Group::getSort);
         wrapper.eq(Group::getParentId, rootId);
         List<Group> list = list(wrapper);
 
@@ -128,6 +128,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
             tree.setParentId(object.getParentId());// 必填属性
             tree.setName(object.getName());
             tree.putExtra("sort", object.getSort());
+            tree.putExtra("createTime", object.getCreateTime());
         });
     }
 

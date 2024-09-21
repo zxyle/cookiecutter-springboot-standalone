@@ -45,7 +45,7 @@ public class UserController extends AuthBaseController {
     @GetMapping("/users")
     public R<Page<UserResponse>> list(@Valid ListAuthRequest req) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.select(User::getId, User::getUsername, User::getEmail, User::getMobile, User::getEnabled);
+        wrapper.select(User::getId, User::getCreateTime, User::getUsername, User::getNickname, User::getEmail, User::getMobile, User::getEnabled);
         if (StringUtils.isNotBlank(req.getKeyword())) {
             wrapper.and(i -> i.like(User::getUsername, req.getKeyword())
                     .or().like(User::getEmail, req.getKeyword())
