@@ -48,7 +48,7 @@ CREATE TABLE `site_info` (
   `param_value` text CHARACTER SET utf8mb4 NOT NULL COMMENT '参数值',
   `description` varchar(255) CHARACTER SET utf8mb4 NOT NULL COMMENT '描述信息',
   PRIMARY KEY (`id`),
-  KEY `idx_param_key` (`param_key`) USING BTREE
+  UNIQUE KEY `uk_param_key` (`param_key`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统信息';
 -- ----------------------------
 -- Records of site_info
