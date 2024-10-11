@@ -554,7 +554,7 @@ CREATE TABLE `sys_operate_log` (
   `response` varchar(1024) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '响应体',
   `success` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作是否成功',
   `trace_id` char(32) CHARACTER SET utf8mb4 NOT NULL COMMENT '链路追踪ID',
-  `measured` smallint UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作耗时(毫秒)',
+  `measured` mediumint UNSIGNED NOT NULL DEFAULT '0' COMMENT '操作耗时(毫秒)',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='操作日志';
 

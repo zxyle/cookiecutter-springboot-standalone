@@ -173,7 +173,7 @@ public class AuthBaseController {
     }
 
     /**
-     * 判断用户是否登录
+     * 判断用户是否登录 可以改成 is_authenticated
      */
     public boolean isLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
