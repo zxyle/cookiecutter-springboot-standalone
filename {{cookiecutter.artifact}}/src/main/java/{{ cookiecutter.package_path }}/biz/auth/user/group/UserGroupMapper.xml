@@ -13,6 +13,7 @@
 
     <select id="listGroups" resultType="{{ cookiecutter.basePackage }}.biz.auth.group.Group">
         SELECT
+          b.`id`,
           b.`name`,
           b.`parent_id`,
           b.`description`,
