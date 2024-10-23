@@ -42,7 +42,7 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     }
 
     /**
-     * 查询指定用户的数据
+     * 查询指定用户的${table.comment}
      */
     @Cacheable(key = "#id + '_' + #userId")
     public ${table.className} findById(Integer id, Integer userId) {
@@ -61,7 +61,7 @@ public class ${className} extends ServiceImpl<${table.className}Mapper, ${table.
     }
 
     /**
-     * 删除指定用户的数据
+     * 删除指定用户的${table.comment}
      */
     @CacheEvict(key = "#id + '_' + #userId")
     public boolean deleteById(Integer id, Integer userId) {
