@@ -31,9 +31,6 @@ public class ${className} {
     </#if>
 
 <#list table.columns as column>
-    /**
-     * ${column.comment}
-     */
     <#if excel>
     @ColumnWidth(${column.comment?length * 4})
     @ExcelProperty("${column.comment}")

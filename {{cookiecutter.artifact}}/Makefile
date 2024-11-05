@@ -45,7 +45,7 @@ backup:
 	ssh $(SERVER) "mkdir -p $(BACKEND_DIR)/backup"
 	ssh $(SERVER) "cp $(BACKEND_DIR)/$(JAR) $(BACKEND_DIR)/backup/backup.jar"
 
-# 当发现部署失败时，可以回滚到上一个版本
+# 当出现部署失败时，可以回滚到上一个版本
 rollback:
 	ssh $(SERVER) "mv $(BACKEND_DIR)/backup/backup.jar $(BACKEND_DIR)/$(JAR)"
 	$(MAKE) restart
@@ -57,7 +57,7 @@ publish: package backup
 	scp -rC ./target/*.jar $(SERVER):$(BACKEND_DIR)
 	$(MAKE) restart
 	$(MAKE) clean
-	@echo "Deployed successfully!"
+	@echo "已成功部署部署"
 
 # 初始化前后端运行环境
 # 服务器需要安装rsync, yum install rsync -y
@@ -109,7 +109,7 @@ redis:
 	ssh $(SERVER) "rm -rf /tmp/$(REDIS_RPM)"
 	ssh $(SERVER) "redis-server --version"
 	ssh $(SERVER) "echo 'requirepass RGCqg&fju#Q6xypF' >> /etc/redis.conf"
-	#ssh $(SERVER) "echo 'bind 0.0.0.0' >> /etc/redis.conf"
+	ssh $(SERVER) "echo 'bind 0.0.0.0' >> /etc/redis.conf"
 	ssh $(SERVER) "systemctl enable redis --now"
 
 # 安装mysql

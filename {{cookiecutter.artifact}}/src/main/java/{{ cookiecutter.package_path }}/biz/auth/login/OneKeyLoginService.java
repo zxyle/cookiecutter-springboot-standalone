@@ -10,6 +10,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.login;
 // 百度云 https://growing.baidu.com/pnvs.html
 // 腾讯云 https://cloud.tencent.com/product/nvs
 // uniapp https://unicloud.dcloud.net.cn/pages/uni-login/app-config
+// 又拍云 https://www.upyun.com/ （仅限安卓和ios）
 public interface OneKeyLoginService {
 
     /**
