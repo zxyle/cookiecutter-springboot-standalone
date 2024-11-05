@@ -82,7 +82,7 @@ services:
       - TZ=Asia/Shanghai
     restart: on-failure
 
-  reids:
+  redis-stack:
     image: redis/redis-stack:latest
     ports:
       - "8890:8001"
