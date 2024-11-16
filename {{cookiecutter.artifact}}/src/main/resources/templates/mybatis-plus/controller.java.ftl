@@ -9,6 +9,7 @@ import {{ cookiecutter.namespace }}.validation.Valid;
 import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -86,6 +87,9 @@ public class ${className} {
         // Excel导出功能，不需要可以删除
         if (Boolean.TRUE.equals(req.getExport())) {
             // wrapper.last("limit 10000"); // 过多的数据导出会造成系统卡顿，建议设置限制条数
+            if (CollectionUtils.isNotEmpty(req.getIds())) {
+                wrapper.in(${table.className}::getId, req.getIds());
+            }
             List<${table.className}> list = thisService.list(wrapper);
             List<${table.className}Export> exportList = IntStream.range(0, list.size())
                     .mapToObj(index -> {

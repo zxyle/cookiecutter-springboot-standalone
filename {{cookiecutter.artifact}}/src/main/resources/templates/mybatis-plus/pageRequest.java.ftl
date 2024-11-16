@@ -46,4 +46,10 @@ public class ${className} extends PaginationRequest {
     private ${column.javaType} ${column.property};
 
 </#list>
+    /**
+     * 逗号分隔ID列表
+     *
+     * @mock 1,2,3
+     */
+    private Set<@NotNull @Positive Integer> ids;
 }

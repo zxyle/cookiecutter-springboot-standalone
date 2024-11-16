@@ -13,4 +13,24 @@
       FROM
         ${table.tableName}
     </select>
+
+    <select id="list" resultType="${package}.${table.className}">
+      SELECT
+        id,
+        create_time,
+        update_time,
+      <#list table.columns as column>
+        ${column.name}<#if column?is_last><#else>,</#if>
+      </#list>
+      FROM
+        ${table.tableName}
+      <where>
+        <if test="req.ids != null and req.ids.size() > 0">
+        AND id IN
+        <foreach collection="req.ids" item="id" open="(" separator="," close=")">
+          #{id}
+        </foreach>
+        </if>
+      </where>
+    </select>
 </mapper>
