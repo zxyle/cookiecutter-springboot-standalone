@@ -2,7 +2,7 @@ package {{ cookiecutter.basePackage }}.biz.auth.login;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
 /**
  * 本机号码一键登录请求

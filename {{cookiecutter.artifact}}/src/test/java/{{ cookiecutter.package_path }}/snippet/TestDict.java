@@ -76,7 +76,7 @@ public class TestDict {
                 "@ToString\n" +
                 "@AllArgsConstructor\n");
 
-        String className = StringUtil.toCapitalize(StringUtil.toCamelCase(dicts.get(0).getDictType()));
+        String className = StringUtil.capitalize(StringUtil.toCamelCase(dicts.get(0).getDictType()));
         System.out.println("public enum " + className + "Enum {\n");
 
         for (int i = 0; i < dicts.size(); i++) {
