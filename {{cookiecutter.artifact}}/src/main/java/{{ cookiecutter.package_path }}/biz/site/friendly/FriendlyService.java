@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 友链 服务实现类
+ * 友情链接 服务实现类
  */
 @Slf4j
 @Service

@@ -11,7 +11,7 @@ import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 /**
- * 友链
+ * 友情链接
  */
 @Data
 @TableName("site_friendly")
