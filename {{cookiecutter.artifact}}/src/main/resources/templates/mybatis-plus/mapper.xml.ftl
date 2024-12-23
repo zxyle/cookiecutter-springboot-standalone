@@ -28,7 +28,6 @@
         <if test="req.ids != null and req.ids.size() > 0">
         AND id IN
         <foreach collection="req.ids" item="id" open="(" separator="," close=")">
-          #{id}
         </foreach>
         </if>
       </where>
