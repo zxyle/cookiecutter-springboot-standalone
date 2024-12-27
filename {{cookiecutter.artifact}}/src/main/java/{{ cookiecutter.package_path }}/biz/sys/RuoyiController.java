@@ -399,18 +399,6 @@ public class RuoyiController {
                 "          }\n" +
                 "        }\n" +
                 "      ]\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"name\": \"Http://ruoyi.vip\",\n" +
-                "      \"path\": \"http://ruoyi.vip\",\n" +
-                "      \"hidden\": false,\n" +
-                "      \"component\": \"Layout\",\n" +
-                "      \"meta\": {\n" +
-                "        \"title\": \"若依官网\",\n" +
-                "        \"icon\": \"guide\",\n" +
-                "        \"noCache\": false,\n" +
-                "        \"link\": \"http://ruoyi.vip\"\n" +
-                "      }\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}";
