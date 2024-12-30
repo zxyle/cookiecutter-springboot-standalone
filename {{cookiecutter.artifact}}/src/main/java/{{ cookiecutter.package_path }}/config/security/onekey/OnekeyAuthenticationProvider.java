@@ -1,36 +1,40 @@
-package {{ cookiecutter.basePackage }}.config.security.wechat;
+package {{ cookiecutter.basePackage }}.config.security.onekey;
 
+
+import cn.hutool.core.util.DesensitizedUtil;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
+import {{ cookiecutter.basePackage }}.biz.auth.user.role.UserRoleService;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
- * 微信小程序手机号授权登录认证Provider
+ * 本机手机号授权登录认证Provider
  */
-public class WechatAuthenticationProvider implements AuthenticationProvider {
+public class OnekeyAuthenticationProvider implements AuthenticationProvider {
 
     UserDetailsService userDetailsService;
     ValidateService validateService;
     UserService userService;
+    UserRoleService userRoleService;
 
-    public WechatAuthenticationProvider(UserDetailsService userDetailsService, ValidateService validateService, UserService userService) {
+    public OnekeyAuthenticationProvider(UserDetailsService userDetailsService, ValidateService validateService, UserService userService, UserRoleService userRoleService) {
         this.userDetailsService = userDetailsService;
         this.validateService = validateService;
         this.userService = userService;
+        this.userRoleService = userRoleService;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        WechatAuthenticationToken authenticationToken = (WechatAuthenticationToken) authentication;
+        OnekeyAuthenticationToken authenticationToken = (OnekeyAuthenticationToken) authentication;
 
         String phone = (String) authenticationToken.getPrincipal();
         String openid = (String) authenticationToken.getCredentials();
@@ -50,14 +54,12 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         if (account1 == null) {
             User user = new User();
             user.setMobile(phone);
-            user.setOpenid(openid);
-            user.setNickname("微信用户");
+            user.setNickname(DesensitizedUtil.mobilePhone(phone));
+            // user.setAvatarUrl("");
             userService.save(user);
-        } else {
-            // TODO 存在着openid不一致的情况
-            if (!account1.getOpenid().equals(openid)) {
-                throw new BadCredentialsException("openid不一致");
-            }
+
+            // 给用户添加成为app注册用户角色
+            userRoleService.createRelation(user.getId(), 14);
         }
 
         // 调用自定义的userDetailsService认证
@@ -68,7 +70,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         }
 
         // 如果user不为空重新构建WechatAuthenticationToken（已认证）
-        WechatAuthenticationToken authenticationResult = new WechatAuthenticationToken(userDetails, userDetails.getAuthorities());
+        OnekeyAuthenticationToken authenticationResult = new OnekeyAuthenticationToken(userDetails, userDetails.getAuthorities());
         authenticationResult.setDetails(authenticationToken.getDetails());
         return authenticationResult;
     }
@@ -80,6 +82,6 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
      */
     @Override
     public boolean supports(Class<?> authentication) {
-        return WechatAuthenticationToken.class.isAssignableFrom(authentication);
+        return OnekeyAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

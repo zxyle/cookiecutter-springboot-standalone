@@ -1,11 +1,9 @@
 package {{ cookiecutter.basePackage }}.config.security.mobile;
 
+import org.springframework.security.authentication.*;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +40,16 @@ public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
 
         // 检查当前手机号是否已注册，没有则创建用户
         User account1 = userService.findByAccount(account);
+        if (account1 != null) {
+            if (Boolean.FALSE.equals(account1.getEnabled())) {
+                throw new DisabledException("账号已被禁用");
+            }
+
+            if (Boolean.TRUE.equals(account1.getLocked())) {
+                throw new LockedException("账号已被锁定");
+            }
+        }
+
         if (account1 == null) {
             User user = new User();
             user.setMobile(account);  // TODO 需要判断账号是邮箱还是手机号
