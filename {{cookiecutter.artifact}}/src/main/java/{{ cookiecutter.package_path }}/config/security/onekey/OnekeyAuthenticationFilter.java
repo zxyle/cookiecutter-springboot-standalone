@@ -49,9 +49,8 @@ public class OnekeyAuthenticationFilter extends AbstractAuthenticationProcessing
 
         // 从请求body中获取登录参数
         OneKeyLoginRequest loginRequest = obtainCodeLoginRequest(req);
-        String accessToken = loginRequest.getAccessToken();
-        String openid = loginRequest.getOpenid();
-        String account = oneKeyLoginService.getPhone(accessToken, openid);
+        String accessToken = loginRequest.getToken();
+        String account = oneKeyLoginService.getPhone(accessToken);
         if (StringUtils.isBlank(account)) {
             throw new AuthenticationServiceException("微信用户信息获取失败");
         }

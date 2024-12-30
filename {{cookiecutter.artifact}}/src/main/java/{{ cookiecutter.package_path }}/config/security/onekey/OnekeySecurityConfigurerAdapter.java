@@ -27,7 +27,6 @@ public class OnekeySecurityConfigurerAdapter extends SecurityConfigurerAdapter<D
     final LoginLogService loginLogService;
     final OneKeyLoginService oneKeyLoginService;
     final UserService userService;
-    final MapService mapService;
     final UserRoleService userRoleService;
 
     @Override
@@ -35,7 +34,7 @@ public class OnekeySecurityConfigurerAdapter extends SecurityConfigurerAdapter<D
         // 自定义WechatAuthenticationFilter过滤器
         OnekeyAuthenticationFilter wechatAuthenticationFilter = new OnekeyAuthenticationFilter(oneKeyLoginService);
         wechatAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        wechatAuthenticationFilter.setAuthenticationSuccessHandler(new OnekeyAuthenticationSuccessHandler(loginLogService, userService, mapService));
+        wechatAuthenticationFilter.setAuthenticationSuccessHandler(new OnekeyAuthenticationSuccessHandler(loginLogService, userService));
         wechatAuthenticationFilter.setAuthenticationFailureHandler(new OnekeyAuthenticationFailureHandler(loginLogService));
 
         // 设置自定义WechatAuthenticationProvider的认证器userDetailsService

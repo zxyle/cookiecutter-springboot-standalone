@@ -10,7 +10,6 @@ import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import {{ cookiecutter.basePackage }}.config.security.LoginUser;
-import io.github.zxyle.map.MapService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +38,6 @@ public class OnekeyAuthenticationSuccessHandler implements AuthenticationSuccess
     final LoginLogService loginLogService;
     static StringRedisTemplate stringRedisTemplate;
     final UserService usersService;
-    final MapService mapService;
 
     // 解决 @Component 下 @Autowired 注入为null的情况
     @Autowired

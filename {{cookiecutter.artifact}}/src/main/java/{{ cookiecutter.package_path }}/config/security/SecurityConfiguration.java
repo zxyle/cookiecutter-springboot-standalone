@@ -6,6 +6,7 @@ import {{ cookiecutter.basePackage }}.config.security.filter.AclFilter;
 import {{ cookiecutter.basePackage }}.config.security.filter.JwtAuthenticationTokenFilter;
 import {{ cookiecutter.basePackage }}.config.security.mobile.SmsSecurityConfigurerAdapter;
 import {{ cookiecutter.basePackage }}.config.security.wechat.WechatSecurityConfigurerAdapter;
+import {{ cookiecutter.basePackage }}.config.security.onekey.OnekeySecurityConfigurerAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,7 @@ public class SecurityConfiguration {
     final SmsSecurityConfigurerAdapter smsSecurityConfigurerAdapter;
     final CorsProperties corsProperties;
     final WechatSecurityConfigurerAdapter wechatSecurityConfigurerAdapter;
+    final OnekeySecurityConfigurerAdapter onekeySecurityConfigurerAdapter;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -67,6 +69,7 @@ public class SecurityConfiguration {
                 // 除上述请求 全部需要鉴权认证
                 .anyRequest().authenticated()
                .and().apply(smsSecurityConfigurerAdapter)
+               .and().apply(onekeySecurityConfigurerAdapter)
                .and().apply(wechatSecurityConfigurerAdapter);
 
 
