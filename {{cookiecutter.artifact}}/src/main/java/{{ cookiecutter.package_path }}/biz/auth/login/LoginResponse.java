@@ -34,7 +34,7 @@ public class LoginResponse {
     /**
      * JWT令牌，放在Authorization请求头中
      *
-     * @mock eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMCIsImlhdCI6MTU4MzY5NjQwMCwiZXhwIj
+     * @mock Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMCIsImlhdCI6MTU4MzY5NjQwMCwiZXhwIj
      */
     private String token;
 
