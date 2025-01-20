@@ -4,6 +4,7 @@ import {{ cookiecutter.basePackage }}.biz.auth.profile.Profile;
 import {{ cookiecutter.basePackage }}.biz.auth.user.User;
 import {{ cookiecutter.basePackage }}.biz.auth.token.JwtUtil;
 import lombok.Data;
+import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
 
 /**
  * 用户登录响应
@@ -31,7 +32,7 @@ public class LoginResponse {
     private String nickname;
 
     /**
-     * JWT令牌
+     * JWT令牌，放在Authorization请求头中
      *
      * @mock eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMCIsImlhdCI6MTU4MzY5NjQwMCwiZXhwIj
      */
@@ -58,6 +59,6 @@ public class LoginResponse {
         this.nickname = user.getNickname();
         this.admin = user.getAdmin();
         this.mustChangePwd = user.getMustChangePwd();
-        this.token = JwtUtil.createJwt(userId.toString());
+        this.token = AuthConst.AUTH_TYPE + JwtUtil.createJwt(userId.toString());
     }
 }

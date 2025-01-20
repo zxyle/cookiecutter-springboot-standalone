@@ -34,4 +34,11 @@ public final class AuthConst {
      */
     public static final int DEFAULT_EXPIRE_DAYS = 30;
 
+    /**
+     * 认证类型 (注意: 后面有个空格)
+     *
+     * @mock Bearer
+     */
+    public static final String AUTH_TYPE = "Bearer ";
+
 }
