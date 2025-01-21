@@ -52,7 +52,12 @@ public class LoginResponse {
      */
     private boolean mustChangePwd;
 
-    // TODO 考虑增加一个头像Url
+    /**
+     * 头像Url
+     *
+     * @mock https://avatars.githubusercontent.com/u/10000000?v=4
+     */
+    private String avatar;
 
     public LoginResponse(User user) {
         this.userId = user.getId();

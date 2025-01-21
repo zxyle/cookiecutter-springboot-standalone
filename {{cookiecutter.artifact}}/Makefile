@@ -150,6 +150,7 @@ nginx:
 	scp -rvC ./deploy/*.conf $(SERVER):/etc/nginx/conf.d/
 	ssh $(SERVER) "systemctl enable nginx --now"
 	ssh $(SERVER) "nginx -t"
+	ssh $(SERVER) "nginx -s reload"
 
 # 安装caddy
 caddy:
