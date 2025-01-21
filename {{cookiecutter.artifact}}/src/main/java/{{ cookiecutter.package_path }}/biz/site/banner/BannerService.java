@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 @CacheConfig(cacheNames = "BannerCache")
 public class BannerService extends ServiceImpl<BannerMapper, Banner> {
 
-    final BannerMapper thisMapper;
-
     /**
      * 新增
      */
@@ -44,17 +42,6 @@ public class BannerService extends ServiceImpl<BannerMapper, Banner> {
     @CacheEvict(key = "#id")
     public boolean deleteById(Integer id) {
         return removeById(id);
-    }
-
-    /**
-     * 删除指定用户的数据
-     */
-    @CacheEvict(key = "#id + '_' + #userId")
-    public boolean deleteById(Integer id, Integer userId) {
-        LambdaQueryWrapper<Banner> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(id != null, Banner::getId, id);
-        // wrapper.eq(userId != null, Banner::getUserId, userId);
-        return remove(wrapper);
     }
 
     /**
