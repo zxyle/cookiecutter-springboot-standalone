@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
 
 /**
- * Banner请求类
+ * 轮播图请求类
  */
 @Getter
 @Setter

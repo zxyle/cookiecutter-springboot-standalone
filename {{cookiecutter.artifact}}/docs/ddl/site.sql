@@ -153,7 +153,7 @@ CREATE TABLE `site_banner` (
   `position` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '展示位置',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_pos_status` (`status`,`position`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Banner';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='轮播图';
 
 -- ----------------------------
 -- Records of site_banner

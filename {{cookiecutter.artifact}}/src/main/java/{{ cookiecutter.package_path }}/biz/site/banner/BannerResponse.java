@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 /**
- * Banner响应类
+ * 轮播图响应类
  */
 @Getter
 @Setter

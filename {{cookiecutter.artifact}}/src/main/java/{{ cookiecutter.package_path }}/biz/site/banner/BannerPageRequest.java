@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 /**
- * Banner 分页请求类
+ * 轮播图 分页请求类
  */
 @Getter
 @Setter

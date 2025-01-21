@@ -18,7 +18,7 @@ import {{ cookiecutter.namespace }}.validation.constraints.Positive;
 
 
 /**
- * Banner管理
+ * 轮播图管理
  */
 @Slf4j
 @Validated
@@ -46,7 +46,7 @@ public class BannerController extends AuthBaseController {
     }
 
     /**
-     * 新增Banner
+     * 新增轮播图
      */
     @LogOperation(name = "新增", biz = "site")
     @PreAuthorize("@ck.hasPermit('site:banner:add')")
@@ -59,7 +59,7 @@ public class BannerController extends AuthBaseController {
     }
 
     /**
-     * 按ID查询Banner
+     * 按ID查询轮播图
      *
      * @param id id
      */
@@ -72,7 +72,7 @@ public class BannerController extends AuthBaseController {
     }
 
     /**
-     * 按ID更新Banner
+     * 按ID更新轮播图
      *
      * @param id id
      */
@@ -93,7 +93,7 @@ public class BannerController extends AuthBaseController {
     }
 
     /**
-     * 按ID删除Banner
+     * 按ID删除轮播图
      *
      * @param id id
      */

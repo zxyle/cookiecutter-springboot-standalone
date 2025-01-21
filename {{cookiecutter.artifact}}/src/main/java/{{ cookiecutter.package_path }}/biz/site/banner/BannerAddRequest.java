@@ -14,7 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 /**
- * Banner请求类
+ * 轮播图请求类
  */
 @Getter
 @Setter

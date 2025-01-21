@@ -11,7 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
- * Banner服务类
+ * 轮播图服务类
  */
 @Slf4j
 @Service

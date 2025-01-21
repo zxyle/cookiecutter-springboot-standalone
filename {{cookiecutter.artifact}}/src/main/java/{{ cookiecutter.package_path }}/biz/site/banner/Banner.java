@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * banner
+ * 轮播图
  */
 @Data
 @TableName("site_banner")
