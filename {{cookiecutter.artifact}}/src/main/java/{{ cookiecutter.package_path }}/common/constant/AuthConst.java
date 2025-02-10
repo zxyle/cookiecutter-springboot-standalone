@@ -37,6 +37,6 @@ public final class AuthConst {
     /**
      * 认证类型 (注意: 后面有个空格)
      */
-    public static final String AUTH_TYPE = "Bearer ";
+    public static final String AUTH_SCHEME = "Bearer ";
 
 }

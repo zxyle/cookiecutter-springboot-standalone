@@ -64,6 +64,6 @@ public class LoginResponse {
         this.nickname = user.getNickname();
         this.admin = user.getAdmin();
         this.mustChangePwd = user.getMustChangePwd();
-        this.token = AuthConst.AUTH_TYPE + JwtUtil.createJwt(userId.toString());
+        this.token = AuthConst.AUTH_SCHEME + JwtUtil.createJwt(userId.toString());
     }
 }

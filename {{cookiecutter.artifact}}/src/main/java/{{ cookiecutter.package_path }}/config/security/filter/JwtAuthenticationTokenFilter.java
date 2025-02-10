@@ -49,7 +49,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
 
         // 从Bearer token中获取jwt
-        token = token.substring(AuthConst.AUTH_TYPE.length());
+        token = token.substring(AuthConst.AUTH_SCHEME.length());
 
         // 解析jwt, 解析失败则放行
         String userId;
