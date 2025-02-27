@@ -20,7 +20,7 @@ services:
     volumes:
       - ./docs/ddl/auth.sql:/docker-entrypoint-initdb.d/auth.sql
       - ./docs/ddl/site.sql:/docker-entrypoint-initdb.d/site.sql
-      - ./docs/ddl/sys.sql:/docker-entrypoint-initdb.d/sdk.sql
+      - ./docs/ddl/sys.sql:/docker-entrypoint-initdb.d/sys.sql
       - ./data/mysql:/var/lib/mysql
     restart: on-failure
 
