@@ -5,7 +5,6 @@ import {{ cookiecutter.basePackage }}.biz.auth.user.UserService;
 import {{ cookiecutter.basePackage }}.biz.auth.user.role.UserRoleService;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.ValidateService;
 import {{ cookiecutter.basePackage }}.biz.sys.log.LoginLogService;
-import io.github.zxyle.map.MapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

@@ -8,7 +8,7 @@ public final class RegexConst {
     private RegexConst() {
     }
 
-    public static final String REGEX_MOBILE = "^1(3[0-9]|4[57]|5[0-35-9]|6[2567]|7[0-3,5-8]|8\d|9\d)\d{8}$";
+    public static final String REGEX_MOBILE = "^1(3[0-9]|4[57]|5[0-35-9]|6[2567]|7[0-3,5-8]|8\\d|9\\d)\\d{8}$";
 
     public static final String REGEX_EMAIL = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 
