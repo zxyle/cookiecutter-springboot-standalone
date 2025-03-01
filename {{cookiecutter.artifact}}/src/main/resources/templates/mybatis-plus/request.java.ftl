@@ -4,6 +4,7 @@ import ${table.basePackageName}.common.request.BaseRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 import {{ cookiecutter.namespace }}.validation.constraints.NotNull;
+import {{ cookiecutter.namespace }}.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -51,6 +52,9 @@ public class ${className} extends BaseRequest {
     <#if column.javaType == "LocalDate">
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd")
+    </#if>
+    <#if column.unsigned>
+    @PositiveOrZero(message = "${column.comment}必须大于等于0")
     </#if>
     private ${column.javaType} ${column.property};
 
