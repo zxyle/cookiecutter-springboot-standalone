@@ -16,7 +16,7 @@ public class OperateLogService extends ServiceImpl<OperateLogMapper, OperateLog>
      * 异步保存操作日志
      */
     @Async("applicationTaskExecutor")
-    public void saveLog(OperateLog operateLog) {
+    public void saveLogAsync(OperateLog operateLog) {
         this.save(operateLog);
     }
 }
