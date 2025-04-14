@@ -58,9 +58,9 @@ public class ${className} {
     </#if>
 
     /**
-     * 分页查询
+     * ${table.comment!}分页查询
      */
-    @LogOperation(name = "分页查询${table.comment!}", biz = "${table.biz}")
+    @LogOperation(name = "${table.comment!}分页查询", biz = "${table.biz}")
     @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
     @GetMapping("${table.endpoint}")
     public R<Page<${table.className}>> page(@Valid ${table.className}PageRequest req) <#if excel>throws IOException</#if> {
@@ -115,16 +115,15 @@ public class ${className} {
     /**
      * ${table.comment!}列表查询
      */
-    // 当数据量不大时，需要查出全部数据，可以使用此接口，不需要可以删除
-    // @LogOperation(name = "${table.comment!}列表查询", biz = "${table.biz}")
-    // @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
-    // @GetMapping("${table.endpoint}")
-    // public R<List<${table.className}>> list(@Valid ${table.className}Request req) {
-    //     LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
-    //     // 补充查询条件
-    //     wrapper.orderByDesc(${table.className}::getId);
-    //     return R.ok(thisService.list(wrapper));
-    // }
+    @LogOperation(name = "${table.comment!}列表查询", biz = "${table.biz}")
+    @PreAuthorize("@ck.hasPermit('${table.biz}:${table.name}:list')")
+    @GetMapping("${table.endpoint}/all")
+    public R<List<${table.className}>> list(@Valid ${table.className}Request req) {
+        LambdaQueryWrapper<${table.className}> wrapper = new LambdaQueryWrapper<>();
+        // 补充查询条件
+        wrapper.orderByDesc(${table.className}::getId);
+        return R.ok(thisService.list(wrapper));
+    }
 
     /**
      * 新增${table.comment!}
