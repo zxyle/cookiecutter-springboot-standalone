@@ -71,7 +71,7 @@ public class OnekeyAuthenticationSuccessHandler implements AuthenticationSuccess
         loginLog.setMsg("登录成功");
         loginLog.setSuccess(true);
         loginLog.setUserId(userId);
-        loginLogService.saveLoginLog(loginLog);
+        loginLogService.saveLogAsync(loginLog);
 
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(User::getId, userId);

@@ -109,7 +109,7 @@ public class LogAspect {
         log.debug("{} -> {}, 耗费时间: {}毫秒.", pjp.getTarget().getClass().getSimpleName(), pjp.getSignature().getName(), (end - start));
         log.info("登录耗费时间: {}毫秒", (end - start));
         log.info("log: {}", loginLog);
-        loginLogService.saveLoginLog(loginLog);
+        loginLogService.saveLogAsync(loginLog);
         return result;
     }
 
@@ -143,7 +143,7 @@ public class LogAspect {
         loginLog.setUserId(null);  // FIXME 如何记录登录失败的用户ID？
 
         log.info("登录失败日志: {}", loginLog);
-        loginLogService.saveLoginLog(loginLog);
+        loginLogService.saveLogAsync(loginLog);
     }
 
     @Data

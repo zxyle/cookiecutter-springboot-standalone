@@ -45,6 +45,6 @@ public class SmsCodeAuthenticationFailureHandler implements AuthenticationFailur
         loginLog.setSuccess(false);
         loginLog.setAccount(account);
         loginLog.setMsg(exception.getMessage());
-        loginLogService.saveLoginLog(loginLog);
+        loginLogService.saveLogAsync(loginLog);
     }
 }

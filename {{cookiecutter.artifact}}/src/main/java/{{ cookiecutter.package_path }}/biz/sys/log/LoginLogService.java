@@ -19,7 +19,7 @@ public class LoginLogService extends ServiceImpl<LoginLogMapper, LoginLog> {
      * @param loginLog 登录日志
      */
     @Async("applicationTaskExecutor")
-    public void saveLoginLog(LoginLog loginLog) {
+    public void saveLogAsync(LoginLog loginLog) {
         if (loginLog == null) {
             return;
         }

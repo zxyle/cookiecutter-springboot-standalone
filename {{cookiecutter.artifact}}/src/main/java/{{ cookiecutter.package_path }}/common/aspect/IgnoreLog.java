@@ -1,4 +1,4 @@
-package com.example.traceapi.common.aspect;
+package {{ cookiecutter.basePackage }}.common.aspect;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
