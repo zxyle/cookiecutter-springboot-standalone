@@ -73,6 +73,7 @@ public class SmsCodeAuthenticationSuccessHandler implements AuthenticationSucces
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(User::getId, userId);
         wrapper.set(User::getLastLoginTime, LocalDateTime.now());
+        wrapper.set(User::getLastIp, IpUtil.getIpAddr(request));
         usersService.update(wrapper);
     }
 }

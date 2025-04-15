@@ -85,6 +85,16 @@ public class User extends BaseEntity {
     private LocalDateTime lastLoginTime;
 
     /**
+     * 最后登录IP
+     */
+    private String lastIp;
+
+    /**
+     * 头像URL
+     */
+    private String avatar;
+
+    /**
      * 微信用户唯一标识
      */
     private String openid;
