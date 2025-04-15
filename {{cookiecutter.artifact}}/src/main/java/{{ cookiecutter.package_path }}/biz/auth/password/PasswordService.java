@@ -36,7 +36,7 @@ public class PasswordService {
         User user = userService.findById(userId);
 
         LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(User::getPwd, passwordEncoder.encode(newPwd.trim()));
+        updateWrapper.set(User::getPassword, passwordEncoder.encode(newPwd.trim()));
         updateWrapper.set(User::getPwdChangeTime, LocalDateTime.now());
         // 只有用户主动修改密码，页面才不会提示修改初始密码, 才会解除密码过期限制
         if (user.getMustChangePwd() && "user".equals(policy.getEditedBy())) {

@@ -332,7 +332,7 @@ CREATE TABLE `auth_user` (
   `username` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '登录用户名',
   `mobile` char(11) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '手机号码',
   `email` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '邮箱地址',
-  `pwd` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '密码',
+  `password` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '密码',
   `nickname` varchar(16) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '昵称/名字/真实姓名（只用于展示）',
   `locked` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '账号是否锁定',
   `admin` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否为超级管理员',
@@ -353,7 +353,7 @@ CREATE TABLE `auth_user` (
 -- Records of auth_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user` (`id`, `username`, `pwd`, `nickname`, `mobile`, `email`, `locked`, `admin`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', '管理员', NULL, NULL, 0, 1, '2099-12-31 23:59:59', NOW(), 1);
+INSERT INTO `auth_user` (`id`, `username`, `password`, `nickname`, `mobile`, `email`, `locked`, `admin`, `expire_time`, `pwd_change_time`, `enabled`) VALUES (1, 'admin', '$2a$10$2R/BL6V3lGNRAE2KeyYK8eZsFjKVr2RS8P8yduz3JywSX22pgv7ge', '管理员', NULL, NULL, 0, 1, '2099-12-31 23:59:59', NOW(), 1);
 COMMIT;
 
 -- ----------------------------

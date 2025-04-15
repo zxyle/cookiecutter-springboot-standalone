@@ -171,7 +171,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
      */
     public User create(String account, String encodedPassword) {
         User user = new User();
-        user.setPwd(encodedPassword);
+        user.setPassword(encodedPassword);
         user.setNickname("用户_" + CaptchaUtil.randAlphabet(6));
         if (AccountUtil.isMobile(account)) {
             user.setMobile(account);

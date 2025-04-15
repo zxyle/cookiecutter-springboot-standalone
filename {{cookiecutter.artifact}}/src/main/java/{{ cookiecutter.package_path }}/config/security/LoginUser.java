@@ -53,7 +53,7 @@ public class LoginUser implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPwd();
+        return user.getPassword();
     }
 
     @Override

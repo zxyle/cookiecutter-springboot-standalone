@@ -34,10 +34,10 @@ public class User extends BaseEntity {
     private String email;
 
     /**
-     * 密码
+     * 加密后的密码
      */
     @JsonIgnore
-    private String pwd;
+    private String password;
 
     /**
      * 昵称/名字/真实姓名（只用于展示）

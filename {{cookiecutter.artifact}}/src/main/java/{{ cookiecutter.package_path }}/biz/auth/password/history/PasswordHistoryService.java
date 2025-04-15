@@ -38,7 +38,7 @@ public class PasswordHistoryService extends ServiceImpl<PasswordHistoryMapper, P
         PasswordHistory history = new PasswordHistory();
         history.setUserId(user.getId());
         history.setAfterPwd(newPwd);
-        history.setBeforePwd(user.getPwd());
+        history.setBeforePwd(user.getPassword());
         history.setEditedBy(policy.getEditedBy());
         history.setKind(policy.getKind());
         save(history);
