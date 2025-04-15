@@ -1,5 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.user;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import {{ cookiecutter.basePackage }}.biz.auth.profile.Profile;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -98,5 +100,11 @@ public class User extends BaseEntity {
      * 微信用户唯一标识
      */
     private String openid;
+
+    /**
+     * 用户资料
+     */
+    @TableField(exist = false)
+    private Profile profile;
 
 }
