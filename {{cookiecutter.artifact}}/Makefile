@@ -157,7 +157,7 @@ caddy:
 	ssh $(SERVER) "yum install yum-plugin-copr -y"
 	ssh $(SERVER) "yum copr enable @caddy/caddy -y"
 	ssh $(SERVER) "yum install caddy -y"
-	ssh $(SERVER) "mkdir /var/log/caddy"
+	ssh $(SERVER) "mkdir -p /var/log/caddy"
 	ssh $(SERVER) "chown caddy:caddy /var/log/caddy"
 	ssh $(SERVER) "chmod 755 /var/log/caddy"
 	scp -rvC ./deploy/Caddyfile $(SERVER):/etc/caddy/
