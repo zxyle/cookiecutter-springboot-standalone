@@ -1,6 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.login;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
@@ -25,4 +26,12 @@ public class CodeLoginRequest {
      */
     @NotBlank(message = "验证码不能为空")
     private String code;
+
+    public String getAccount() {
+        return StringUtils.trim(account);
+    }
+
+    public String getCode() {
+        return StringUtils.trim(code);
+    }
 }

@@ -68,18 +68,17 @@ public class LoginController extends AuthBaseController {
     @GetMapping("/login/oauth")
     public R<LoginResponse> oauthLogin(@Valid ThirdPartyLoginRequest req) {
         log.info("三方账号登录, code: {}, provider: {}", req.getCode(), req.getProvider());
-        // 登录逻辑直接走UscCodeAuthenticationFilter即可，无需在这里实现
-        // 该接口占位仅为生成接口文档使用
+        // 该接口占位仅为生成接口文档使用，登录逻辑直接走UscCodeAuthenticationFilter即可，无需在这里实现
         return R.ok(null);
     }
 
     /**
-     * PC端生成二维码
+     * PC端生成二维码（前端1分钟失效）
      */
     @GetMapping("/login/qrcode")
     public R<TokenResponse> qrcode() {
         String qrcode = IdUtil.fastSimpleUUID();
-        stringRedisTemplate.opsForValue().set("qrcode:" + qrcode, qrcode, 10, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set("qrcode:" + qrcode, qrcode, 1, TimeUnit.MINUTES);
         return R.ok(new TokenResponse(qrcode));
     }
 
@@ -171,7 +170,7 @@ public class LoginController extends AuthBaseController {
     @PostMapping("/logout")
     public R<Void> logout() {
         boolean success = loginService.logout(getUserId());
-        return success ? R.ok("退出成功") : R.fail("退出失败");
+        return success ? R.ok("退出登录成功") : R.fail("退出登录失败");
     }
 
     /**
@@ -181,7 +180,7 @@ public class LoginController extends AuthBaseController {
         // 验证码校验
         boolean verify = codeService.verify(req.getCode(), req.getCaptchaId());
         if (!verify) {
-            return R.fail("验证码可能错误或过期");
+            return R.fail("验证码错误，请重新输入");
         }
         return null;
     }

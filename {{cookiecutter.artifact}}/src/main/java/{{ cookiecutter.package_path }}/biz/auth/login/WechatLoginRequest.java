@@ -1,6 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.login;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
@@ -28,4 +29,15 @@ public class WechatLoginRequest {
     @NotBlank(message = "iv不能为空")
     private String iv;
 
+    public String getJsCode() {
+        return StringUtils.trim(jsCode);
+    }
+
+    public String getEncryptedData() {
+        return StringUtils.trim(encryptedData);
+    }
+
+    public String getIv() {
+        return StringUtils.trim(iv);
+    }
 }

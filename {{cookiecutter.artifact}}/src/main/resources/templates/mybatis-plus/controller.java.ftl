@@ -82,7 +82,7 @@ public class ${className} {
         wrapper.orderByDesc(${table.className}::getId);
         <#if excel>
 
-        // Excel导出功能，不需要可以删除
+        // Excel导出
         if (Boolean.TRUE.equals(req.getExport())) {
             // wrapper.last("limit 10000"); // 过多的数据导出会造成系统卡顿，建议设置限制条数
             if (CollectionUtils.isNotEmpty(req.getIds())) {

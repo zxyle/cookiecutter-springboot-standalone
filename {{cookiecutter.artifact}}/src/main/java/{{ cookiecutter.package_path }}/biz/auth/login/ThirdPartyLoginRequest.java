@@ -1,6 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.login;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
 
@@ -25,4 +26,12 @@ public class ThirdPartyLoginRequest {
      */
     @NotBlank(message = "第三方登录提供商不能为空")
     private String provider;
+
+    public String getCode() {
+        return StringUtils.trim(code);
+    }
+
+    public String getProvider() {
+        return StringUtils.trim(provider);
+    }
 }

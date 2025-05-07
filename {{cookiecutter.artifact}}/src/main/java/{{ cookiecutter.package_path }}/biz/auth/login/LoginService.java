@@ -59,7 +59,7 @@ public class LoginService {
     /**
      * 登录后操作
      */
-    @Async
+    @Async("applicationTaskExecutor")
     public void afterLogin(LoginResponse response) {
         User user = new User();
         user.setId(response.getUserId());
@@ -72,6 +72,7 @@ public class LoginService {
 
         // 更新用户最后登录时间
         user.setLastLoginTime(LocalDateTime.now());
+        // user.setLastIp();
         userService.updateById(user);
     }
 }

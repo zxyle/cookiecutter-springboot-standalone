@@ -1,7 +1,7 @@
 package {{ cookiecutter.basePackage }}.biz.auth.login;
 
 /**
- *
+ * 一键登录服务
  */
 // aliyun https://help.aliyun.com/zh/pnvs/product-overview/what-is-the-number-certification-services
 // 极光  https://www.jiguang.cn/identify

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import {{ cookiecutter.basePackage }}.common.request.BaseRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 import {{ cookiecutter.namespace }}.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import {{ cookiecutter.namespace }}.validation.constraints.Pattern;
  * 使用注册账号(用户名/邮箱/手机号) + 密码方式登录
  */
 @Data
+@ToString(exclude = {"password"})
 @EqualsAndHashCode(callSuper = false)
 public class AccountLoginRequest extends BaseRequest {
 
