@@ -23,14 +23,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 <#if excel>
-import com.alibaba.excel.EasyExcelFactory;
-import java.net.URLEncoder;
-import org.springframework.http.MediaType;
 import java.io.IOException;
 import {{ cookiecutter.namespace }}.servlet.http.HttpServletResponse;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.springframework.beans.BeanUtils;
+import ${table.basePackageName}.common.excel.ExcelUtils;
 </#if>
 
 /**
@@ -98,12 +96,8 @@ public class ${className} {
                         export.setSeq(index + 1);
                         return export;
                     }).collect(Collectors.toList());
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             String fileName = "${table.comment}";
-            String baseName = URLEncoder.encode(fileName, "UTF-8").replace("\\+", "%20");
-            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + baseName + ".xlsx");
-            EasyExcelFactory.write(response.getOutputStream(), ${table.className}Export.class)
-                    .autoCloseStream(Boolean.TRUE).sheet("Sheet1").doWrite(exportList);
+            ExcelUtils.export(response, fileName, exportList, ${table.className}Export.class);
             return null;
         }
 

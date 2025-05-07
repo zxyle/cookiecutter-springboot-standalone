@@ -22,9 +22,6 @@ import lombok.Data;
 @Data
 public class ${className} {
     <#if excel>
-    /**
-     * 序号
-     */
     @ColumnWidth(8)
     @ExcelProperty("序号")
     private int seq;
