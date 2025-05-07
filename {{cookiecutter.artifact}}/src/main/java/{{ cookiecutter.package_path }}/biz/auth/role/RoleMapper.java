@@ -17,6 +17,6 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @param userId 用户ID
      * @return 角色编码列表
      */
-    List<String> findRolesByUserId(Integer userId);
+    List<Role> findRolesByUserId(Integer userId);
 
 }

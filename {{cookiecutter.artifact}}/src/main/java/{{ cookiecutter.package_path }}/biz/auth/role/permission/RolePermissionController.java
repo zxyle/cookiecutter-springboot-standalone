@@ -48,12 +48,7 @@ public class RolePermissionController extends AuthBaseController {
     @PostMapping("/roles/{roleId}/permissions")
     public R<Void> add(@PathVariable Integer roleId, @Valid @RequestBody RolePermission entity) {
         boolean success = thisService.createRelation(roleId, entity.getPermissionId());
-        if (success) {
-            List<Integer> users = getUsersByRole(roleId);
-            users.forEach(permissionService::refreshPermissions);
-            return R.ok("角色新增权限成功");
-        }
-        return R.fail("角色新增权限失败");
+        return success? R.ok("角色新增权限成功") : R.fail("角色新增权限失败");
     }
 
     /**
@@ -66,12 +61,7 @@ public class RolePermissionController extends AuthBaseController {
     @DeleteMapping("/roles/{roleId}/permissions/{permissionId}")
     public R<Void> delete(@PathVariable Integer permissionId, @PathVariable Integer roleId) {
         boolean success = thisService.deleteRelation(roleId, permissionId);
-        if (success) {
-            List<Integer> users = getUsersByRole(roleId);
-            users.forEach(permissionService::refreshPermissions);
-            return R.ok("角色移除权限限成功");
-        }
-        return R.fail("角色移除权限失败");
+        return success ? R.ok("角色移除权限成功") : R.fail("角色移除权限失败");
     }
 
     /**

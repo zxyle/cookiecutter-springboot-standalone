@@ -112,14 +112,7 @@ public class PermissionController extends AuthBaseController {
             return R.fail("删除失败，该权限正在使用");
         }
 
-        Permission permission = thisService.getById(permissionId);
         boolean success = thisService.delete(permissionId);
-        if (success) {
-            // 所有持有该权限的用户，都刷新权限
-            List<Integer> userIds = thisService.holdPermission(permission.getCode());
-            userIds.forEach(thisService::refreshPermissions);
-            return R.ok("删除权限成功");
-        }
-        return R.fail("删除权限失败");
+        return success ? R.ok("删除权限成功") : R.fail("删除权限失败");
     }
 }

@@ -1,5 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.auth.permission;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import {{ cookiecutter.basePackage }}.common.entity.BaseEntity;
 import lombok.Data;
@@ -49,5 +50,11 @@ public class Permission extends BaseEntity {
      * 显示顺序
      */
     private Integer sort;
+
+    /**
+     * 角色ID
+     */
+    @TableField(exist = false)
+    private Integer roleId;
 
 }

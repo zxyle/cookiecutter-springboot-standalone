@@ -1,24 +1,19 @@
 package {{ cookiecutter.basePackage }}.config.security;
 
-import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import {{ cookiecutter.namespace }}.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 
 @Service("ck")
 public class CheckPermissionService {
 
     private final WildcardPermission wildcardPermission = new WildcardPermission();
-
-    @Resource
-    StringRedisTemplate stringRedisTemplate;
 
     /**
      * 检查用户拥有的权限是否包含指定的权限
@@ -34,15 +29,8 @@ public class CheckPermissionService {
         UsernamePasswordAuthenticationToken authentication =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        Integer userId = loginUser.getUser().getId();
-        String key = AuthConst.KEY_PREFIX + userId;
-        String value = stringRedisTemplate.opsForValue().get(key);
-        if (StringUtils.isBlank(value)) {
-            return false;
-        }
+        Collection<GrantedAuthority> authorities = authentication.getAuthorities();
 
-        List<String> patterns = Arrays.asList(value.split(AuthConst.DELIMITER));
-        return wildcardPermission.isPermit(permission, patterns);
+        return wildcardPermission.isPermit(permission, authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
     }
 }

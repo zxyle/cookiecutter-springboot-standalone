@@ -8,7 +8,7 @@ import {{ cookiecutter.basePackage }}.common.request.BatchRequest;
 import {{ cookiecutter.basePackage }}.common.request.PaginationRequest;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import {{ cookiecutter.namespace }}.validation.Valid;
@@ -31,7 +31,7 @@ public class UserRoleController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:get')")
     @GetMapping("/users/{userId}/roles")
     public R<Page<Role>> list(@Valid PaginationRequest req, @PathVariable Integer userId) {
         Page<Role> page = thisMapper.page(req.getPage(), userId, req);
@@ -40,10 +40,11 @@ public class UserRoleController extends AuthBaseController {
 
     /**
      * 用户新增角色
+     * TODO 考虑将该接口合并到批量新增接口中，减少维护成本
      *
      * @param userId 用户ID
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PostMapping("/users/{userId}/roles")
     public R<Void> add(@Valid @RequestBody UserRole entity, @PathVariable Integer userId) {
         boolean success = thisService.createRelation(userId, entity.getRoleId());
@@ -60,7 +61,7 @@ public class UserRoleController extends AuthBaseController {
      * @param userId 用户ID
      * @param roleId 角色ID
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @DeleteMapping("/users/{userId}/roles/{roleId}")
     public R<Void> delete(@PathVariable Integer userId, @PathVariable Integer roleId) {
         boolean success = thisService.deleteRelation(userId, roleId);
@@ -76,7 +77,7 @@ public class UserRoleController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @DeleteMapping("/users/{userId}/roles")
     public R<Void> deleteBatch(@PathVariable Integer userId, @Valid BatchRequest req) {
         Set<Integer> ids = req.getIds();
@@ -91,7 +92,7 @@ public class UserRoleController extends AuthBaseController {
      *
      * @param userId 用户ID
      */
-    @Secured(value = "ROLE_admin")
+    @PreAuthorize("@ck.hasPermit('auth:user:update')")
     @PostMapping("/users/{userId}/roles/batch-add")
     public R<Void> createBatch(@PathVariable Integer userId, @Valid @RequestBody BatchRequest req) {
         Set<Integer> ids = req.getIds();

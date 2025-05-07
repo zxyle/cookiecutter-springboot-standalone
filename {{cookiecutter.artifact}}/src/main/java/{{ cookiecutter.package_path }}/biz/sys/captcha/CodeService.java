@@ -64,7 +64,7 @@ public class CodeService {
 
         String redisKey = settingService.get("captcha.key-prefix").getStr() + captchaId;
         Boolean hasKey = stringRedisTemplate.hasKey(redisKey);
-        if (Boolean.FALSE.equals(hasKey)) {
+        if (!hasKey) {
             return false;
         }
 

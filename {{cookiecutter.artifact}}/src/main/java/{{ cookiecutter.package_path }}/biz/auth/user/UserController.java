@@ -74,6 +74,7 @@ public class UserController extends AuthBaseController {
     @PreAuthorize("@ck.hasPermit('auth:user:add')")
     @PostMapping("/users")
     public R<User> add(@Valid @RequestBody AdminAddUserRequest req) {
+        // TODO 增加事务控制
         if (thisService.findByAccount(req.getAccount()) != null) {
             return R.fail("创建失败，用户名被占用");
         }

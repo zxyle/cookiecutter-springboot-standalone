@@ -3,25 +3,31 @@ package {{ cookiecutter.basePackage }}.biz.auth.user.role;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import {{ cookiecutter.basePackage }}.biz.auth.role.Role;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用户和角色关联表 服务实现类
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 @CacheConfig(cacheNames = "UserRoleCache")
 public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
+
+    final StringRedisTemplate stringRedisTemplate;
+    private static final String USER_ROLE_KEY = "user:%s:roles";
 
     /**
      * 删除映射关系
@@ -39,6 +45,7 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
             return true;
         }
 
+        deleteRolesFromRedis(userId, Collections.singletonList(roleId));
         return remove(buildWrapper(userId, roleId));
     }
 
@@ -81,6 +88,7 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
             return true;
         }
 
+        saveRolesToRedis(userId, new ArrayList<>(roleId));
         return save(new UserRole(userId, roleId));
     }
 
@@ -124,5 +132,18 @@ public class UserRoleService extends ServiceImpl<UserRoleMapper, UserRole> {
     @Cacheable(key = "'roles:' + #userId", unless = "#result == null")
     public List<Role> findRolesByUserId(Integer userId) {
         return baseMapper.findRolesByUserId(userId);
+    }
+
+    // 将用户拥有的角色ID存到redis中
+    public void saveRolesToRedis(Integer userId, List<Integer> roleIds) {
+        String key = String.format(USER_ROLE_KEY, userId);
+        stringRedisTemplate.opsForSet().add(key, roleIds.stream().map(String::valueOf).toArray(String[]::new));
+        stringRedisTemplate.expire(key, 1, TimeUnit.DAYS);
+    }
+
+    // 从redis中删除角色ID
+    public void deleteRolesFromRedis(Integer userId, List<Integer> roleIds) {
+        String key = String.format(USER_ROLE_KEY, userId);
+        stringRedisTemplate.opsForSet().remove(key, roleIds.stream().map(String::valueOf).toArray());
     }
 }

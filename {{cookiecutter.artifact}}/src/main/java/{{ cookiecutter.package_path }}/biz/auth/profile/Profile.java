@@ -53,7 +53,7 @@ public class Profile extends BaseEntity {
      *
      * @mock 男
      */
-    private GenderEnum gender;
+    private String gender;
 
     /**
      * 头像url
