@@ -96,8 +96,7 @@ public class ${className} {
                         export.setSeq(index + 1);
                         return export;
                     }).collect(Collectors.toList());
-            String fileName = "${table.comment}";
-            ExcelUtils.export(response, fileName, exportList, ${table.className}Export.class);
+            ExcelUtils.export(response, "${table.comment}", exportList, ${table.className}Export.class);
             return null;
         }
 
