@@ -3,6 +3,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.captcha;
 import {{ cookiecutter.basePackage }}.biz.auth.mfa.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.sms.ShortMessageService;
 import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
+import {{ cookiecutter.basePackage }}.common.aspect.IgnoreLog;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
@@ -21,7 +22,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 数字验证码管理
+ * 验证码管理
  */
 @Slf4j
 @Validated
@@ -40,9 +41,10 @@ public class CaptchaController {
     /**
      * 生成base64编码图形验证码
      */
+    @IgnoreLog(ignoreResponse = true)
     @GetMapping("/generate")
     public R<CaptchaResponse> generate() {
-        CaptchaPair captchaPair = codeService.send();
+        CaptchaPair captchaPair = codeService.generate();
         CaptchaResponse response = new CaptchaResponse(captchaPair.getCaptchaId(), captchaPair.getB64Image());
         log.info("已生成验证码: {}", captchaPair);
         return R.ok(response);
@@ -51,6 +53,7 @@ public class CaptchaController {
     /**
      * 生成图形验证码
      */
+    @IgnoreLog(ignoreResponse = true)
     @GetMapping("/captchaImage")
     public void get(HttpServletResponse response) throws IOException {
         // 在代理服务器端防止缓冲
@@ -58,7 +61,7 @@ public class CaptchaController {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
         response.setContentType("image/jpeg");
-        CaptchaPair captchaPair = codeService.send();
+        CaptchaPair captchaPair = codeService.generate();
         response.setHeader("captchaId", captchaPair.getCaptchaId());
         response.getOutputStream().write(captchaPair.getBytes());
         response.getOutputStream().flush();
@@ -91,7 +94,7 @@ public class CaptchaController {
         // 验证码60秒有效期内不再发送
         String key = "code:" + account;
         Long expire = stringRedisTemplate.getExpire(key);
-        if (Boolean.TRUE.equals(stringRedisTemplate.hasKey(key)) && (expire != null && expire > 60)) {
+        if (stringRedisTemplate.hasKey(key) && (expire != null && expire > 60)) {
             return R.ok("验证码仍在有效期内");
         }
 
@@ -127,7 +130,7 @@ public class CaptchaController {
 
     public boolean isLocked(String account) {
         String key = "locked:" + account;
-        return Boolean.TRUE.equals(stringRedisTemplate.hasKey(key));
+        return stringRedisTemplate.hasKey(key);
     }
 
 }

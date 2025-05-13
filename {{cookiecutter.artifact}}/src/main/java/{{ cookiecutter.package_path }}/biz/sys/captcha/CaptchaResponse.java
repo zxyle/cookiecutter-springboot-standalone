@@ -10,6 +10,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class CaptchaResponse {
 
+    public static final String DATA_URL_PREFIX = "data:image/png;base64,";
+
     /**
      * 图形验证码ID
      *
@@ -23,4 +25,8 @@ public class CaptchaResponse {
      * @mock data:image/png;base64,iVBORw0KGgoAAAANSUh...
      */
     private String captcha;
+
+    public String getCaptcha() {
+        return DATA_URL_PREFIX + captcha;
+    }
 }

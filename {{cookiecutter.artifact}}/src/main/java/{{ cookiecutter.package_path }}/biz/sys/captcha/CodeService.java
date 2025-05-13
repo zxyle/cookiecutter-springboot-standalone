@@ -25,7 +25,7 @@ public class CodeService {
     /**
      * 生成验证码
      */
-    public CaptchaPair send() {
+    public CaptchaPair generate() {
         CaptchaService captchaService;
         String kind = settingService.get("captcha.kind").getStr();
         switch (kind) {
