@@ -116,11 +116,10 @@ public class RedisStringCounterServiceImpl implements CounterService {
     public boolean clear(String biz, String id) {
         String key = String.format(FORMAT, biz, id);
         Boolean hasKey = stringRedisTemplate.hasKey(key);
-        if (Boolean.FALSE.equals(hasKey)) {
+        if (!hasKey) {
             return true;
         }
-        Boolean deleted = stringRedisTemplate.delete(key);
-        return Boolean.TRUE.equals(deleted);
+        return stringRedisTemplate.delete(key);
     }
 
     /**
@@ -134,7 +133,7 @@ public class RedisStringCounterServiceImpl implements CounterService {
     public boolean batchClear(String biz, List<Integer> ids) {
         List<String> keys = ids.stream().map(id -> String.format(FORMAT, biz, id)).{% if cookiecutter.javaVersion in ["17", "21"] %}toList(){% else %}collect(Collectors.toList()){% endif %};
         Long delete = stringRedisTemplate.delete(keys);
-        return delete != null && delete == ids.size();
+        return delete == ids.size();
     }
 }
 
