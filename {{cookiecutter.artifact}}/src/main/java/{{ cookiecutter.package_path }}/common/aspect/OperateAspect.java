@@ -4,6 +4,8 @@ import {{ cookiecutter.basePackage }}.biz.auth.token.JwtUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.log.OperateLog;
 import {{ cookiecutter.basePackage }}.biz.sys.log.OperateLogService;
 import {{ cookiecutter.basePackage }}.common.constant.AuthConst;
+import {{ cookiecutter.basePackage }}.common.constant.ProjectConst;
+import {{ cookiecutter.basePackage }}.common.exception.GlobalExceptionHandler;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import {{ cookiecutter.basePackage }}.config.interceptor.TraceInterceptor;
@@ -63,9 +65,9 @@ public class OperateAspect {
     @Around("logPointcut()")
     public Object logOperation(ProceedingJoinPoint joinPoint) throws Throwable {
         // 1. 判断是否需要忽略日志记录
-        if (isIgnoreLog(joinPoint)) {
-            return joinPoint.proceed();
-        }
+        List<Boolean> list = isIgnoreLog(joinPoint);
+        boolean ignoreRequest = list.get(0);
+        boolean ignoreResponse = list.get(1);
 
         // 2. 准备基础请求信息
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -74,13 +76,16 @@ public class OperateAspect {
         OperateLog op = new OperateLog();
         // 使用StringBuilder预先构建日志内容，减少日志API调用次数
         StringBuilder logBuilder = new StringBuilder(512)
+                // 删除这条横线， 业务日志 和请求日志就在显示在一起了
                 .append("\n========================================== Start ==========================================\n")
                 .append("Request Url    : ").append(request.getMethod()).append(" ").append(request.getRequestURL()).append("\n");
 
         List<Object> requestArgs = filterRequestArgs(joinPoint);
         if (!requestArgs.isEmpty()) {
             String argsJson = objectMapper.writeValueAsString(requestArgs);
-            logBuilder.append("Request Args   : ").append(argsJson).append("\n");
+            if (!ignoreRequest) {
+                logBuilder.append("Request Args   : ").append(argsJson).append("\n");
+            }
             op.setRequest(StringUtils.substring(argsJson, 0, 2048));
         }
 
@@ -106,6 +111,7 @@ public class OperateAspect {
                 .append("Content Type   : ").append(request.getContentType()).append("\n")
                 .append("Class Method   : ").append(joinPoint.getSignature().getDeclaringTypeName()).append(".").append(joinPoint.getSignature().getName()).append("\n")
                 .append("IP             : ").append(ip)
+                // 以下代码是用来展示IP归属地
                 // .append(" （").append(IpUtil.getRegion(ip)).append("）")
                 .append("\n")
                 .append("TraceId        : ").append(MDC.get(TraceInterceptor.TRACE_ID)).append("\n");
@@ -154,7 +160,9 @@ public class OperateAspect {
 
             @SuppressWarnings("unchecked")
             R<Object> response = (R<Object>) result;
-            logBuilder.append("Response       : ").append(objectMapper.writeValueAsString(response)).append("\n");
+            if (!ignoreResponse) {
+                logBuilder.append("Response       : ").append(objectMapper.writeValueAsString(response)).append("\n");
+            }
             op.setSuccess(response.isSuccess());
             op.setTraceId(response.getTraceId());
             // 如果操作失败，记录失败原因
@@ -168,7 +176,7 @@ public class OperateAspect {
             if (StringUtils.isNotBlank(e.getMessage())) {
                 op.setResponse(StringUtils.substring(e.getMessage(), 0, Math.min(e.getMessage().length(), 1024)));
             }
-            log.error("操作失败: {}", op);
+            logBuilder.append("Exception: ").append(GlobalExceptionHandler.getFilteredExceptionMessage(e, ProjectConst.BASE_PACKAGE)).append("\n");
             throw e;
         } finally {
             long measured = System.currentTimeMillis() - startTime;
@@ -184,16 +192,33 @@ public class OperateAspect {
     /**
      * 判断是否忽略日志
      */
-    private boolean isIgnoreLog(JoinPoint joinPoint) {
+    private List<Boolean> isIgnoreLog(JoinPoint joinPoint) {
+        boolean ignoreRequestClass = false;
+        boolean ignoreResponseClass = false;
+
+        boolean ignoreRequestMethod = false;
+        boolean ignoreResponseMethod = false;
+
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 
         // 检查方法级别的忽略注解
-        if (signature.getMethod().isAnnotationPresent(IgnoreLog.class)) {
-            return true;
+        if (signature.getMethod().isAnnotationPresent(ApiPolicy.class)) {
+            ApiPolicy annotation = signature.getMethod().getAnnotation(ApiPolicy.class);
+            if (annotation != null) {
+                ignoreRequestMethod = annotation.noReq();
+                ignoreResponseMethod = annotation.noRes();
+            }
         }
 
         // 检查类级别的忽略注解
-        return joinPoint.getTarget().getClass().isAnnotationPresent(IgnoreLog.class);
+        if (joinPoint.getTarget().getClass().isAnnotationPresent(ApiPolicy.class)) {
+            ApiPolicy annotation = joinPoint.getTarget().getClass().getAnnotation(ApiPolicy.class);
+            if (annotation != null) {
+                ignoreRequestClass = annotation.noReq();
+                ignoreResponseClass = annotation.noRes();
+            }
+        }
+        return Arrays.asList(ignoreRequestClass || ignoreRequestMethod, ignoreResponseClass || ignoreResponseMethod);
     }
 
     /**

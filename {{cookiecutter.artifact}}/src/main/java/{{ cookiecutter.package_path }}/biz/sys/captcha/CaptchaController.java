@@ -3,7 +3,7 @@ package {{ cookiecutter.basePackage }}.biz.sys.captcha;
 import {{ cookiecutter.basePackage }}.biz.auth.mfa.AccountUtil;
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.sms.ShortMessageService;
 import {{ cookiecutter.basePackage }}.biz.sys.setting.SettingService;
-import {{ cookiecutter.basePackage }}.common.aspect.IgnoreLog;
+import {{ cookiecutter.basePackage }}.common.aspect.ApiPolicy;
 import {{ cookiecutter.basePackage }}.common.response.R;
 import lombok.RequiredArgsConstructor;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
@@ -41,7 +41,7 @@ public class CaptchaController {
     /**
      * 生成base64编码图形验证码
      */
-    @IgnoreLog(ignoreResponse = true)
+    @ApiPolicy(anon = true, noRes = true)
     @GetMapping("/generate")
     public R<CaptchaResponse> generate() {
         CaptchaPair captchaPair = codeService.generate();
@@ -53,7 +53,7 @@ public class CaptchaController {
     /**
      * 生成图形验证码
      */
-    @IgnoreLog(ignoreResponse = true)
+    @ApiPolicy(anon = true, noRes = true)
     @GetMapping("/captchaImage")
     public void get(HttpServletResponse response) throws IOException {
         // 在代理服务器端防止缓冲
@@ -94,7 +94,7 @@ public class CaptchaController {
         // 验证码60秒有效期内不再发送
         String key = "code:" + account;
         Long expire = stringRedisTemplate.getExpire(key);
-        if (stringRedisTemplate.hasKey(key) && (expire != null && expire > 60)) {
+        if (stringRedisTemplate.hasKey(key) && expire > 60) {
             return R.ok("验证码仍在有效期内");
         }
 

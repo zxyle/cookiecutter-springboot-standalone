@@ -159,8 +159,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = {Exception.class, NullPointerException.class, HttpMessageNotReadableException.class})
     public R<Void> exceptionHandler(Exception e) {
-        log.error("未知异常: {}", e.getMessage());
-        log.error("异常详情: {}", getExceptionMessage(e));
+        // log.error("未知异常: {}", e.getMessage());
+        // log.error("异常详情: {}", getExceptionMessage(e));
         return R.fail(ErrorEnum.SERVER_ERROR);
     }
 
@@ -170,11 +170,35 @@ public class GlobalExceptionHandler {
      * @param ex 异常对象
      * @return 异常信息的字符串表示形式
      */
-    public String getExceptionMessage(Exception ex) {
+    public static String getExceptionMessage(Exception ex) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter writer = new PrintWriter(stringWriter);
         ex.printStackTrace(writer);
         StringBuffer buffer = stringWriter.getBuffer();
         return buffer.toString();
+    }
+
+    public static String getFilteredExceptionMessage(Throwable ex, String packagePrefix) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+
+        // 递归解析所有嵌套异常
+        while (ex != null) {
+            pw.println(ex.getClass().getName() + ": " + ex.getMessage());
+
+            // 过滤堆栈：仅保留指定包名的调用链
+            StackTraceElement[] stackTrace = ex.getStackTrace();
+            for (StackTraceElement element : stackTrace) {
+                if (element.getClassName().startsWith(packagePrefix)) {
+                    pw.println("\tat " + element); // 保留原始格式
+                }
+            }
+
+            ex = ex.getCause();
+            if (ex != null) {
+                pw.print("\nCaused by: ");
+            }
+        }
+        return sw.toString();
     }
 }

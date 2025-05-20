@@ -8,6 +8,7 @@ public final class RegexConst {
     private RegexConst() {
     }
 
+    // 中国大陆手机号：1开头，第二位是3-9，后面跟着9位数字
     public static final String REGEX_MOBILE = "^1(3[0-9]|4[57]|5[0-35-9]|6[2567]|7[0-3,5-8]|8\\d|9\\d)\\d{8}$";
 
     public static final String REGEX_EMAIL = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
@@ -40,6 +41,7 @@ public final class RegexConst {
 
     public static final String REGEX_ZH = "^[\u4e00-\u9fa5]+$";
 
+    // 中国大陆邮政编码：第一位不能是0，后面紧跟 5位数字，严格限制只能有6位数字
     public static final String REGEX_POSTCODE = "^[1-9]\\d{5}(?!\\d)$";
 
     public static final String REGEX_IPV4 = "^(\\d{1,3}\\.){3}\\d{1,3}$";
