@@ -39,13 +39,12 @@ public final class RegexConst {
 
     public static final String REGEX_DOUBLE = "^[-\\+]?[\\d]*(\\.\\d{1,2})?$";
 
-    public static final String REGEX_ZH = "^[\u4e00-\u9fa5]+$";
-
     // 中国大陆邮政编码：第一位不能是0，后面紧跟 5位数字，严格限制只能有6位数字
     public static final String REGEX_POSTCODE = "^[1-9]\\d{5}(?!\\d)$";
 
     public static final String REGEX_IPV4 = "^(\\d{1,3}\\.){3}\\d{1,3}$";
 
+    // yyyy-MM-dd
     public static final String REGEX_DATE = "^(19|20)\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$";
 
     // yyyy-MM-dd HH:mm:ss
