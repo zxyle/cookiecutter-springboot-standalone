@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
@@ -29,8 +30,7 @@ public class RedisStarServiceImpl implements StarService {
     private static final String STAR_COUNT_KEY = "starCnt:%d:%d";
     private static final String USER_STAR_LIST_KEY = "starList:%d:%d";
     // 防止zset每个元素score占用内存过大，设置一个起始时间戳
-    private static final long BASE_TIMESTAMP = private static final long BASE_TIMESTAMP =
-            LocalDateTime.of({% now 'local', '%Y, Integer.parseInt("%m"), Integer.parseInt("%d"), Integer.parseInt("%H"), Integer.parseInt("%M"), Integer.parseInt("%S")' %})
+    private static final long BASE_TIMESTAMP = LocalDateTime.of({% now 'local', '%Y, Integer.parseInt("%m"), Integer.parseInt("%d"), Integer.parseInt("%H"), Integer.parseInt("%M"), Integer.parseInt("%S")' %})
                     .atZone(ZoneId.systemDefault())
                     .toEpochSecond();
 
