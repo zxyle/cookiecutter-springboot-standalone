@@ -29,7 +29,10 @@ public class RedisFollowServiceImpl implements FollowService {
     private static final String FOLLOWING_CNT_KEY = "following:cnt:%d";
     private static final String FANS_CNT_KEY = "fans:cnt:%d";
     // 防止zset每个元素score占用内存过大，设置一个起始时间戳
-    private static final long START_TS = 1704038400L;
+    private static final long BASE_TIMESTAMP = private static final long BASE_TIMESTAMP =
+            LocalDateTime.of({% now 'local', '%Y, Integer.parseInt("%m"), Integer.parseInt("%d"), Integer.parseInt("%H"), Integer.parseInt("%M"), Integer.parseInt("%S")' %})
+                    .atZone(ZoneId.systemDefault())
+                    .toEpochSecond();
 
     /**
      * 关注用户
@@ -49,8 +52,8 @@ public class RedisFollowServiceImpl implements FollowService {
         String key4 = String.format(FANS_CNT_KEY, followId);
 
         List<Object> results = stringRedisTemplate.executePipelined((RedisCallback<Object>) connection -> {
-            connection.zAdd(key.getBytes(), Instant.now().getEpochSecond() - START_TS, followId.toString().getBytes());
-            connection.zAdd(key2.getBytes(), Instant.now().getEpochSecond() - START_TS, userId.toString().getBytes());
+            connection.zAdd(key.getBytes(), Instant.now().getEpochSecond() - BASE_TIMESTAMP, followId.toString().getBytes());
+            connection.zAdd(key2.getBytes(), Instant.now().getEpochSecond() - BASE_TIMESTAMP, userId.toString().getBytes());
             connection.incr(key3.getBytes());
             connection.incr(key4.getBytes());
             return null;

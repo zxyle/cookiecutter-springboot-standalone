@@ -33,7 +33,10 @@ public class RedisLikeServiceImpl implements LikeService {
     private static final String LIKE_COUNT_KEY = "likeCnt:%d:%d";
     private static final String USER_LIKE_LIST_KEY = "likeList:%d:%d";
     // 防止zset每个元素score占用内存过大，设置一个起始时间戳
-    private static final long START_TS = 1704038400L;
+    private static final long BASE_TIMESTAMP = private static final long BASE_TIMESTAMP =
+            LocalDateTime.of({% now 'local', '%Y, Integer.parseInt("%m"), Integer.parseInt("%d"), Integer.parseInt("%H"), Integer.parseInt("%M"), Integer.parseInt("%S")' %})
+                    .atZone(ZoneId.systemDefault())
+                    .toEpochSecond();
 
     /**
      * 点赞
@@ -51,11 +54,11 @@ public class RedisLikeServiceImpl implements LikeService {
         // 检查该用户是否已经为这个内容点过赞
         if (!isLiked(resType, resId, userId)) {
             // 如果没有，则将用户ID加入到点赞集合中，并设置分数为当前时间戳
-            stringRedisTemplate.opsForZSet().add(key, String.valueOf(userId), Instant.now().getEpochSecond() - START_TS);
+            stringRedisTemplate.opsForZSet().add(key, String.valueOf(userId), Instant.now().getEpochSecond() - BASE_TIMESTAMP);
             // 增加点赞数
             Long increment = stringRedisTemplate.opsForValue().increment(countKey);
             // 用户收藏列表添加
-            stringRedisTemplate.opsForZSet().add(userKey, String.valueOf(resId), Instant.now().getEpochSecond() - START_TS);
+            stringRedisTemplate.opsForZSet().add(userKey, String.valueOf(resId), Instant.now().getEpochSecond() - BASE_TIMESTAMP);
             return increment == null || increment < 0 ? 0 : increment;
         }
 
@@ -167,7 +170,7 @@ public class RedisLikeServiceImpl implements LikeService {
         if (tupleSet != null && !tupleSet.isEmpty()) {
             List<LikeDTO> records = tupleSet.stream().map(tuple -> {
                 LikeDTO likeDTO = new LikeDTO();
-                likeDTO.setLikeTime(Instant.ofEpochSecond(Objects.requireNonNull(tuple.getScore()).longValue() + START_TS)
+                likeDTO.setLikeTime(Instant.ofEpochSecond(Objects.requireNonNull(tuple.getScore()).longValue() + BASE_TIMESTAMP)
                         .atZone(ZoneId.systemDefault())
                         .toLocalDateTime());
                 likeDTO.setResId(Integer.parseInt(Objects.requireNonNull(tuple.getValue())));

@@ -59,7 +59,7 @@ public class RedisSortedSetDelayQueue {
      * 基准点秒级时间戳，用来显著降低 zset score 数值大小，利于 Redis 存储优化
      */
     private static final long BASE_TIMESTAMP =
-            LocalDateTime.of({% now 'local', '%Y, %m, %d' %}, 0, 0, 0)
+            LocalDateTime.of({% now 'local', '%Y, Integer.parseInt("%m"), Integer.parseInt("%d"), Integer.parseInt("%H"), Integer.parseInt("%M"), Integer.parseInt("%S")' %})
                     .atZone(ZoneId.systemDefault())
                     .toEpochSecond();
 
@@ -214,4 +214,4 @@ public class RedisSortedSetDelayQueue {
             }
         }
     }
-}}
+}
