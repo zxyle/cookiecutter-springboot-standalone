@@ -1,5 +1,6 @@
 package {{ cookiecutter.basePackage }}.biz.sys.monitor;
 
+import {{ cookiecutter.basePackage }}.common.aspect.ApiPolicy;
 import {{ cookiecutter.basePackage }}.common.constant.DateFormatConst;
 import {{ cookiecutter.basePackage }}.common.util.IpUtil;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,7 @@ import java.util.Map;
  * 系统健康状态
  */
 @RestController
+@ApiPolicy(anon = true)
 public class HealthController {
 
     /**
