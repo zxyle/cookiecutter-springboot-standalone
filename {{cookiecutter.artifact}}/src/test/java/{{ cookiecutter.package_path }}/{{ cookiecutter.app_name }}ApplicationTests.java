@@ -1,17 +1,23 @@
 package {{ cookiecutter.basePackage }};
 
 import {{ cookiecutter.basePackage }}.biz.sys.captcha.EmailCodeService;
+import {{ cookiecutter.basePackage }}.common.lock.RedisDistributedLock;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 
+import java.util.concurrent.TimeUnit;
+
 @SpringBootTest
 class {{ cookiecutter.app_name }}ApplicationTests {
 
     @Autowired
     EmailCodeService emailService;
+
+    @Autowired
+    RedisDistributedLock redisLock;
 
     {% if cookiecutter.bootVersion.split('.')[0] == '2' -%}
     // 其他密码HASH方法
@@ -44,6 +50,26 @@ class {{ cookiecutter.app_name }}ApplicationTests {
     @Test
     void send() {
         emailService.sendVerificationCode("123456", "admin@example.com");
+    }
+
+    // 分布式锁测试
+    @Test
+    void lock() {
+        // 获取锁
+        String lockKey = "order_123";
+        String lockValue = redisLock.lock(lockKey, 30, TimeUnit.SECONDS);
+
+        try {
+            if (lockValue != null) {
+                // 执行业务逻辑
+                System.out.println("执行业务逻辑...");
+            }
+        } finally {
+            // 安全释放锁
+            if (lockValue != null) {
+                redisLock.unlock(lockKey, lockValue);
+            }
+        }
     }
 
 }
